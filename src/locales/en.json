@@ -1,0 +1,4 @@
+{
+    "app_name": "Muslim Calendar",
+    "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"]
+}
