@@ -4,10 +4,15 @@ import React, { Fragment } from "react"
 const HeaderContainer = ({ t, isSidebarExpanded, toggleSidebar, changeLanguage, setDisplayMode, isDarkMode }) => (
   <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 w-full p-1 shadow-xl z-10">
     <section className="header-title grow flex items-center">
-      <button className="p-1 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" onClick={toggleSidebar}>
-        <img className="h-8 object-contain drop-shadow-md px-1" src={`${import.meta.env.BASE_URL}images/sidebar-icon.svg`}/>
-      </button>
-      <h3 className="hidden lg:block grow px-2 font-serif text-white">{t('app_name')}</h3>
+      {innerWidth > 1024
+        ? (
+            <button className="p-1 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" onClick={toggleSidebar}>
+              <img className="h-8 object-contain drop-shadow-md px-1" src={`${import.meta.env.BASE_URL}images/sidebar-icon.svg`}/>
+            </button>
+          )
+        : <img className="h-8 p-0.5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/calendar-icon.svg`} alt="App Icon" />
+      }
+      <h3 className="grow px-2 font-serif text-white whitespace-nowrap">{t('app_name')}</h3>
     </section>
     <section className="w-fit flex items-center pl-1">
       <a href="https://github.com/Vidi005/muslim-calendar" title="Repository" target="_blank" rel="noreferrer noopener">

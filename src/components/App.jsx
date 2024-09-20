@@ -10,6 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      SIDEBAR_STATE_STORAGE_KEY: "SIDEBAR_STATE_STORAGE_KEY",
       LANGUAGE_STORAGE_KEY: "LANGUAGE_STORAGE_KEY",
       DARK_MODE_STORAGE_KEY: "DARK_MODE_STORAGE_KEY",
       selectedLanguage: "en",
@@ -26,6 +27,7 @@ class App extends React.Component {
   checkBrowserStorage() {
     isStorageExist(i18n.t('browser_warning'))
     if (isStorageExist('')) {
+      this.checkSidebarState()
       this.checkDisplayMode()
       this.checkLanguageData()
     }
@@ -33,6 +35,19 @@ class App extends React.Component {
 
   componentDidUpdate() {
     document.body.classList.toggle("dark", this.state.isDarkMode)
+  }
+
+  checkSidebarState () {
+    const getSidebarStateFromLocal = localStorage.getItem(this.state.SIDEBAR_STATE_STORAGE_KEY)
+    try {
+      const parsedSidebarState = JSON.parse(getSidebarStateFromLocal)
+      if (parsedSidebarState !== undefined || parsedSidebarState !== null) {
+        this.setState({ isSidebarExpanded: parsedSidebarState })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.SIDEBAR_STATE_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
   }
 
   checkDisplayMode () {
@@ -64,7 +79,11 @@ class App extends React.Component {
   toggleSidebar () {
     this.setState(prevState => ({
       isSidebarExpanded: !prevState.isSidebarExpanded
-    }))
+    }), () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.SIDEBAR_STATE_STORAGE_KEY, JSON.stringify(this.state.isSidebarExpanded))
+      }
+    })
   }
 
   collapseSidebar () {

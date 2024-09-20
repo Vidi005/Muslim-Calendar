@@ -23,9 +23,12 @@ class MainContainer extends React.Component {
               </div>
               )
           : (
-              <BottomBar
-                t={this.props.t}
-              />
+              <div className="home-container flex flex-col w-full h-full">
+                <HomeContent t={this.props.t} />
+                <BottomBar
+                  t={this.props.t}
+                />
+              </div>
             )
         }
       </main>
