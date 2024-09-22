@@ -19,12 +19,31 @@ class MainContainer extends React.Component {
                   t={this.props.t}
                   isSidebarExpanded={this.props.state.isSidebarExpanded}
                 />
-                <HomeContent t={this.props.t} collapseSidebar={this.props.collapseSidebar}/>
+                <HomeContent
+                  t={this.props.t}
+                  collapseSidebar={this.props.collapseSidebar}
+                  onInputLocationChange={this.props.onInputLocationChange}
+                  inputLocation={this.props.state.inputLocation}
+                  isSearching={this.props.state.isSearching}
+                  suggestedLocations={this.props.state.suggestedLocations}
+                  selectedLanguage={this.props.state.selectedLanguage}
+                  selectedLocation={this.props.state.selectedLocation}
+                  setSelectedLocation={this.props.setSelectedLocation}
+                />
               </div>
               )
           : (
               <div className="home-container flex flex-col w-full h-full">
-                <HomeContent t={this.props.t} />
+                <HomeContent
+                  t={this.props.t}
+                  onInputLocationChange={this.props.onInputLocationChange}
+                  inputLocation={this.props.state.inputLocation}
+                  isSearching={this.props.state.isSearching}
+                  suggestedLocations={this.props.state.suggestedLocations}
+                  selectedLanguage={this.props.state.selectedLanguage}
+                  selectedLocation={this.props.state.selectedLocation}
+                  setSelectedLocation={this.props.setSelectedLocation}
+                />
                 <BottomBar
                   t={this.props.t}
                 />

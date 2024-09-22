@@ -14,7 +14,17 @@ class App extends React.Component {
       LANGUAGE_STORAGE_KEY: "LANGUAGE_STORAGE_KEY",
       DARK_MODE_STORAGE_KEY: "DARK_MODE_STORAGE_KEY",
       selectedLanguage: "en",
+      inputDate: "",
+      inputTime: "",
+      inputLocation: "",
+      suggestedLocations: [],
+      latitude: 0,
+      longitude: 0,
+      altitude: 0,
+      selectedLocation: "",
       isSidebarExpanded: true,
+      isAutoLocate: true,
+      isSearching: false,
       isDarkMode: false,
       isFocused: false
     }
@@ -96,6 +106,14 @@ class App extends React.Component {
     }), () => this.saveDisplayMode(this.state.isDarkMode))
   }
 
+  onInputLocationChange (inputLocation) {
+    this.setState({ inputLocation: inputLocation })
+  }
+
+  setSelectedLocation (location) {
+    this.setState({ selectedLocation: location })
+  }
+
   changeLanguage (lang) {
     i18n.changeLanguage(lang)
     this.setState({ selectedLanguage: lang }, () => this.saveLanguageData(lang))
@@ -138,6 +156,8 @@ class App extends React.Component {
               collapseSidebar={this.collapseSidebar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
+              onInputLocationChange={this.onInputLocationChange.bind(this)}
+              setSelectedLocation={this.setSelectedLocation.bind(this)}
             />
           }/>
           <Route path="/home" element={
@@ -148,6 +168,8 @@ class App extends React.Component {
               collapseSidebar={this.collapseSidebar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
+              onInputLocationChange={this.onInputLocationChange.bind(this)}
+              setSelectedLocation={this.setSelectedLocation.bind(this)}
             />
           }/>
           <Route path="*" element={<NoPage t={i18n.t} />} />
