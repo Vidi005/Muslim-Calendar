@@ -1,4 +1,24 @@
 {
     "app_name": "Muslim Calendar",
-    "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"]
+    "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"],
+    "current_date": "Current Date :",
+    "georgian_date": "Georgian Date",
+    "hijri_date": "Hijri Date",
+    "current_time": "Current Time :",
+    "app_config": "Application Configuration :",
+    "date": "Date :",
+    "time": "Time :",
+    "no_location_found": "No Location Found",
+    "current_location": "Current Location",
+    "restore_datetime": "Restore Datetime",
+    "reset_settings": "Reset Settings",
+    "location": "Location :",
+    "search_location": "Search Location...",
+    "latitude": "Latitude :",
+    "longitude": "Longitude :",
+    "altitude": "Altitude :",
+    "apply": "Apply",
+    "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
+    "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
+    "criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }

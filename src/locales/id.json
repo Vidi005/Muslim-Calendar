@@ -1,4 +1,24 @@
 {
     "app_name": "Muslim Calendar",
-    "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"]
+    "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
+    "current_date": "Hari Ini :",
+    "georgian_date": "Tanggal Masehi",
+    "hijri_date": "Tanggal Hijriah",
+    "current_time": "Waktu Sekarang :",
+    "app_config": "Konfigurasi Aplikasi :",
+    "date": "Hari :",
+    "time": "Waktu :",
+    "no_location_found": "Lokasi Tidak Ditemukan",
+    "current_location": "Lokasi Saat Ini",
+    "restore_datetime": "Kembalikan Waktu",
+    "reset_settings": "Reset Pengaturan",
+    "location": "Lokasi :",
+    "search_location": "Cari Lokasi...",
+    "latitude": "Lintang :",
+    "longitude": "Bujur :",
+    "altitude": "Ketinggian :",
+    "apply": "Terapkan",
+    "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
+    "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
+    "criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }
