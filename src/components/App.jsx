@@ -23,6 +23,7 @@ class App extends React.Component {
       altitude: 0,
       selectedLocation: "",
       isSidebarExpanded: true,
+      isToolbarShown: true,
       isAutoLocate: true,
       isSearching: false,
       isDarkMode: false,
@@ -95,9 +96,11 @@ class App extends React.Component {
       }
     })
   }
-
-  collapseSidebar () {
-    this.setState({ isSidebarExpanded: false })
+  
+  toggleToolbar () {
+    this.setState(prevState => ({
+      isToolbarShown: !prevState.isToolbarShown
+    }))
   }
 
   setDisplayMode () {
@@ -153,7 +156,7 @@ class App extends React.Component {
               t={i18n.t}
               state={this.state}
               toggleSidebar={this.toggleSidebar.bind(this)}
-              collapseSidebar={this.collapseSidebar.bind(this)}
+              toggleToolbar={this.toggleToolbar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
               onInputLocationChange={this.onInputLocationChange.bind(this)}
@@ -165,7 +168,7 @@ class App extends React.Component {
               t={i18n.t}
               state={this.state}
               toggleSidebar={this.toggleSidebar.bind(this)}
-              collapseSidebar={this.collapseSidebar.bind(this)}
+              toggleToolbar={this.toggleToolbar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
               onInputLocationChange={this.onInputLocationChange.bind(this)}

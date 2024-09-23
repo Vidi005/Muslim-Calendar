@@ -1,6 +1,8 @@
 {
     "app_name": "Muslim Calendar",
     "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
+    "hide_toolbar": "Sembunyikan Toolbar",
+    "show_toolbar": "Tampilkan Toolbar",
     "current_date": "Hari Ini :",
     "georgian_date": "Tanggal Masehi",
     "hijri_date": "Tanggal Hijriah",
@@ -18,6 +20,12 @@
     "longitude": "Bujur :",
     "altitude": "Ketinggian :",
     "apply": "Terapkan",
+    "day_correction": "Koreksi :",
+    "corrections": ["-1 hari", "0 hari", "+2 hari"],
+    "sun_declination": "Deklinasi Matahari :",
+    "calculations": ["Kalkulasi Manual", "Pustaka JS Meeus"],
+    "interval_update": "Pembaruan :",
+    "intervals": ["15 detik", "30 detik", "1 menit"],
     "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
     "criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
