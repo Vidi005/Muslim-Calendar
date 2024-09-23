@@ -1,7 +1,7 @@
 import { Menu, Switch, Transition } from "@headlessui/react"
 import React, { Fragment } from "react"
 
-const HeaderContainer = ({ t, isSidebarExpanded, toggleSidebar, changeLanguage, setDisplayMode, isDarkMode }) => (
+const HeaderContainer = ({ t, toggleSidebar, changeLanguage, setDisplayMode, isDarkMode }) => (
   <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 w-full p-1 shadow-xl z-10">
     <section className="header-title grow flex items-center">
       {innerWidth > 1024
