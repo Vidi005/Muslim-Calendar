@@ -21,8 +21,9 @@ class MainContainer extends React.Component {
                 />
                 <HomeContent
                   t={this.props.t}
-                  collapseSidebar={this.props.collapseSidebar}
+                  toggleToolbar={this.props.toggleToolbar}
                   onInputLocationChange={this.props.onInputLocationChange}
+                  isToolbarShown={this.props.state.isToolbarShown}
                   inputLocation={this.props.state.inputLocation}
                   isSearching={this.props.state.isSearching}
                   suggestedLocations={this.props.state.suggestedLocations}
@@ -36,7 +37,9 @@ class MainContainer extends React.Component {
               <div className="home-container flex flex-col w-full h-full">
                 <HomeContent
                   t={this.props.t}
+                  toggleToolbar={this.props.toggleToolbar}
                   onInputLocationChange={this.props.onInputLocationChange}
+                  isToolbarShown={this.props.state.isToolbarShown}
                   inputLocation={this.props.state.inputLocation}
                   isSearching={this.props.state.isSearching}
                   suggestedLocations={this.props.state.suggestedLocations}
