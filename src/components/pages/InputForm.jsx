@@ -1,7 +1,7 @@
 import { Combobox, Transition } from "@headlessui/react"
 import React, { Fragment } from "react"
 
-const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearching, toggleToolbar, onInputLocationChange, selectedLocation, suggestedLocations, setSelectedLocation }) => {
+const InputForm = ({ t, selectedLanguage, isToolbarShown, currentDate, inputLocation, latitude, longitude, altitude, isSearching, toggleToolbar, getCurrentLocation, onInputLocationChange, selectedLocation, suggestedLocations, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates }) => {
   if (innerWidth > 1024) {
     return (
       <section className="form-container sticky shadow-md">
@@ -37,7 +37,7 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                   required
                 />
               </span>
-              <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow">
+              <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
                 <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                 <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
               </button>
@@ -101,6 +101,8 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                   <input
                     type="number"
                     className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                    onChange={onInputLatitudeChange}
+                    value={latitude}
                     required
                   />
                 </span>
@@ -109,6 +111,8 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                   <input
                     type="number"
                     className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                    onChange={onInputLongitudeChange}
+                    value={longitude}
                     required
                   />
                 </span>
@@ -117,14 +121,24 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                   <input
                     type="number"
                     className="input-altitude w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                    onChange={onInputAltitudeChange}
+                    value={altitude}
                     required
                   />
                   <p>&nbsp;m</p>
                 </span>
-                <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow">{t('apply')}</button>
+                <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
               </form>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-1">
+              <span className="flex items-center">
+                <label>{t('hijri_date_criteria')}&nbsp;</label>
+                <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} required>
+                  <option value="0">{t('date_criteria.0')}</option>
+                  <option value="1">{t('date_criteria.1')}</option>
+                  <option value="2">{t('date_criteria.2')}</option>
+                </select>
+              </span>
               <span className="flex items-center">
                 <label>{t('day_correction')}&nbsp;</label>
                 <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} required>
@@ -156,15 +170,15 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
             <tr className="font-bold">
               <td>{t('georgian_date')}</td>
               <td className="pl-1 pr-2">:</td>
-              <td>{new Date().toLocaleDateString(selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</td>
+              <td>{currentDate.georgian}</td>
             </tr>
             <tr className="text-green-700 dark:text-green-200 duration-200">
               <td>{t('hijri_date')}</td>
               <td className="pl-1 pr-2">:</td>
-              <td>{new Date().toLocaleDateString(selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })}</td>
+              <td>{currentDate.islamic}</td>
             </tr>
             <tr className="border-t border-t-black font-serif font-bold text-lg">
-              <td colSpan={3}>{t('current_time')}&nbsp;<span className="font-sans">{new Date().toLocaleTimeString(selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })}</span></td>
+              <td colSpan={3}>{t('current_time')}&nbsp;<span className="font-sans">{currentDate.time}</span></td>
             </tr>
           </table>
         </Transition>
@@ -193,21 +207,21 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
             <tr className="font-bold text-xs">
               <td>{t('georgian_date')}</td>
               <td className="pl-0.5 pr-1">:</td>
-              <td className="w-full">{new Date().toLocaleDateString(selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</td>
+              <td className="w-full">{currentDate.georgian}</td>
             </tr>
             <tr className="text-green-700 dark:text-green-200 text-xs duration-200">
               <td>{t('hijri_date')}</td>
               <td className="pl-0.5 pr-1">:</td>
-              <td className="w-full">{new Date().toLocaleDateString(selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })}</td>
+              <td className="w-full">{currentDate.islamic}</td>
             </tr>
             <tr className="font-serif font-bold text-sm">
-              <td colSpan={3}>Current Time : &nbsp;<span className="font-sans text-xs">{new Date().toLocaleTimeString(selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })}</span></td>
+              <td colSpan={3}>Current Time : &nbsp;<span className="font-sans text-xs">{currentDate.time}</span></td>
             </tr>
           </table>
-          <article className="grid grid-flow-row items-center gap-2 border-t border-t-white">
+          <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white">
             <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
             <div className="flex flex-wrap items-center justify-center gap-2">
-              <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow">
+              <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
                 <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                 <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
               </button>
@@ -288,6 +302,8 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                 <input
                   type="number"
                   className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                  value={latitude}
+                  onChange={onInputLatitudeChange}
                   required
                 />
               </span>
@@ -296,6 +312,8 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                 <input
                   type="number"
                   className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                  value={longitude}
+                  onChange={onInputLongitudeChange}
                   required
                 />
               </span>
@@ -304,13 +322,23 @@ const InputForm = ({ t, selectedLanguage, isToolbarShown, inputLocation, isSearc
                 <input
                   type="number"
                   className="input-altitude w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                  value={altitude}
+                  onChange={onInputAltitudeChange}
                   required
                 />
                 <p>&nbsp;m</p>
               </span>
-              <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow">{t('apply')}</button>
+              <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
             </form>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+              <span className="flex items-center">
+                <label>{t('hijri_date_criteria')}&nbsp;</label>
+                <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} required>
+                  <option value="0">{t('date_criteria.0')}</option>
+                  <option value="1">{t('date_criteria.1')}</option>
+                  <option value="2">{t('date_criteria.2')}</option>
+                </select>
+              </span>
               <span className="flex items-center">
                 <label>{t('day_correction')}&nbsp;</label>
                 <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} required>

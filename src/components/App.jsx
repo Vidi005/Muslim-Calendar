@@ -13,7 +13,10 @@ class App extends React.Component {
       SIDEBAR_STATE_STORAGE_KEY: "SIDEBAR_STATE_STORAGE_KEY",
       LANGUAGE_STORAGE_KEY: "LANGUAGE_STORAGE_KEY",
       DARK_MODE_STORAGE_KEY: "DARK_MODE_STORAGE_KEY",
+      TOOLBAR_STATE_STORAGE_KEY: "TOOLBAR_STATE_STORAGE_KEY",
+      LOCATION_STATE_STORAGE_KEY: "LOCATION_STATE_STORAGE_KEY",
       selectedLanguage: "en",
+      currentDate: {},
       inputDate: "",
       inputTime: "",
       inputLocation: "",
@@ -29,10 +32,20 @@ class App extends React.Component {
       isDarkMode: false,
       isFocused: false
     }
+    this.intervalId = null
   }
 
   componentDidMount() {
     this.checkBrowserStorage()
+    this.intervalId = setInterval(this.getCurrentDate.bind(this), 1000)
+  }
+
+  componentDidUpdate() {
+    document.body.classList.toggle("dark", this.state.isDarkMode)
+  }
+
+  componentWillUnmount() {
+    if (this.intervalId) clearInterval(this.intervalId)
   }
 
   checkBrowserStorage() {
@@ -41,11 +54,9 @@ class App extends React.Component {
       this.checkSidebarState()
       this.checkDisplayMode()
       this.checkLanguageData()
+      this.checkToolbarState()
+      this.checkSavedLocation()
     }
-  }
-
-  componentDidUpdate() {
-    document.body.classList.toggle("dark", this.state.isDarkMode)
   }
 
   checkSidebarState () {
@@ -57,6 +68,19 @@ class App extends React.Component {
       }
     } catch (error) {
       localStorage.removeItem(this.state.SIDEBAR_STATE_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkToolbarState () {
+    const getToolbarStateFromLocal = localStorage.getItem(this.state.TOOLBAR_STATE_STORAGE_KEY)
+    try {
+      const parsedToolbarState = JSON.parse(getToolbarStateFromLocal)
+      if (parsedToolbarState !== undefined || parsedToolbarState !== null) {
+        this.setState({ isToolbarShown: parsedToolbarState })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.TOOLBAR_STATE_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -87,6 +111,33 @@ class App extends React.Component {
     }
   }
 
+  checkSavedLocation () {
+    const getSavedLocationFromLocal = localStorage.getItem(this.state.LOCATION_STATE_STORAGE_KEY)
+    try {
+      const parsedSavedLocation = JSON.parse(getSavedLocationFromLocal)
+      if (parsedSavedLocation !== null || parsedSavedLocation?.selectedLocation !== undefined) {
+        this.setState({
+          selectedLocation: parsedSavedLocation.selectedLocation,
+          latitude: parsedSavedLocation?.latitude,
+          longitude: parsedSavedLocation?.longitude,
+          altitude: parsedSavedLocation?.altitude
+        })
+      } else this.getCurrentLocation()
+    } catch (error) {
+      localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  getCurrentDate () {
+    const georgian = new Date().toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+    const islamic = new Date().toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+    const time = new Date().toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
+    this.setState({
+      currentDate: { georgian, islamic, time }
+    })
+  }
+
   toggleSidebar () {
     this.setState(prevState => ({
       isSidebarExpanded: !prevState.isSidebarExpanded
@@ -96,25 +147,11 @@ class App extends React.Component {
       }
     })
   }
-  
-  toggleToolbar () {
-    this.setState(prevState => ({
-      isToolbarShown: !prevState.isToolbarShown
-    }))
-  }
 
   setDisplayMode () {
     this.setState(prevState => ({
       isDarkMode: !prevState.isDarkMode
     }), () => this.saveDisplayMode(this.state.isDarkMode))
-  }
-
-  onInputLocationChange (inputLocation) {
-    this.setState({ inputLocation: inputLocation })
-  }
-
-  setSelectedLocation (location) {
-    this.setState({ selectedLocation: location })
   }
 
   changeLanguage (lang) {
@@ -131,6 +168,66 @@ class App extends React.Component {
   saveLanguageData (selectedLanguage) {
     if (isStorageExist(i18n.t('browser_warning'))) {
       localStorage.setItem(this.state.LANGUAGE_STORAGE_KEY, JSON.stringify(selectedLanguage))
+    }
+  }
+
+  toggleToolbar () {
+    this.setState(prevState => ({
+      isToolbarShown: !prevState.isToolbarShown
+    }), () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.TOOLBAR_STATE_STORAGE_KEY, JSON.stringify(this.state.isToolbarShown))
+      }
+    })
+  }
+
+  getCurrentLocation () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          altitude: position.coords.altitude || 1
+        }, () => localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY))
+      }, error => {
+        this.setState({ selectedLocation: error.message })
+      }, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      })
+    }
+  }
+
+  onInputLocationChange (inputLocation) {
+    this.setState({ inputLocation: inputLocation })
+  }
+
+  setSelectedLocation (location) {
+    this.setState({ selectedLocation: location })
+  }
+
+  onInputLatitudeChange (event) {
+    this.setState({ latitude: event.target.value })
+  }
+
+  onInputLongitudeChange (event) {
+    this.setState({ longitude: event.target.value })
+  }
+
+  onInputAltitudeChange (event) {
+    this.setState({ altitude: event.target.value })
+  }
+
+  applyLocationCoordinates () {
+    if (isStorageExist(i18n.t('browser_warning'))) {
+      const locationData = {
+        selectedLocation: this.state.selectedLocation,
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        altitude: this.state.altitude
+      }
+      localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
     }
   }
 
@@ -156,23 +253,33 @@ class App extends React.Component {
               t={i18n.t}
               state={this.state}
               toggleSidebar={this.toggleSidebar.bind(this)}
-              toggleToolbar={this.toggleToolbar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
+              toggleToolbar={this.toggleToolbar.bind(this)}
+              getCurrentLocation={this.getCurrentLocation.bind(this)}
               onInputLocationChange={this.onInputLocationChange.bind(this)}
               setSelectedLocation={this.setSelectedLocation.bind(this)}
-            />
-          }/>
+              onInputLatitudeChange={this.onInputLatitudeChange.bind(this)}
+              onInputLongitudeChange={this.onInputLongitudeChange.bind(this)}
+              onInputAltitudeChange={this.onInputAltitudeChange.bind(this)}
+              applyLocationCoordinates={this.applyLocationCoordinates.bind(this)}
+              />
+            }/>
           <Route path="/home" element={
             <HomePage
               t={i18n.t}
               state={this.state}
               toggleSidebar={this.toggleSidebar.bind(this)}
-              toggleToolbar={this.toggleToolbar.bind(this)}
               changeLanguage={this.changeLanguage.bind(this)}
               setDisplayMode={this.setDisplayMode.bind(this)}
+              toggleToolbar={this.toggleToolbar.bind(this)}
+              getCurrentLocation={this.getCurrentLocation.bind(this)}
               onInputLocationChange={this.onInputLocationChange.bind(this)}
               setSelectedLocation={this.setSelectedLocation.bind(this)}
+              onInputLatitudeChange={this.onInputLatitudeChange.bind(this)}
+              onInputLongitudeChange={this.onInputLongitudeChange.bind(this)}
+              onInputAltitudeChange={this.onInputAltitudeChange.bind(this)}
+              applyLocationCoordinates={this.applyLocationCoordinates.bind(this)}
             />
           }/>
           <Route path="*" element={<NoPage t={i18n.t} />} />
