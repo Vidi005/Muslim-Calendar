@@ -22,6 +22,11 @@ class MainContainer extends React.Component {
                 <HomeContent
                   t={this.props.t}
                   toggleToolbar={this.props.toggleToolbar}
+                  currentDate={this.props.state.currentDate}
+                  longitude={this.props.state.longitude}
+                  latitude={this.props.state.latitude}
+                  altitude={this.props.state.altitude}
+                  getCurrentLocation={this.props.getCurrentLocation}
                   onInputLocationChange={this.props.onInputLocationChange}
                   isToolbarShown={this.props.state.isToolbarShown}
                   inputLocation={this.props.state.inputLocation}
@@ -30,7 +35,11 @@ class MainContainer extends React.Component {
                   selectedLanguage={this.props.state.selectedLanguage}
                   selectedLocation={this.props.state.selectedLocation}
                   setSelectedLocation={this.props.setSelectedLocation}
-                />
+                  onInputLatitudeChange={this.props.onInputLatitudeChange}
+                  onInputLongitudeChange={this.props.onInputLongitudeChange}
+                  onInputAltitudeChange={this.props.onInputAltitudeChange}
+                  applyLocationCoordinates={this.props.applyLocationCoordinates}
+                  />
               </div>
               )
           : (
@@ -38,6 +47,11 @@ class MainContainer extends React.Component {
                 <HomeContent
                   t={this.props.t}
                   toggleToolbar={this.props.toggleToolbar}
+                  currentDate={this.props.state.currentDate}
+                  latitude={this.props.state.latitude}
+                  longitude={this.props.state.longitude}
+                  altitude={this.props.state.altitude}
+                  getCurrentLocation={this.props.getCurrentLocation}
                   onInputLocationChange={this.props.onInputLocationChange}
                   isToolbarShown={this.props.state.isToolbarShown}
                   inputLocation={this.props.state.inputLocation}
@@ -46,6 +60,10 @@ class MainContainer extends React.Component {
                   selectedLanguage={this.props.state.selectedLanguage}
                   selectedLocation={this.props.state.selectedLocation}
                   setSelectedLocation={this.props.setSelectedLocation}
+                  onInputLatitudeChange={this.props.onInputLatitudeChange}
+                  onInputLongitudeChange={this.props.onInputLongitudeChange}
+                  onInputAltitudeChange={this.props.onInputAltitudeChange}
+                  applyLocationCoordinates={this.props.applyLocationCoordinates}
                 />
                 <BottomBar
                   t={this.props.t}

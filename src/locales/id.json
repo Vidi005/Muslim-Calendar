@@ -20,6 +20,8 @@
     "longitude": "Bujur :",
     "altitude": "Ketinggian :",
     "apply": "Terapkan",
+    "hijri_date_criteria": "Kriteria :",
+    "date_criteria": ["MABIMS", "Hisab", "KHGT"],
     "day_correction": "Koreksi :",
     "corrections": ["-1 hari", "0 hari", "+2 hari"],
     "sun_declination": "Deklinasi Matahari :",
@@ -28,5 +30,5 @@
     "intervals": ["15 detik", "30 detik", "1 menit"],
     "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
-    "criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
+    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }

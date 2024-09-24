@@ -20,6 +20,8 @@
     "longitude": "Longitude :",
     "altitude": "Altitude :",
     "apply": "Apply",
+    "hijri_date_criteria": "Criteria :",
+    "date_criteria": ["MABIMS", "Hisab", "KHGT"],
     "day_correction": "Correction :",
     "corrections": ["-1 day", "0 day", "+2 day"],
     "sun_declination": "Sun Declination :",
@@ -28,5 +30,5 @@
     "intervals": ["15 seconds", "30 seconds", "1 minute"],
     "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
-    "criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
+    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }
