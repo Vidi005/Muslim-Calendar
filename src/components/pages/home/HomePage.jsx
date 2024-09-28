@@ -6,7 +6,8 @@ import MainContainer from "./MainContainer"
 const HomePage = ({ t, isSidebarExpanded}) => (
   <div className="home-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
-      <meta name="keyword" content="Muslim Calendar" />
+      <title>{t('app_name') + ' | ' + t('pages.0')}</title>
+      <meta name="description" content={t('app_desc')} />
     </Helmet>
     <HeaderContainer />
     <MainContainer t={t} isSidebarExpanded={isSidebarExpanded} />

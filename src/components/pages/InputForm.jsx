@@ -1,13 +1,14 @@
 import { Combobox, Transition } from "@headlessui/react"
 import React, { Fragment } from "react"
 import { HomePageConsumer } from "../contexts/HomPageContext"
+import en from "../../locales/en.json"
 
 const InputForm = () => (
   <HomePageConsumer>
     {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectDayCorrection, selectCalculationMethod, selectIntervalUpdate }) => {
       if (innerWidth > 1024) {
         return (
-          <section className="form-container sticky shadow-md">
+          <section className="form-container sticky top-0 shadow-md">
             <Transition
               appear
               show={state.isToolbarShown}
@@ -141,32 +142,25 @@ const InputForm = () => (
                   <span className="flex items-center">
                     <label>{t('hijri_date_criteria')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
-                      <option value="0">{t('date_criteria.0')}</option>
-                      <option value="1">{t('date_criteria.1')}</option>
-                      <option value="2">{t('date_criteria.2')}</option>
+                      {en.date_criteria.map((item, index) => <option key={item} value={index}>{t(`date_criteria.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('day_correction')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedDayCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
-                      <option value="0">{t('corrections.0')}</option>
-                      <option value="1">{t('corrections.1')}</option>
-                      <option value="2">{t('corrections.2')}</option>
+                      {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('sun_declination')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCalculationMethod} onChange={event => selectCalculationMethod(event.target.value)} required>
-                      <option value="0">{t('calculations.0')}</option>
-                      <option value="1">{t('calculations.1')}</option>
+                      {en.calculations.map((item, index) => <option key={item} value={index}>{t(`calculations.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('interval_update')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
-                      <option value="0">{t('intervals.0')}</option>
-                      <option value="1">{t('intervals.1')}</option>
-                      <option value="2">{t('intervals.2')}</option>
+                      {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
                     </select>
                   </span>
                 </div>
@@ -197,7 +191,7 @@ const InputForm = () => (
         )
       } else {
         return (
-          <section className="form-container sticky shadow-md">
+          <section className="form-container sticky top-0 shadow-md">
             <Transition
               appear
               show={state.isToolbarShown}
@@ -345,32 +339,25 @@ const InputForm = () => (
                   <span className="flex items-center">
                     <label>{t('hijri_date_criteria')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
-                      <option value="0">{t('date_criteria.0')}</option>
-                      <option value="1">{t('date_criteria.1')}</option>
-                      <option value="2">{t('date_criteria.2')}</option>
+                      {en.date_criteria.map((item, index) => <option key={item} value={index}>{t(`date_criteria.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('day_correction')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
-                      <option value="0">{t('corrections.0')}</option>
-                      <option value="1">{t('corrections.1')}</option>
-                      <option value="2">{t('corrections.2')}</option>
+                      {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('sun_declination')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCalculationMethod} onChange={event => selectCalculationMethod(event.target.value)} required>
-                      <option value="0">{t('calculations.0')}</option>
-                      <option value="1">{t('calculations.1')}</option>
+                      {en.calculations.map((item, index) => <option key={item} value={index}>{t(`calculations.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
                     <label>{t('interval_update')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
-                      <option value="0">{t('intervals.0')}</option>
-                      <option value="1">{t('intervals.1')}</option>
-                      <option value="2">{t('intervals.2')}</option>
+                      {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
                     </select>
                   </span>
                 </div>
