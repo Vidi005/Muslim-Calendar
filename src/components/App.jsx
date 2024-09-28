@@ -265,7 +265,7 @@ class App extends React.Component {
       }, {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 60000
+        maximumAge: 15000
       })
     }
   }

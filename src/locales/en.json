@@ -1,5 +1,6 @@
 {
     "app_name": "Muslim Calendar",
+    "app_desc": "Welcome to Muslim Calendar. Display Islamic Calendar Information.",
     "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"],
     "hide_toolbar": "Hide Toolbar",
     "show_toolbar": "Show Toolbar",
@@ -34,6 +35,38 @@
     "interval_update": "Updates :",
     "intervals": ["15 seconds", "30 seconds", "1 minute"],
     "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
+    "ashr_time": "Ashr Time :",
+    "mahzab": ["Shafii", "Hanafi"],
+    "convention": "Convention :",
+    "conventions": [
+        {
+            "method": "MWL",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            }
+        },
+        {
+            "method": "ISNA",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            }
+        },
+        {
+            "method": "Umm al-Qura",
+            "sun_altitude": {
+                "fajr": 18.5,
+                "isha": "90 mins"
+            }
+        }
+    ],
+    "calculation_method": "Method :",
+    "formulas": ["Middle of the night", "One-seventh of the night", "Angle-based method"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
+    "prayer_times_config": "Prayer Times Config :",
+    "time_correction": "Time Correction :",
+    "prayer_names": ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
+    "minutes": "mins",
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }
