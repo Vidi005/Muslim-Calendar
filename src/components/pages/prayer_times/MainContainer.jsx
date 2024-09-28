@@ -1,7 +1,7 @@
 import React from "react"
 import Sidebar from "../Sidebar"
 import BottomBar from "../BottomBar"
-import HomeContent from "./HomeContent"
+import PrayerTimesContent from "./PrayerTimesContent"
 
 class MainContainer extends React.Component {
   constructor(props) {
@@ -11,20 +11,20 @@ class MainContainer extends React.Component {
 
   render() {
     return (
-      <main className="home-page h-full flex-auto grow flex-nowrap bg-green-100 dark:bg-gray-800">
+      <main className="prayer-times-page h-full flex-auto grow flex-nowrap bg-green-100 dark:bg-gray-800">
         {innerWidth > 1024
           ? (
-              <div className="home-container flex flex-nowrap w-full h-full overflow-y-auto">
+              <div className="prayer-times-container flex flex-nowrap w-full h-full overflow-y-auto">
                 <Sidebar
                   t={this.props.t}
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
-                <HomeContent />
+                <PrayerTimesContent />
               </div>
               )
           : (
-              <div className="home-container flex flex-col w-full h-full">
-                <HomeContent />
+              <div className="prayer-times-container flex flex-col w-full h-full">
+                <PrayerTimesContent />
                 <BottomBar
                   t={this.props.t}
                 />
