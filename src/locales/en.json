@@ -61,6 +61,8 @@
             }
         }
     ],
+    "ihtiyath": "Ihtiyath :",
+    "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
     "calculation_method": "Method :",
     "formulas": ["Middle of the night", "One-seventh of the night", "Angle-based method"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
@@ -68,5 +70,10 @@
     "time_correction": "Time Correction :",
     "prayer_names": ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
     "minutes": "mins",
+    "moon_crescent_map_config": "Moon Crescent Map Config :",
+    "moon_crescent_criteria": "Criteria :",
+    "islamic_month": "Month :",
+    "islamic_year": "Year :",
+    "hijri_abbreviation": "AH",
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }

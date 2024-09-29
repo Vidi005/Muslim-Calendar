@@ -61,6 +61,8 @@
             }
         }
     ],
+    "ihtiyath": "Ihtiyath :",
+    "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
     "calculation_method": "Metode :",
     "formulas": ["Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
@@ -68,5 +70,10 @@
     "time_correction": "Koreksi Waktu :",
     "prayer_names": ["Subuh", "Terbit", "Dzuhur", "Ashar", "Maghrib", "Isya"],
     "minutes": "menit",
+    "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",
+    "moon_crescent_criteria ": "Kriteria :",
+    "islamic_month": "Bulan :",
+    "islamic_year": "Tahun :",
+    "hijri_abbreviation": "H",
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"]
 }

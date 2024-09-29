@@ -21,6 +21,12 @@ const PrayerTimesSettings = () => (
               {en.conventions.map((type, index) => <option key={type} value={index}>{t(`conventions.${index}.method`)}</option>)}
             </select>
           </span>
+          <span className="flex items-center">
+            <label htmlFor="ihtiyath">{t('ihtiyath')}</label>
+            <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={0} required>
+              {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
+            </select>
+          </span>
           {Math.abs(state.latitude) > 48.5 && (
             <span className="flex items-center">
               <label htmlFor="calculation_method">{t('calculation_method')}</label>
