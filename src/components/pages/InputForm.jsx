@@ -29,7 +29,7 @@ const InputForm = () => (
                       type="date"
                       lang={selectedLanguage}
                       value={state.inputDate}
-                      className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredDate}
                       required
                     />
@@ -40,7 +40,7 @@ const InputForm = () => (
                       type="time"
                       lang={selectedLanguage}
                       value={state.inputTime}
-                      className="input-time ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-time ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredTime}
                       required
                     />
@@ -108,7 +108,7 @@ const InputForm = () => (
                       <label htmlFor="latitude">{t('latitude')}&nbsp;</label>
                       <input
                         type="number"
-                        className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                        className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 shadow-inner rounded duration-200"
                         onChange={onInputLatitudeChange}
                         value={state.latitude}
                         required
@@ -118,7 +118,7 @@ const InputForm = () => (
                       <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
                       <input
                         type="number"
-                        className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                        className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputLongitudeChange}
                         value={state.longitude}
                         required
@@ -128,7 +128,7 @@ const InputForm = () => (
                       <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
                       <input
                         type="number"
-                        className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                        className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputAltitudeChange}
                         value={state.elevation}
                         required
@@ -240,7 +240,7 @@ const InputForm = () => (
                       type="date"
                       lang={selectedLanguage}
                       value={state.inputDate}
-                      className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredDate}
                       required
                     />
@@ -251,7 +251,7 @@ const InputForm = () => (
                       type="time"
                       lang={selectedLanguage}
                       value={state.inputTime}
-                      className="input-time ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-time ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredTime}
                       required
                     />
@@ -306,7 +306,7 @@ const InputForm = () => (
                     <label htmlFor="latitude">{t('latitude')}&nbsp;</label>
                     <input
                       type="number"
-                      className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.latitude}
                       onChange={onInputLatitudeChange}
                       required
@@ -316,7 +316,7 @@ const InputForm = () => (
                     <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
                     <input
                       type="number"
-                      className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.longitude}
                       onChange={onInputLongitudeChange}
                       required
@@ -326,7 +326,7 @@ const InputForm = () => (
                     <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
                     <input
                       type="number"
-                      className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"
+                      className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.elevation}
                       onChange={onInputAltitudeChange}
                       required

@@ -8,6 +8,7 @@ import NoPage from "./pages/empty/NoPage"
 import { HomePageProvider } from "./contexts/HomPageContext"
 import Swal from "sweetalert2"
 import PrayerTimesPage from "./pages/prayer_times/PrayerTimesPage"
+import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
 
 class App extends React.Component {
   constructor(props) {
@@ -471,6 +472,33 @@ class App extends React.Component {
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
             }}>
               <PrayerTimesPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+            </HomePageProvider>
+          }/>
+          <Route path="/moon-crescent-map" element={
+            <HomePageProvider value={{
+              t: i18n.t,
+              state: this.state,
+              toggleSidebar: this.toggleSidebar.bind(this),
+              changeLanguage: this.changeLanguage.bind(this),
+              setDisplayMode: this.setDisplayMode.bind(this),
+              toggleToolbar: this.toggleToolbar.bind(this),
+              setDesiredDate: this.setDesiredDate.bind(this),
+              setDesiredTime: this.setDesiredTime.bind(this),
+              getCurrentLocation: this.getCurrentLocation.bind(this),
+              restoreDateTime: this.restoreDateTime.bind(this),
+              resetSettings: this.resetSettings.bind(this),
+              onInputLocationChange: this.onInputLocationChange.bind(this),
+              selectCriteria: this.selectCriteria.bind(this),
+              selectDayCorrection: this.selectDayCorrection.bind(this),
+              selectCalculationMethod: this.selectCalculationMethod.bind(this),
+              selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
+              setSelectedLocation: this.setSelectedLocation.bind(this),
+              onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
+              onInputLongitudeChange: this.onInputLongitudeChange.bind(this),
+              onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
+              applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
+            }}>
+              <MoonCrescentMapPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
             </HomePageProvider>
           }/>
           <Route path="*" element={<NoPage t={i18n.t} />} />
