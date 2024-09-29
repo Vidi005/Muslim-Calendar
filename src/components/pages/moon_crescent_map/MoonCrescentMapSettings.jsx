@@ -29,6 +29,9 @@ const MoonCrescentMapSettings = () => (
               {en.visibility_criteria.map((type, index) => <option key={type} value={index}>{t(`visibility_criteria.${index}`)}</option>)}
             </select>
           </span>
+          <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow">
+            <span className="ml-1 text-white text-sm whitespace-nowrap">{t('create_map')}</span>
+          </button>
         </div>
       </section>
     )}
