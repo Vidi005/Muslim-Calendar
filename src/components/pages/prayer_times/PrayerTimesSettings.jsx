@@ -23,7 +23,7 @@ const PrayerTimesSettings = () => (
           </span>
           <span className="flex items-center">
             <label htmlFor="ihtiyath">{t('ihtiyath')}</label>
-            <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={0} required>
+            <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={1} required>
               {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
@@ -35,6 +35,10 @@ const PrayerTimesSettings = () => (
               </select>
             </span>
           )}
+          <button className="flex items-center ml-auto p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow">
+            <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Reset Settings" />
+            <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
+          </button>
         </div>
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('time_correction')}</h4>
         <div className="flex flex-wrap items-center gap-2">

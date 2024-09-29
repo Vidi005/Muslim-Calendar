@@ -142,7 +142,7 @@ const InputForm = () => (
                   <span className="flex items-center">
                     <label>{t('hijri_date_criteria')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
-                      {en.date_criteria.map((item, index) => <option key={item} value={index}>{t(`date_criteria.${index}`)}</option>)}
+                      {en.date_criteria.map((item, index) => <option key={item.criteria} value={index}>{t(`date_criteria.${index}.criteria`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
