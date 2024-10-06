@@ -19,12 +19,12 @@ class MainContainer extends React.Component {
                   t={this.props.t}
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
-                <HomeContent />
+                <HomeContent sliderRef={this.props.sliderRef} goToCurrentMonth={this.props.goToCurrentMonth} />
               </div>
               )
           : (
               <div className="home-container flex flex-col w-full h-full">
-                <HomeContent />
+                <HomeContent sliderRef={this.props.sliderRef} goToCurrentMonth={this.props.goToCurrentMonth} />
                 <BottomBar
                   t={this.props.t}
                 />
