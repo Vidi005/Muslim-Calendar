@@ -5,7 +5,7 @@ import en from "../../locales/en.json"
 
 const InputForm = () => (
   <HomePageConsumer>
-    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectDayCorrection, selectCalculationMethod, selectIntervalUpdate }) => {
+    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectDayCorrection, selectIntervalUpdate }) => {
       if (innerWidth > 1024) {
         return (
           <section className="form-container sticky top-0 shadow-md">
@@ -141,7 +141,7 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="flex items-center">
                     <label>{t('hijri_date_criteria')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
+                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
                       {en.date_criteria.map((item, index) => <option key={item.criteria} value={index}>{t(`date_criteria.${index}.criteria`)}</option>)}
                     </select>
                   </span>
@@ -149,12 +149,6 @@ const InputForm = () => (
                     <label>{t('day_correction')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedDayCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
                       {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
-                    </select>
-                  </span>
-                  <span className="flex items-center">
-                    <label>{t('sun_declination')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCalculationMethod} onChange={event => selectCalculationMethod(event.target.value)} required>
-                      {en.calculations.map((item, index) => <option key={item} value={index}>{t(`calculations.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
@@ -338,7 +332,7 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
                   <span className="flex items-center">
                     <label>{t('hijri_date_criteria')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
+                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required>
                       {en.date_criteria.map((item, index) => <option key={item} value={index}>{t(`date_criteria.${index}`)}</option>)}
                     </select>
                   </span>
@@ -346,12 +340,6 @@ const InputForm = () => (
                     <label>{t('day_correction')}&nbsp;</label>
                     <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
                       {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
-                    </select>
-                  </span>
-                  <span className="flex items-center">
-                    <label>{t('sun_declination')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedCalculationMethod} onChange={event => selectCalculationMethod(event.target.value)} required>
-                      {en.calculations.map((item, index) => <option key={item} value={index}>{t(`calculations.${index}`)}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">

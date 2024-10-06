@@ -9,6 +9,7 @@ import { HomePageProvider } from "./contexts/HomPageContext"
 import Swal from "sweetalert2"
 import PrayerTimesPage from "./pages/prayer_times/PrayerTimesPage"
 import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
+import { Body, Elongation, Equator, Horizon, Observer, SearchAltitude, SearchMoonPhase } from "astronomy-engine"
 
 class App extends React.Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class App extends React.Component {
       INTERVAL_UPDATES_STORAGE_KEY: "INTERVAL_UPDATES_STORAGE_KEY",
       selectedLanguage: "en",
       currentDate: {},
+      seconds: 0,
       inputDate: "",
       inputTime: "",
       inputLocation: "",
@@ -33,10 +35,13 @@ class App extends React.Component {
       longitude: 0,
       elevation: 0,
       selectedLocation: "",
-      selectedCriteria: 1,
+      selectedCriteria: 0,
       selectedDayCorrection: 1,
       selectedCalculationMethod: 0,
       selectedIntervalUpdate: 0,
+      months: [],
+      currentMonthIndex: new Date().getMonth(),
+      currentYear: new Date().getFullYear(),
       isSidebarExpanded: true,
       isToolbarShown: true,
       isAutoLocate: true,
@@ -45,6 +50,7 @@ class App extends React.Component {
       isFocused: false
     }
     this.intervalId = null
+    this.sliderRef = React.createRef()
   }
 
   componentDidMount() {
@@ -52,8 +58,17 @@ class App extends React.Component {
     this.intervalId = setInterval(this.getCurrentDate.bind(this), 1000)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(_prevProps, prevState) {
     document.body.classList.toggle("dark", this.state.isDarkMode)
+    if (prevState.seconds !== this.state.seconds) {
+      if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 60 === 0) {
+        this.generateCalendar()
+      } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 30 === 0) {
+        this.generateCalendar()        
+      } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 15 === 0) {
+        this.generateCalendar()
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -185,7 +200,7 @@ class App extends React.Component {
     try {
       const parsedSavedIntervalUpdates = JSON.parse(getSavedIntervalUpdatesFromLocal)
       if (parsedSavedIntervalUpdates !== null) {
-        this.setState({ selectedIntervalUpdate: parsedSavedIntervalUpdates })
+        this.setState({ selectedIntervalUpdate: parseInt(parsedSavedIntervalUpdates) })
       }
     } catch (error) {
       localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
@@ -198,8 +213,9 @@ class App extends React.Component {
     const islamic = new Date().toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
     const time = new Date().toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     this.setState({
-      currentDate: { georgian, islamic, time }
-    })
+      currentDate: { georgian, islamic, time },
+      seconds: new Date().getSeconds()
+    }, this.generateCalendar())
   }
 
   toggleSidebar () {
@@ -321,14 +337,17 @@ class App extends React.Component {
   }
 
   onInputLatitudeChange (event) {
+    if (event.target.value > 90 || event.target.value < -90) return
     this.setState({ latitude: event.target.value })
   }
 
   onInputLongitudeChange (event) {
+    if (event.target.value > 180 || event.target.value < -180) return
     this.setState({ longitude: event.target.value })
   }
 
   onInputAltitudeChange (event) {
+    if (event.target.value > 10000 || event.target.value < 0) return
     this.setState({ elevation: event.target.value })
   }
 
@@ -376,6 +395,85 @@ class App extends React.Component {
     })
   }
 
+  generateCalendar = () => {
+    const months = []
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      const daysInMonth = new Date(this.state.currentYear, monthIndex + 1, 0).getDate()
+      const monthDays = []
+      for (let day = 1; day <= daysInMonth; day++) {
+        const gregorianDate = new Date(this.state.currentYear, monthIndex, day)
+        const hijriDate = this.calculateHijriStart(gregorianDate)
+        monthDays.push({
+          gregorian: gregorianDate.getDate(),
+          hijri: hijriDate.getDate()
+        })
+      }
+      months.push(monthDays)
+    }
+    this.setState({ months: months })
+  }
+
+  calculateMoonEvent = gregorianDate => {
+    const elongationInfo = Elongation(Body.Moon, gregorianDate)
+    const elongationDeg = elongationInfo.elongation
+    const observer = new Observer(this.state.latitude, this.state.longitude, this.state.elevation)
+    const moonEquatorial = Equator(Body.Moon, gregorianDate, observer, false, true)
+    const moonHorizontal = Horizon(gregorianDate, observer, moonEquatorial.ra, moonEquatorial.dec, 'normal')
+    const altitudeDeg = moonHorizontal.altitude
+    return { elongationDeg, altitudeDeg }
+  }
+  
+  createKHGTHijriDate = gregorianDate => {
+    const { elongationDeg, altitudeDeg } = this.calculateMoonEvent(gregorianDate)
+    const hijriDate = new Date(gregorianDate)
+    if (elongationDeg >= 8 && altitudeDeg >= 5) {
+      hijriDate.setDate(hijriDate.getDate() + 1)
+    }
+    return hijriDate
+  }
+
+  createMabimsHijriDate = gregorianDate => {
+    const { elongationDeg, altitudeDeg } = this.calculateMoonEvent(gregorianDate)
+    const hijriDate = new Date(gregorianDate)
+    if (elongationDeg >= 8 && altitudeDeg >= 5) {
+      hijriDate.setDate(hijriDate.getDate() + 1)
+    }
+    return hijriDate
+  }
+
+  getSunsetTime (gregorianDate) {
+    const observer = new Observer(this.state.latitude, this.state.longitude, this.state.elevation)
+    const body = Body.Sun
+    const startTime = new Date(gregorianDate)
+    const direction = -1
+    const sunsetEvent = SearchAltitude(body, observer, direction, startTime, 0.0)
+    return sunsetEvent.date
+  }
+
+  createMuhammadiyahDate = gregorianDate => {
+    const newMoon = SearchMoonPhase(0, gregorianDate)
+    const sunsetTime = this.getSunsetTime(gregorianDate)
+    const hijriDate = new Date(sunsetTime)
+    if (newMoon.date < sunsetTime) {
+      hijriDate.setDate(hijriDate.getDate() + 1)
+    }
+    return hijriDate
+  }
+
+  calculateHijriStart = gregorianDate => {
+    if (this.state.selectedCriteria === '0') {
+      return this.createMabimsHijriDate(gregorianDate)
+    } else if (this.state.selectedCriteria === '1') {
+      return this.createKHGTHijriDate(gregorianDate)
+    }
+  }
+  
+  goToCurrentMonth = () => {
+    if (this.sliderRef.current) {
+      this.sliderRef.current.slickGoTo(this.state.currentMonthIndex)
+    }
+  }
+
   onBlurHandler() {
     this.setState({ isFocused: false })
   }
@@ -417,7 +515,12 @@ class App extends React.Component {
               onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
             }}>
-              <HomePage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+              <HomePage
+                t={i18n.t}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+                sliderRef={this.sliderRef}
+                goToCurrentMonth={this.goToCurrentMonth.bind(this)}
+              />
             </HomePageProvider>
           }/>
           <Route path="/home" element={
@@ -436,7 +539,6 @@ class App extends React.Component {
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectDayCorrection: this.selectDayCorrection.bind(this),
-              selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
@@ -444,7 +546,12 @@ class App extends React.Component {
               onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
             }}>
-              <HomePage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+              <HomePage
+                t={i18n.t}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+                sliderRef={this.sliderRef}
+                goToCurrentMonth={this.goToCurrentMonth.bind(this)}
+              />
             </HomePageProvider>
           }/>
           <Route path="/prayer-times" element={
@@ -463,7 +570,6 @@ class App extends React.Component {
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectDayCorrection: this.selectDayCorrection.bind(this),
-              selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
