@@ -9,7 +9,6 @@ import { HomePageProvider } from "./contexts/HomPageContext"
 import Swal from "sweetalert2"
 import PrayerTimesPage from "./pages/prayer_times/PrayerTimesPage"
 import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
-import { Body, Elongation, Equator, Horizon, Observer, SearchAltitude, SearchMoonPhase } from "astronomy-engine"
 
 class App extends React.Component {
   constructor(props) {
@@ -29,6 +28,7 @@ class App extends React.Component {
       seconds: 0,
       inputDate: "",
       inputTime: "",
+      formattedDateTime: new Date(),
       inputLocation: "",
       suggestedLocations: [],
       latitude: 0,
@@ -39,9 +39,7 @@ class App extends React.Component {
       selectedDayCorrection: 1,
       selectedCalculationMethod: 0,
       selectedIntervalUpdate: 0,
-      months: [],
-      currentMonthIndex: new Date().getMonth(),
-      currentYear: new Date().getFullYear(),
+      dayNumbers: [],
       isSidebarExpanded: true,
       isToolbarShown: true,
       isAutoLocate: true,
@@ -56,6 +54,7 @@ class App extends React.Component {
   componentDidMount() {
     this.checkBrowserStorage()
     this.intervalId = setInterval(this.getCurrentDate.bind(this), 1000)
+    this.generateCalendar()
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -215,7 +214,7 @@ class App extends React.Component {
     this.setState({
       currentDate: { georgian, islamic, time },
       seconds: new Date().getSeconds()
-    }, this.generateCalendar())
+    })
   }
 
   toggleSidebar () {
@@ -262,11 +261,17 @@ class App extends React.Component {
   }
 
   setDesiredDate (event) {
-    this.setState({ inputDate: event.target.value })
+    this.setState({ inputDate: event.target.value }, this.formatDateTime())
   }
 
   setDesiredTime (event) {
-    this.setState({ inputTime: event.target.value })
+    this.setState({ inputTime: event.target.value }, this.formatDateTime())
+  }
+
+  formatDateTime () {
+    if (this.state.inputDate !== "" && this.state.inputTime !== "") {
+      this.setState({ formattedDateTime: new Date(`${this.state.inputDate}T${this.state.inputTime}`) })
+    } else this.setState({ formattedDateTime: new Date() })
   }
 
   getCurrentLocation () {
@@ -288,7 +293,7 @@ class App extends React.Component {
   }
 
   restoreDateTime () {
-    this.setState({ inputDate: "", inputTime: "" })
+    this.setState({ inputDate: "", inputTime: "" }, this.formatDateTime())
   }
 
   resetSettings () {
@@ -312,6 +317,7 @@ class App extends React.Component {
           elevation: 0,
           selectedLocation: ""
         }, () => {
+          this.formatDateTime()
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
           localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
           localStorage.removeItem(this.state.DAY_CORRECTION_STORAGE_KEY)
@@ -395,83 +401,46 @@ class App extends React.Component {
     })
   }
 
+  calculateHijriDate = gregorianDate => {
+    const MS_PER_DAY = 86400000
+    const HIJRI_EPOCH = 1948439.5
+    const GREGORIAN_EPOCH = 2440587.5
+    const julianDays = gregorianDate.getTime() / MS_PER_DAY + GREGORIAN_EPOCH
+    const daysSinceHijriEpoch = julianDays - HIJRI_EPOCH
+    const hijriYear = Math.floor(daysSinceHijriEpoch / 354.367)
+    const hijriNewYear = hijriYear * 354.367
+    const hijriDayOfYear = daysSinceHijriEpoch - hijriNewYear
+    // const hijriMonth = Math.floor(hijriDayOfYear / 29.530588)
+    const hijriDay = Math.ceil(hijriDayOfYear % 29.530588)
+    const adjustedHijriDay = hijriDay <= 0 ? hijriDay + 30 : hijriDay
+    return adjustedHijriDay
+  }
+
   generateCalendar = () => {
-    const months = []
-    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
-      const daysInMonth = new Date(this.state.currentYear, monthIndex + 1, 0).getDate()
-      const monthDays = []
+    const dayNumbers = Array.from({ length: 12 }).map((_, monthIndex) => {
+      const firstDayOfMonth = new Date(this.state.formattedDateTime.getFullYear(), monthIndex, 1).getDay()
+      const daysInMonth = new Date(this.state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()
+      const daysArray = Array.from({ length: firstDayOfMonth }).fill(null)
       for (let day = 1; day <= daysInMonth; day++) {
-        const gregorianDate = new Date(this.state.currentYear, monthIndex, day)
-        const hijriDate = this.calculateHijriStart(gregorianDate)
-        monthDays.push({
-          gregorian: gregorianDate.getDate(),
-          hijri: hijriDate.getDate()
+        const gregorianDate = new Date(this.state.formattedDateTime.getFullYear(), monthIndex, day)        
+        // const hijriDate = calculateHijriDate(gregorianDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria)
+        daysArray.push({
+          gregorian: day,
+          hijri: this.calculateHijriDate(gregorianDate)
         })
       }
-      months.push(monthDays)
-    }
-    this.setState({ months: months })
-  }
-
-  calculateMoonEvent = gregorianDate => {
-    const elongationInfo = Elongation(Body.Moon, gregorianDate)
-    const elongationDeg = elongationInfo.elongation
-    const observer = new Observer(this.state.latitude, this.state.longitude, this.state.elevation)
-    const moonEquatorial = Equator(Body.Moon, gregorianDate, observer, false, true)
-    const moonHorizontal = Horizon(gregorianDate, observer, moonEquatorial.ra, moonEquatorial.dec, 'normal')
-    const altitudeDeg = moonHorizontal.altitude
-    return { elongationDeg, altitudeDeg }
-  }
-  
-  createKHGTHijriDate = gregorianDate => {
-    const { elongationDeg, altitudeDeg } = this.calculateMoonEvent(gregorianDate)
-    const hijriDate = new Date(gregorianDate)
-    if (elongationDeg >= 8 && altitudeDeg >= 5) {
-      hijriDate.setDate(hijriDate.getDate() + 1)
-    }
-    return hijriDate
-  }
-
-  createMabimsHijriDate = gregorianDate => {
-    const { elongationDeg, altitudeDeg } = this.calculateMoonEvent(gregorianDate)
-    const hijriDate = new Date(gregorianDate)
-    if (elongationDeg >= 8 && altitudeDeg >= 5) {
-      hijriDate.setDate(hijriDate.getDate() + 1)
-    }
-    return hijriDate
-  }
-
-  getSunsetTime (gregorianDate) {
-    const observer = new Observer(this.state.latitude, this.state.longitude, this.state.elevation)
-    const body = Body.Sun
-    const startTime = new Date(gregorianDate)
-    const direction = -1
-    const sunsetEvent = SearchAltitude(body, observer, direction, startTime, 0.0)
-    return sunsetEvent.date
-  }
-
-  createMuhammadiyahDate = gregorianDate => {
-    const newMoon = SearchMoonPhase(0, gregorianDate)
-    const sunsetTime = this.getSunsetTime(gregorianDate)
-    const hijriDate = new Date(sunsetTime)
-    if (newMoon.date < sunsetTime) {
-      hijriDate.setDate(hijriDate.getDate() + 1)
-    }
-    return hijriDate
-  }
-
-  calculateHijriStart = gregorianDate => {
-    if (this.state.selectedCriteria === '0') {
-      return this.createMabimsHijriDate(gregorianDate)
-    } else if (this.state.selectedCriteria === '1') {
-      return this.createKHGTHijriDate(gregorianDate)
-    }
+      return daysArray
+    })
+    this.setState({ dayNumbers: dayNumbers })
   }
   
   goToCurrentMonth = () => {
-    if (this.sliderRef.current) {
-      this.sliderRef.current.slickGoTo(this.state.currentMonthIndex)
-    }
+    this.setState({ inputDate: "", inputTime: "" }, () => {
+      this.formatDateTime()
+      if (this.sliderRef.current) {
+        this.sliderRef.current.slickGoTo(this.state.formattedDateTime.getMonth())
+      }
+    })
   }
 
   onBlurHandler() {
