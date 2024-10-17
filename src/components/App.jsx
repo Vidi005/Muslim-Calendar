@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { isStorageExist } from "../utils/data"
+import { isStorageExist, adjustedIslamicDate, getCalendarData } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -39,7 +39,7 @@ class App extends React.Component {
       selectedDayCorrection: 1,
       selectedCalculationMethod: 0,
       selectedIntervalUpdate: 0,
-      dayNumbers: [],
+      months: [],
       isSidebarExpanded: true,
       isToolbarShown: true,
       isAutoLocate: true,
@@ -54,7 +54,6 @@ class App extends React.Component {
   componentDidMount() {
     this.checkBrowserStorage()
     this.intervalId = setInterval(this.getCurrentDate.bind(this), 1000)
-    this.generateCalendar()
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -151,7 +150,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        })
+        },() => this.generateCalendar())
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -208,9 +207,10 @@ class App extends React.Component {
   }
 
   getCurrentDate () {
-    const georgian = new Date().toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-    const islamic = new Date().toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
-    const time = new Date().toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
+    const currentDate = new Date()
+    const georgian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+    const islamic = adjustedIslamicDate(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria).toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+    const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     this.setState({
       currentDate: { georgian, islamic, time },
       seconds: new Date().getSeconds()
@@ -281,7 +281,10 @@ class App extends React.Component {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           elevation: position.coords.elevation || 1
-        }, () => localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY))
+        }, () => {
+          this.generateCalendar()
+          localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+        })
       }, error => {
         this.setState({ selectedLocation: error.message })
       }, {
@@ -371,8 +374,11 @@ class App extends React.Component {
 
   selectCriteria (value) {
     this.setState({ selectedCriteria: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
+      if (value !== parseInt(this.state.selectedCriteria)) {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
+        }
+        this.generateCalendar()
       }
     })
   }
@@ -401,37 +407,9 @@ class App extends React.Component {
     })
   }
 
-  calculateHijriDate = gregorianDate => {
-    const MS_PER_DAY = 86400000
-    const HIJRI_EPOCH = 1948439.5
-    const GREGORIAN_EPOCH = 2440587.5
-    const julianDays = gregorianDate.getTime() / MS_PER_DAY + GREGORIAN_EPOCH
-    const daysSinceHijriEpoch = julianDays - HIJRI_EPOCH
-    const hijriYear = Math.floor(daysSinceHijriEpoch / 354.367)
-    const hijriNewYear = hijriYear * 354.367
-    const hijriDayOfYear = daysSinceHijriEpoch - hijriNewYear
-    // const hijriMonth = Math.floor(hijriDayOfYear / 29.530588)
-    const hijriDay = Math.ceil(hijriDayOfYear % 29.530588)
-    const adjustedHijriDay = hijriDay <= 0 ? hijriDay + 30 : hijriDay
-    return adjustedHijriDay
-  }
-
   generateCalendar = () => {
-    const dayNumbers = Array.from({ length: 12 }).map((_, monthIndex) => {
-      const firstDayOfMonth = new Date(this.state.formattedDateTime.getFullYear(), monthIndex, 1).getDay()
-      const daysInMonth = new Date(this.state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()
-      const daysArray = Array.from({ length: firstDayOfMonth }).fill(null)
-      for (let day = 1; day <= daysInMonth; day++) {
-        const gregorianDate = new Date(this.state.formattedDateTime.getFullYear(), monthIndex, day)        
-        // const hijriDate = calculateHijriDate(gregorianDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria)
-        daysArray.push({
-          gregorian: day,
-          hijri: this.calculateHijriDate(gregorianDate)
-        })
-      }
-      return daysArray
-    })
-    this.setState({ dayNumbers: dayNumbers })
+    const calendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria)
+    this.setState({ months: calendarData })
   }
   
   goToCurrentMonth = () => {
