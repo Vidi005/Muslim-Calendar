@@ -11,7 +11,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
       <section className="calendar-section max-w-full mx-7">
         <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{t('current_month')}</button>
         <Slider arrows dots infinite={false} speed={500} slidesToShow={1} slidesToScroll={1} ref={sliderRef} initialSlide={state.formattedDateTime.getMonth()}>
-          {state.dayNumbers.map((days, monthIndex) => (
+          {state.months.map((days, monthIndex) => (
             <React.Fragment key={monthIndex}>
               <h2 className="text-center text-green-700 dark:text-white">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage, { month: 'long', year: 'numeric' })}</h2>
               <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg">
