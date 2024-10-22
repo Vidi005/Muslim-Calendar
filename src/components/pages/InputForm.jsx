@@ -8,7 +8,7 @@ const InputForm = () => (
     {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectDayCorrection, selectIntervalUpdate }) => {
       if (innerWidth > 1024) {
         return (
-          <section className="form-container sticky top-0 shadow-md">
+          <section className="form-container sticky top-0 shadow-md z-10">
             <Transition
               appear
               show={state.isToolbarShown}
@@ -167,7 +167,7 @@ const InputForm = () => (
                   <td className="pl-1 pr-2">:</td>
                   <td>{state.currentDate.georgian}</td>
                 </tr>
-                <tr className="text-green-700 dark:text-green-200 duration-200">
+                <tr className="text-green-900 dark:text-black duration-200">
                   <td>{t('hijri_date')}</td>
                   <td className="pl-1 pr-2">:</td>
                   <td>{state.currentDate.islamic}</td>
@@ -204,7 +204,7 @@ const InputForm = () => (
                   <td className="pl-0.5 pr-1">:</td>
                   <td className="w-full">{state.currentDate.georgian}</td>
                 </tr>
-                <tr className="text-green-700 dark:text-green-200 text-xs duration-200">
+                <tr className="text-green-900 dark:text-black text-xs duration-200">
                   <td>{t('hijri_date')}</td>
                   <td className="pl-0.5 pr-1">:</td>
                   <td className="w-full">{state.currentDate.islamic}</td>
@@ -220,11 +220,11 @@ const InputForm = () => (
                     <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
                   </button>
-                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-300 dark:bg-yellow-500 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow">
+                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-300 dark:bg-yellow-500 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
                     <img src={`${import.meta.env.BASE_URL}images/restore-datetime-icon.svg`} alt="Restore Datetime" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_datetime')}</span>
                   </button>
-                  <button className="flex items-center p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow">
+                  <button className="flex items-center p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={resetSettings}>
                     <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Reset Settings" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('reset_settings')}</span>
                   </button>

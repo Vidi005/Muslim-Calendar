@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { isStorageExist, adjustedIslamicDate, getCalendarData } from "../utils/data"
+import { isStorageExist, adjustedIslamicDate, getCalendarData, getMoonInfos } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -23,6 +23,7 @@ class App extends React.Component {
       DAY_CORRECTION_STORAGE_KEY: "DAY_CORRECTION_STORAGE_KEY",
       CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
       INTERVAL_UPDATES_STORAGE_KEY: "INTERVAL_UPDATES_STORAGE_KEY",
+      FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       selectedLanguage: "en",
       currentDate: {},
       seconds: 0,
@@ -36,10 +37,14 @@ class App extends React.Component {
       elevation: 0,
       selectedLocation: "",
       selectedCriteria: 0,
+      errorMessage: { title: i18n.t('invalid_date_format.0'), text: i18n.t('invalid_date_format.1')},
       selectedDayCorrection: 1,
       selectedCalculationMethod: 0,
       selectedIntervalUpdate: 0,
-      months: [],
+      selectedFormula: 0,
+      monthsInSetYear: [],
+      monthsInCurrentYear: [],
+      moonInfos: [],
       isSidebarExpanded: true,
       isToolbarShown: true,
       isAutoLocate: true,
@@ -60,11 +65,11 @@ class App extends React.Component {
     document.body.classList.toggle("dark", this.state.isDarkMode)
     if (prevState.seconds !== this.state.seconds) {
       if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 60 === 0) {
-        this.generateCalendar()
+        this.formatDateTime()
       } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 30 === 0) {
-        this.generateCalendar()        
+        this.formatDateTime()     
       } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 15 === 0) {
-        this.generateCalendar()
+        this.formatDateTime()
       }
     }
   }
@@ -85,6 +90,7 @@ class App extends React.Component {
       this.checkSavedDayCorrection()
       this.checkSavedCalculationMethod()
       this.checkSavedIntervalUpdates()
+      this.checkSavedFormula()
     }
   }
 
@@ -150,7 +156,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.generateCalendar())
+        },() => this.formatDateTime())
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -205,11 +211,24 @@ class App extends React.Component {
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
+  
+  checkSavedFormula () {
+    const getSavedFormulaFromLocal = localStorage.getItem(this.state.FORMULA_STORAGE_KEY)
+    try {
+      const parsedSavedFormula = JSON.parse(getSavedFormulaFromLocal)
+      if (parsedSavedFormula !== null) {
+        this.setState({ selectedFormula: parseInt(parsedSavedFormula) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.FORMULA_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
 
   getCurrentDate () {
     const currentDate = new Date()
     const georgian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-    const islamic = adjustedIslamicDate(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria).toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+    const islamic = adjustedIslamicDate(currentDate, this.state.monthsInCurrentYear).toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
     const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     this.setState({
       currentDate: { georgian, islamic, time },
@@ -261,17 +280,38 @@ class App extends React.Component {
   }
 
   setDesiredDate (event) {
-    this.setState({ inputDate: event.target.value }, this.formatDateTime())
+    this.setState(prevState => {
+      if (prevState.inputDate !== event.target.value) {
+        return { inputDate: event.target.value }
+      }
+    }, () => this.formatDateTime())
   }
 
   setDesiredTime (event) {
-    this.setState({ inputTime: event.target.value }, this.formatDateTime())
+    this.setState(prevState => {
+      if (prevState.inputTime !== event.target.value) {
+        return { inputTime: event.target.value }
+      }
+    }, () => this.formatDateTime())
   }
 
   formatDateTime () {
     if (this.state.inputDate !== "" && this.state.inputTime !== "") {
-      this.setState({ formattedDateTime: new Date(`${this.state.inputDate}T${this.state.inputTime}`) })
-    } else this.setState({ formattedDateTime: new Date() })
+      const formattedDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
+      if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
+        this.setState({ formattedDateTime: formattedDateTime }, () => {
+          this.generateCalendar()
+          this.generateMoonInfos()
+          this.goToCurrentMonth()
+        })
+      } else {
+        this.generateCalendar()
+        this.generateMoonInfos()
+      }
+    } else this.setState({ formattedDateTime: new Date() }, () => {
+      this.generateCalendar()
+      this.generateMoonInfos()
+    })
   }
 
   getCurrentLocation () {
@@ -282,7 +322,7 @@ class App extends React.Component {
           longitude: position.coords.longitude,
           elevation: position.coords.elevation || 1
         }, () => {
-          this.generateCalendar()
+          this.formatDateTime()
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
         })
       }, error => {
@@ -296,7 +336,10 @@ class App extends React.Component {
   }
 
   restoreDateTime () {
-    this.setState({ inputDate: "", inputTime: "" }, this.formatDateTime())
+    this.setState({ inputDate: "", inputTime: "" }, () => {
+      this.formatDateTime()
+      this.goToCurrentMonth()
+    })
   }
 
   resetSettings () {
@@ -330,7 +373,7 @@ class App extends React.Component {
       }
     }).finally(() => {
       this.getCurrentLocation()
-      this.selectCriteria('1')
+      this.selectCriteria('0')
       this.selectDayCorrection('1')
       this.selectCalculationMethod('0')
       this.selectIntervalUpdate('0')
@@ -347,28 +390,31 @@ class App extends React.Component {
 
   onInputLatitudeChange (event) {
     if (event.target.value > 90 || event.target.value < -90) return
-    this.setState({ latitude: event.target.value })
+    this.setState({ latitude: parseFloat(event.target.value) })
   }
 
   onInputLongitudeChange (event) {
     if (event.target.value > 180 || event.target.value < -180) return
-    this.setState({ longitude: event.target.value })
+    this.setState({ longitude: parseFloat(event.target.value) })
   }
 
   onInputAltitudeChange (event) {
     if (event.target.value > 10000 || event.target.value < 0) return
-    this.setState({ elevation: event.target.value })
+    this.setState({ elevation: parseFloat(event.target.value) })
   }
 
   applyLocationCoordinates () {
     if (isStorageExist(i18n.t('browser_warning'))) {
       const locationData = {
         selectedLocation: this.state.selectedLocation,
-        latitude: this.state.latitude,
-        longitude: this.state.longitude,
-        elevation: this.state.elevation
+        latitude: parseFloat(this.state.latitude),
+        longitude: parseFloat(this.state.longitude),
+        elevation: parseFloat(this.state.elevation)
       }
-      localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
+      if (getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)?.length > 0) {
+        localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
+        this.formatDateTime()
+      }
     }
   }
 
@@ -378,7 +424,7 @@ class App extends React.Component {
         if (isStorageExist(i18n.t('browser_warning'))) {
           localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
         }
-        this.generateCalendar()
+        this.formatDateTime()
       }
     })
   }
@@ -407,18 +453,42 @@ class App extends React.Component {
     })
   }
 
+  selectFormula (value) {
+    this.setState({ selectedFormula: value }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
+      }
+      this.formatDateTime()
+    })
+  }
+
   generateCalendar = () => {
-    const calendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria)
-    this.setState({ months: calendarData })
+    const currentDate = new Date()
+    if (currentDate.getDate() === this.state.formattedDateTime.getDate() && currentDate.getHours() === this.state.formattedDateTime.getHours() && currentDate.getMinutes() === this.state.formattedDateTime.getMinutes()) {
+      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
+      if (setCalendarData?.length > 0) {
+        this.setState({ monthsInSetYear: setCalendarData, monthsInCurrentYear: setCalendarData })
+      }
+    } else {
+      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
+      const currentCalendarData = getCalendarData(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
+      if (setCalendarData?.length > 0) {
+        this.setState({ monthsInSetYear: setCalendarData })
+      }
+      if (currentCalendarData?.length > 0) {
+        this.setState({ monthsInCurrentYear: currentCalendarData })        
+      }
+    }
   }
   
   goToCurrentMonth = () => {
-    this.setState({ inputDate: "", inputTime: "" }, () => {
-      this.formatDateTime()
-      if (this.sliderRef.current) {
-        this.sliderRef.current.slickGoTo(this.state.formattedDateTime.getMonth())
-      }
-    })
+    if (this.sliderRef.current) {
+      this.sliderRef.current.slickGoTo(this.state.formattedDateTime.getMonth())
+    }
+  }
+
+  generateMoonInfos = () => {
+    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedFormula, this.state.selectedLanguage) })
   }
 
   onBlurHandler() {
@@ -524,7 +594,11 @@ class App extends React.Component {
               onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
             }}>
-              <PrayerTimesPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+              <PrayerTimesPage
+                t={i18n.t}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+                selectFormula={this.selectFormula.bind(this)}
+              />
             </HomePageProvider>
           }/>
           <Route path="/moon-crescent-map" element={
