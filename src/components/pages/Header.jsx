@@ -5,7 +5,7 @@ import { HomePageConsumer } from "../contexts/HomPageContext"
 const HeaderContainer = () => (
   <HomePageConsumer>
     {({ t, toggleSidebar, changeLanguage, setDisplayMode, state }) => (
-      <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 w-full p-1 shadow-xl z-10">
+      <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 w-full p-1 shadow-xl z-20">
         <section className="header-title grow flex items-center">
           {innerWidth > 1024
             ? (

@@ -25,27 +25,41 @@
     "latitude": "Lintang :",
     "longitude": "Bujur :",
     "elevation": "Ketinggian :",
+    "invalid_date_format": ["Galat", "Koordinat lokasi atau zona waktu tidak sesuai"],
     "apply": "Terapkan",
     "hijri_date_criteria": "Kriteria :",
     "date_criteria": [
         {
-            "criteria": "MABIMS",
-            "latitude_range": [11, 7.4],
-            "longitude_range": [95, 141]
-        },
-        {
             "criteria": "KHGT",
             "latitude_range": [-90, 90],
             "longitude_range": [-180, 180]
+        },
+        {
+            "criteria": "MABIMS",
+            "latitude_range": [-11, 7.4],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Wujudul Hilal",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Ummul Qura",
+            "latitude_range": [16, 32],
+            "longitude_range": [34, 56]
         }
     ],
     "day_correction": "Koreksi :",
     "corrections": ["-1 hari", "0 hari", "+1 hari"],
     "interval_update": "Pembaruan :",
     "intervals": ["15 detik", "30 detik", "1 menit"],
-    "current_month": "Ke Bulan Sekarang",
+    "current_month": "Ke Bulan Sekarang/Ditentukan",
+    "calendar": "Kalender",
+    "moon_info": "Info Bulan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
     "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Lintang", "Bujur", "Ketinggian", "Azimut", "Jarak ke Bulan", "Elongasi", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Konjungsi Berikutnya"],
     "calculation": "Penghitungan :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "ashr_time": "Waktu Ashar :",
@@ -219,7 +233,7 @@
     "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
     "restore_to_default": "Ke Pengaturan Awal",
     "calculation_method": "Metode :",
-    "formulas": ["Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
+    "formulas": ["Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
     "prayer_times_config": "Pengaturan Waktu Sholat :",
     "time_correction": "Koreksi Waktu :",
