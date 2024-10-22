@@ -3,7 +3,7 @@ import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { prayerTimesCorrection } from "../../../utils/data"
 
-const PrayerTimesSettings = () => (
+const PrayerTimesSettings = ({ selectFormula, resetSettings }) => (
   <HomePageConsumer>
     {({ t, state, selectCalculationMethod }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
@@ -29,7 +29,7 @@ const PrayerTimesSettings = () => (
           <span className="flex items-center">
             <label htmlFor="convention">{t('convention')}</label>
             <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={0} required>
-              {en.conventions.map((type, index) => <option key={type} value={index}>{t(`conventions.${index}.method`)}</option>)}
+              {en.conventions.map((type, index) => <option key={type.method} value={index}>{t(`conventions.${index}.method`)}</option>)}
             </select>
           </span>
           <span className="flex items-center">
@@ -38,15 +38,15 @@ const PrayerTimesSettings = () => (
               {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
-          {Math.abs(state.latitude) > 48.5 && (
+          {Math.abs(state.latitude) > 48 && (
             <span className="flex items-center">
               <label htmlFor="calculation_method">{t('calculation_method')}</label>
-              <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={0} required>
+              <select className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedFormula} onChange={event => selectFormula(event.target.value)} required>
                 {en.formulas.map((type, index) => <option key={type} value={index}>{t(`formulas.${index}`)}</option>)}
               </select>
             </span>
           )}
-          <button className="flex items-center ml-auto p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow">
+          <button className="flex items-center ml-auto p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={resetSettings}>
             <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Reset Settings" />
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
           </button>
