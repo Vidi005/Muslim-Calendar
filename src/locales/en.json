@@ -4,7 +4,7 @@
     "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"],
     "hide_toolbar": "Hide Toolbar",
     "show_toolbar": "Show Toolbar",
-    "current_date": "Current Date :",
+    "current_date": "Current System Date :",
     "georgian_date": "Georgian Date",
     "hijri_date": "Hijri Date",
     "current_time": "Current Time :",
@@ -50,8 +50,7 @@
             "longitude_range": [34, 56]
         }
     ],
-    "day_correction": "Correction :",
-    "corrections": ["-1 day", "0 day", "+1 day"],
+    "timezone": "Time Zone :",
     "interval_update": "Updates :",
     "intervals": ["15 seconds", "30 seconds", "1 minute"],
     "current_month": "Go to Current/Set Date",

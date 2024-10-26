@@ -4,7 +4,7 @@
     "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
     "hide_toolbar": "Sembunyikan Toolbar",
     "show_toolbar": "Tampilkan Toolbar",
-    "current_date": "Hari Ini :",
+    "current_date": "Hari Ini (Sistem) :",
     "georgian_date": "Tanggal Masehi",
     "hijri_date": "Tanggal Hijriah",
     "current_time": "Waktu Sekarang :",
@@ -50,8 +50,7 @@
             "longitude_range": [34, 56]
         }
     ],
-    "day_correction": "Koreksi :",
-    "corrections": ["-1 hari", "0 hari", "+1 hari"],
+    "timezone": "Zona Waktu :",
     "interval_update": "Pembaruan :",
     "intervals": ["15 detik", "30 detik", "1 menit"],
     "current_month": "Ke Bulan Sekarang/Ditentukan",

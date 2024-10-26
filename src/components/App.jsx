@@ -20,7 +20,7 @@ class App extends React.Component {
       TOOLBAR_STATE_STORAGE_KEY: "TOOLBAR_STATE_STORAGE_KEY",
       LOCATION_STATE_STORAGE_KEY: "LOCATION_STATE_STORAGE_KEY",
       CRITERIA_STORAGE_KEY: "CRITERIA_STORAGE_KEY",
-      DAY_CORRECTION_STORAGE_KEY: "DAY_CORRECTION_STORAGE_KEY",
+      TIMEZONE_STORAGE_KEY: "TIMEZONE_STORAGE_KEY",
       CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
       INTERVAL_UPDATES_STORAGE_KEY: "INTERVAL_UPDATES_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
@@ -38,7 +38,7 @@ class App extends React.Component {
       selectedLocation: "",
       selectedCriteria: 0,
       errorMessage: { title: i18n.t('invalid_date_format.0'), text: i18n.t('invalid_date_format.1')},
-      selectedDayCorrection: 1,
+      selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedCalculationMethod: 0,
       selectedIntervalUpdate: 0,
       selectedFormula: 0,
@@ -87,7 +87,7 @@ class App extends React.Component {
       this.checkToolbarState()
       this.checkSavedLocation()
       this.checkSavedCriteria()
-      this.checkSavedDayCorrection()
+      this.checkSavedTimeZone()
       this.checkSavedCalculationMethod()
       this.checkSavedIntervalUpdates()
       this.checkSavedFormula()
@@ -175,13 +175,17 @@ class App extends React.Component {
     }
   }
 
-  checkSavedDayCorrection () {
-    const getSavedDayCorrectionFromLocal = localStorage.getItem(this.state.DAY_CORRECTION_STORAGE_KEY)
+  checkSavedTimeZone () {
+    const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
-      const parsedSavedDayCorrection = JSON.parse(getSavedDayCorrectionFromLocal)
-      if (parsedSavedDayCorrection !== null) this.setState({ selectedDayCorrection: parsedSavedDayCorrection })
+      const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime())
+      else {
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime())
+      }
     } catch (error) {
-      localStorage.removeItem(this.state.DAY_CORRECTION_STORAGE_KEY)
+      localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -297,7 +301,18 @@ class App extends React.Component {
 
   formatDateTime () {
     if (this.state.inputDate !== "" && this.state.inputTime !== "") {
-      const formattedDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
+      const configuredDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
+      const configuredLocaleString = configuredDateTime.toLocaleString('en', {
+        timeZone: this.state.selectedTimeZone,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      })
+      const formattedDateTime = new Date(Date.parse(configuredLocaleString))
       if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
         this.setState({ formattedDateTime: formattedDateTime }, () => {
           this.generateCalendar()
@@ -308,10 +323,22 @@ class App extends React.Component {
         this.generateCalendar()
         this.generateMoonInfos()
       }
-    } else this.setState({ formattedDateTime: new Date() }, () => {
-      this.generateCalendar()
-      this.generateMoonInfos()
-    })
+    } else {
+      const localeString = new Date().toLocaleString('en', {
+        timeZone: this.state.selectedTimeZone,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      })
+      this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
+        this.generateCalendar()
+        this.generateMoonInfos()
+      })
+    }
   }
 
   getCurrentLocation () {
@@ -361,12 +388,13 @@ class App extends React.Component {
           latitude: 0,
           longitude: 0,
           elevation: 0,
-          selectedLocation: ""
+          selectedLocation: "",
+          selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.formatDateTime()
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
           localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
-          localStorage.removeItem(this.state.DAY_CORRECTION_STORAGE_KEY)
+          localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
           localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
           localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
         })
@@ -374,7 +402,7 @@ class App extends React.Component {
     }).finally(() => {
       this.getCurrentLocation()
       this.selectCriteria('0')
-      this.selectDayCorrection('1')
+      this.selectTimeZone(this.state.selectedTimeZone)
       this.selectCalculationMethod('0')
       this.selectIntervalUpdate('0')
     })
@@ -429,11 +457,12 @@ class App extends React.Component {
     })
   }
 
-  selectDayCorrection (value) {
-    this.setState({ selectedDayCorrection: value }, () => {
+  selectTimeZone (value) {
+    this.setState({ selectedTimeZone: value }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.DAY_CORRECTION_STORAGE_KEY, JSON.stringify(this.state.selectedDayCorrection))
+        localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
+      this.formatDateTime()
     })
   }
 
@@ -464,7 +493,18 @@ class App extends React.Component {
 
   generateCalendar = () => {
     const currentDate = new Date()
-    if (currentDate.getDate() === this.state.formattedDateTime.getDate() && currentDate.getHours() === this.state.formattedDateTime.getHours() && currentDate.getMinutes() === this.state.formattedDateTime.getMinutes()) {
+    const currentLocalString = currentDate.toLocaleString(this.state.selectedLanguage, {
+      timeZone: this.state.selectedTimeZone,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+    const formattedDateTime = new Date(Date.parse(currentLocalString))
+    if (formattedDateTime.getDate() === this.state.formattedDateTime.getDate() && formattedDateTime.getHours() === this.state.formattedDateTime.getHours() && formattedDateTime.getMinutes() === this.state.formattedDateTime.getMinutes()) {
       const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
       if (setCalendarData?.length > 0) {
         this.setState({ monthsInSetYear: setCalendarData, monthsInCurrentYear: setCalendarData })
@@ -488,7 +528,7 @@ class App extends React.Component {
   }
 
   generateMoonInfos = () => {
-    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedFormula, this.state.selectedLanguage) })
+    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.selectedTimeZone, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedFormula, this.state.selectedLanguage) })
   }
 
   onBlurHandler() {
@@ -523,7 +563,7 @@ class App extends React.Component {
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
-              selectDayCorrection: this.selectDayCorrection.bind(this),
+              selectTimeZone: this.selectTimeZone.bind(this),
               selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
@@ -555,7 +595,7 @@ class App extends React.Component {
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
-              selectDayCorrection: this.selectDayCorrection.bind(this),
+              selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
@@ -586,7 +626,7 @@ class App extends React.Component {
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
-              selectDayCorrection: this.selectDayCorrection.bind(this),
+              selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
@@ -616,7 +656,7 @@ class App extends React.Component {
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
-              selectDayCorrection: this.selectDayCorrection.bind(this),
+              selectTimeZone: this.selectTimeZone.bind(this),
               selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),

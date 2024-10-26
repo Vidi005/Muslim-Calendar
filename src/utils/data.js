@@ -33,6 +33,37 @@ const pages = () => [
   }
 ]
 
+const getTimezoneOffset = timezone => {
+  const date = new Date()
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    timeZoneName: 'shortOffset'
+  })
+  const offsetMatch = formatter.formatToParts(date).find(part => part.type === 'timeZoneName')
+  let offset = offsetMatch.value.replace('GMT', '')
+  if (offset.length > 0 && !offset.includes(':')) {
+    offset = `${offset}:00`
+  } else offset = "+00:00"
+  return offset
+}
+
+const parseOffset = offset => {
+  const sign = offset.charAt(0)
+  const hours = offset.slice(1).split(':')[0]
+  const minutes = offset.split(':')[1]
+  const totalMinutes = parseInt(hours) * 60 + parseInt(minutes)
+  return (sign === '+' ? 1 : -1) * totalMinutes
+}
+
+const getTimeZoneList = () => {
+  const timeZoneList = Intl.supportedValuesOf('timeZone')
+  const timeZonePairs = timeZoneList.map(timeZone => ({
+    timeZone: timeZone,
+    offset: getTimezoneOffset(timeZone)
+  })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))
+  return timeZonePairs
+}
+
 const makkahCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
@@ -234,7 +265,7 @@ const adjustedIslamicDate = (currentDate, months) => {
   return islamicDate
 }
 
-const getMoonInfos = (gregorianDate, latitude, longitude, elevation, formula, lang) => {
+const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, formula, lang) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
@@ -279,8 +310,8 @@ const getMoonInfos = (gregorianDate, latitude, longitude, elevation, formula, la
     }
     moonSet = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
   }
-  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric" })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric" })}`
-  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric" })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric" })}`
+  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
+  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   return [
     moonAge,
     illuminationPercent,
@@ -291,8 +322,8 @@ const getMoonInfos = (gregorianDate, latitude, longitude, elevation, formula, la
     moonAzimuth,
     distanceInKm,
     moonElongation,
-    moonRise.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short" }),
-    moonSet.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short" }),
+    moonRise.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }),
+    moonSet.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }),
     lastNewMoonDateTime,
     nextNewMoonDateTime
   ]
@@ -300,4 +331,4 @@ const getMoonInfos = (gregorianDate, latitude, longitude, elevation, formula, la
 
 const prayerTimesCorrection = () => [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 
-export { isStorageExist, pages, getCalendarData, adjustedIslamicDate, getMoonInfos, prayerTimesCorrection }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getMoonInfos, prayerTimesCorrection }
