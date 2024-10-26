@@ -2,10 +2,11 @@ import { Combobox, Transition } from "@headlessui/react"
 import React, { Fragment } from "react"
 import { HomePageConsumer } from "../contexts/HomPageContext"
 import en from "../../locales/en.json"
+import { getTimeZoneList } from "../../utils/data"
 
 const InputForm = () => (
   <HomePageConsumer>
-    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectDayCorrection, selectIntervalUpdate }) => {
+    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectTimeZone, selectIntervalUpdate }) => {
       if (innerWidth > 1024) {
         return (
           <section className="form-container sticky top-0 shadow-md z-10">
@@ -146,9 +147,9 @@ const InputForm = () => (
                     </select>
                   </span>
                   <span className="flex items-center">
-                    <label>{t('day_correction')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedDayCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
-                      {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
+                    <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
+                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
+                      {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
@@ -160,8 +161,8 @@ const InputForm = () => (
                 </div>
               </article>
               <table className="table-auto flex-none ml-1">
-                <thead className="font-serif font-bold text-lg text-transparent">{t('current_date')}</thead>
-                <thead className="font-serif font-bold text-lg">{t('current_date')}</thead>
+                <thead className="font-serif font-bold text-lg text-transparent text-left"><th colSpan={3}>{t('current_date')}</th></thead>
+                <thead className="font-serif font-bold text-lg text-left"><th colSpan={3}>{t('current_date')}</th></thead>
                 <tr className="font-bold">
                   <td>{t('georgian_date')}</td>
                   <td className="pl-1 pr-2">:</td>
@@ -198,7 +199,7 @@ const InputForm = () => (
               leaveTo="opacity-0 -translate-y-1/2"
             >
               <table className="p-1">
-                <thead className="font-serif font-bold text-sm whitespace-nowrap">Current Date :</thead>
+                <thead className="font-serif font-bold text-sm text-left whitespace-nowrap"><th colSpan={3}>{t('current_date')}</th></thead>
                 <tr className="font-bold text-xs">
                   <td>{t('georgian_date')}</td>
                   <td className="pl-0.5 pr-1">:</td>
@@ -213,7 +214,7 @@ const InputForm = () => (
                   <td colSpan={3}>Current Time : &nbsp;<span className="font-sans text-xs">{state.currentDate.time}</span></td>
                 </tr>
               </table>
-              <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white">
+              <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white duration-200">
                 <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
@@ -337,9 +338,9 @@ const InputForm = () => (
                     </select>
                   </span>
                   <span className="flex items-center">
-                    <label>{t('day_correction')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedCorrection} onChange={event => selectDayCorrection(event.target.value)} required>
-                      {en.corrections.map((item, index) => <option key={item} value={index}>{t(`corrections.${index}`)}</option>)}
+                    <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
+                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
+                      {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
                   <span className="flex items-center">
