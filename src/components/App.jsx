@@ -44,6 +44,7 @@ class App extends React.Component {
       selectedFormula: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
+      hijriEventDates: [],
       moonInfos: [],
       isSidebarExpanded: true,
       isToolbarShown: true,
@@ -439,7 +440,7 @@ class App extends React.Component {
         longitude: parseFloat(this.state.longitude),
         elevation: parseFloat(this.state.elevation)
       }
-      if (getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)?.length > 0) {
+      if (getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage).months?.length > 0) {
         localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
         this.formatDateTime()
       }
@@ -505,18 +506,22 @@ class App extends React.Component {
     })
     const formattedDateTime = new Date(Date.parse(currentLocalString))
     if (formattedDateTime.getDate() === this.state.formattedDateTime.getDate() && formattedDateTime.getHours() === this.state.formattedDateTime.getHours() && formattedDateTime.getMinutes() === this.state.formattedDateTime.getMinutes()) {
-      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
-      if (setCalendarData?.length > 0) {
-        this.setState({ monthsInSetYear: setCalendarData, monthsInCurrentYear: setCalendarData })
+      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
+      if (setCalendarData.months?.length > 0) {
+        this.setState({
+          monthsInSetYear: setCalendarData.months,
+          monthsInCurrentYear: setCalendarData.months,
+          hijriEventDates: setCalendarData.hijriEventDates
+        })
       }
     } else {
-      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
-      const currentCalendarData = getCalendarData(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.errorMessage)
-      if (setCalendarData?.length > 0) {
-        this.setState({ monthsInSetYear: setCalendarData })
+      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
+      const currentCalendarData = getCalendarData(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
+      if (setCalendarData.months?.length > 0) {
+        this.setState({ monthsInSetYear: setCalendarData.months, hijriEventDates: setCalendarData.hijriEventDates })
       }
-      if (currentCalendarData?.length > 0) {
-        this.setState({ monthsInCurrentYear: currentCalendarData })        
+      if (currentCalendarData.months?.length > 0) {
+        this.setState({ monthsInCurrentYear: currentCalendarData.months })        
       }
     }
   }
@@ -528,7 +533,7 @@ class App extends React.Component {
   }
 
   generateMoonInfos = () => {
-    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.selectedTimeZone, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedFormula, this.state.selectedLanguage) })
+    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.selectedTimeZone, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedLanguage) })
   }
 
   onBlurHandler() {

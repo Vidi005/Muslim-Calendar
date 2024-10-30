@@ -152,12 +152,17 @@ const InputForm = () => (
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
-                  <span className="flex items-center">
-                    <label>{t('interval_update')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
-                      {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
-                    </select>
-                  </span>
+                  {state.inputDate !== '' && state.inputTime !== ''
+                    ? null
+                    : (
+                      <span className="flex items-center">
+                        <label>{t('interval_update')}&nbsp;</label>
+                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
+                          {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
+                        </select>
+                      </span>
+                      )
+                  }
                 </div>
               </article>
               <table className="table-auto flex-none ml-1">
