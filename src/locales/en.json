@@ -57,8 +57,21 @@
     "calendar": "Calendar",
     "moon_info": "Moon Info",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-    "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
-    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Latitude", "Longitude", "Altitude", "Azimuth", "Distance to Moon", "Elongation", "Moon Rise", "Moon Set", "Last Conjunction", "Next Conjunction"],
+    "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qi'dah", "Dhu'l-Hijjah"],
+    "muslim_events": {
+        "1-1": "1 Muharram",
+        "9-1": "Tasu'a",
+        "10-1": "Ashura",
+        "12-3": "Maulid",
+        "27-7": "Lailat Al Miraj",
+        "15-8": "Nisfu Sha'ban",
+        "1-9": "Ramadan Start",
+        "17-9": "Nuzulul Quran",
+        "1-10": "Ied Al-Fitr",
+        "9-12": "Arafah",
+        "10-12": "Ied Al-Adha"
+    },
+    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Latitude", "Longitude", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Elongation", "Moon Rise", "Moon Set", "Last Conjunction", "Next Conjunction", "Sunrise", "Sunset"],
     "calculation": "Calculation :",
     "calculations": ["Astronimy-Engine", "Manual"],
     "ashr_time": "Ashr Time :",
@@ -147,7 +160,7 @@
             "longitude_range": [24.7, 36.9]
         },
         {
-            "method": "Kemenag",
+            "method": "Kemenag (Indonesia)",
             "sun_altitude": {
                 "fajr": 20,
                 "isha": 18
@@ -232,7 +245,7 @@
     "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
     "restore_to_default": "Restore to Default",
     "calculation_method": "Method :",
-    "formulas": ["Follow ±45 degrees latitude", "Follow Makkah coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
+    "formulas": ["Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
     "prayer_times_config": "Prayer Times Configuration :",
     "time_correction": "Time Correction :",

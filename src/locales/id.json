@@ -57,8 +57,21 @@
     "calendar": "Kalender",
     "moon_info": "Info Bulan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
-    "islamic_months": ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syaban", "Ramadhan", "Syawal", "Dzulqaidah", "Dzulhijjah"],
-    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Lintang", "Bujur", "Ketinggian", "Azimut", "Jarak ke Bulan", "Elongasi", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Konjungsi Berikutnya"],
+    "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
+    "muslim_events": {
+        "1-1": "1 Muharram",
+        "9-1": "Tasu'a",
+        "10-1": "Asyura",
+        "12-3": "Maulid Nabi",
+        "27-7": "Isra Mi'raj",
+        "15-8": "Nisfu Sya'ban",
+        "1-9": "Awal Ramadhan",
+        "17-9": "Nuzulul Qur'an",
+        "1-10": "Idul Fitri",
+        "9-12": "Arafah",
+        "10-12": "Idul Adha"
+    },
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Lintang", "Bujur", "Kenaikan Kanan", "Deklinasi", "Ketinggian", "Azimut", "Jarak ke Bulan", "Elongasi", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Konjungsi Berikutnya", "Matahari Terbit", "Matahari Terbenam"],
     "calculation": "Penghitungan :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "ashr_time": "Waktu Ashar :",
@@ -147,7 +160,7 @@
             "longitude_range": [24.7, 36.9]
         },
         {
-            "method": "Kemenag",
+            "method": "Kemenag RI",
             "sun_altitude": {
                 "fajr": 20,
                 "isha": 18

@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, Elongation, Equator, Horizon, Illumination, Observer, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, Observer, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
 import Swal from "sweetalert2"
 
 const isStorageExist = content => {
@@ -41,8 +41,11 @@ const getTimezoneOffset = timezone => {
   })
   const offsetMatch = formatter.formatToParts(date).find(part => part.type === 'timeZoneName')
   let offset = offsetMatch.value.replace('GMT', '')
-  if (offset.length > 0 && !offset.includes(':')) {
-    offset = `${offset}:00`
+  if (offset.length > 0) {
+    if (offset.includes(':')) {
+      offset = offset.length < 6 ? `${offset.slice(0, 1)}0${offset.slice(1)}` : offset
+    }
+    else offset = offset.length < 3 ? `${offset.slice(0, 1)}0${offset.slice(1)}:00` : `${offset}:00`
   } else offset = "+00:00"
   return offset
 }
@@ -64,7 +67,7 @@ const getTimeZoneList = () => {
   return timeZonePairs
 }
 
-const makkahCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
+const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
@@ -97,7 +100,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
             if (latitude > 48) westObserver = observerFromEarth(45, longitude, elevation)
             else westObserver = observerFromEarth(-45, longitude, elevation)
           } else if (formula === '1') {
-            westObserver = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
+            westObserver = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
           } else {
             if (latitude > 48) westObserver = observerFromEarth(48, longitude, elevation)
             else westObserver = observerFromEarth(-48, longitude, elevation)
@@ -127,7 +130,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
             if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
             else observer = observerFromEarth(-45, longitude, elevation)
           } else if (formula === '1') {
-            observer = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
+            observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
           } else {
             if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
             else observer = observerFromEarth(-48, longitude, elevation)
@@ -155,7 +158,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
             if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
             else observer = observerFromEarth(-45, longitude, elevation)
           } else if (formula === '1') {
-            observer = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
+            observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
           } else {
             if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
             else observer = observerFromEarth(-48, longitude, elevation)
@@ -174,7 +177,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         date = new AstroTime(newMoon.date)
         dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
         newMoonDate = new AstroTime(dateInNewMoon)
-        observer = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
+        observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
         if (newMoon.date < sunset.date) {
           return newMoonDate
@@ -194,12 +197,13 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   }
 }
 
-const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, formula, errMsg) => {
+const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, formula, lang, errMsg) => {
   const newMoons = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
   const startGregorianDate = new Date(`${gregorianDate.getFullYear()}-12-31T23:59:59`)
   let startDate = new AstroTime(startGregorianDate)
   let newMoonDate = gregorianFirstDate
+  const gregorianDatesFromIslamicMidMonth = []
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
     newMoonDate = new Date(calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula, errMsg).date)
     if (newMoonDate instanceof Date) {
@@ -232,6 +236,9 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
             hijriDayCounter = 1
           }
           dayObj.hijri = hijriDayCounter++
+          if (dayObj.hijri === 15 && !gregorianDatesFromIslamicMidMonth.some(date => date.day === dayObj.gregorian && date.month === monthIdx)) {
+            gregorianDatesFromIslamicMidMonth.push({ day: dayObj.gregorian, month: monthIdx })
+          }
           if (nextMoonDate && dayObj.gregorian === nextMoonDate.getDate() && monthIdx === nextMoonDate.getMonth()) {
             hijriDayCounter = 1
             nextMoonIndex++
@@ -246,12 +253,62 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
       months[0].forEach((dayObj, dayIdx) => {
         if (dayObj !== null && dayIdx <= currentYearDaysOffset) {
           dayObj.hijri = hijriDayCounter++
+          if (dayObj.hijri === 15 && !gregorianDatesFromIslamicMidMonth.some(date => date.day === dayObj.gregorian && date.month === 0)) {
+            gregorianDatesFromIslamicMidMonth.push({ day: dayObj.gregorian, month: 0 })
+          }
         }
       })
       hijriDayCounter = 1
     }
   })
-  return months
+  const hijriEventDates = getHijriEventDates(gregorianDate, gregorianDatesFromIslamicMidMonth, months, lang)
+  return { months, hijriEventDates }
+}
+
+const muslimEvents = {
+  "1-1": "1-1-event", // 1 Muharram
+  "9-1": "9-1-event", // Tasu'a
+  "10-1": "10-1-event", // Asyura
+  "12-3": "12-3-event", // Maulid
+  "27-7": "27-7-event", // Isra Mi'raj
+  "15-8": "15-8-event", // Nisfu Sya'ban
+  "1-9": "1-9-event", // 1 Ramadan
+  "17-9": "17-9-event", // Nuzulul Qur'an
+  "1-10": "1-10-event", // Ied Fitr
+  "9-12": "9-12-event", // Arafah
+  "10-12": "10-12-event", // Ied Adha
+}
+
+const getHijriEventDates = (gregorianDate, hijriDay15GregorianDates, months, lang) => {
+  const hijriEvents = []
+  hijriDay15GregorianDates.forEach(({ day: gregorianDay, month: gregorianMonth }) => {
+    const date = new Date(gregorianDate.getFullYear(), gregorianMonth - 1, gregorianDay + 1)
+    const hijriDate = date.toLocaleDateString(lang, {
+      calendar: "islamic",
+      month: "numeric",
+      year: "numeric"
+    })
+    Object.entries(muslimEvents).forEach(([key, eventId]) => {
+      const [eventDay, eventMonth] = key.split("-").map(Number)
+      const eventHijriDay = 15 - (15 - eventDay)
+      const hijriMonth = hijriDate.split('/')[0]
+      const hijriYear = hijriDate.split('/')[1]
+      if (eventMonth === parseInt(hijriMonth)) {
+        months.forEach((month, monthIdx) => {
+          month.forEach(dayObj => {
+            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx + 1 === gregorianMonth) {
+              hijriEvents.push({
+                eventId: eventId,
+                hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},
+                gregorianDate: new Date(`${gregorianDate.getFullYear()}-${gregorianMonth}-${dayObj.gregorian}`)
+              })
+            }
+          })
+        })
+      }
+    })
+  })
+  return hijriEvents
 }
 
 const adjustedIslamicDate = (currentDate, months) => {
@@ -265,70 +322,58 @@ const adjustedIslamicDate = (currentDate, months) => {
   return islamicDate
 }
 
-const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, formula, lang) => {
-  let observer = observerFromEarth(latitude, longitude, elevation)
+const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
+  const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
+  const fullMoon = SearchMoonPhase(180, lastNewMoon, +30)
   const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} days`
+  const fullMoonDays = (fullMoon.ut - lastNewMoon.ut).toFixed(2)
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const phaseAngle = `${moonIllumination.phase_angle.toFixed(2)}°`
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
   const moonEquator = Equator(Body.Moon, astroDate, observer, true, true)
-  const moonLatitude = `${moonEquator.dec.toFixed(2)}°`
-  const moonLongitude = `${moonEquator.ra.toFixed(2)}°`
+  const moonDeclination = `${moonEquator.dec.toFixed(2)}°`
+  const moonRightAscension = `${moonEquator.ra.toFixed(2)}°`
+  const moonEcliptic = EclipticGeoMoon(astroDate)
+  const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
+  const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquator.ra, moonEquator.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
-  const distanceInKm = `${(geoDistanceAU * 149597870.7).toFixed(2)} km`
+  const distanceInKm = `${(geoDistanceAU * 1495978707 / 10).toFixed(2)} km`
   const elongation = AngleFromSun(Body.Moon, astroDate)
   const moonElongation = `${elongation.toFixed(2)}°`
-  let moonRise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
-  let moonSet = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
+  const moonRise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
+  const moonSet = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
-  if (!moonRise) {
-    if (formula === '0') {
-      if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
-      else observer = observerFromEarth(-45, longitude, elevation)
-    } else if (formula === '1') {
-      observer = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
-    } else {
-      if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
-      else observer = observerFromEarth(-48, longitude, elevation)
-    }
-    moonRise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
-  }
-  if (!moonSet) {
-    if (formula === '0') {
-      if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
-      else observer = observerFromEarth(-45, longitude, elevation)
-    } else if (formula === '1') {
-      observer = observerFromEarth(makkahCoordinates.latitude, makkahCoordinates.longitude, makkahCoordinates.elevation)
-    } else {
-      if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
-      else observer = observerFromEarth(-48, longitude, elevation)
-    }
-    moonSet = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
-  }
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
+  const sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
   return [
     moonAge,
     illuminationPercent,
     phaseAngle,
+    moonDeclination,
+    moonRightAscension,
     moonLatitude,
     moonLongitude,
     moonAltitude,
     moonAzimuth,
     distanceInKm,
     moonElongation,
-    moonRise.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }),
-    moonSet.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }),
+    moonRise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    moonSet?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     lastNewMoonDateTime,
-    nextNewMoonDateTime
+    nextNewMoonDateTime,
+    sunrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    sunset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    fullMoonDays
   ]
 }
 
-const prayerTimesCorrection = () => [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
+const prayerTimesCorrection = () => [-5, -4, -3, -2, -1, 0, +1, +2, +3, +4, +5]
 
 export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getMoonInfos, prayerTimesCorrection }
