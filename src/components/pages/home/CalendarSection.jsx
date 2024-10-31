@@ -99,8 +99,8 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
             {/* <div className="hijri-events-list mt-4">
               <h3 className="font-bold text-lg mb-2">Hijri Events</h3>
               <ul className="list-disc pl-5">
-                {state.hijriEventDates.map(event => (
-                  <li key={event.eventId}>
+                {state.hijriEventDates.map((event, index) => (
+                  <li key={index}>
                     <span className="event-name font-semibold">{event.eventId}</span>, 
                     Hijri Date: {event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {event.hijriDate.year}, 
                     Gregorian Date: {event.gregorianDate.toLocaleDateString(state.selectedLanguage, { year: 'numeric', month: 'long', day: 'numeric' })}
