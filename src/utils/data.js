@@ -111,11 +111,11 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
         if (moonElongation.elongation >= 8 && moonHorizon.altitude >= 5) {
-          return newMoonDate
-        } else if (newMoonDate.date < fajr.date) {
-          return newMoonDate
-        } else {
           return newMoonDate.AddDays(1)
+        } else if (newMoonDate.date < fajr.date) {
+          return newMoonDate.AddDays(1)
+        } else {
+          return newMoonDate.AddDays(2)
         }
       }
     } else if (criteria === '1') {
@@ -141,9 +141,9 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
         moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
         if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
-          return newMoonDate
-        } else {
           return newMoonDate.AddDays(1)
+        } else {
+          return newMoonDate.AddDays(2)
         }
       }
     } else if (criteria === '2') {
@@ -166,9 +166,9 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
           sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
         }
         if (newMoon.date < sunset.date) {
-          return newMoonDate
-        } else {
           return newMoonDate.AddDays(1)
+        } else {
+          return newMoonDate.AddDays(2)
         }
       } while (true)
     } else {
@@ -180,9 +180,9 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
         if (newMoon.date < sunset.date) {
-          return newMoonDate
-        } else {
           return newMoonDate.AddDays(1)
+        } else {
+          return newMoonDate.AddDays(2)
         }
       } while (true)      
     }
@@ -203,13 +203,16 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   const startGregorianDate = new Date(`${gregorianDate.getFullYear()}-12-31T23:59:59`)
   let startDate = new AstroTime(startGregorianDate)
   let newMoonDate = gregorianFirstDate
-  const gregorianDatesFromIslamicMidMonth = []
+  let currentMoonDate
+  let nextMoonDate
+  let lastYearDaysOffset = 0
+  let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
-    newMoonDate = new Date(calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula, errMsg).date)
+    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula, errMsg).date
     if (newMoonDate instanceof Date) {
       newMoons.push(newMoonDate)
       startDate = new AstroTime(newMoonDate)
-      startDate = startDate.AddDays(-28)
+      startDate = startDate.AddDays(-29)
     }
   }
   const months = Array.from({ length: 12 }).map((_, monthIndex) => {
@@ -217,10 +220,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     const daysInMonth = new Date(gregorianDate.getFullYear(), monthIndex + 1, 0).getDate()
     const daysArray = Array.from({ length: firstDayOfMonth }).fill(null)
     for (let day = 1; day <= daysInMonth; day++) {
-      daysArray.push({
-        gregorian: day,
-        hijri: 0
-      })
+      daysArray.push({ gregorian: day, hijri: 0 })
     }
     return daysArray
   })
@@ -230,38 +230,30 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     months.forEach((month, monthIdx) => {
       month.forEach(dayObj => {
         if (dayObj !== null) {
-          const currentMoonDate = newMoons[nextMoonIndex]
-          const nextMoonDate = newMoons[nextMoonIndex + 1]
-          if (dayObj.gregorian === currentMoonDate.getDate() && monthIdx === currentMoonDate.getMonth()) {
-            hijriDayCounter = 1
-          }
-          dayObj.hijri = hijriDayCounter++
-          if (dayObj.hijri === 15 && !gregorianDatesFromIslamicMidMonth.some(date => date.day === dayObj.gregorian && date.month === monthIdx)) {
-            gregorianDatesFromIslamicMidMonth.push({ day: dayObj.gregorian, month: monthIdx })
-          }
+          currentMoonDate = newMoons[nextMoonIndex]
+          nextMoonDate = newMoons[nextMoonIndex + 1]
+          if (dayObj.gregorian === currentMoonDate.getDate() && monthIdx === currentMoonDate.getMonth()) hijriDayCounter = 1
           if (nextMoonDate && dayObj.gregorian === nextMoonDate.getDate() && monthIdx === nextMoonDate.getMonth()) {
             hijriDayCounter = 1
+            dayObj.hijri = hijriDayCounter++
             nextMoonIndex++
-          }
+          } else dayObj.hijri = hijriDayCounter++
         }
       })
     })
     if (moonDate.getFullYear() >= gregorianDate.getFullYear()) {
-      const lastYearDaysOffset = (gregorianFirstDate - newMoons[0]) / 86400000
-      hijriDayCounter = lastYearDaysOffset
-      const currentYearDaysOffset = (newMoons[1] - gregorianFirstDate) / 86400000
+      lastYearDaysOffset = (gregorianFirstDate - newMoons[0]) / 86400000
+      hijriDayCounter = lastYearDaysOffset + 1
+      currentYearDaysOffset = (newMoons[1] - gregorianFirstDate) / 86400000
       months[0].forEach((dayObj, dayIdx) => {
         if (dayObj !== null && dayIdx <= currentYearDaysOffset) {
           dayObj.hijri = hijriDayCounter++
-          if (dayObj.hijri === 15 && !gregorianDatesFromIslamicMidMonth.some(date => date.day === dayObj.gregorian && date.month === 0)) {
-            gregorianDatesFromIslamicMidMonth.push({ day: dayObj.gregorian, month: 0 })
-          }
         }
       })
       hijriDayCounter = 1
     }
   })
-  const hijriEventDates = getHijriEventDates(gregorianDate, gregorianDatesFromIslamicMidMonth, months, lang)
+  const hijriEventDates = getHijriEventDates(gregorianDate, newMoons, months, lang)
   return { months, hijriEventDates }
 }
 
@@ -279,10 +271,14 @@ const muslimEvents = {
   "10-12": "10-12-event", // Ied Adha
 }
 
-const getHijriEventDates = (gregorianDate, hijriDay15GregorianDates, months, lang) => {
+const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   const hijriEvents = []
-  hijriDay15GregorianDates.forEach(({ day: gregorianDay, month: gregorianMonth }) => {
-    const date = new Date(gregorianDate.getFullYear(), gregorianMonth - 1, gregorianDay + 1)
+  let date
+  let eventHijriDay = 0
+  let hijriMonth = 0
+  let hijriYear
+  newMoons.forEach(newMoon => {
+    date = new Date(newMoon.getFullYear(), newMoon.getMonth(), newMoon.getDate() + 14)
     const hijriDate = date.toLocaleDateString(lang, {
       calendar: "islamic",
       month: "numeric",
@@ -290,17 +286,17 @@ const getHijriEventDates = (gregorianDate, hijriDay15GregorianDates, months, lan
     })
     Object.entries(muslimEvents).forEach(([key, eventId]) => {
       const [eventDay, eventMonth] = key.split("-").map(Number)
-      const eventHijriDay = 15 - (15 - eventDay)
-      const hijriMonth = hijriDate.split('/')[0]
-      const hijriYear = hijriDate.split('/')[1]
+      eventHijriDay = 15 - (15 - eventDay)
+      hijriMonth = hijriDate.split('/')[0]
+      hijriYear = hijriDate.split('/')[1]
       if (eventMonth === parseInt(hijriMonth)) {
         months.forEach((month, monthIdx) => {
           month.forEach(dayObj => {
-            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx + 1 === gregorianMonth) {
+            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx + 1 === newMoon.getMonth() + 1 && newMoon.getFullYear() === gregorianDate.getFullYear()) {
               hijriEvents.push({
                 eventId: eventId,
                 hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},
-                gregorianDate: new Date(`${gregorianDate.getFullYear()}-${gregorianMonth}-${dayObj.gregorian}`)
+                gregorianDate: new Date(`${gregorianDate.getFullYear()}-${newMoon.getMonth() + 1}-${dayObj.gregorian}`)
               })
             }
           })

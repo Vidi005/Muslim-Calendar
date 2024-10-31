@@ -148,7 +148,7 @@ const InputForm = () => (
                   </span>
                   <span className="flex items-center">
                     <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
+                    <select className="bg-green-200 dark:bg-gray-200 w-64 p-1 overflow-ellipsis rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
@@ -344,7 +344,7 @@ const InputForm = () => (
                   </span>
                   <span className="flex items-center">
                     <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
+                    <select className="bg-green-200 dark:bg-gray-200 w-48 p-1 overflow-ellipsis rounded shadow-inner duration-200" defaultValue={state.selectedTimeZone} value={state.selectedTimeZone} onChange={event => selectTimeZone(event.target.value)} required>
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
