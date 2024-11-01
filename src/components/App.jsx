@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { isStorageExist, adjustedIslamicDate, getCalendarData, getMoonInfos } from "../utils/data"
+import { isStorageExist } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -232,15 +232,34 @@ class App extends React.Component {
 
   getCurrentDate () {
     const currentDate = new Date()
+    const adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     const georgian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-    const islamic = adjustedIslamicDate(currentDate, this.state.monthsInCurrentYear).toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
     const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
-    this.setState({
-      currentDate: { georgian, islamic, time },
-      seconds: new Date().getSeconds()
+    adjustedDateWorker.postMessage({
+      type: 'createAdjustedIslamicDate',
+      gregorianDate: currentDate,
+      months: this.state.monthsInCurrentYear
     })
+    adjustedDateWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createAdjustedIslamicDate') {
+        const islamicDate = workerEvent.data.result
+        this.setState({
+          currentDate: { georgian, islamicDate, time },
+          seconds: new Date().getSeconds()
+        }, () => adjustedDateWorker.terminate())
+      }
+    }
+    adjustedDateWorker.onerror = error => {
+      Swal.fire({
+        title: i18n.t('error'),
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: i18n.t('ok'),
+        confirmButtonColor: 'green'
+      }).finally(() => adjustedDateWorker.terminate())
+    }
   }
-
+  
   toggleSidebar () {
     this.setState(prevState => ({
       isSidebarExpanded: !prevState.isSidebarExpanded
@@ -440,10 +459,12 @@ class App extends React.Component {
         longitude: parseFloat(this.state.longitude),
         elevation: parseFloat(this.state.elevation)
       }
-      if (getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage).months?.length > 0) {
-        localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
-        this.formatDateTime()
-      }
+      this.createCalendarWorker(this.state.formattedDateTime).then(calendarData => {
+        if (calendarData?.months?.length > 0) {
+          localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
+          this.formatDateTime()
+        }
+      })
     }
   }
 
@@ -492,6 +513,39 @@ class App extends React.Component {
     })
   }
 
+  createCalendarWorker = (gregorianDate) => {
+    return new Promise((resolve, reject) => {
+      const calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+      calendarDataWorker.postMessage({
+        type: 'createCalendarData',
+        gregorianDate: gregorianDate,
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        elevation: this.state.elevation,
+        criteria: this.state.selectedCriteria,
+        formula: this.state.selectedFormula,
+        lang: this.state.selectedLanguage,
+        errMsg: this.state.errorMessage
+      })
+      calendarDataWorker.onmessage = workerEvent => {
+        if (workerEvent.data.type === 'createCalendarData') {
+          resolve(workerEvent.data.result)
+        }
+        calendarDataWorker.terminate()
+      }
+      calendarDataWorker.onerror = error => {
+        Swal.fire({
+          title: i18n.t('error'),
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: i18n.t('ok'),
+          confirmButtonColor: 'green'
+        }).finally(() => calendarDataWorker.terminate())
+        reject(error)
+      }
+    })
+  }
+
   generateCalendar = () => {
     const currentDate = new Date()
     const currentLocalString = currentDate.toLocaleString(this.state.selectedLanguage, {
@@ -506,23 +560,26 @@ class App extends React.Component {
     })
     const formattedDateTime = new Date(Date.parse(currentLocalString))
     if (formattedDateTime.getDate() === this.state.formattedDateTime.getDate() && formattedDateTime.getHours() === this.state.formattedDateTime.getHours() && formattedDateTime.getMinutes() === this.state.formattedDateTime.getMinutes()) {
-      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
-      if (setCalendarData.months?.length > 0) {
-        this.setState({
-          monthsInSetYear: setCalendarData.months,
-          monthsInCurrentYear: setCalendarData.months,
-          hijriEventDates: setCalendarData.hijriEventDates
-        })
-      }
+      this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
+        if (setCalendarData?.months?.length > 0) {
+          this.setState({
+            monthsInSetYear: setCalendarData.months,
+            monthsInCurrentYear: setCalendarData.months,
+            hijriEventDates: setCalendarData.hijriEventDates
+          })
+        }
+      })
     } else {
-      const setCalendarData = getCalendarData(this.state.formattedDateTime, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
-      const currentCalendarData = getCalendarData(currentDate, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedCriteria, this.state.selectedFormula, this.state.selectedLanguage, this.state.errorMessage)
-      if (setCalendarData.months?.length > 0) {
-        this.setState({ monthsInSetYear: setCalendarData.months, hijriEventDates: setCalendarData.hijriEventDates })
-      }
-      if (currentCalendarData.months?.length > 0) {
-        this.setState({ monthsInCurrentYear: currentCalendarData.months })        
-      }
+      this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
+        if (setCalendarData?.months?.length > 0) {
+          this.setState({ monthsInSetYear: setCalendarData.months, hijriEventDates: setCalendarData.hijriEventDates })
+        }
+      })
+      this.createCalendarWorker(currentDate).then(currentCalendarData => {
+        if (currentCalendarData?.months?.length > 0) {
+          this.setState({ monthsInCurrentYear: currentCalendarData.months })        
+        }
+      })
     }
   }
   
@@ -533,7 +590,30 @@ class App extends React.Component {
   }
 
   generateMoonInfos = () => {
-    this.setState({ moonInfos: getMoonInfos(this.state.formattedDateTime, this.state.selectedTimeZone, this.state.latitude, this.state.longitude, this.state.elevation, this.state.selectedLanguage) })
+    const moonInfosWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    moonInfosWorker.postMessage({
+      type: 'createMoonInfos',
+      gregorianDate: this.state.formattedDateTime,
+      timeZone: this.state.selectedTimeZone,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      elevation: this.state.elevation,
+      lang: this.state.selectedLanguage
+    })
+    moonInfosWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createMoonInfos') {
+        this.setState({ moonInfos: workerEvent.data.result }, () => moonInfosWorker.terminate())
+      }
+    }
+    moonInfosWorker.onerror = error => {
+      Swal.fire({
+        title: i18n.t('error'),
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: i18n.t('ok'),
+        confirmButtonColor: 'green'
+      }).finally(() => moonInfosWorker.terminate())
+    }
   }
 
   onBlurHandler() {
