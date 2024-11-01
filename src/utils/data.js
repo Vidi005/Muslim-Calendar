@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, Observer, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
 import Swal from "sweetalert2"
 
 const isStorageExist = content => {
@@ -86,6 +86,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     let moonEquator
     let moonHorizon
     if (criteria === '0') {
+      // Global Hijri Calendar/KHGT
       while (true) {
         newMoon = SearchMoonPhase(0, date, -30)
         date = new AstroTime(newMoon.date)
@@ -119,6 +120,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
       }
     } else if (criteria === '1') {
+      // MABIMS
       while (true) {
         newMoon = SearchMoonPhase(0, date, -30)
         date = new AstroTime(newMoon.date)
@@ -147,6 +149,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
       }
     } else if (criteria === '2') {
+      // Wujudul Hilal
       do {
         newMoon = SearchMoonPhase(0, date, -30)
         date = new AstroTime(newMoon.date)
@@ -172,6 +175,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
       } while (true)
     } else {
+      // Ummul Qura
       do {
         newMoon = SearchMoonPhase(0, date, -30)
         date = new AstroTime(newMoon.date)
@@ -205,7 +209,6 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let newMoonDate = gregorianFirstDate
   let currentMoonDate
   let nextMoonDate
-  let lastYearDaysOffset = 0
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
     newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula, errMsg).date
@@ -242,11 +245,10 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
       })
     })
     if (moonDate.getFullYear() >= gregorianDate.getFullYear()) {
-      lastYearDaysOffset = (gregorianFirstDate - newMoons[0]) / 86400000
-      hijriDayCounter = lastYearDaysOffset + 1
-      currentYearDaysOffset = (newMoons[1] - gregorianFirstDate) / 86400000
+      hijriDayCounter = 33 - newMoons[0].getDate()
+      currentYearDaysOffset = newMoons[1].getDate() + gregorianFirstDate.getDay() - 1
       months[0].forEach((dayObj, dayIdx) => {
-        if (dayObj !== null && dayIdx <= currentYearDaysOffset) {
+        if (dayObj !== null && dayIdx < currentYearDaysOffset) {
           dayObj.hijri = hijriDayCounter++
         }
       })
@@ -263,7 +265,7 @@ const muslimEvents = {
   "10-1": "10-1-event", // Asyura
   "12-3": "12-3-event", // Maulid
   "27-7": "27-7-event", // Isra Mi'raj
-  "15-8": "15-8-event", // Nisfu Sya'ban
+  "15-8": "15-8-event", // Nisfu Sha'ban
   "1-9": "1-9-event", // 1 Ramadan
   "17-9": "17-9-event", // Nuzulul Qur'an
   "1-10": "1-10-event", // Ied Fitr
@@ -311,7 +313,7 @@ const adjustedIslamicDate = (currentDate, months) => {
   const islamicDate = new Date()
   const islamicDay = currentDate.getDate()
   const fixedDaysInMonth = currentDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
-  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + 1].hijri
+  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + 1]?.hijri
   if (fixedDaysInMonth !== calculatedDaysInMonth) {
     islamicDate.setDate(islamicDay + (calculatedDaysInMonth - fixedDaysInMonth))
   }
@@ -322,27 +324,26 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
-  const fullMoon = SearchMoonPhase(180, lastNewMoon, +30)
   const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} days`
-  const fullMoonDays = (fullMoon.ut - lastNewMoon.ut).toFixed(2)
   const moonIllumination = Illumination(Body.Moon, astroDate)
-  const phaseAngle = `${moonIllumination.phase_angle.toFixed(2)}°`
+  const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
-  const moonEquator = Equator(Body.Moon, astroDate, observer, true, true)
-  const moonDeclination = `${moonEquator.dec.toFixed(2)}°`
-  const moonRightAscension = `${moonEquator.ra.toFixed(2)}°`
+  const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
+  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
+  const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
+  const moonRightAscension = `${moonEquatorJ2000.ra.toFixed(2)}°`
   const moonEcliptic = EclipticGeoMoon(astroDate)
   const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
   const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
-  const moonHorizon = Horizon(astroDate, observer, moonEquator.ra, moonEquator.dec, 'normal')
+  const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
   const distanceInKm = `${(geoDistanceAU * 1495978707 / 10).toFixed(2)} km`
   const elongation = AngleFromSun(Body.Moon, astroDate)
   const moonElongation = `${elongation.toFixed(2)}°`
-  const moonRise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
-  const moonSet = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
+  const moonrise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
@@ -351,7 +352,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   return [
     moonAge,
     illuminationPercent,
-    phaseAngle,
+    `${phaseAngle}°`,
     moonDeclination,
     moonRightAscension,
     moonLatitude,
@@ -360,13 +361,12 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     moonAzimuth,
     distanceInKm,
     moonElongation,
-    moonRise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
-    moonSet?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    moonrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    moonset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     lastNewMoonDateTime,
     nextNewMoonDateTime,
     sunrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
-    sunset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
-    fullMoonDays
+    sunset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--'
   ]
 }
 
