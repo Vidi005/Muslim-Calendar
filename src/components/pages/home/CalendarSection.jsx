@@ -8,7 +8,7 @@ import { HomePageConsumer } from "../../contexts/HomPageContext";
 const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
   <HomePageConsumer>
     {({ t, state }) => {
-      const isWaxing = parseFloat(state.moonInfos[0]) < (parseFloat(state.moonInfos[state.moonInfos.length - 1]))
+      const isWaxing = parseFloat(state.moonInfos[2]) <= 180
       const isQuarter = parseFloat(state.moonInfos[1]) <= 50
       const ellipse1 = isQuarter
         ? `ellipse(${50 - parseFloat(state.moonInfos[1])}% 50% at 0% 50%)`
@@ -65,7 +65,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                                 const isMuslimEvent = state.hijriEventDates.some(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex);
                                 if (isMuslimEvent) {
                                   return (
-                                    <td key={dayIndex} className={`${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} bg-sky-500/20 dark:bg-sky-500 p-2 text-center cursor-pointer rounded`}>
+                                    <td key={dayIndex} className={`${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} bg-sky-500/20 dark:bg-sky-500 p-2 text-center rounded`}>
                                       {day ? (
                                         <React.Fragment>
                                           <span className="block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
@@ -96,18 +96,21 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                 );
               })}
             </Slider>
-            {/* <div className="hijri-events-list mt-4">
-              <h3 className="font-bold text-lg mb-2">Hijri Events</h3>
-              <ul className="list-disc pl-5">
-                {state.hijriEventDates.map((event, index) => (
-                  <li key={index}>
-                    <span className="event-name font-semibold">{event.eventId}</span>, 
-                    Hijri Date: {event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {event.hijriDate.year}, 
-                    Gregorian Date: {event.gregorianDate.toLocaleDateString(state.selectedLanguage, { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </li>
+            <table className="table-auto text-sky-700 dark:text-sky-200">
+              <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()} :</u></h3></th>
+              <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
+                {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map(event => (
+                  <tr key={event.eventId}>
+                    <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage, { month: 'long', day: '2-digit' })}</td>
+                    <td>&nbsp;:&nbsp;</td>
+                    <td>
+                      <span>{t(`muslim_events.${event.eventId}`)} </span>
+                      <span className="whitespace-nowrap">({event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {event.hijriDate.year})</span>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-            </div> */}
+              </tbody>
+            </table>
           </div>
           <div className="flex flex-col items-center w-full md:w-1/3 lg:w-1/4 text-green-700 dark:text-gray-200 duration-200">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_info')}</h1>
