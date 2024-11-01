@@ -294,7 +294,7 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
       if (eventMonth === parseInt(hijriMonth)) {
         months.forEach((month, monthIdx) => {
           month.forEach(dayObj => {
-            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx + 1 === newMoon.getMonth() + 1 && newMoon.getFullYear() === gregorianDate.getFullYear()) {
+            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx === newMoon.getMonth() && newMoon.getFullYear() === gregorianDate.getFullYear()) {
               hijriEvents.push({
                 eventId: eventId,
                 hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},

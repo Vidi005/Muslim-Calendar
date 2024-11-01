@@ -56,6 +56,7 @@
     "current_month": "Ke Bulan Sekarang/Ditentukan",
     "calendar": "Kalender",
     "moon_info": "Info Bulan",
+    "error": "Kesalahan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
     "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
     "muslim_holidays": "Hari besar Islam di Tahun ",
