@@ -4,16 +4,33 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext";
+import CustomNextArrow from "./CustomNextArrow";
+import CustomPrevArrow from "./CustomPrevArrow";
 
 const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
   <HomePageConsumer>
     {({ t, state }) => {
+      const settings = {
+        arrows: true,
+        dots: true,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        initialSlide: state.formattedDateTime.getMonth(),
+        adaptiveHeight: true,
+        nextArrow: <CustomNextArrow />,
+        prevArrow: <CustomPrevArrow />,
+        customPaging: index => <div title="Jump to Month" style={ state.isDarkMode
+          ? { borderRadius: "9999px", width: "24px", backgroundColor: "#e5e7eb", fontFamily: "serif", fontSize: "16px", color: "black" }
+          : { borderRadius: "9999px", width: "24px", backgroundColor: "#22c55e", fontFamily: "serif", fontSize: "16px", color: "white" }}><b>{index + 1}</b></div>
+      }
       const isWaxing = parseFloat(state.moonInfos[2]) <= 180
-      const isQuarter = parseFloat(state.moonInfos[1]) <= 50
-      const ellipse1 = isQuarter
+      const isCrescent = parseFloat(state.moonInfos[1]) <= 50
+      const ellipse1 = isCrescent
         ? `ellipse(${50 - parseFloat(state.moonInfos[1])}% 50% at 0% 50%)`
         : `ellipse(0% 50% at 0% 50%)`
-      const ellipse2 = !isQuarter
+      const ellipse2 = !isCrescent
         ? `ellipse(${parseFloat(state.moonInfos[1]) - 50}% 50% at 100% 50%)`
         : `ellipse(0% 50% at 100% 50%)`
       return (
@@ -21,7 +38,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
           <div className="w-full md:w-2/3 lg:w-3/4 px-7">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('calendar')}</h1>
             <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{t('current_month')}</button>
-            <Slider arrows dots infinite={false} speed={500} slidesToShow={1} slidesToScroll={1} ref={sliderRef} initialSlide={state.formattedDateTime.getMonth()}>
+            <Slider {...settings} ref={sliderRef}>
               {state.monthsInSetYear.map((days, monthIndex) => {
                 const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
                 const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
@@ -96,7 +113,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                 );
               })}
             </Slider>
-            <table className="table-auto text-sky-700 dark:text-sky-200">
+            <table className="mt-8 table-auto text-sky-700 dark:text-sky-200">
               <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()} :</u></h3></th>
               <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
                 {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
