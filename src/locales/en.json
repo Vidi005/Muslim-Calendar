@@ -52,7 +52,7 @@
     ],
     "timezone": "Time Zone :",
     "interval_update": "Updates :",
-    "intervals": ["15 seconds", "30 seconds", "1 minute"],
+    "intervals": ["5 seconds", "15 seconds", "30 seconds", "1 minute"],
     "current_month": "Go to Current/Set Date",
     "calendar": "Calendar",
     "moon_info": "Moon Info",

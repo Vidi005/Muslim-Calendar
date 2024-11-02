@@ -68,6 +68,7 @@ const getTimeZoneList = () => {
 }
 
 const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
+const sabangCoordinates = { latitude: 5.894, longitude: 95.316, elevation: 43 }
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
@@ -85,7 +86,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     let sunset
     let moonEquator
     let moonHorizon
-    if (criteria === '0') {
+    if (criteria === 0) {
       // Global Hijri Calendar/KHGT
       while (true) {
         newMoon = SearchMoonPhase(0, date, -30)
@@ -97,10 +98,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         fajr = SearchRiseSet(Body.Sun, eastObserver, -13, newMoonDate, 1, elevation)
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
         if (!sunset) {
-          if (formula === '0') {
+          if (formula === 0) {
             if (latitude > 48) westObserver = observerFromEarth(45, longitude, elevation)
             else westObserver = observerFromEarth(-45, longitude, elevation)
-          } else if (formula === '1') {
+          } else if (formula === 1) {
             westObserver = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
           } else {
             if (latitude > 48) westObserver = observerFromEarth(48, longitude, elevation)
@@ -119,26 +120,15 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
           return newMoonDate.AddDays(2)
         }
       }
-    } else if (criteria === '1') {
+    } else if (criteria === 1) {
       // MABIMS
       while (true) {
         newMoon = SearchMoonPhase(0, date, -30)
         date = new AstroTime(newMoon.date)
         dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
         newMoonDate = new AstroTime(dateInNewMoon)
+        observer = observerFromEarth(sabangCoordinates.latitude, sabangCoordinates.longitude, sabangCoordinates.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-        if (!sunset) {
-          if (formula === '0') {
-            if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
-            else observer = observerFromEarth(-45, longitude, elevation)
-          } else if (formula === '1') {
-            observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
-          } else {
-            if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
-            else observer = observerFromEarth(-48, longitude, elevation)
-          }
-          sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-        }
         moonElongation = Elongation(Body.Moon, sunset)
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
         moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
@@ -148,7 +138,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
           return newMoonDate.AddDays(2)
         }
       }
-    } else if (criteria === '2') {
+    } else if (criteria === 2) {
       // Wujudul Hilal
       do {
         newMoon = SearchMoonPhase(0, date, -30)
@@ -157,10 +147,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         newMoonDate = new AstroTime(dateInNewMoon)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
         if (!sunset) {
-          if (formula === '0') {
+          if (formula === 0) {
             if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
             else observer = observerFromEarth(-45, longitude, elevation)
-          } else if (formula === '1') {
+          } else if (formula === 1) {
             observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
           } else {
             if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
@@ -313,7 +303,7 @@ const adjustedIslamicDate = (currentDate, months) => {
   const islamicDate = new Date()
   const islamicDay = currentDate.getDate()
   const fixedDaysInMonth = currentDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
-  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + 1]?.hijri
+  const calculatedDaysInMonth = months[currentDate.getMonth() + 1][currentDate.getDate() - 1]?.hijri
   if (fixedDaysInMonth !== calculatedDaysInMonth) {
     islamicDate.setDate(islamicDay + (calculatedDaysInMonth - fixedDaysInMonth))
   }

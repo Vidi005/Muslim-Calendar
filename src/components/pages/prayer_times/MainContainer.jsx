@@ -24,7 +24,7 @@ class MainContainer extends React.Component {
       cancelButtonColor: 'red'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.props.selectFormula('0')
+        this.props.selectFormula(0)
         localStorage.removeItem(this.state.FORMULA_STORAGE_KEY)
       }
     })

@@ -52,7 +52,7 @@
     ],
     "timezone": "Zona Waktu :",
     "interval_update": "Pembaruan :",
-    "intervals": ["15 detik", "30 detik", "1 menit"],
+    "intervals": ["5 detik", "15 detik", "30 detik", "1 menit"],
     "current_month": "Ke Bulan Sekarang/Ditentukan",
     "calendar": "Kalender",
     "moon_info": "Info Bulan",

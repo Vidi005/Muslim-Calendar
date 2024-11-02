@@ -23,10 +23,10 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
             <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{t('current_month')}</button>
             <Slider arrows dots infinite={false} speed={500} slidesToShow={1} slidesToScroll={1} ref={sliderRef} initialSlide={state.formattedDateTime.getMonth()}>
               {state.monthsInSetYear.map((days, monthIndex) => {
-                const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 0).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
-                const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
-                const hijriDate1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 0).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'long', year: 'numeric' })
-                const hijriDate2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'long', year: 'numeric' })
+                const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
+                const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
+                const hijriDate1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage, { calendar: 'islamic', month: 'long', year: 'numeric' })
+                const hijriDate2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: 'islamic', month: 'long', year: 'numeric' })
                 return (
                   <React.Fragment key={monthIndex}>
                     <h2 className="m-2 text-center text-green-700 dark:text-white duration-200">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage, { month: 'long', year: 'numeric' })}</h2>
@@ -51,7 +51,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                             {days.slice(weekIndex * 7, (weekIndex + 1) * 7).map((day, dayIndex) => {
                               if (isNaN(day?.gregorian)) {
                                 return (
-                                  <td key={dayIndex} className="border-none border-transparent border-spacing-0 text-center">
+                                  <td key={dayIndex} className="border-none border-transparent border-spacing-0 text-center whitespace-nowrap">
                                     {day ? (
                                       <React.Fragment>
                                         <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
@@ -65,7 +65,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                                 const isMuslimEvent = state.hijriEventDates.some(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex);
                                 if (isMuslimEvent) {
                                   return (
-                                    <td key={dayIndex} className={`${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} bg-sky-500/20 dark:bg-sky-500 p-2 text-center rounded`}>
+                                    <td key={dayIndex} className={`${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} bg-sky-500/20 dark:bg-sky-500 p-2 text-center whitespace-nowrap rounded`}>
                                       {day ? (
                                         <React.Fragment>
                                           <span className="block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
@@ -76,7 +76,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                                   )
                                 } else {
                                   return (
-                                    <td key={dayIndex} className={`${dayIndex === 0 ? "bg-red-500/20 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/20 dark:bg-green-500" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center`}>
+                                    <td key={dayIndex} className={`${dayIndex === 0 ? "bg-red-500/20 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/20 dark:bg-green-500" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
                                       {day ? (
                                         <React.Fragment>
                                           <span className={`${dayIndex === 0 ? "text-red-700" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
@@ -99,8 +99,8 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
             <table className="table-auto text-sky-700 dark:text-sky-200">
               <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()} :</u></h3></th>
               <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
-                {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map(event => (
-                  <tr key={event.eventId}>
+                {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
+                  <tr key={index}>
                     <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage, { month: 'long', day: '2-digit' })}</td>
                     <td>&nbsp;:&nbsp;</td>
                     <td>
@@ -117,14 +117,14 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
             <div className="moon-phase w-full p-4 overflow-hidden">
               <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[8])}deg)` }}>
                 <img className="w-full object-contain object-center brightness-125" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon Phase" />
-                <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0 duration-500`}>
+                <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
                   <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/75 drop-shadow"></span>
                   <span
-                    className="absolute inset-0 translate-x-1/2 bg-black/75 border-none border-transparent border-spacing-0"
+                    className="absolute inset-0 translate-x-1/2 bg-black/75 border-none border-transparent border-spacing-0 duration-500"
                     style={{ clipPath: ellipse1 }}
                   ></span>
                   <span
-                    className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0"
+                    className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0 duration-500"
                     style={{ clipPath: ellipse2 }}
                   >
                     <img
