@@ -157,7 +157,7 @@ const InputForm = () => (
                     : (
                       <span className="flex items-center">
                         <label>{t('interval_update')}&nbsp;</label>
-                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
+                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
                           {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
                         </select>
                       </span>
@@ -203,8 +203,8 @@ const InputForm = () => (
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 -translate-y-1/2"
             >
-              <table className="p-1">
-                <thead className="font-serif font-bold text-sm text-left whitespace-nowrap"><th colSpan={3}>{t('current_date')}</th></thead>
+              <table className="p-1 whitespace-nowrap">
+                <thead className="font-serif font-bold text-sm text-left"><th colSpan={3}>{t('current_date')}</th></thead>
                 <tr className="font-bold text-xs">
                   <td>{t('georgian_date')}</td>
                   <td className="pl-0.5 pr-1">:</td>
@@ -216,7 +216,7 @@ const InputForm = () => (
                   <td className="w-full">{state.currentDate.islamic}</td>
                 </tr>
                 <tr className="font-serif font-bold text-sm">
-                  <td colSpan={3}>Current Time : &nbsp;<span className="font-sans text-xs">{state.currentDate.time}</span></td>
+                  <td colSpan={3}>{t("current_time")}&nbsp;<span className="font-sans text-xs">{state.currentDate.time}</span></td>
                 </tr>
               </table>
               <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white duration-200">
@@ -348,12 +348,17 @@ const InputForm = () => (
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
                   </span>
-                  <span className="flex items-center">
-                    <label>{t('interval_update')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={0} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
-                      {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
-                    </select>
-                  </span>
+                  {state.inputDate !== '' && state.inputTime !== ''
+                    ? null
+                    : (
+                      <span className="flex items-center">
+                        <label>{t('interval_update')}&nbsp;</label>
+                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
+                          {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
+                        </select>
+                      </span>
+                      )
+                  }
                 </div>
               </article>
             </Transition>

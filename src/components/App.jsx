@@ -40,7 +40,7 @@ class App extends React.Component {
       errorMessage: { title: i18n.t('invalid_date_format.0'), text: i18n.t('invalid_date_format.1')},
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedCalculationMethod: 0,
-      selectedIntervalUpdate: 0,
+      selectedIntervalUpdate: 1,
       selectedFormula: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
@@ -65,11 +65,13 @@ class App extends React.Component {
   componentDidUpdate(_prevProps, prevState) {
     document.body.classList.toggle("dark", this.state.isDarkMode)
     if (prevState.seconds !== this.state.seconds) {
-      if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 60 === 0) {
+      if (this.state.selectedIntervalUpdate === 3 && this.state.seconds % 60 === 0) {
         this.formatDateTime()
-      } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 30 === 0) {
+      } else if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 30 === 0) {
         this.formatDateTime()     
-      } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 15 === 0) {
+      } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 15 === 0) {
+        this.formatDateTime()
+      } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 5 === 0) {
         this.formatDateTime()
       }
     }
@@ -169,7 +171,7 @@ class App extends React.Component {
     const getSavedCriteriaFromLocal = localStorage.getItem(this.state.CRITERIA_STORAGE_KEY)
     try {
       const parsedSavedCriteria = JSON.parse(getSavedCriteriaFromLocal)
-      if (parsedSavedCriteria !== null) this.setState({ selectedCriteria: parsedSavedCriteria })
+      if (parsedSavedCriteria !== null) this.setState({ selectedCriteria: parseInt(parsedSavedCriteria) })
     } catch (error) {
       localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
@@ -196,7 +198,7 @@ class App extends React.Component {
     try {
       const parsedSavedCalculationMethod = JSON.parse(getSavedCalculationMethodFromLocal)
       if (parsedSavedCalculationMethod !== null) {
-        this.setState({ selectedCalculationMethod: parsedSavedCalculationMethod })
+        this.setState({ selectedCalculationMethod: parseInt(parsedSavedCalculationMethod) })
       }
     } catch (error) {
       localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
@@ -235,28 +237,30 @@ class App extends React.Component {
     const adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     const georgian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
     const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
-    adjustedDateWorker.postMessage({
-      type: 'createAdjustedIslamicDate',
-      gregorianDate: currentDate,
-      months: this.state.monthsInCurrentYear
-    })
-    adjustedDateWorker.onmessage = workerEvent => {
-      if (workerEvent.data.type === 'createAdjustedIslamicDate') {
-        const islamicDate = workerEvent.data.result
-        this.setState({
-          currentDate: { georgian, islamicDate, time },
-          seconds: new Date().getSeconds()
-        }, () => adjustedDateWorker.terminate())
+    if (this.state.monthsInCurrentYear.length > 0) {
+      adjustedDateWorker.postMessage({
+        type: 'createAdjustedIslamicDate',
+        gregorianDate: currentDate,
+        months: this.state.monthsInCurrentYear
+      })
+      adjustedDateWorker.onmessage = workerEvent => {
+        if (workerEvent.data.type === 'createAdjustedIslamicDate') {
+          const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+          this.setState({
+            currentDate: { georgian, islamic, time },
+            seconds: new Date().getSeconds()
+          }, () => adjustedDateWorker.terminate())
+        }
       }
-    }
-    adjustedDateWorker.onerror = error => {
-      Swal.fire({
-        title: i18n.t('error'),
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: i18n.t('ok'),
-        confirmButtonColor: 'green'
-      }).finally(() => adjustedDateWorker.terminate())
+      adjustedDateWorker.onerror = error => {
+        Swal.fire({
+          title: i18n.t('error'),
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: i18n.t('ok'),
+          confirmButtonColor: 'green'
+        }).finally(() => adjustedDateWorker.terminate())
+      }
     }
   }
   
@@ -412,19 +416,19 @@ class App extends React.Component {
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.formatDateTime()
-          localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
-          localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
-          localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
-          localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
-          localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
+          this.getCurrentLocation()
+          this.selectCriteria(0)
+          this.selectTimeZone(this.state.selectedTimeZone)
+          this.selectCalculationMethod(0)
+          this.selectIntervalUpdate(1)
         })
       }
     }).finally(() => {
-      this.getCurrentLocation()
-      this.selectCriteria('0')
-      this.selectTimeZone(this.state.selectedTimeZone)
-      this.selectCalculationMethod('0')
-      this.selectIntervalUpdate('0')
+      localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+      localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
+      localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
+      localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
+      localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
     })
   }
 
@@ -469,48 +473,56 @@ class App extends React.Component {
   }
 
   selectCriteria (value) {
-    this.setState({ selectedCriteria: value }, () => {
-      if (value !== parseInt(this.state.selectedCriteria)) {
+    if (parseInt(value) !== this.state.selectedCriteria) {
+      this.setState({ selectedCriteria: parseInt(value) }, () => {
         if (isStorageExist(i18n.t('browser_warning'))) {
           localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
         }
         this.formatDateTime()
-      }
-    })
+      })
+    }
   }
 
   selectTimeZone (value) {
-    this.setState({ selectedTimeZone: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
-      }
-      this.formatDateTime()
-    })
+    if (value !== this.state.selectedTimeZone) {
+      this.setState({ selectedTimeZone: value }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
+        }
+        this.formatDateTime()
+      })
+    }
   }
 
   selectCalculationMethod (value) {
-    this.setState({ selectedCalculationMethod: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
-      }
-    })
+    if (parseInt(value) !== this.state.selectedCalculationMethod) {
+      this.setState({ selectedCalculationMethod: parseInt(value) }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
+        }
+      })
+    }
   }
 
   selectIntervalUpdate (value) {
-    this.setState({ selectedIntervalUpdate: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.INTERVAL_UPDATES_STORAGE_KEY, JSON.stringify(this.state.selectedIntervalUpdate))
-      }
-    })
+    if (parseInt(value) !== this.state.selectedIntervalUpdate) {
+      this.setState({ selectedIntervalUpdate: parseInt(value) }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.INTERVAL_UPDATES_STORAGE_KEY, JSON.stringify(this.state.selectedIntervalUpdate))
+        }
+      })
+    }
   }
 
   selectFormula (value) {
-    this.setState({ selectedFormula: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
-      }
-      this.formatDateTime()
-    })
+    if (parseInt(value) !== this.state.selectedFormula) {
+      this.setState({ selectedFormula: parseInt(value) }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
+        }
+        this.formatDateTime()
+      })
+    }
   }
 
   createCalendarWorker = (gregorianDate) => {
@@ -534,13 +546,7 @@ class App extends React.Component {
         calendarDataWorker.terminate()
       }
       calendarDataWorker.onerror = error => {
-        Swal.fire({
-          title: i18n.t('error'),
-          text: error.message,
-          icon: 'error',
-          confirmButtonText: i18n.t('ok'),
-          confirmButtonColor: 'green'
-        }).finally(() => calendarDataWorker.terminate())
+        calendarDataWorker.terminate()
         reject(error)
       }
     })
@@ -605,15 +611,7 @@ class App extends React.Component {
         this.setState({ moonInfos: workerEvent.data.result }, () => moonInfosWorker.terminate())
       }
     }
-    moonInfosWorker.onerror = error => {
-      Swal.fire({
-        title: i18n.t('error'),
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: i18n.t('ok'),
-        confirmButtonColor: 'green'
-      }).finally(() => moonInfosWorker.terminate())
-    }
+    moonInfosWorker.onerror = _error => moonInfosWorker.terminate()
   }
 
   onBlurHandler() {
