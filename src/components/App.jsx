@@ -9,6 +9,7 @@ import { HomePageProvider } from "./contexts/HomPageContext"
 import Swal from "sweetalert2"
 import PrayerTimesPage from "./pages/prayer_times/PrayerTimesPage"
 import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
+import en from "./../locales/en.json"
 
 class App extends React.Component {
   constructor(props) {
@@ -373,6 +374,7 @@ class App extends React.Component {
           longitude: position.coords.longitude,
           elevation: position.coords.elevation || 1
         }, () => {
+          this.getCurrentCriteria()
           this.formatDateTime()
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
         })
@@ -417,7 +419,6 @@ class App extends React.Component {
         }, () => {
           this.formatDateTime()
           this.getCurrentLocation()
-          this.selectCriteria(0)
           this.selectTimeZone(this.state.selectedTimeZone)
           this.selectCalculationMethod(0)
           this.selectIntervalUpdate(1)
@@ -468,7 +469,20 @@ class App extends React.Component {
           localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
           this.formatDateTime()
         }
-      })
+      }).finally(() => this.getCurrentCriteria())
+    }
+  }
+
+  getCurrentCriteria () {
+    const calendarCriteria = en.date_criteria.map(criteria => ({ ...criteria }))
+    for (let index = 1; index < calendarCriteria.length; index++) {
+      const item = calendarCriteria[index]
+      const [latMin, latMax] = item.latitude_range
+      const [lonMin, lonMax] = item.longitude_range
+      if (this.state.latitude >= latMin && this.state.latitude <= latMax && this.state.longitude >= lonMin && this.state.longitude <= lonMax) {
+        this.selectCriteria(index)
+        break
+      } else this.selectCriteria(0)
     }
   }
 
@@ -595,6 +609,12 @@ class App extends React.Component {
     }
   }
 
+  jumpToClickedMonth = dotIndex => {
+    if (this.sliderRef.current) {
+      this.sliderRef.current.slickGoTo(dotIndex)
+    }
+  }
+
   generateMoonInfos = () => {
     const moonInfosWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonInfosWorker.postMessage({
@@ -660,6 +680,7 @@ class App extends React.Component {
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 sliderRef={this.sliderRef}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
+                jumpToClickedMonth={this.jumpToClickedMonth.bind(this)}
               />
             </HomePageProvider>
           }/>
@@ -691,6 +712,7 @@ class App extends React.Component {
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 sliderRef={this.sliderRef}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
+                jumpToClickedMonth={this.jumpToClickedMonth.bind(this)}
               />
             </HomePageProvider>
           }/>

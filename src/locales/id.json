@@ -54,6 +54,8 @@
     "interval_update": "Pembaruan :",
     "intervals": ["5 detik", "15 detik", "30 detik", "1 menit"],
     "current_month": "Ke Bulan Sekarang/Ditentukan",
+    "error_alert": "Kesalahan",
+    "error_solution": "Silakan muat ulang halaman",
     "calendar": "Kalender",
     "moon_info": "Info Bulan",
     "error": "Kesalahan",

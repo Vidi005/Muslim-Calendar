@@ -7,12 +7,12 @@ import { HomePageConsumer } from "../../contexts/HomPageContext";
 import CustomNextArrow from "./CustomNextArrow";
 import CustomPrevArrow from "./CustomPrevArrow";
 
-const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
+const CalendarSection = ({ sliderRef, goToCurrentMonth, jumpToClickedMonth }) => (
   <HomePageConsumer>
     {({ t, state }) => {
       const settings = {
         arrows: true,
-        dots: true,
+        dots: false,
         infinite: false,
         speed: 500,
         slidesToShow: 1,
@@ -20,10 +20,7 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
         initialSlide: state.formattedDateTime.getMonth(),
         adaptiveHeight: true,
         nextArrow: <CustomNextArrow />,
-        prevArrow: <CustomPrevArrow />,
-        customPaging: index => <div title="Jump to Month" style={ state.isDarkMode
-          ? { borderRadius: "9999px", width: "24px", backgroundColor: "#e5e7eb", fontFamily: "serif", fontSize: "16px", color: "black" }
-          : { borderRadius: "9999px", width: "24px", backgroundColor: "#22c55e", fontFamily: "serif", fontSize: "16px", color: "white" }}><b>{index + 1}</b></div>
+        prevArrow: <CustomPrevArrow />
       }
       const isWaxing = parseFloat(state.moonInfos[2]) <= 180
       const isCrescent = parseFloat(state.moonInfos[1]) <= 50
@@ -78,8 +75,8 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                                   </td>
                                 );
                               } else {
-                                const isCurrentDate = state.formattedDateTime.getDate() === day.gregorian && state.formattedDateTime.getMonth() === monthIndex;
-                                const isMuslimEvent = state.hijriEventDates.some(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex);
+                                const isCurrentDate = state.formattedDateTime.getDate() === day.gregorian && state.formattedDateTime.getMonth() === monthIndex
+                                const isMuslimEvent = state.hijriEventDates.some(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex)
                                 if (isMuslimEvent) {
                                   return (
                                     <td key={dayIndex} className={`${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} bg-sky-500/20 dark:bg-sky-500 p-2 text-center whitespace-nowrap rounded`}>
@@ -110,10 +107,15 @@ const CalendarSection = ({ sliderRef, goToCurrentMonth }) => (
                       </tbody>
                     </table>
                   </React.Fragment>
-                );
+                )
               })}
             </Slider>
-            <table className="mt-8 table-auto text-sky-700 dark:text-sky-200">
+            <ul className="flex flex-nowrap items-center justify-center list-none mx-auto py-4 space-x-1 md:space-x-2 lg:space-x-4">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage, { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
+              ))}
+            </ul>
+            <table className="table-auto text-sky-700 dark:text-sky-200">
               <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()} :</u></h3></th>
               <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
                 {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (

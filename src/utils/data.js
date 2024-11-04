@@ -271,24 +271,26 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   let hijriYear
   newMoons.forEach(newMoon => {
     date = new Date(newMoon.getFullYear(), newMoon.getMonth(), newMoon.getDate() + 14)
-    const hijriDate = date.toLocaleDateString(lang, {
+    const hijriDateInDay15 = date.toLocaleDateString(lang, {
       calendar: "islamic",
       month: "numeric",
       year: "numeric"
     })
+    hijriMonth = hijriDateInDay15.split('/')[0]
+    hijriYear = hijriDateInDay15.split('/')[1]
     Object.entries(muslimEvents).forEach(([key, eventId]) => {
       const [eventDay, eventMonth] = key.split("-").map(Number)
       eventHijriDay = 15 - (15 - eventDay)
-      hijriMonth = hijriDate.split('/')[0]
-      hijriYear = hijriDate.split('/')[1]
       if (eventMonth === parseInt(hijriMonth)) {
+        const eventInGregorianDate = new Date(newMoon)
+        eventInGregorianDate.setDate(newMoon.getDate() + (eventHijriDay - 1))
         months.forEach((month, monthIdx) => {
           month.forEach(dayObj => {
-            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx === newMoon.getMonth() && newMoon.getFullYear() === gregorianDate.getFullYear()) {
+            if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx === eventInGregorianDate.getMonth() && eventInGregorianDate.getFullYear() === gregorianDate.getFullYear()) {
               hijriEvents.push({
                 eventId: eventId,
                 hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},
-                gregorianDate: new Date(`${gregorianDate.getFullYear()}-${newMoon.getMonth() + 1}-${dayObj.gregorian}`)
+                gregorianDate: eventInGregorianDate
               })
             }
           })

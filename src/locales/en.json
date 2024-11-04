@@ -54,6 +54,8 @@
     "interval_update": "Updates :",
     "intervals": ["5 seconds", "15 seconds", "30 seconds", "1 minute"],
     "current_month": "Go to Current/Set Date",
+    "error_alert": "Error",
+    "error_solution": "Please reload the page",
     "calendar": "Calendar",
     "moon_info": "Moon Info",
     "error": "Error",
