@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 
-const HomePage = ({ t, isSidebarExpanded, sliderRef, goToCurrentMonth }) => (
+const HomePage = ({ t, isSidebarExpanded, sliderRef, goToCurrentMonth, jumpToClickedMonth }) => (
   <div className="home-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('app_name') + ' | ' + t('pages.0')}</title>
@@ -15,6 +15,7 @@ const HomePage = ({ t, isSidebarExpanded, sliderRef, goToCurrentMonth }) => (
       isSidebarExpanded={isSidebarExpanded}
       sliderRef={sliderRef}
       goToCurrentMonth={goToCurrentMonth}
+      jumpToClickedMonth={jumpToClickedMonth}
     />
   </div>
 )
