@@ -249,6 +249,17 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   return { months, hijriEventDates }
 }
 
+const adjustedIslamicDate = (currentDate, months) => {
+  const islamicDate = new Date()
+  const islamicDay = currentDate.getDate()
+  const fixedDaysInMonth = currentDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
+  const calculatedDaysInMonth = months[currentDate.getMonth() + 1][currentDate.getDate() - 1]?.hijri
+  if (fixedDaysInMonth !== calculatedDaysInMonth) {
+    islamicDate.setDate(islamicDay + (calculatedDaysInMonth - fixedDaysInMonth))
+  }
+  return islamicDate
+}
+
 const muslimEvents = {
   "1-1": "1-1-event", // 1 Muharram
   "9-1": "9-1-event", // Tasu'a
@@ -265,13 +276,17 @@ const muslimEvents = {
 
 const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   const hijriEvents = []
+  const filteredUniqueEventDates = new Set()
   let date
+  let hijriDateInDay15
   let eventHijriDay = 0
   let hijriMonth = 0
   let hijriYear
+  let eventInGregorianDate
+  let dateKey
   newMoons.forEach(newMoon => {
     date = new Date(newMoon.getFullYear(), newMoon.getMonth(), newMoon.getDate() + 14)
-    const hijriDateInDay15 = date.toLocaleDateString(lang, {
+    hijriDateInDay15 = date.toLocaleDateString(lang, {
       calendar: "islamic",
       month: "numeric",
       year: "numeric"
@@ -282,16 +297,20 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
       const [eventDay, eventMonth] = key.split("-").map(Number)
       eventHijriDay = 15 - (15 - eventDay)
       if (eventMonth === parseInt(hijriMonth)) {
-        const eventInGregorianDate = new Date(newMoon)
+        eventInGregorianDate = new Date(newMoon)
         eventInGregorianDate.setDate(newMoon.getDate() + (eventHijriDay - 1))
         months.forEach((month, monthIdx) => {
           month.forEach(dayObj => {
             if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx === eventInGregorianDate.getMonth() && eventInGregorianDate.getFullYear() === gregorianDate.getFullYear()) {
-              hijriEvents.push({
-                eventId: eventId,
-                hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},
-                gregorianDate: eventInGregorianDate
-              })
+              dateKey = eventInGregorianDate.toISOString().split('T')[0]
+              if (!filteredUniqueEventDates.has(dateKey)) {
+                filteredUniqueEventDates.add(dateKey)
+                hijriEvents.push({
+                  eventId: eventId,
+                  hijriDate: {day: eventHijriDay, month: eventMonth, year: hijriYear},
+                  gregorianDate: eventInGregorianDate
+                })
+              }
             }
           })
         })
@@ -301,15 +320,14 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   return hijriEvents
 }
 
-const adjustedIslamicDate = (currentDate, months) => {
-  const islamicDate = new Date()
-  const islamicDay = currentDate.getDate()
-  const fixedDaysInMonth = currentDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
-  const calculatedDaysInMonth = months[currentDate.getMonth() + 1][currentDate.getDate() - 1]?.hijri
-  if (fixedDaysInMonth !== calculatedDaysInMonth) {
-    islamicDate.setDate(islamicDay + (calculatedDaysInMonth - fixedDaysInMonth))
-  }
-  return islamicDate
+const getElementContent = innerHTML => {
+  let hijriEvent = ''
+  Object.values(muslimEvents).forEach(eventId => {
+    if (innerHTML.includes(eventId)) {
+      hijriEvent = eventId
+    }
+  })
+  return hijriEvent
 }
 
 const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
@@ -364,4 +382,4 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
 
 const prayerTimesCorrection = () => [-5, -4, -3, -2, -1, 0, +1, +2, +3, +4, +5]
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getMoonInfos, prayerTimesCorrection }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getElementContent, getMoonInfos, prayerTimesCorrection }

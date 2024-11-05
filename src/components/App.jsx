@@ -45,17 +45,21 @@ class App extends React.Component {
       selectedFormula: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
+      tooltipId: '',
       hijriEventDates: [],
       moonInfos: [],
       isSidebarExpanded: true,
       isToolbarShown: true,
-      isAutoLocate: true,
+      isCalendarLoading: true,
+      areMoonInfosLoading: true,
       isSearching: false,
       isDarkMode: false,
       isFocused: false
     }
     this.intervalId = null
     this.sliderRef = React.createRef()
+    this.calendarContainerRef = React.createRef()
+    this.tooltipRef = React.createRef()
   }
 
   componentDidMount() {
@@ -558,8 +562,10 @@ class App extends React.Component {
           resolve(workerEvent.data.result)
         }
         calendarDataWorker.terminate()
+        this.setState({ isCalendarLoading: false })
       }
       calendarDataWorker.onerror = error => {
+        this.setState({ isCalendarLoading: false })
         calendarDataWorker.terminate()
         reject(error)
       }
@@ -609,6 +615,46 @@ class App extends React.Component {
     }
   }
 
+  showTooltip = event => {
+    const tooltipWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    tooltipWorker.postMessage({ type: 'createIncludedElement', innerHTML: event.target.innerHTML })
+    tooltipWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createIncludedElement') {
+        const matchedEvent = workerEvent.data.result
+        if (event.target.innerHTML.includes(matchedEvent)) {
+          this.setState({ tooltipId: matchedEvent }, () => {
+            const calendarContainerRect = this.calendarContainerRef.current.getBoundingClientRect()
+            const tooltip = this.tooltipRef.current
+            const tooltipWidth = tooltip?.offsetWidth
+            const tooltipHeight = tooltip?.offsetHeight
+            const containerHalfWidth = calendarContainerRect.width / 2
+            const leftPosition = event.clientX
+            if (tooltip) {
+              if (leftPosition < containerHalfWidth) {
+                tooltip.style.left = `${leftPosition - tooltipWidth / 2}px`
+                tooltip.style.right = 'auto'
+              } else {
+                tooltip.style.left = `${leftPosition - tooltipWidth}px`
+                tooltip.style.right = 'auto'
+              }
+              const scrollOffset = window.scrollY || window.pageYOffset
+              tooltip.style.top = `${event.clientY / 2 - tooltipHeight - 10 - scrollOffset}px`
+            }
+            tooltipWorker.terminate()
+          })
+        } else this.hideTooltip()
+      }
+    }
+    tooltipWorker.onerror = _error => {
+      this.hideTooltip()
+      tooltipWorker.terminate()
+    }
+  }
+
+  hideTooltip() {
+    this.setState({ tooltipId: '' })
+  }
+
   jumpToClickedMonth = dotIndex => {
     if (this.sliderRef.current) {
       this.sliderRef.current.slickGoTo(dotIndex)
@@ -628,10 +674,13 @@ class App extends React.Component {
     })
     moonInfosWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createMoonInfos') {
-        this.setState({ moonInfos: workerEvent.data.result }, () => moonInfosWorker.terminate())
+        this.setState({ moonInfos: workerEvent.data.result, areMoonInfosLoading: false }, () => moonInfosWorker.terminate())
       }
     }
-    moonInfosWorker.onerror = _error => moonInfosWorker.terminate()
+    moonInfosWorker.onerror = _error => {
+      moonInfosWorker.terminate()
+      this.setState({ areMoonInfosLoading: false })
+    }
   }
 
   onBlurHandler() {
@@ -679,6 +728,10 @@ class App extends React.Component {
                 t={i18n.t}
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 sliderRef={this.sliderRef}
+                calendarContainerRef={this.calendarContainerRef}
+                tooltipRef={this.tooltipRef}
+                showTooltip={this.showTooltip.bind(this)}
+                hideTooltip={this.hideTooltip.bind(this)}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
                 jumpToClickedMonth={this.jumpToClickedMonth.bind(this)}
               />
@@ -711,6 +764,10 @@ class App extends React.Component {
                 t={i18n.t}
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 sliderRef={this.sliderRef}
+                calendarContainerRef={this.calendarContainerRef}
+                tooltipRef={this.tooltipRef}
+                showTooltip={this.showTooltip.bind(this)}
+                hideTooltip={this.hideTooltip.bind(this)}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
                 jumpToClickedMonth={this.jumpToClickedMonth.bind(this)}
               />
