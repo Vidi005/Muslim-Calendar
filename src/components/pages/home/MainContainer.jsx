@@ -21,6 +21,10 @@ class MainContainer extends React.Component {
                 />
                 <HomeContent
                   sliderRef={this.props.sliderRef}
+                  calendarContainerRef={this.props.calendarContainerRef}
+                  tooltipRef={this.props.tooltipRef}
+                  showTooltip={this.props.showTooltip}
+                  hideTooltip={this.props.hideTooltip}
                   goToCurrentMonth={this.props.goToCurrentMonth}
                   jumpToClickedMonth={this.props.jumpToClickedMonth}
                 />
@@ -30,6 +34,10 @@ class MainContainer extends React.Component {
               <div className="home-container flex flex-col w-full h-full">
                 <HomeContent
                   sliderRef={this.props.sliderRef}
+                  calendarContainerRef={this.props.calendarContainerRef}
+                  tooltipRef={this.props.tooltipRef}
+                  showTooltip={this.props.showTooltip}
+                  hideTooltip={this.props.hideTooltip}
                   goToCurrentMonth={this.props.goToCurrentMonth}
                   jumpToClickedMonth={this.props.jumpToClickedMonth}
                 />
