@@ -22,8 +22,12 @@ class App extends React.Component {
       LOCATION_STATE_STORAGE_KEY: "LOCATION_STATE_STORAGE_KEY",
       CRITERIA_STORAGE_KEY: "CRITERIA_STORAGE_KEY",
       TIMEZONE_STORAGE_KEY: "TIMEZONE_STORAGE_KEY",
-      CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
       INTERVAL_UPDATES_STORAGE_KEY: "INTERVAL_UPDATES_STORAGE_KEY",
+      CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
+      ASHR_TIME_STORAGE_KEY: "ASHR_TIME_STORAGE_KEY",
+      CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
+      IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
+      CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       selectedLanguage: "en",
       currentDate: {},
@@ -40,8 +44,13 @@ class App extends React.Component {
       selectedCriteria: 0,
       errorMessage: { title: i18n.t('invalid_date_format.0'), text: i18n.t('invalid_date_format.1')},
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      selectedCalculationMethod: 0,
       selectedIntervalUpdate: 1,
+      selectedCalculationMethod: 0,
+      selectedAshrTime: 0,
+      selectedConvention: 0,
+      sunAltitude: en.conventions[0].sun_altitude,
+      selectedIhtiyath: 1,
+      selectedCorrections: Array(en.prayer_names.length).fill(0),
       selectedFormula: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
@@ -96,8 +105,12 @@ class App extends React.Component {
       this.checkSavedLocation()
       this.checkSavedCriteria()
       this.checkSavedTimeZone()
-      this.checkSavedCalculationMethod()
       this.checkSavedIntervalUpdates()
+      this.checkSavedCalculationMethod()
+      this.checkSavedAshrTime()
+      this.checkSavedConvention()
+      this.checkSavedIhtiyath()
+      this.checkSavedCorrections()
       this.checkSavedFormula()
     }
   }
@@ -198,6 +211,19 @@ class App extends React.Component {
     }
   }
 
+  checkSavedIntervalUpdates () {
+    const getSavedIntervalUpdatesFromLocal = localStorage.getItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
+    try {
+      const parsedSavedIntervalUpdates = JSON.parse(getSavedIntervalUpdatesFromLocal)
+      if (parsedSavedIntervalUpdates !== null) {
+        this.setState({ selectedIntervalUpdate: parseInt(parsedSavedIntervalUpdates) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
   checkSavedCalculationMethod () {
     const getSavedCalculationMethodFromLocal = localStorage.getItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
     try {
@@ -211,19 +237,61 @@ class App extends React.Component {
     }
   }
 
-  checkSavedIntervalUpdates () {
-    const getSavedIntervalUpdatesFromLocal = localStorage.getItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
+  checkSavedAshrTime () {
+    const getSavedAshrTimeFromLocal = localStorage.getItem(this.state.ASHR_TIME_STORAGE_KEY)
     try {
-      const parsedSavedIntervalUpdates = JSON.parse(getSavedIntervalUpdatesFromLocal)
-      if (parsedSavedIntervalUpdates !== null) {
-        this.setState({ selectedIntervalUpdate: parseInt(parsedSavedIntervalUpdates) })
+      const parsedSavedAshrTime = JSON.parse(getSavedAshrTimeFromLocal)
+      if (parsedSavedAshrTime !== null) {
+        this.setState({ selectedAshrTime: parseInt(parsedSavedAshrTime) })
       }
     } catch (error) {
-      localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
+      localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkSavedConvention () {
+    const getSavedConventionFromLocal = localStorage.getItem(this.state.CONVENTION_STORAGE_KEY)
+    try {
+      const parsedSavedConvention = JSON.parse(getSavedConventionFromLocal)
+      if (parsedSavedConvention !== null) {
+        this.setState({
+          selectedConvention: parseInt(parsedSavedConvention),
+          sunAltitude: en.conventions[parseInt(parsedSavedConvention)].sun_altitude
+        })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
   
+  checkSavedIhtiyath () {
+    const getSavedIhtiyathFromLocal = localStorage.getItem(this.state.IHTIYATH_STORAGE_KEY)
+    try {
+      const parsedSavedIhtiyath = JSON.parse(getSavedIhtiyathFromLocal)
+      if (parsedSavedIhtiyath !== null) {
+        this.setState({ selectedIhtiyath: parseInt(parsedSavedIhtiyath) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
+
+  checkSavedCorrections () {
+    const getSavedCorrectionsFromLocal = localStorage.getItem(this.state.CORRECTIONS_STORAGE_KEY)
+    try {
+      const parsedSavedCorrections = JSON.parse(getSavedCorrectionsFromLocal)
+      if (parsedSavedCorrections !== null) {
+        this.setState({ selectedCorrections: parsedSavedCorrections })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.CORRECTIONS_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
+
   checkSavedFormula () {
     const getSavedFormulaFromLocal = localStorage.getItem(this.state.FORMULA_STORAGE_KEY)
     try {
@@ -379,6 +447,7 @@ class App extends React.Component {
           elevation: position.coords.elevation || 1
         }, () => {
           this.getCurrentCriteria()
+          this.getCurrentConvention()
           this.formatDateTime()
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
         })
@@ -409,7 +478,7 @@ class App extends React.Component {
       cancelButtonText: i18n.t('no'),
       confirmButtonColor: 'green',
       cancelButtonColor: 'red'
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         this.setState({
           inputLocation: "",
@@ -424,16 +493,13 @@ class App extends React.Component {
           this.formatDateTime()
           this.getCurrentLocation()
           this.selectTimeZone(this.state.selectedTimeZone)
-          this.selectCalculationMethod(0)
           this.selectIntervalUpdate(1)
+          localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+          localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
+          localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
+          localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
         })
       }
-    }).finally(() => {
-      localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
-      localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
-      localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
-      localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
-      localStorage.removeItem(this.state.INTERVAL_UPDATES_STORAGE_KEY)
     })
   }
 
@@ -473,7 +539,10 @@ class App extends React.Component {
           localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
           this.formatDateTime()
         }
-      }).finally(() => this.getCurrentCriteria())
+      }).finally(() => {
+        this.getCurrentCriteria()
+        this.getCurrentConvention()
+      })
     }
   }
 
@@ -483,7 +552,7 @@ class App extends React.Component {
       const item = calendarCriteria[index]
       const [latMin, latMax] = item.latitude_range
       const [lonMin, lonMax] = item.longitude_range
-      if (this.state.latitude >= latMin && this.state.latitude <= latMax && this.state.longitude >= lonMin && this.state.longitude <= lonMax) {
+      if (this.state.latitude >= latMin && this.state.latitude <= latMax && this.state.longitude >= lonMin && this.state.longitude <= lonMax) { 
         this.selectCriteria(index)
         break
       } else this.selectCriteria(0)
@@ -491,56 +560,98 @@ class App extends React.Component {
   }
 
   selectCriteria (value) {
-    if (parseInt(value) !== this.state.selectedCriteria) {
-      this.setState({ selectedCriteria: parseInt(value) }, () => {
-        if (isStorageExist(i18n.t('browser_warning'))) {
-          localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
-        }
-        this.formatDateTime()
-      })
-    }
+    this.setState({ selectedCriteria: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
+      }
+      this.formatDateTime()
+    })
   }
 
   selectTimeZone (value) {
-    if (value !== this.state.selectedTimeZone) {
-      this.setState({ selectedTimeZone: value }, () => {
-        if (isStorageExist(i18n.t('browser_warning'))) {
-          localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
-        }
-        this.formatDateTime()
-      })
+    this.setState({ selectedTimeZone: value }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
+      }
+      this.formatDateTime()
+    })
+  }
+
+  selectIntervalUpdate (value) {
+    this.setState({ selectedIntervalUpdate: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.INTERVAL_UPDATES_STORAGE_KEY, JSON.stringify(this.state.selectedIntervalUpdate))
+      }
+    })
+  }
+
+  getCurrentConvention () {
+    const conventions = en.conventions.map(convention => ({ ...convention }))
+    for (let index = 1; index < conventions.length; index++) {
+      const item = conventions[index]
+      const [latMin, latMax] = item.latitude_range
+      const [lonMin, lonMax] = item.longitude_range
+      if (this.state.latitude >= latMin && this.state.latitude <= latMax && this.state.longitude >= lonMin && this.state.longitude <= lonMax) {
+        this.selectConvention(index)
+        break
+      } else this.selectConvention(0)
     }
   }
 
   selectCalculationMethod (value) {
-    if (parseInt(value) !== this.state.selectedCalculationMethod) {
-      this.setState({ selectedCalculationMethod: parseInt(value) }, () => {
-        if (isStorageExist(i18n.t('browser_warning'))) {
-          localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
-        }
-      })
-    }
+    this.setState({ selectedCalculationMethod: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
+      }
+    })
   }
 
-  selectIntervalUpdate (value) {
-    if (parseInt(value) !== this.state.selectedIntervalUpdate) {
-      this.setState({ selectedIntervalUpdate: parseInt(value) }, () => {
-        if (isStorageExist(i18n.t('browser_warning'))) {
-          localStorage.setItem(this.state.INTERVAL_UPDATES_STORAGE_KEY, JSON.stringify(this.state.selectedIntervalUpdate))
-        }
-      })
-    }
+  selectAshrTime (value) {
+    this.setState({ selectedAshrTime: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.ASHR_TIME_STORAGE_KEY, JSON.stringify(this.state.selectedAshrTime))
+      }
+    })
+  }
+
+  selectConvention (value) {
+    this.setState({
+      selectedConvention: parseInt(value),
+      sunAltitude: en.conventions[parseInt(value)].sun_altitude
+    }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
+      }
+    })
+  }
+
+  selectIhtiyath (value) {
+    this.setState({ selectedIhtiyath: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.IHTIYATH_STORAGE_KEY, JSON.stringify(this.state.selectedIhtiyath))
+      }
+    })
+  }
+
+  selectCorrections (index, value) {
+    this.setState(prevState => {
+      const newCorrections = [...prevState.selectedCorrections]
+      newCorrections[index] = value
+      return { selectedCorrections: newCorrections }
+    }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.CORRECTIONS_STORAGE_KEY, JSON.stringify(this.state.selectedCorrections))
+      }
+    })
   }
 
   selectFormula (value) {
-    if (parseInt(value) !== this.state.selectedFormula) {
-      this.setState({ selectedFormula: parseInt(value) }, () => {
-        if (isStorageExist(i18n.t('browser_warning'))) {
-          localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
-        }
-        this.formatDateTime()
-      })
-    }
+    this.setState({ selectedFormula: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
+      }
+      this.formatDateTime()
+    })
   }
 
   createCalendarWorker = (gregorianDate) => {
@@ -553,6 +664,7 @@ class App extends React.Component {
         longitude: this.state.longitude,
         elevation: this.state.elevation,
         criteria: this.state.selectedCriteria,
+        sunAltitude: this.state.sunAltitude,
         formula: this.state.selectedFormula,
         lang: this.state.selectedLanguage,
         errMsg: this.state.errorMessage
@@ -716,7 +828,6 @@ class App extends React.Component {
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
-              selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
@@ -799,6 +910,12 @@ class App extends React.Component {
               <PrayerTimesPage
                 t={i18n.t}
                 isSidebarExpanded={this.state.isSidebarExpanded}
+                selectCalculationMethod={this.selectCalculationMethod.bind(this)}
+                selectAshrTime={this.selectAshrTime.bind(this)}
+                getCurrentConvention={this.getCurrentConvention.bind(this)}
+                selectConvention={this.selectConvention.bind(this)}
+                selectIhtiyath={this.selectIhtiyath.bind(this)}
+                selectCorrections={this.selectCorrections.bind(this)}
                 selectFormula={this.selectFormula.bind(this)}
               />
             </HomePageProvider>
@@ -819,7 +936,6 @@ class App extends React.Component {
               onInputLocationChange: this.onInputLocationChange.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
-              selectCalculationMethod: this.selectCalculationMethod.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
               setSelectedLocation: this.setSelectedLocation.bind(this),
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
