@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
 import Swal from "sweetalert2"
 
 const isStorageExist = content => {
@@ -68,11 +68,11 @@ const getTimeZoneList = () => {
 }
 
 const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
-const sabangCoordinates = { latitude: 5.894, longitude: 95.316, elevation: 43 }
+const sabangCoordinates = { latitude: 5.894, longitude: 95.316, elevation: 43.6 }
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
-const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, formula, errMsg) => {
+const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, fajrAlt, formula, errMsg) => {
   try {
     let observer = observerFromEarth(latitude, longitude, elevation)
     let date = startDate
@@ -95,7 +95,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         newMoonDate = new AstroTime(dateInNewMoon)
         eastObserver = observerFromEarth(0, 135, elevation)
         westObserver = observerFromEarth(0, -120, elevation)
-        fajr = SearchRiseSet(Body.Sun, eastObserver, -13, newMoonDate, 1, elevation)
+        fajr = SearchAltitude(Body.Sun, eastObserver, +1, newMoonDate, 1, -fajrAlt)
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
         if (!sunset) {
           if (formula === 0) {
@@ -191,7 +191,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   }
 }
 
-const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, formula, lang, errMsg) => {
+const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, fajrAlt, formula, lang, errMsg) => {
   const newMoons = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
   const startGregorianDate = new Date(`${gregorianDate.getFullYear()}-12-31T23:59:59`)
@@ -201,7 +201,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let nextMoonDate
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
-    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula, errMsg).date
+    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, fajrAlt, formula, errMsg).date
     if (newMoonDate instanceof Date) {
       newMoons.push(newMoonDate)
       startDate = new AstroTime(newMoonDate)

@@ -80,7 +80,7 @@
     },
     "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Latitude", "Longitude", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Elongation", "Moonrise", "Moonset", "Last Conjunction", "Next Conjunction", "Sunrise", "Sunset"],
     "calculation": "Calculation :",
-    "calculations": ["Astronimy-Engine", "Manual"],
+    "calculations": ["Astronomy-Engine", "Manual"],
     "ashr_time": "Ashr Time :",
     "mahzab": ["Shafii", "Hanafi"],
     "convention": "Convention :",
@@ -167,15 +167,6 @@
             "longitude_range": [24.7, 36.9]
         },
         {
-            "method": "Kemenag (Indonesia)",
-            "sun_altitude": {
-                "fajr": 20,
-                "isha": 18
-            },
-            "latitude_range": [6.1, 11],
-            "longitude_range": [95, 141]
-        },
-        {
             "method": "MUIS",
             "sun_altitude": {
                 "fajr": 20,
@@ -192,6 +183,15 @@
             },
             "latitude_range": [0.85, 7.4],
             "longitude_range": [99.6, 119.3]
+        },
+        {
+            "method": "Kemenag",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
         },
         {
             "method": "UOIF",
@@ -230,15 +230,6 @@
             "longitude_range": [7.5, 11.6]
         },
         {
-            "method": "Tehran",
-            "sun_altitude": {
-                "fajr": 17.7,
-                "isha": 14
-            },
-            "latitude_range": [25, 39.8],
-            "longitude_range": [44, 63.3]
-        },
-        {
             "method": "Jafari",
             "sun_altitude": {
                 "fajr": 16,
@@ -246,6 +237,15 @@
             },
             "latitude_range": [12, 39.8],
             "longitude_range": [35.1, 63.3]
+        },
+        {
+            "method": "Tehran",
+            "sun_altitude": {
+                "fajr": 17.7,
+                "isha": 14
+            },
+            "latitude_range": [25, 39.8],
+            "longitude_range": [44, 63.3]
         }
     ],
     "ihtiyath": "Ihtiyath :",

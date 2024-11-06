@@ -3,11 +3,17 @@ import Sidebar from "../Sidebar"
 import BottomBar from "../BottomBar"
 import PrayerTimesContent from "./PrayerTimesContent"
 import Swal from "sweetalert2"
+import en from "./../../../locales/en.json"
 
 class MainContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
+      ASHR_TIME_STORAGE_KEY: "ASHR_TIME_STORAGE_KEY",
+      CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
+      IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
+      CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY"
     }
   }
@@ -24,7 +30,17 @@ class MainContainer extends React.Component {
       cancelButtonColor: 'red'
     }).then((result) => {
       if (result.isConfirmed) {
+        this.props.selectCalculationMethod(0)
+        this.props.selectAshrTime(0)
+        this.props.getCurrentConvention()
+        this.props.selectIhtiyath(1)
+        en.prayer_names.forEach((_, index) => this.props.selectCorrections(index, 0))
         this.props.selectFormula(0)
+        localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
+        localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
+        localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
+        localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
+        localStorage.removeItem(this.state.CORRECTIONS_STORAGE_KEY)
         localStorage.removeItem(this.state.FORMULA_STORAGE_KEY)
       }
     })
@@ -41,6 +57,11 @@ class MainContainer extends React.Component {
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
                 <PrayerTimesContent
+                  selectCalculationMethod={this.props.selectCalculationMethod}
+                  selectAshrTime={this.props.selectAshrTime}
+                  selectConvention={this.props.selectConvention}
+                  selectIhtiyath={this.props.selectIhtiyath}
+                  selectCorrections={this.props.selectCorrections}
                   selectFormula={this.props.selectFormula}
                   resetSettings={this.resetSettings.bind(this)}
                 />
@@ -49,6 +70,11 @@ class MainContainer extends React.Component {
           : (
               <div className="prayer-times-container flex flex-col w-full h-full">
                 <PrayerTimesContent
+                  selectCalculationMethod={this.props.selectCalculationMethod}
+                  selectAshrTime={this.props.selectAshrTime}
+                  selectConvention={this.props.selectConvention}
+                  selectIhtiyath={this.props.selectIhtiyath}
+                  selectCorrections={this.props.selectCorrections}
                   selectFormula={this.props.selectFormula}
                   resetSettings={this.resetSettings.bind(this)}
                 />
