@@ -1,12 +1,12 @@
 import { adjustedIslamicDate, getCalendarData, getElementContent, getMoonInfos } from "./data"
 
 self.onmessage = event => {
-  const { type, months, gregorianDate, latitude, longitude, elevation, criteria, formula, lang, errMsg, innerHTML, timeZone } = event.data
+  const { type, months, gregorianDate, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, errMsg, innerHTML, timeZone } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(gregorianDate, months)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
   } else if (type === 'createCalendarData') {
-    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, formula, lang, errMsg)
+    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, sunAltitude.fajr, formula, lang, errMsg)
     self.postMessage({ type: 'createCalendarData', result })
   } else if (type === 'createIncludedElement') {
     const result = getElementContent(innerHTML)
