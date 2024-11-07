@@ -42,7 +42,6 @@ class App extends React.Component {
       elevation: 0,
       selectedLocation: "",
       selectedCriteria: 0,
-      errorMessage: { title: i18n.t('invalid_date_format.0'), text: i18n.t('invalid_date_format.1')},
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedIntervalUpdate: 1,
       selectedCalculationMethod: 0,
@@ -57,13 +56,14 @@ class App extends React.Component {
       tooltipId: '',
       hijriEventDates: [],
       moonInfos: [],
+      prayerTimes: [],
+      arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
       isSearching: false,
-      isDarkMode: false,
-      isFocused: false
+      isDarkMode: false
     }
     this.intervalId = null
     this.sliderRef = React.createRef()
@@ -414,11 +414,13 @@ class App extends React.Component {
         this.setState({ formattedDateTime: formattedDateTime }, () => {
           this.generateCalendar()
           this.generateMoonInfos()
+          this.generatePrayerTimes(formattedDateTime)
           this.goToCurrentMonth()
         })
       } else {
         this.generateCalendar()
         this.generateMoonInfos()
+        this.generatePrayerTimes(formattedDateTime)
       }
     } else {
       const localeString = new Date().toLocaleString('en', {
@@ -434,6 +436,7 @@ class App extends React.Component {
       this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
         this.generateCalendar()
         this.generateMoonInfos()
+        this.generatePrayerTimes(this.state.formattedDateTime)
       })
     }
   }
@@ -603,6 +606,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
       }
+      this.generatePrayerTimes(this.state.formattedDateTime)
     })
   }
 
@@ -611,6 +615,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.ASHR_TIME_STORAGE_KEY, JSON.stringify(this.state.selectedAshrTime))
       }
+      this.generatePrayerTimes(this.state.formattedDateTime)
     })
   }
 
@@ -622,6 +627,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
       }
+      this.generatePrayerTimes(this.state.formattedDateTime)
     })
   }
 
@@ -630,18 +636,20 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.IHTIYATH_STORAGE_KEY, JSON.stringify(this.state.selectedIhtiyath))
       }
+      this.generatePrayerTimes(this.state.formattedDateTime)
     })
   }
 
   selectCorrections (index, value) {
     this.setState(prevState => {
       const newCorrections = [...prevState.selectedCorrections]
-      newCorrections[index] = value
+      newCorrections[index] = parseInt(value)
       return { selectedCorrections: newCorrections }
     }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CORRECTIONS_STORAGE_KEY, JSON.stringify(this.state.selectedCorrections))
       }
+      this.generatePrayerTimes(this.state.formattedDateTime)
     })
   }
 
@@ -654,7 +662,7 @@ class App extends React.Component {
     })
   }
 
-  createCalendarWorker = (gregorianDate) => {
+  createCalendarWorker = gregorianDate => {
     return new Promise((resolve, reject) => {
       const calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
       calendarDataWorker.postMessage({
@@ -666,8 +674,7 @@ class App extends React.Component {
         criteria: this.state.selectedCriteria,
         sunAltitude: this.state.sunAltitude,
         formula: this.state.selectedFormula,
-        lang: this.state.selectedLanguage,
-        errMsg: this.state.errorMessage
+        lang: this.state.selectedLanguage
       })
       calendarDataWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createCalendarData') {
@@ -677,8 +684,8 @@ class App extends React.Component {
         this.setState({ isCalendarLoading: false })
       }
       calendarDataWorker.onerror = error => {
-        this.setState({ isCalendarLoading: false })
         calendarDataWorker.terminate()
+        this.setState({ isCalendarLoading: false }, () => console.error(error.message))
         reject(error)
       }
     })
@@ -795,12 +802,30 @@ class App extends React.Component {
     }
   }
 
-  onBlurHandler() {
-    this.setState({ isFocused: false })
-  }
-
-  onFocusHandler() {
-    this.setState({ isFocused: true })
+  generatePrayerTimes = gregorianDate => {
+    const prayerTimesWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    prayerTimesWorker.postMessage({
+      type: 'createPrayerTimes',
+      gregorianDate: gregorianDate,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      elevation: this.state.elevation,
+      calculationMethod: this.state.selectedCalculationMethod,
+      ashrTime: this.state.selectedAshrTime,
+      sunAltitude: this.state.sunAltitude,
+      ihtiyath: this.state.selectedIhtiyath,
+      formula: this.state.selectedFormula,
+      corrections: this.state.selectedCorrections
+    })
+    prayerTimesWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createPrayerTimes') {
+        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
+      }
+    }
+    prayerTimesWorker.onerror = error => {
+      prayerTimesWorker.terminate()
+      this.setState({ arePrayerTimesLoading: false }, () => console.error(error.message))
+    }
   }
 
   render() {

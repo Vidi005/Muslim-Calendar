@@ -25,7 +25,6 @@
     "latitude": "Latitude :",
     "longitude": "Longitude :",
     "elevation": "Elevation :",
-    "invalid_date_format": ["Error", "Invalid location coordinates or time zone"],
     "apply": "Apply",
     "hijri_date_criteria": "Criteria :",
     "date_criteria": [
@@ -69,7 +68,7 @@
         "1-1-event": "1 Muharram",
         "9-1-event": "Tasu'a",
         "10-1-event": "Ashura",
-        "12-3-event": "Maulid",
+        "12-3-event": "Maulid Nabi Muhammad",
         "27-7-event": "Lailat Al Miraj",
         "15-8-event": "Nisfu Sha'ban",
         "1-9-event": "Ramadan Start",
@@ -233,7 +232,8 @@
             "method": "Jafari",
             "sun_altitude": {
                 "fajr": 16,
-                "isha": 14
+                "isha": 14,
+                "maghrib": 4
             },
             "latitude_range": [12, 39.8],
             "longitude_range": [35.1, 63.3]
@@ -242,7 +242,8 @@
             "method": "Tehran",
             "sun_altitude": {
                 "fajr": 17.7,
-                "isha": 14
+                "isha": 14,
+                "maghrib": 4.5
             },
             "latitude_range": [25, 39.8],
             "longitude_range": [44, 63.3]
@@ -256,7 +257,7 @@
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
     "prayer_times_config": "Prayer Times Configuration :",
     "time_correction": "Time Correction :",
-    "prayer_names": ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
+    "prayer_names": ["Imsak", "Fajr", "Sunrise", "Dhuha", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
     "minutes": "mins",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",
     "moon_crescent_criteria": "Criteria :",

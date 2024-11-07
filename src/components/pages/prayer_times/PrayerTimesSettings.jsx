@@ -77,19 +77,21 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('time_correction')}</h4>
         <div className="flex flex-wrap items-center gap-2">
           {en.prayer_names.map((name, index) => (
-            <span key={name} className="flex items-center">
-              <label htmlFor="prayer-name">{t(`prayer_names.${index}`) + ' :'}</label>
-              <select
-                className="mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-                defaultValue={0}
-                value={state.selectedCorrections[index]}
-                onChange={event => selectCorrections(index, event.target.value)}
-                required
-              >
-                {prayerTimesCorrection().map(correction => <option key={correction} value={correction}>{correction}</option>)}
-              </select>
-              <span>{t('minutes')}</span>
-            </span>
+            (index !== 0 && index !== 2 && index !== 3) && (
+              <span key={name} className="flex items-center">
+                <label htmlFor="prayer-name">{t(`prayer_names.${index}`) + ' :'}</label>
+                <select
+                  className="mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                  defaultValue={0}
+                  value={state.selectedCorrections[index]}
+                  onChange={event => selectCorrections(index, event.target.value)}
+                  required
+                >
+                  {prayerTimesCorrection().map(correction => <option key={correction} value={correction}>{correction}</option>)}
+                </select>
+                <span>{t('minutes')}</span>
+              </span>
+            )
           ))}
         </div>
       </section>

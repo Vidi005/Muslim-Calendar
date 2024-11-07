@@ -25,7 +25,6 @@
     "latitude": "Lintang :",
     "longitude": "Bujur :",
     "elevation": "Ketinggian :",
-    "invalid_date_format": ["Galat", "Koordinat lokasi atau zona waktu tidak sesuai"],
     "apply": "Terapkan",
     "hijri_date_criteria": "Kriteria :",
     "date_criteria": [
@@ -69,7 +68,7 @@
         "1-1-event": "1 Muharram",
         "9-1-event": "Tasu'a",
         "10-1-event": "Asyura",
-        "12-3-event": "Maulid Nabi",
+        "12-3-event": "Maulid Nabi Muhammad",
         "27-7-event": "Isra Mi'raj",
         "15-8-event": "Nisfu Sya'ban",
         "1-9-event": "Awal Ramadhan",
@@ -233,7 +232,8 @@
             "method": "Jafari",
             "sun_altitude": {
                 "fajr": 16,
-                "isha": 14
+                "isha": 14,
+                "maghrib": 4
             },
             "latitude_range": [12, 39.8],
             "longitude_range": [35.1, 63.3]
@@ -242,7 +242,8 @@
             "method": "Tehran",
             "sun_altitude": {
                 "fajr": 17.7,
-                "isha": 14
+                "isha": 14,
+                "maghrib": 4.5
             },
             "latitude_range": [25, 39.8],
             "longitude_range": [44, 63.3]
@@ -256,7 +257,7 @@
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
     "prayer_times_config": "Pengaturan Waktu Sholat :",
     "time_correction": "Koreksi Waktu :",
-    "prayer_names": ["Subuh", "Terbit", "Dzuhur", "Ashar", "Maghrib", "Isya"],
+    "prayer_names": ["Imsak", "Subuh", "Terbit", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya"],
     "minutes": "menit",
     "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",
     "moon_crescent_criteria ": "Kriteria :",
