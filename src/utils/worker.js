@@ -1,12 +1,12 @@
-import { adjustedIslamicDate, getCalendarData, getElementContent, getMoonInfos } from "./data"
+import { adjustedIslamicDate, getCalendarData, getElementContent, getMoonInfos, getPrayerTimes } from "./data"
 
 self.onmessage = event => {
-  const { type, months, gregorianDate, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, errMsg, innerHTML, timeZone } = event.data
+  const { type, months, gregorianDate, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(gregorianDate, months)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
   } else if (type === 'createCalendarData') {
-    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, sunAltitude.fajr, formula, lang, errMsg)
+    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, sunAltitude.fajr, formula, lang)
     self.postMessage({ type: 'createCalendarData', result })
   } else if (type === 'createIncludedElement') {
     const result = getElementContent(innerHTML)
@@ -14,5 +14,8 @@ self.onmessage = event => {
   } else if (type === 'createMoonInfos') {
     const result = getMoonInfos(gregorianDate, timeZone, latitude, longitude, elevation, lang)
     self.postMessage({ type: 'createMoonInfos', result })
+  } else if (type === 'createPrayerTimes') {
+    const result = getPrayerTimes(gregorianDate, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections)
+    self.postMessage({ type: 'createPrayerTimes', result })
   }
 }
