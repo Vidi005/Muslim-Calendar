@@ -1,6 +1,8 @@
 import React from "react"
 import InputForm from "../InputForm"
 import PrayerTimesSettings from "./PrayerTimesSettings"
+import CurrentPrayerTimes from "./CurrentPrayerTimes"
+import PrayerTimesVisualization from "./PrayerTimesVisualization"
 
 const PrayerTimesContent = ({ selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectFormula, resetSettings }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
@@ -14,6 +16,10 @@ const PrayerTimesContent = ({ selectCalculationMethod, selectAshrTime, selectCon
       selectFormula={selectFormula}
       resetSettings={resetSettings}
     />
+    <div className="current-prayer-times flex flex-wrap">
+      <CurrentPrayerTimes/>
+      <PrayerTimesVisualization/>
+    </div>
   </article>
 )
 
