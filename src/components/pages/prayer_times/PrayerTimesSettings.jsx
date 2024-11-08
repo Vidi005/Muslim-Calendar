@@ -3,7 +3,7 @@ import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { prayerTimesCorrection } from "../../../utils/data"
 
-const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, selectAshrTime, selectIhtiyath, selectCorrections, selectFormula, resetSettings }) => (
+const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, selectAshrTime, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
   <HomePageConsumer>
     {({ t, state }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
@@ -93,6 +93,27 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
               </span>
             )
           ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-2 whitespace-nowrap">
+          <label htmlFor="dhuha_method">{t('dhuha_method')}</label>
+          <select
+            className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+            defaultValue={0}
+            value={state.selectedDhuhaMethod}
+            onChange={event => selectDhuhaMethod(Math.abs(state.latitude) > 48 ? 1 : event.target.value)}
+            required
+          >
+            {en.dhuha_methods.map((type, index) => <option key={type} value={index}>{t(`dhuha_methods.${index}`)}</option>)}
+          </select>
+          <input
+            type="number"
+            className="w-10 md:w-12 ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+            defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? 4.5 : 18}
+            value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? state.inputSunAltitude : state.inputMinutes}
+            onChange={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? onInputSunAltitudeChange : onInputMinutesChange}
+            required
+          />
+          <span>{state.selectedDhuhaMethod === 0 ? t('degrees') : t('minutes')}</span>
         </div>
       </section>
     )}

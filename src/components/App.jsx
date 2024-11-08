@@ -28,6 +28,9 @@ class App extends React.Component {
       CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
       CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
+      DHUHA_METHOD_STORAGE_KEY: "DHUHA_METHOD_STORAGE_KEY",
+      INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
+      INPUT_MINUTES_STORAGE_KEY: "INPUT_MINUTES_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       selectedLanguage: "en",
       currentDate: {},
@@ -50,6 +53,9 @@ class App extends React.Component {
       sunAltitude: en.conventions[0].sun_altitude,
       selectedIhtiyath: 1,
       selectedCorrections: Array(en.prayer_names.length).fill(0),
+      selectedDhuhaMethod: 0,
+      inputSunAltitude: 4.5,
+      inputMinutes: 18,
       selectedFormula: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
@@ -111,6 +117,9 @@ class App extends React.Component {
       this.checkSavedConvention()
       this.checkSavedIhtiyath()
       this.checkSavedCorrections()
+      this.checkSavedDhuhaMethod()
+      this.checkSavedInputtedSunAltitude()
+      this.checkSavedInputtedMinutes()
       this.checkSavedFormula()
     }
   }
@@ -292,6 +301,45 @@ class App extends React.Component {
     }    
   }
 
+  checkSavedDhuhaMethod () {
+    const getSavedDhuhaMethodFromLocal = localStorage.getItem(this.state.DHUHA_METHOD_STORAGE_KEY)
+    try {
+      const parsedSavedDhuhaMethod = JSON.parse(getSavedDhuhaMethodFromLocal)
+      if (parsedSavedDhuhaMethod !== null) {
+        this.setState({ selectedDhuhaMethod: parseInt(parsedSavedDhuhaMethod) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.DHUHA_METHOD_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
+
+  checkSavedInputtedSunAltitude () {
+    const getSavedInputtedSunAltitudeFromLocal = localStorage.getItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY)
+    try {
+      const parsedSavedInputtedSunAltitude = JSON.parse(getSavedInputtedSunAltitudeFromLocal)
+      if (parsedSavedInputtedSunAltitude !== null) {
+        this.setState({ inputSunAltitude: parseFloat(parsedSavedInputtedSunAltitude) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
+
+  checkSavedInputtedMinutes () {
+    const getSavedInputtedMinutesFromLocal = localStorage.getItem(this.state.INPUT_MINUTES_STORAGE_KEY)
+    try {
+      const parsedSavedInputtedMinutes = JSON.parse(getSavedInputtedMinutesFromLocal)
+      if (parsedSavedInputtedMinutes !== null) {
+        this.setState({ inputMinutes: parseInt(parsedSavedInputtedMinutes) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.INPUT_MINUTES_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }    
+  }
+
   checkSavedFormula () {
     const getSavedFormulaFromLocal = localStorage.getItem(this.state.FORMULA_STORAGE_KEY)
     try {
@@ -308,7 +356,7 @@ class App extends React.Component {
   getCurrentDate () {
     const currentDate = new Date()
     const adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
-    const georgian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+    const gregorian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
     const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     if (this.state.monthsInCurrentYear.length > 0) {
       adjustedDateWorker.postMessage({
@@ -320,7 +368,7 @@ class App extends React.Component {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
           const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
           this.setState({
-            currentDate: { georgian, islamic, time },
+            currentDate: { gregorian, islamic, time },
             seconds: new Date().getSeconds()
           }, () => adjustedDateWorker.terminate())
         }
@@ -515,12 +563,14 @@ class App extends React.Component {
   }
 
   onInputLatitudeChange (event) {
-    if (event.target.value > 90 || event.target.value < -90) return
-    this.setState({ latitude: parseFloat(event.target.value) })
+    if (Math.abs(event.target.value) > 90) return
+    this.setState({ latitude: parseFloat(event.target.value) }, () => {
+      if (Math.abs(this.state.latitude) > 48) this.selectDhuhaMethod(1)
+    })
   }
 
   onInputLongitudeChange (event) {
-    if (event.target.value > 180 || event.target.value < -180) return
+    if (Math.abs(event.target.value) > 180) return
     this.setState({ longitude: parseFloat(event.target.value) })
   }
 
@@ -653,6 +703,35 @@ class App extends React.Component {
     })
   }
 
+  selectDhuhaMethod (value) {
+    this.setState({ selectedDhuhaMethod: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.DHUHA_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedDhuhaMethod))
+      }
+      this.generatePrayerTimes(this.state.formattedDateTime)
+    })
+  }
+
+  onInputSunAltitudeChange (value) {
+    if (parseFloat(value) < 4 && parseFloat(value) > 8) return
+    this.setState({ inputSunAltitude: parseFloat(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
+      }
+      this.generatePrayerTimes(this.state.formattedDateTime)
+    })
+  }
+
+  onInputMinutesChange (value) {
+    if (parseInt(value) < 10 && parseInt(value) > 40) return
+    this.setState({ inputMinutes: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.INPUT_MINUTES_STORAGE_KEY, JSON.stringify(this.state.inputMinutes))
+      }
+      this.generatePrayerTimes(this.state.formattedDateTime)
+    })
+  }
+  
   selectFormula (value) {
     this.setState({ selectedFormula: parseInt(value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
@@ -815,11 +894,17 @@ class App extends React.Component {
       sunAltitude: this.state.sunAltitude,
       ihtiyath: this.state.selectedIhtiyath,
       formula: this.state.selectedFormula,
-      corrections: this.state.selectedCorrections
+      corrections: this.state.selectedCorrections,
+      dhuhaMethod: this.state.selectedDhuhaMethod,
+      inputSunAlt: this.state.inputSunAltitude,
+      inputMins: this.state.inputMinutes
     })
     prayerTimesWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createPrayerTimes') {
-        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
+        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => {
+          console.log(this.state.prayerTimes);
+          prayerTimesWorker.terminate()
+        })
       }
     }
     prayerTimesWorker.onerror = error => {
@@ -941,6 +1026,9 @@ class App extends React.Component {
                 selectConvention={this.selectConvention.bind(this)}
                 selectIhtiyath={this.selectIhtiyath.bind(this)}
                 selectCorrections={this.selectCorrections.bind(this)}
+                selectDhuhaMethod={this.selectDhuhaMethod.bind(this)}
+                onInputSunAltitudeChange={this.onInputSunAltitudeChange.bind(this)}
+                onInputMinutesChange={this.onInputMinutesChange.bind(this)}
                 selectFormula={this.selectFormula.bind(this)}
               />
             </HomePageProvider>

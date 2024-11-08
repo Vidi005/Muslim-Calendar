@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, EclipticLongitude, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -377,18 +377,30 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections) => {
+const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let fajr = null
   let sunrise = null
+  let dhuha = null
+  let ashr = null
   let maghrib = null
   let isha = null
+  let correctedAshrTime = ashr
   let correctedMaghribTime = maghrib
   let correctedIshaTime = isha
-  if (latitude > 48 || latitude < -48) {
+  let shadowFactor = 1
+  if (mahzab === 0) shadowFactor = 1
+  else shadowFactor = 2
+  if (Math.abs(latitude) > 48) {
+    let setLatitude = latitude
+    if (latitude > 48) setLatitude = 48
+    else setLatitude = -48
     if (formula === 0) {
-      if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
-      else observer = observerFromEarth(-45, longitude, elevation)
+      // Follow ±45 degrees latitude
+      let higherLat = latitude
+      if (latitude > 48) higherLat = 45
+      else higherLat = -45
+      observer = observerFromEarth(higherLat, longitude, elevation)
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (isNaN(sunAlt?.maghrib)) {
@@ -406,7 +418,14 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
         isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha)
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
+      const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+      const cotSunAltitudeAshr = Math.tan(higherLat - sunDeclination) + shadowFactor
+      const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+      const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     } else if (formula === 1) {
+      // Follow mecca coordinates
       observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
@@ -425,27 +444,139 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
         isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha)
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
-    } else {
-      // Others Formulas still not developed yet. Coming soon!
-      if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
-      else observer = observerFromEarth(-48, longitude, elevation)
-      fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
+      const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+      const cotSunAltitudeAshr = Math.tan(meccaCoordinates.latitude - sunDeclination) + shadowFactor
+      const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+      const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+    } else if (formula === 2) {
+      // Middle of the night
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
+      if (!sunrise) {
+        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+      }
       if (isNaN(sunAlt?.maghrib)) {
         maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
+        if (!maghrib) {
+          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+        }
       } else {
         maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
+        if (!maghrib) {
+          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+        }
       }
+      const nightDuration = sunrise.AddDays(1).date - maghrib.date
+      const fajrTime = sunrise.date.getTime() - nightDuration / 2
+      fajr = new AstroTime(new Date(fajrTime))
       correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
-      isha = new Date(correctedMaghribTime)
-      correctedIshaTime = isha
+      if (isNaN(sunAlt.isha)) {
+        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
+        correctedIshaTime = isha
+      } else {
+        const ishaTime = maghrib.date.getTime() + nightDuration / 2
+        isha = new Date(ishaTime)
+        correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
+      }
+      let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+      let cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+      let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+      let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      if (!ashr) {
+        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+        ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+      }
+      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+    } else if (formula === 3) {
+      // One-seventh of the night
+      sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
+      if (!sunrise) {
+        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+      }
+      if (isNaN(sunAlt?.maghrib)) {
+        maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
+        if (!maghrib) {
+          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+        }
+      } else {
+        maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
+        if (!maghrib) {
+          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+        }
+      }
+      const nightDuration = sunrise.AddDays(1).date - maghrib.date
+      const fajrTime = sunrise.date.getTime() - nightDuration / 7
+      fajr = new AstroTime(new Date(fajrTime))
+      correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
+      if (isNaN(sunAlt.isha)) {
+        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
+        correctedIshaTime = isha
+      } else {
+        const ishaTime = maghrib.date.getTime() + nightDuration / 7
+        isha = new Date(ishaTime)
+        correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
+      }
+      let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+      let cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+      let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+      let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      if (!ashr) {
+        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+        ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+      }
+      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+    } else {
+      // Angle-based method
+      sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
+      if (!sunrise) {
+        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+      }
+      if (isNaN(sunAlt?.maghrib)) {
+        maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
+        if (!maghrib) {
+          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+        }
+      } else {
+        maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
+        if (!maghrib) {
+          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+        }
+      }
+      const nightDuration = sunrise.AddDays(1).date - maghrib.date
+      const fajrTime = sunrise.date.getTime() - nightDuration * sunAlt.fajr / 60
+      fajr = new AstroTime(new Date(fajrTime))
+      correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
         isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
         correctedIshaTime = isha
       } else {
         isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha)
-        correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
+        const ishaTime = maghrib.date.getTime() + nightDuration * sunAlt.isha / 60
+        isha = new Date(ishaTime)
+        correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
       }
+      let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+      let cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+      let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+      let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      if (!ashr) {
+        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+        ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+      }
+      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     }
   } else {
     fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
@@ -465,39 +596,39 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
       isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha)
       correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
     }
+    const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
+    const cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+    const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+    const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
+    ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+    correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+  }
+  if (dhuhaMethod === 0) {
+    dhuha = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, inputSunAlt).date
+  } else {
+    dhuha = addTime(sunrise.date, inputMins, 0)
   }
   const correctedFajrTime = addTime(fajr.date, ihtiyath, corrections[1])
   const imsakTime = addTime(correctedFajrTime, -10, 0)
   const correctedSunrise = addTime(sunrise.date, -ihtiyath, 0)
+  const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
   const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
   const correctedDhuhrTime = addTime(dhuhr.date, ihtiyath, corrections[4])
-  const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-  const declinationInRad = (sunDeclination * Math.PI) / 180
-  const latitudeInRad = (latitude * Math.PI) / 180
-  let ashrSunAltitude = 0
-  if (mahzab === 0) {
-    ashrSunAltitude = Math.acos(1 + Math.tan(Math.abs(declinationInRad - latitudeInRad)))
-  } else {
-    ashrSunAltitude = Math.acos(2 + Math.tan(Math.abs(declinationInRad - latitudeInRad)))
-  }
-  const ashrHourAngle = Math.acos((Math.sin(ashrSunAltitude) - Math.sin(latitudeInRad) * Math.sin(sunDeclination)) / (Math.cos(latitudeInRad) * Math.cos(declinationInRad)))
-  const ashr = SearchHourAngle(Body.Sun, observer, ashrHourAngle, astroDate, 1).time
-  const correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
-  return { imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime }
+  return { imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime }
 }
 
-const calculateManually = (gregorianDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections) => {}
+const calculateManually = () => {}
 
-const getPrayerTimes = (gregorianDate, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections) => {
+const getPrayerTimes = (gregorianDate, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(startDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections)
+    calculatedPrayerTimes = calculateManually(startDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }

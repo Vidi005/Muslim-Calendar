@@ -169,9 +169,9 @@ const InputForm = () => (
                 <thead className="font-serif font-bold text-lg text-transparent text-left"><th colSpan={3}>{t('current_date')}</th></thead>
                 <thead className="font-serif font-bold text-lg text-left"><th colSpan={3}>{t('current_date')}</th></thead>
                 <tr className="font-bold">
-                  <td>{t('georgian_date')}</td>
+                  <td>{t('gregorian_date')}</td>
                   <td className="pl-1 pr-2">:</td>
-                  <td>{state.currentDate.georgian}</td>
+                  <td>{state.currentDate.gregorian}</td>
                 </tr>
                 <tr className="text-green-900 dark:text-black duration-200">
                   <td>{t('hijri_date')}</td>
@@ -206,9 +206,9 @@ const InputForm = () => (
               <table className="p-1 whitespace-nowrap">
                 <thead className="font-serif font-bold text-sm text-left"><th colSpan={3}>{t('current_date')}</th></thead>
                 <tr className="font-bold text-xs">
-                  <td>{t('georgian_date')}</td>
+                  <td>{t('gregorian_date')}</td>
                   <td className="pl-0.5 pr-1">:</td>
-                  <td className="w-full">{state.currentDate.georgian}</td>
+                  <td className="w-full">{state.currentDate.gregorian}</td>
                 </tr>
                 <tr className="text-green-900 dark:text-black text-xs duration-200">
                   <td>{t('hijri_date')}</td>
