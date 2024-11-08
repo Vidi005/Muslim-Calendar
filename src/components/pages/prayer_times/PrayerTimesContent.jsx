@@ -4,7 +4,7 @@ import PrayerTimesSettings from "./PrayerTimesSettings"
 import CurrentPrayerTimes from "./CurrentPrayerTimes"
 import PrayerTimesVisualization from "./PrayerTimesVisualization"
 
-const PrayerTimesContent = ({ selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectFormula, resetSettings }) => (
+const PrayerTimesContent = ({ selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <PrayerTimesSettings
@@ -13,6 +13,9 @@ const PrayerTimesContent = ({ selectCalculationMethod, selectAshrTime, selectCon
       selectConvention={selectConvention}
       selectIhtiyath={selectIhtiyath}
       selectCorrections={selectCorrections}
+      selectDhuhaMethod={selectDhuhaMethod}
+      onInputSunAltitudeChange={onInputSunAltitudeChange}
+      onInputMinutesChange={onInputMinutesChange}
       selectFormula={selectFormula}
       resetSettings={resetSettings}
     />
