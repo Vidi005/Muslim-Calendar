@@ -87,6 +87,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   if (criteria === 0) {
     // Global Hijri Calendar/KHGT
     while (true) {
+      // Search for New Moon backward
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
@@ -96,6 +97,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       fajr = SearchAltitude(Body.Sun, eastObserver, +1, newMoonDate, 1, -fajrAlt)
       sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       if (!sunset) {
+        // If sunset is not found, search for sunset on the lower latitude by using lower latitude observer or Mecca observer (based selected formula)
         if (formula === 0) {
           if (latitude > 48) westObserver = observerFromEarth(45, longitude, elevation)
           else westObserver = observerFromEarth(-45, longitude, elevation)
@@ -111,10 +113,13 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
       moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
       if (moonElongation.elongation >= 8 && moonHorizon.altitude >= 5) {
+        // Met the Global Hijri Calendar criteria
         return newMoonDate.AddDays(1)
       } else if (newMoonDate.date < fajr.date) {
+        // Met the Global Hijri Calendar criteria
         return newMoonDate.AddDays(1)
       } else {
+        // Didn't meet the Global Hijri Calendar criteria
         return newMoonDate.AddDays(2)
       }
     }
@@ -131,8 +136,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
       if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
+        // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
+        // Didn't meet the MABIMS criteria
         return newMoonDate.AddDays(2)
       }
     }
@@ -157,8 +164,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
       if (newMoon.date < sunset.date) {
+        // Met the Wujudul Hilal criteria
         return newMoonDate.AddDays(1)
       } else {
+        // Didn't meet the Wujudul Hilal criteria
         return newMoonDate.AddDays(2)
       }
     } while (true)
@@ -172,8 +181,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       if (newMoon.date < sunset.date) {
+        // Met the Ummul Qura criteria
         return newMoonDate.AddDays(1)
       } else {
+        // Didn't meet the Ummul Qura criteria
         return newMoonDate.AddDays(2)
       }
     } while (true)      
@@ -190,6 +201,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let nextMoonDate
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
+    // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
     newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, fajrAlt, formula).date
     if (newMoonDate instanceof Date) {
       newMoons.push(newMoonDate)
@@ -198,6 +210,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     }
   }
   const months = Array.from({ length: 12 }).map((_, monthIndex) => {
+    // Create month array for gregorian calendar and fill Hijri calendar days default/offset values with zero pad
     const firstDayOfMonth = new Date(gregorianDate.getFullYear(), monthIndex, 1).getDay()
     const daysInMonth = new Date(gregorianDate.getFullYear(), monthIndex + 1, 0).getDate()
     const daysArray = Array.from({ length: firstDayOfMonth }).fill(null)
@@ -212,6 +225,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     months.forEach((month, monthIdx) => {
       month.forEach(dayObj => {
         if (dayObj !== null) {
+          // Fill calculated Hijri calendar days into gregorian calendar
           currentMoonDate = newMoons[nextMoonIndex]
           nextMoonDate = newMoons[nextMoonIndex + 1]
           if (dayObj.gregorian === currentMoonDate.getDate() && monthIdx === currentMoonDate.getMonth()) hijriDayCounter = 1
@@ -224,6 +238,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
       })
     })
     if (moonDate.getFullYear() >= gregorianDate.getFullYear()) {
+      // Fill the last Hijri calendar days if hijri date didn't start from 1 January
       hijriDayCounter = 33 - newMoons[0].getDate()
       currentYearDaysOffset = newMoons[1].getDate() + gregorianFirstDate.getDay() - 1
       months[0].forEach((dayObj, dayIdx) => {
@@ -284,6 +299,7 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
     hijriYear = hijriDateInDay15.split('/')[1]
     Object.entries(muslimEvents).forEach(([key, eventId]) => {
       const [eventDay, eventMonth] = key.split("-").map(Number)
+      // Get Hijri Months from 15th day for each hijri months based built-in Javascript Islamic calendar format, because there are some difference of Hijri day offset for new moon for each Hijri Date criteria calculation
       eventHijriDay = 15 - (15 - eventDay)
       if (eventMonth === parseInt(hijriMonth)) {
         eventInGregorianDate = new Date(newMoon)
@@ -292,6 +308,7 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
           month.forEach(dayObj => {
             if (dayObj !== null && dayObj.hijri === eventHijriDay && monthIdx === eventInGregorianDate.getMonth() && eventInGregorianDate.getFullYear() === gregorianDate.getFullYear()) {
               dateKey = eventInGregorianDate.toISOString().split('T')[0]
+              // Make sure the Muslim Holiday event date in gregorian date is unique (Preventing pushed twice to event list)
               if (!filteredUniqueEventDates.has(dateKey)) {
                 filteredUniqueEventDates.add(dateKey)
                 hijriEvents.push({
@@ -377,7 +394,21 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const setTimeZone = (date, timeZone) => {
+  const localeString = date.toLocaleString('en', {
+    timeZone: timeZone,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  })
+  return new Date(Date.parse(localeString))
+}
+
+const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let fajr = null
   let sunrise = null
@@ -389,7 +420,9 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
   let correctedMaghribTime = maghrib
   let correctedIshaTime = isha
   let shadowFactor = 1
+  // For Shafii, Maliki, and Hanbali school (Standard)
   if (mahzab === 0) shadowFactor = 1
+  // For Hanafi school
   else shadowFactor = 2
   if (Math.abs(latitude) > 48) {
     let setLatitude = latitude
@@ -454,11 +487,13 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
       // Middle of the night
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
+        // If the Sun is not rising, we use lower latitude instead returning null values
         sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         if (!maghrib) {
+          // If Maghrib/the Sun never set, we use lower latitude instead returning null values
           maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
         }
       } else {
@@ -485,6 +520,7 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
       let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
+        // If the Ashr sun altitude never happens, we use lower latitude instead returning null values
         sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
         cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
@@ -604,31 +640,36 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, m
     correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
   }
   if (dhuhaMethod === 0) {
+    // Calculate Dhuha time based Sun altitude
     dhuha = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, inputSunAlt).date
   } else {
+    // Calculate Dhuha Time based Sunrise time
     dhuha = addTime(sunrise.date, inputMins, 0)
   }
-  const correctedFajrTime = addTime(fajr.date, ihtiyath, corrections[1])
-  const imsakTime = addTime(correctedFajrTime, -10, 0)
-  const correctedSunrise = addTime(sunrise.date, -ihtiyath, 0)
-  const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
+  const correctedFajrTime = setTimeZone(addTime(fajr.date, ihtiyath, corrections[1]), timeZone)
+  const imsakTime = setTimeZone(addTime(correctedFajrTime, -10, 0), timeZone)
+  const correctedSunrise = setTimeZone(addTime(sunrise.date, -ihtiyath, 0), timeZone)
+  const correctedDhuhaTime = setTimeZone(addTime(dhuha, ihtiyath, 0), timeZone)
   const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
-  const correctedDhuhrTime = addTime(dhuhr.date, ihtiyath, corrections[4])
+  const correctedDhuhrTime = setTimeZone(addTime(dhuhr.date, ihtiyath, corrections[4]), timeZone)
+  correctedAshrTime = setTimeZone(correctedAshrTime, timeZone)
+  correctedMaghribTime = setTimeZone(correctedMaghribTime, timeZone)
+  correctedIshaTime = setTimeZone(correctedIshaTime, timeZone)
   return { imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime }
 }
 
-const calculateManually = () => {}
+const calculateManually = (astroDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {}
 
-const getPrayerTimes = (gregorianDate, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, latitude, longitude, elevation, timeZone, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(startDate, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(startDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }

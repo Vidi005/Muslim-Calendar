@@ -256,7 +256,7 @@
     "formulas": ["Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
     "prayer_times_config": "Prayer Times Configuration :",
-    "time_correction": "Time Correction :",
+    "time_correction": "Times Correction :",
     "prayer_names": ["Imsak", "Fajr", "Sunrise", "Dhuha", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
     "dhuha_method": "Dhuha Method :",
     "dhuha_methods": ["Sun Altitude Based", "After Sunrise"],
