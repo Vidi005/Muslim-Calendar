@@ -15,7 +15,7 @@ self.onmessage = event => {
     const result = getMoonInfos(gregorianDate, timeZone, latitude, longitude, elevation, lang)
     self.postMessage({ type: 'createMoonInfos', result })
   } else if (type === 'createPrayerTimes') {
-    const result = getPrayerTimes(gregorianDate, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    const result = getPrayerTimes(gregorianDate, latitude, longitude, elevation, timeZone, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
   }
 }

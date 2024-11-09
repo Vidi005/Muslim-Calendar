@@ -15,35 +15,35 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      SIDEBAR_STATE_STORAGE_KEY: "SIDEBAR_STATE_STORAGE_KEY",
-      LANGUAGE_STORAGE_KEY: "LANGUAGE_STORAGE_KEY",
-      DARK_MODE_STORAGE_KEY: "DARK_MODE_STORAGE_KEY",
-      TOOLBAR_STATE_STORAGE_KEY: "TOOLBAR_STATE_STORAGE_KEY",
-      LOCATION_STATE_STORAGE_KEY: "LOCATION_STATE_STORAGE_KEY",
-      CRITERIA_STORAGE_KEY: "CRITERIA_STORAGE_KEY",
-      TIMEZONE_STORAGE_KEY: "TIMEZONE_STORAGE_KEY",
-      INTERVAL_UPDATES_STORAGE_KEY: "INTERVAL_UPDATES_STORAGE_KEY",
-      CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
-      ASHR_TIME_STORAGE_KEY: "ASHR_TIME_STORAGE_KEY",
-      CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
-      IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
-      CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
-      DHUHA_METHOD_STORAGE_KEY: "DHUHA_METHOD_STORAGE_KEY",
-      INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
-      INPUT_MINUTES_STORAGE_KEY: "INPUT_MINUTES_STORAGE_KEY",
-      FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
-      selectedLanguage: "en",
+      SIDEBAR_STATE_STORAGE_KEY: 'SIDEBAR_STATE_STORAGE_KEY',
+      LANGUAGE_STORAGE_KEY: 'LANGUAGE_STORAGE_KEY',
+      DARK_MODE_STORAGE_KEY: 'DARK_MODE_STORAGE_KEY',
+      TOOLBAR_STATE_STORAGE_KEY: 'TOOLBAR_STATE_STORAGE_KEY',
+      LOCATION_STATE_STORAGE_KEY: 'LOCATION_STATE_STORAGE_KEY',
+      CRITERIA_STORAGE_KEY: 'CRITERIA_STORAGE_KEY',
+      TIMEZONE_STORAGE_KEY: 'TIMEZONE_STORAGE_KEY',
+      INTERVAL_UPDATES_STORAGE_KEY: 'INTERVAL_UPDATES_STORAGE_KEY',
+      CALCULATION_METHOD_STORAGE_KEY: 'CALCULATION_METHOD_STORAGE_KEY',
+      ASHR_TIME_STORAGE_KEY: 'ASHR_TIME_STORAGE_KEY',
+      CONVENTION_STORAGE_KEY: 'CONVENTION_STORAGE_KEY',
+      IHTIYATH_STORAGE_KEY: 'IHTIYATH_STORAGE_KEY',
+      CORRECTIONS_STORAGE_KEY: 'CORRECTIONS_STORAGE_KEY',
+      DHUHA_METHOD_STORAGE_KEY: 'DHUHA_METHOD_STORAGE_KEY',
+      INPUT_SUN_ALTITUDE_STORAGE_KEY: 'INPUT_SUN_ALTITUDE_STORAGE_KEY',
+      INPUT_MINUTES_STORAGE_KEY: 'INPUT_MINUTES_STORAGE_KEY',
+      FORMULA_STORAGE_KEY: 'FORMULA_STORAGE_KEY',
+      selectedLanguage: 'en',
       currentDate: {},
       seconds: 0,
-      inputDate: "",
-      inputTime: "",
+      inputDate: '',
+      inputTime: '',
       formattedDateTime: new Date(),
-      inputLocation: "",
+      inputLocation: '',
       suggestedLocations: [],
       latitude: 0,
       longitude: 0,
       elevation: 0,
-      selectedLocation: "",
+      selectedLocation: '',
       selectedCriteria: 0,
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedIntervalUpdate: 1,
@@ -83,7 +83,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    document.body.classList.toggle("dark", this.state.isDarkMode)
+    document.body.classList.toggle('dark', this.state.isDarkMode)
     if (prevState.seconds !== this.state.seconds) {
       if (this.state.selectedIntervalUpdate === 3 && this.state.seconds % 60 === 0) {
         this.formatDateTime()
@@ -93,6 +93,11 @@ class App extends React.Component {
         this.formatDateTime()
       } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 5 === 0) {
         this.formatDateTime()
+      }
+    }
+    if (this.state.currentDate?.time) {
+      if (this.state.currentDate.time.includes('00:00:00')) {
+        this.generatePrayerTimes(this.state.formattedDateTime)
       }
     }
   }
@@ -186,7 +191,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime())
+        },() => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -209,10 +214,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime())
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime())
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -369,7 +374,7 @@ class App extends React.Component {
           const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
           this.setState({
             currentDate: { gregorian, islamic, time },
-            seconds: new Date().getSeconds()
+            seconds: currentDate.getSeconds()
           }, () => adjustedDateWorker.terminate())
         }
       }
@@ -433,7 +438,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime())
+    }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
   }
 
   setDesiredTime (event) {
@@ -441,52 +446,54 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value }
       }
-    }, () => this.formatDateTime())
+    }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
   }
 
   formatDateTime () {
-    if (this.state.inputDate !== "" && this.state.inputTime !== "") {
-      const configuredDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
-      const configuredLocaleString = configuredDateTime.toLocaleString('en', {
-        timeZone: this.state.selectedTimeZone,
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      })
-      const formattedDateTime = new Date(Date.parse(configuredLocaleString))
-      if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
-        this.setState({ formattedDateTime: formattedDateTime }, () => {
+    return new Promise(resolve => {
+      if (this.state.inputDate !== '' && this.state.inputTime !== '') {
+        const configuredDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
+        const configuredLocaleString = configuredDateTime.toLocaleString('en', {
+          timeZone: this.state.selectedTimeZone,
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        })
+        const formattedDateTime = new Date(Date.parse(configuredLocaleString))
+        if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
+          this.setState({ formattedDateTime: formattedDateTime }, () => {
+            this.generateCalendar()
+            this.generateMoonInfos()
+            this.goToCurrentMonth()
+            resolve()
+          })
+        } else {
           this.generateCalendar()
           this.generateMoonInfos()
-          this.generatePrayerTimes(formattedDateTime)
-          this.goToCurrentMonth()
-        })
+          resolve()
+        }
       } else {
-        this.generateCalendar()
-        this.generateMoonInfos()
-        this.generatePrayerTimes(formattedDateTime)
+        const localeString = new Date().toLocaleString('en', {
+          timeZone: this.state.selectedTimeZone,
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        })
+        this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
+          this.generateCalendar()
+          this.generateMoonInfos()
+          resolve()
+        })
       }
-    } else {
-      const localeString = new Date().toLocaleString('en', {
-        timeZone: this.state.selectedTimeZone,
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      })
-      this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
-        this.generateCalendar()
-        this.generateMoonInfos()
-        this.generatePrayerTimes(this.state.formattedDateTime)
-      })
-    }
+    })
   }
 
   getCurrentLocation () {
@@ -499,7 +506,7 @@ class App extends React.Component {
         }, () => {
           this.getCurrentCriteria()
           this.getCurrentConvention()
-          this.formatDateTime()
+          this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
         })
       }, error => {
@@ -513,8 +520,8 @@ class App extends React.Component {
   }
 
   restoreDateTime () {
-    this.setState({ inputDate: "", inputTime: "" }, () => {
-      this.formatDateTime()
+    this.setState({ inputDate: '', inputTime: '' }, () => {
+      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
       this.goToCurrentMonth()
     })
   }
@@ -532,17 +539,18 @@ class App extends React.Component {
     }).then(result => {
       if (result.isConfirmed) {
         this.setState({
-          inputLocation: "",
-          inputDate: "",
-          inputTime: "",
+          inputLocation: '',
+          inputDate: '',
+          inputTime: '',
           latitude: 0,
           longitude: 0,
           elevation: 0,
-          selectedLocation: "",
+          selectedLocation: '',
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.formatDateTime()
-          this.getCurrentLocation()
+            .then(() => this.getCurrentLocation())
+            .then(() => this.generatePrayerTimes(this.state.formattedDateTime))
           this.selectTimeZone(this.state.selectedTimeZone)
           this.selectIntervalUpdate(1)
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -595,6 +603,7 @@ class App extends React.Component {
       }).finally(() => {
         this.getCurrentCriteria()
         this.getCurrentConvention()
+        this.generatePrayerTimes(this.state.formattedDateTime)
       })
     }
   }
@@ -626,7 +635,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime()
+      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
     })
   }
 
@@ -737,7 +746,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
-      this.formatDateTime()
+      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
     })
   }
 
@@ -835,7 +844,7 @@ class App extends React.Component {
                 tooltip.style.left = `${leftPosition - tooltipWidth}px`
                 tooltip.style.right = 'auto'
               }
-              const scrollOffset = window.scrollY || window.pageYOffset
+              const scrollOffset = scrollY || pageYOffset
               tooltip.style.top = `${event.clientY / 2 - tooltipHeight - 10 - scrollOffset}px`
             }
             tooltipWorker.terminate()
@@ -889,6 +898,7 @@ class App extends React.Component {
       latitude: this.state.latitude,
       longitude: this.state.longitude,
       elevation: this.state.elevation,
+      timeZone: this.state.selectedTimeZone,
       calculationMethod: this.state.selectedCalculationMethod,
       ashrTime: this.state.selectedAshrTime,
       sunAltitude: this.state.sunAltitude,
@@ -901,10 +911,7 @@ class App extends React.Component {
     })
     prayerTimesWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createPrayerTimes') {
-        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => {
-          console.log(this.state.prayerTimes);
-          prayerTimesWorker.terminate()
-        })
+        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
       }
     }
     prayerTimesWorker.onerror = error => {
