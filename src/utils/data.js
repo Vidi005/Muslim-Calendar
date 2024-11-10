@@ -345,17 +345,17 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
   const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
-  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
-  const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
+  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, false)
   const moonRightAscension = `${moonEquatorJ2000.ra.toFixed(2)}°`
-  const moonEcliptic = EclipticGeoMoon(astroDate)
-  const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
-  const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
+  const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
   const distanceInKm = `${(geoDistanceAU * 1495978707 / 10).toFixed(2)} km`
+  const moonEcliptic = EclipticGeoMoon(astroDate)
+  const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
+  const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
   const elongation = AngleFromSun(Body.Moon, astroDate)
   const moonElongation = `${elongation.toFixed(2)}°`
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
@@ -363,24 +363,29 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
+  const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
+  const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
+  const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
   return [
     moonAge,
     illuminationPercent,
     `${phaseAngle}°`,
-    moonDeclination,
     moonRightAscension,
-    moonLatitude,
-    moonLongitude,
+    moonDeclination,
     moonAltitude,
     moonAzimuth,
     distanceInKm,
+    moonLatitude,
+    moonLongitude,
     moonElongation,
     moonrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     moonset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     lastNewMoonDateTime,
     nextNewMoonDateTime,
+    `${sunAltitude.toFixed(2)}°`,
+    `${sunAzimuth.toFixed(2)}°`,
     sunrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     sunset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--'
   ]
@@ -452,7 +457,7 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
       const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      const cotSunAltitudeAshr = Math.tan(higherLat - sunDeclination) + shadowFactor
+      const cotSunAltitudeAshr = Math.tan(Math.abs(higherLat - sunDeclination) * Math.PI / 180) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
@@ -478,7 +483,7 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
       const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      const cotSunAltitudeAshr = Math.tan(meccaCoordinates.latitude - sunDeclination) + shadowFactor
+      const cotSunAltitudeAshr = Math.tan(Math.abs(meccaCoordinates.latitude - sunDeclination) * Math.PI / 180) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
@@ -515,14 +520,14 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
       }
       let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      let cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+      let cotSunAltitudeAshr = Math.tan(Math.abs(latitude - sunDeclination) * Math.PI / 180) + shadowFactor
       let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
         // If the Ashr sun altitude never happens, we use lower latitude instead returning null values
         sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
-        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        cotSunAltitudeAshr = Math.tan(Math.abs(setLatitude - sunDeclination) * Math.PI / 180) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
@@ -558,13 +563,13 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
       }
       let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      let cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+      let cotSunAltitudeAshr = Math.tan(Math.abs(latitude - sunDeclination) * Math.PI / 180) + shadowFactor
       let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
         sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
-        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        cotSunAltitudeAshr = Math.tan(Math.abs(setLatitude - sunDeclination) * Math.PI / 180) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
@@ -601,13 +606,13 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
       }
       let sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      let cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+      let cotSunAltitudeAshr = Math.tan(Math.abs(setLatitude - sunDeclination) * Math.PI / 180) + shadowFactor
       let tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       let ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
         sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
-        cotSunAltitudeAshr = Math.tan(setLatitude - sunDeclination) + shadowFactor
+        cotSunAltitudeAshr = Math.tan(Math.abs(setLatitude - sunDeclination) * Math.PI / 180) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
@@ -633,7 +638,7 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
       correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
     }
     const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-    const cotSunAltitudeAshr = Math.tan(latitude - sunDeclination) + shadowFactor
+    const cotSunAltitudeAshr = Math.tan(Math.abs(latitude - sunDeclination) * Math.PI / 180) + shadowFactor
     const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
     const ashrSunAltitude = Math.atan(tanSunAltitudeAshr) * 180 / Math.PI
     ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
@@ -647,7 +652,7 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
     dhuha = addTime(sunrise.date, inputMins, 0)
   }
   const correctedFajrTime = setTimeZone(addTime(fajr.date, ihtiyath, corrections[1]), timeZone)
-  const imsakTime = setTimeZone(addTime(correctedFajrTime, -10, 0), timeZone)
+  const imsakTime = addTime(correctedFajrTime, -10, 0)
   const correctedSunrise = setTimeZone(addTime(sunrise.date, -ihtiyath, 0), timeZone)
   const correctedDhuhaTime = setTimeZone(addTime(dhuha, ihtiyath, 0), timeZone)
   const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
@@ -655,10 +660,10 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
   correctedAshrTime = setTimeZone(correctedAshrTime, timeZone)
   correctedMaghribTime = setTimeZone(correctedMaghribTime, timeZone)
   correctedIshaTime = setTimeZone(correctedIshaTime, timeZone)
-  return { imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime }
+  return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const calculateManually = (astroDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {}
+const calculateManually = (astroDate, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => []
 
 const getPrayerTimes = (gregorianDate, latitude, longitude, elevation, timeZone, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
