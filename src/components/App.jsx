@@ -97,7 +97,7 @@ class App extends React.Component {
     }
     if (this.state.currentDate?.time) {
       if (this.state.currentDate.time.includes('00:00:00')) {
-        this.generatePrayerTimes(this.state.formattedDateTime)
+        this.create3DaysOfPrayerTimes()
       }
     }
   }
@@ -191,7 +191,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
+        },() => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -214,10 +214,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -438,7 +438,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
+    }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
   }
 
   setDesiredTime (event) {
@@ -446,7 +446,7 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime)))
+    }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
   }
 
   formatDateTime () {
@@ -506,7 +506,7 @@ class App extends React.Component {
         }, () => {
           this.getCurrentCriteria()
           this.getCurrentConvention()
-          this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
+          this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
         })
       }, error => {
@@ -521,7 +521,7 @@ class App extends React.Component {
 
   restoreDateTime () {
     this.setState({ inputDate: '', inputTime: '' }, () => {
-      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
+      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
       this.goToCurrentMonth()
     })
   }
@@ -548,9 +548,7 @@ class App extends React.Component {
           selectedLocation: '',
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
-          this.formatDateTime()
-            .then(() => this.getCurrentLocation())
-            .then(() => this.generatePrayerTimes(this.state.formattedDateTime))
+          this.formatDateTime().then(() => this.getCurrentLocation())
           this.selectTimeZone(this.state.selectedTimeZone)
           this.selectIntervalUpdate(1)
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -603,7 +601,7 @@ class App extends React.Component {
       }).finally(() => {
         this.getCurrentCriteria()
         this.getCurrentConvention()
-        this.generatePrayerTimes(this.state.formattedDateTime)
+        this.create3DaysOfPrayerTimes()
       })
     }
   }
@@ -635,7 +633,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
+      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
     })
   }
 
@@ -665,7 +663,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CALCULATION_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedCalculationMethod))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -674,7 +672,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.ASHR_TIME_STORAGE_KEY, JSON.stringify(this.state.selectedAshrTime))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -686,7 +684,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -695,7 +693,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.IHTIYATH_STORAGE_KEY, JSON.stringify(this.state.selectedIhtiyath))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -708,7 +706,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CORRECTIONS_STORAGE_KEY, JSON.stringify(this.state.selectedCorrections))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -717,27 +715,27 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.DHUHA_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedDhuhaMethod))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
-  onInputSunAltitudeChange (value) {
-    if (parseFloat(value) < 4 && parseFloat(value) > 8) return
-    this.setState({ inputSunAltitude: parseFloat(value) }, () => {
+  onInputSunAltitudeChange (event) {
+    if (parseFloat(event.target.value) < 4 || parseFloat(event.target.value) > 8) return
+    this.setState({ inputSunAltitude: parseFloat(event.target.value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
 
-  onInputMinutesChange (value) {
-    if (parseInt(value) < 10 && parseInt(value) > 40) return
-    this.setState({ inputMinutes: parseInt(value) }, () => {
+  onInputMinutesChange (event) {
+    if (parseInt(event.target.value) < 10 || parseInt(event.target.value) > 40) return
+    this.setState({ inputMinutes: parseInt(event.target.value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.INPUT_MINUTES_STORAGE_KEY, JSON.stringify(this.state.inputMinutes))
       }
-      this.generatePrayerTimes(this.state.formattedDateTime)
+      this.create3DaysOfPrayerTimes()
     })
   }
   
@@ -746,7 +744,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
-      this.formatDateTime().then(() => this.generatePrayerTimes(this.state.formattedDateTime))
+      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
     })
   }
 
@@ -891,33 +889,49 @@ class App extends React.Component {
   }
 
   generatePrayerTimes = gregorianDate => {
-    const prayerTimesWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
-    prayerTimesWorker.postMessage({
-      type: 'createPrayerTimes',
-      gregorianDate: gregorianDate,
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
-      elevation: this.state.elevation,
-      timeZone: this.state.selectedTimeZone,
-      calculationMethod: this.state.selectedCalculationMethod,
-      ashrTime: this.state.selectedAshrTime,
-      sunAltitude: this.state.sunAltitude,
-      ihtiyath: this.state.selectedIhtiyath,
-      formula: this.state.selectedFormula,
-      corrections: this.state.selectedCorrections,
-      dhuhaMethod: this.state.selectedDhuhaMethod,
-      inputSunAlt: this.state.inputSunAltitude,
-      inputMins: this.state.inputMinutes
-    })
-    prayerTimesWorker.onmessage = workerEvent => {
-      if (workerEvent.data.type === 'createPrayerTimes') {
-        this.setState({ prayerTimes: workerEvent.data.result, arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
+    return new Promise((resolve, reject) => {
+      const prayerTimesWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+      prayerTimesWorker.postMessage({
+        type: 'createPrayerTimes',
+        gregorianDate: gregorianDate,
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        elevation: this.state.elevation,
+        timeZone: this.state.selectedTimeZone,
+        calculationMethod: this.state.selectedCalculationMethod,
+        ashrTime: this.state.selectedAshrTime,
+        sunAltitude: this.state.sunAltitude,
+        ihtiyath: this.state.selectedIhtiyath,
+        formula: this.state.selectedFormula,
+        corrections: this.state.selectedCorrections,
+        dhuhaMethod: this.state.selectedDhuhaMethod,
+        inputSunAlt: this.state.inputSunAltitude,
+        inputMins: this.state.inputMinutes
+      })
+      prayerTimesWorker.onmessage = workerEvent => {
+        if (workerEvent.data.type === 'createPrayerTimes') {
+          this.setState({ arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
+          resolve(workerEvent.data.result)
+        }
       }
-    }
-    prayerTimesWorker.onerror = error => {
-      prayerTimesWorker.terminate()
-      this.setState({ arePrayerTimesLoading: false }, () => console.error(error.message))
-    }
+      prayerTimesWorker.onerror = error => {
+        prayerTimesWorker.terminate()
+        this.setState({ arePrayerTimesLoading: false }, () => console.error(error.message))
+        reject(error.message)
+      }
+    })
+  }
+
+  create3DaysOfPrayerTimes = () => {
+    const theDayBefore = new Date(this.state.formattedDateTime)
+    theDayBefore.setDate(theDayBefore.getDate() - 1)
+    const theDayAfter = new Date(this.state.formattedDateTime)
+    theDayAfter.setDate(theDayAfter.getDate() + 1)
+    Promise.all([
+      this.generatePrayerTimes(theDayBefore),
+      this.generatePrayerTimes(this.state.formattedDateTime),
+      this.generatePrayerTimes(theDayAfter)
+    ]).then(prayerTimes => { this.setState({ prayerTimes: prayerTimes }) })
   }
 
   render() {
