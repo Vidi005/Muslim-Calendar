@@ -502,12 +502,17 @@ class App extends React.Component {
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          elevation: position.coords.elevation || 1
+          elevation: position.coords.elevation || 1,
+          selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.getCurrentCriteria()
           this.getCurrentConvention()
-          this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
-          localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+          this.formatDateTime()
+            .then(() => this.selectTimeZone(this.state.selectedTimeZone))
+            .then(() => this.create3DaysOfPrayerTimes()).finally(() => {
+              localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+              localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
+            })
         })
       }, error => {
         this.setState({ selectedLocation: error.message })

@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, EclipticLongitude, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -656,7 +656,8 @@ const calculateByAstronomyEngine = (astroDate, latitude, longitude, elevation, t
   const correctedSunrise = setTimeZone(addTime(sunrise.date, -ihtiyath, 0), timeZone)
   const correctedDhuhaTime = setTimeZone(addTime(dhuha, ihtiyath, 0), timeZone)
   const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
-  const correctedDhuhrTime = setTimeZone(addTime(dhuhr.date, ihtiyath, corrections[4]), timeZone)
+  const dhuhrDescendCorrection = 1
+  const correctedDhuhrTime = setTimeZone(addTime(dhuhr.date, ihtiyath + dhuhrDescendCorrection, corrections[4]), timeZone)
   correctedAshrTime = setTimeZone(correctedAshrTime, timeZone)
   correctedMaghribTime = setTimeZone(correctedMaghribTime, timeZone)
   correctedIshaTime = setTimeZone(correctedIshaTime, timeZone)
