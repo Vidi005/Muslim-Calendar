@@ -34,7 +34,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
         <section className="calendar-section flex flex-wrap md:flex-nowrap max-w-full">
           <div className="w-full md:w-2/3 lg:w-3/4 px-7 overflow-hidden">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('calendar')}</h1>
-            <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{t('current_month')}</button>
+            <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date ? t('set_month') : t('current_month')}</button>
             {state.isCalendarLoading
               ? (
                 <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
@@ -160,6 +160,10 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
           </div>
           <div className="flex flex-col items-center w-full md:w-1/3 lg:w-1/4 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_info')}</h1>
+            {state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date
+              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_moon_info')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage, { day: '2-digit', month: '2-digit', year: 'numeric' })}</h5>
+              : null
+            }
             <div className="moon-phase w-full p-4 overflow-hidden">
               <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[6])}deg)` }}>
                 <img className="w-full object-contain object-center brightness-125" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon Phase" />
