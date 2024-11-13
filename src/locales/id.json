@@ -21,6 +21,7 @@
     "yes": "Ya",
     "no": "Tidak",
     "location": "Lokasi :",
+    "geocoding": "Menentukan lokasi...",
     "search_location": "Cari Lokasi...",
     "latitude": "Lintang :",
     "longitude": "Bujur :",

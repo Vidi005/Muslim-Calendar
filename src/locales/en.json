@@ -21,6 +21,7 @@
     "yes": "Yes",
     "no": "No",
     "location": "Location :",
+    "geocoding": "Geocoding...",
     "search_location": "Search Location...",
     "latitude": "Latitude :",
     "longitude": "Longitude :",

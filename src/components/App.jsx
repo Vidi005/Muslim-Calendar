@@ -43,8 +43,9 @@ class App extends React.Component {
       latitude: 0,
       longitude: 0,
       elevation: 0,
-      selectedLocation: '',
+      selectedLocation: {},
       selectedCriteria: 0,
+      nearestCity: '',
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedIntervalUpdate: 1,
       selectedCalculationMethod: 0,
@@ -68,6 +69,7 @@ class App extends React.Component {
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
+      isGeocoding: false,
       isSearching: false,
       isDarkMode: false
     }
@@ -496,6 +498,64 @@ class App extends React.Component {
     })
   }
 
+  loadCitiesData = async () => {
+    const response = await fetch(`${import.meta.env.BASE_URL}db/world-cities-min.json`)
+    if (!response.ok) {
+      Swal.fire({
+        title: i18n.t('error'),
+        text: response.status,
+        icon: 'error',
+        confirmButtonText: i18n.t('ok'),
+        confirmButtonColor: 'green'
+      })
+    }
+    else {
+      return await response.json()
+    }
+  }
+
+  generateNearestCity = worldCities => {
+    this.setState({ isGeocoding: true, inputLocation: '', selectedLocation: {} })
+    const nearestCityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    nearestCityWorker.postMessage({
+      type: 'createHaversineDistance',
+      cityData: worldCities,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    })
+    nearestCityWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createHaversineDistance') {
+        this.setState({ selectedLocation: workerEvent.data.result })
+      }
+      this.setState({ isGeocoding: false })
+      nearestCityWorker.terminate()
+    }
+    nearestCityWorker.onerror = error => {
+      nearestCityWorker.terminate()
+      this.setState({ isGeocoding: false, selectedLocation: error.message })
+    }
+  }
+
+  generateCities = worldCities => {
+    const citiesDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    citiesDataWorker.postMessage({
+      type: 'createCityData',
+      cityData: worldCities,
+      query: this.state.inputLocation
+    })
+    citiesDataWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createCityData') {
+        this.setState({ suggestedLocations: workerEvent.data.result })
+      }
+      citiesDataWorker.terminate()
+      this.setState({ isSearching: false })
+    }
+    citiesDataWorker.onerror = error => {
+      citiesDataWorker.terminate()
+      this.setState({ isSearching: false, selectedLocation: error.message })
+    }
+  }
+
   getCurrentLocation () {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -509,7 +569,9 @@ class App extends React.Component {
           this.getCurrentConvention()
           this.formatDateTime()
             .then(() => this.selectTimeZone(this.state.selectedTimeZone))
-            .then(() => this.create3DaysOfPrayerTimes()).finally(() => {
+            .then(() => this.create3DaysOfPrayerTimes())
+            .then(() => this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities)))
+            .finally(() => {
               localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
               localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
             })
@@ -550,7 +612,7 @@ class App extends React.Component {
           latitude: 0,
           longitude: 0,
           elevation: 0,
-          selectedLocation: '',
+          selectedLocation: {},
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.formatDateTime().then(() => this.getCurrentLocation())
@@ -566,11 +628,25 @@ class App extends React.Component {
   }
 
   onInputLocationChange (inputLocation) {
-    this.setState({ inputLocation: inputLocation })
+    if (!this.state.isGeocoding) {
+      if (inputLocation.length < 3) this.setState({ isSearching: false, suggestedLocations: [] })
+      else {
+        this.setState({ isSearching: true, inputLocation: inputLocation }, () => {
+          this.loadCitiesData().then(worldCities => this.generateCities(worldCities))
+        })
+      }
+    }
   }
 
+  onClearLocationInput = () => this.setState({ inputLocation: '', selectedLocation: {} })
+
   setSelectedLocation (location) {
-    this.setState({ selectedLocation: location })
+    this.setState({
+      selectedLocation: location,
+      latitude: location.lat,
+      longitude: location.lng,
+      elevation: 1
+    }, () => this.applyLocationCoordinates())
   }
 
   onInputLatitudeChange (event) {
@@ -962,6 +1038,7 @@ class App extends React.Component {
               restoreDateTime: this.restoreDateTime.bind(this),
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
+              onClearLocationInput: this.onClearLocationInput.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
@@ -998,6 +1075,7 @@ class App extends React.Component {
               restoreDateTime: this.restoreDateTime.bind(this),
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
+              onClearLocationInput: this.onClearLocationInput.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
@@ -1034,6 +1112,7 @@ class App extends React.Component {
               restoreDateTime: this.restoreDateTime.bind(this),
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
+              onClearLocationInput: this.onClearLocationInput.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
@@ -1073,6 +1152,7 @@ class App extends React.Component {
               restoreDateTime: this.restoreDateTime.bind(this),
               resetSettings: this.resetSettings.bind(this),
               onInputLocationChange: this.onInputLocationChange.bind(this),
+              onClearLocationInput: this.onClearLocationInput.bind(this),
               selectCriteria: this.selectCriteria.bind(this),
               selectTimeZone: this.selectTimeZone.bind(this),
               selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
