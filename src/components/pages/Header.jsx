@@ -13,7 +13,7 @@ const HeaderContainer = () => (
                   <img className="h-8 object-contain drop-shadow-md px-1" src={`${import.meta.env.BASE_URL}images/sidebar-icon.svg`}/>
                 </button>
               )
-            : <img className="h-8 p-0.5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/calendar-icon.svg`} alt="App Icon" />
+            : <img className="h-8 p-0.5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/mc-icon.png`} alt="App Icon" />
           }
           <h3 className="grow px-2 font-serif text-white whitespace-nowrap">{t('app_name')}</h3>
         </section>
