@@ -1,10 +1,16 @@
-import { adjustedIslamicDate, getCalendarData, getElementContent, getMoonInfos, getPrayerTimes } from "./data"
+import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonInfos, getNearestCity, getPrayerTimes } from "./data"
 
 self.onmessage = event => {
-  const { type, months, gregorianDate, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins } = event.data
+  const { type, months, gregorianDate, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(gregorianDate, months)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
+  } else if (type === 'createCityData') {
+    const result = getCitiesByName(cityData, query)
+    self.postMessage({ type: 'createCityData', result })
+  } else if (type === 'createHaversineDistance') {
+    const result = getNearestCity(cityData, latitude, longitude)
+    self.postMessage({ type: 'createHaversineDistance', result })
   } else if (type === 'createCalendarData') {
     const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, sunAltitude.fajr, formula, lang)
     self.postMessage({ type: 'createCalendarData', result })
