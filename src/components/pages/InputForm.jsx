@@ -6,7 +6,7 @@ import { getTimeZoneList } from "../../utils/data"
 
 const InputForm = () => (
   <HomePageConsumer>
-    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectTimeZone, selectIntervalUpdate }) => {
+    {({ t, selectedLanguage, state, toggleToolbar, setDesiredDate, setDesiredTime, getCurrentLocation, restoreDateTime, resetSettings, onInputLocationChange, onClearLocationInput, setSelectedLocation, onInputLatitudeChange, onInputLongitudeChange, onInputAltitudeChange, applyLocationCoordinates, selectCriteria, selectTimeZone, selectIntervalUpdate }) => {
       if (innerWidth > 1024) {
         return (
           <section className="form-container sticky top-0 shadow-md z-10">
@@ -62,12 +62,13 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Combobox as={"span"} className={"flex items-center"} value={state.selectedLocation} onChange={setSelectedLocation}>
                     <Combobox.Label>{t('location')}&nbsp;</Combobox.Label>
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
                       <Combobox.Input
                         className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
                         onChange={event => onInputLocationChange(event.target.value)}
-                        displayValue={location => location || ''}
-                        placeholder={t('search_location')}
+                        displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
+                        placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
+                        aria-disabled={state.isGeocoding}
                       ></Combobox.Input>
                       {state.isSearching && (
                         <Combobox.Button className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
@@ -75,7 +76,7 @@ const InputForm = () => (
                         </Combobox.Button>
                       )}
                       {state.inputLocation.length > 0 && !state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-1.5 py-0.5 text-base text-red-700 rounded-r"}>X</Combobox.Button>
+                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
                       )}
                       <Transition
                         as={Fragment}
@@ -85,18 +86,19 @@ const InputForm = () => (
                         leave="ease-in duration-200"
                         leaveFrom="opacity-100 scale-100 translate-y-full"
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
+                        afterLeave={() => onInputLocationChange('')}
                       >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-16 w-max bg-green-200/50 dark:bg-gray-200/50 backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_locations_found')}</span>
                             : (
                                 state.suggestedLocations.map(location => (
                                   <Combobox.Option
-                                    key={location}
+                                    key={location.city}
                                     value={location}
                                     className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
                                   >
-                                    {location}
+                                    {`${location.city}, ${location.admin_name}, ${location.country}`}
                                   </Combobox.Option>
                               )))
                           }
@@ -260,12 +262,13 @@ const InputForm = () => (
                 <form className="flex flex-wrap items-center justify-center gap-2" onSubmit={e => e.preventDefault()}>
                   <Combobox as={"span"} className={"flex items-center gap-1 text-sm"} value={state.selectedLocation} onChange={setSelectedLocation}>
                     <Combobox.Label>{t('location')}&nbsp;</Combobox.Label>
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
                       <Combobox.Input
                         className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
                         onChange={event => onInputLocationChange(event.target.value)}
-                        displayValue={location => location || ''}
-                        placeholder={t('search_location')}
+                        displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
+                        placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
+                        aria-disabled={state.isGeocoding}
                       ></Combobox.Input>
                       {state.isSearching && (
                         <Combobox.Button className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
@@ -273,7 +276,7 @@ const InputForm = () => (
                         </Combobox.Button>
                       )}
                       {state.inputLocation.length > 0 && !state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-1.5 py-0.5 text-base text-red-700 rounded-r"}>X</Combobox.Button>
+                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
                       )}
                       <Transition
                         as={Fragment}
@@ -283,18 +286,19 @@ const InputForm = () => (
                         leave="ease-in duration-200"
                         leaveFrom="opacity-100 scale-100 translate-y-full"
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
+                        afterLeave={() => onInputLocationChange('')}
                       >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-16 w-max bg-green-200/50 dark:bg-gray-200/50 backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_locations_found')}</span>
                             : (
                                 state.suggestedLocations.map(location => (
                                   <Combobox.Option
-                                    key={location}
+                                    key={location.city}
                                     value={location}
                                     className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
                                   >
-                                    {location}
+                                    {`${location.city}, ${location.admin_name}, ${location.country}`}
                                   </Combobox.Option>
                               )))
                           }

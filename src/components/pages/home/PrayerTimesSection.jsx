@@ -33,7 +33,7 @@ const PrayerTimesSection = () => (
                   <td className="border border-green-900 dark:border-white p-2 text-green-900 dark:text-white font-bold">{t(`prayer_names.${i}`)}</td>
                   {state.prayerTimes.map((prayerTime, j) => (
                     <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-500 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
-                      {prayerTime[i].toLocaleTimeString('en-GB', { hour12: false })}
+                      {prayerTime[i]?.toLocaleTimeString('en-GB', { hour12: false })}
                     </td>
                   ))}
                 </tr>
