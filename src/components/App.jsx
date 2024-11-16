@@ -565,12 +565,12 @@ class App extends React.Component {
           elevation: position.coords.elevation || 1,
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
+          this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
           this.getCurrentCriteria()
           this.getCurrentConvention()
           this.formatDateTime()
             .then(() => this.selectTimeZone(this.state.selectedTimeZone))
             .then(() => this.create3DaysOfPrayerTimes())
-            .then(() => this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities)))
             .finally(() => {
               localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
               localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
