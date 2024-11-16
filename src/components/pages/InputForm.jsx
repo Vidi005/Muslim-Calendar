@@ -78,32 +78,21 @@ const InputForm = () => (
                       {state.inputLocation.length > 0 && !state.isSearching && (
                         <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
                       )}
-                      <Transition
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 scale-95 -translate-y-1/4"
-                        enterTo="opacity-100 scale-100 translate-y-full"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 scale-100 translate-y-full"
-                        leaveTo="opacity-0 scale-95 -translate-y-1/4"
-                        afterLeave={() => onInputLocationChange('')}
-                      >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
-                          {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
-                            ? <span className="p-1">{t('no_location_found')}</span>
-                            : (
-                                state.suggestedLocations.map(location => (
-                                  <Combobox.Option
-                                    key={location.city}
-                                    value={location}
-                                    className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
-                                  >
-                                    {`${location.city}, ${location.admin_name}, ${location.country}`}
-                                  </Combobox.Option>
-                              )))
-                          }
-                        </Combobox.Options>
-                      </Transition>
+                      <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200 animate__animated animate__fadeInDown"}>
+                        {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
+                          ? <span className="p-1">{t('no_location_found')}</span>
+                          : (
+                              state.suggestedLocations.map(location => (
+                                <Combobox.Option
+                                  key={location.city}
+                                  value={location}
+                                  className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
+                                >
+                                  {`${location.city}, ${location.admin_name}, ${location.country}`}
+                                </Combobox.Option>
+                            )))
+                        }
+                      </Combobox.Options>
                     </div>
                   </Combobox>
                   <form className="flex items-center justify-between gap-2" onSubmit={e => e.preventDefault()}>
@@ -278,32 +267,21 @@ const InputForm = () => (
                       {state.inputLocation.length > 0 && !state.isSearching && (
                         <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
                       )}
-                      <Transition
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 scale-95 -translate-y-1/4"
-                        enterTo="opacity-100 scale-100 translate-y-full"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 scale-100 translate-y-full"
-                        leaveTo="opacity-0 scale-95 -translate-y-1/4"
-                        afterLeave={() => onInputLocationChange('')}
-                      >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
-                          {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
-                            ? <span className="p-1">{t('no_location_found')}</span>
-                            : (
-                                state.suggestedLocations.map(location => (
-                                  <Combobox.Option
-                                    key={location.city}
-                                    value={location}
-                                    className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
-                                  >
-                                    {`${location.city}, ${location.admin_name}, ${location.country}`}
-                                  </Combobox.Option>
-                              )))
-                          }
-                        </Combobox.Options>
-                      </Transition>
+                      <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200 animate__animated animate__fadeInDown"}>
+                        {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
+                          ? <span className="p-1">{t('no_location_found')}</span>
+                          : (
+                              state.suggestedLocations.map(location => (
+                                <Combobox.Option
+                                  key={location.city}
+                                  value={location}
+                                  className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
+                                >
+                                  {`${location.city}, ${location.admin_name}, ${location.country}`}
+                                </Combobox.Option>
+                            )))
+                        }
+                      </Combobox.Options>
                     </div>
                   </Combobox>
                   <span className="flex items-center text-sm">
