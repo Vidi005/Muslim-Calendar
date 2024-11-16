@@ -1,7 +1,7 @@
 import React from "react"
 
-const PrayerTimesVisualization = () => (
+const QiblaDirection = () => (
   <section className="w-full md:w-1/2"></section>
 )
 
-export default PrayerTimesVisualization
+export default QiblaDirection
