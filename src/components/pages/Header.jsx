@@ -41,20 +41,10 @@ const HeaderContainer = () => (
               <img className="h-full object-contain" src={`${import.meta.env.BASE_URL}images/lang-icon.svg`} alt="Languages" />
               <img className="h-full object-contain" src={`${import.meta.env.BASE_URL}images/expand-icon.svg`} alt="Expand" />
             </Menu.Button>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-300"
-              enterFrom="transform opacity-0 scale-95 -translate-y-1/2"
-              enterTo="transform opacity-100 scale-100 translate-y-0"
-              leave="transition ease-in duration-200"
-              leaveFrom="transform opacity-100 scale-100 translate-y-0"
-              leaveTo="transform opacity-0 scale-95 -translate-y-1/2"
-            >
-              <Menu.Items className="absolute grid grid-flow-row gap-1 right-1 mt-2 w-40 origin-top-right divide-y divide-green-100 rounded-lg bg-green-600 shadow-lg ring-1 ring-green-100 ring-opacity-5 focus:outline-none text-base z-20 overflow-hidden">
-                <Menu.Item as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("en")}>English</Menu.Item>
-                <Menu.Item as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("id")}>Indonesian</Menu.Item>
-              </Menu.Items>
-            </Transition>
+            <Menu.Items className="absolute grid grid-flow-row gap-1 right-1 mt-2 w-40 origin-top-right divide-y divide-green-100 rounded-lg bg-green-600 shadow-lg ring-1 ring-green-100 ring-opacity-5 focus:outline-none text-base z-20 overflow-hidden animate__animated animate__fadeInDown animate__faster">
+              <Menu.Item as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("en")}>English</Menu.Item>
+              <Menu.Item as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("id")}>Indonesian</Menu.Item>
+            </Menu.Items>
           </Menu>
         </section>
       </header>
