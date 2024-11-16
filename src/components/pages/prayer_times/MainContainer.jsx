@@ -66,6 +66,7 @@ class MainContainer extends React.Component {
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
                 <PrayerTimesContent
+                  t={this.props.t}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
@@ -82,6 +83,7 @@ class MainContainer extends React.Component {
           : (
               <div className="prayer-times-container flex flex-col w-full h-full">
                 <PrayerTimesContent
+                  t={this.props.t}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
