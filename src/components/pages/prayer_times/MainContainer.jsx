@@ -17,7 +17,22 @@ class MainContainer extends React.Component {
       DHUHA_METHOD_STORAGE_KEY: "DHUHA_METHOD_STORAGE_KEY",
       INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
       INPUT_MINUTES_STORAGE_KEY: "INPUT_MINUTES_STORAGE_KEY",
-      FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY"
+      FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
+      arePrayerTimesListLoading: true,
+      monthType: 0,
+      selectedMonth: this.props.formattedDateTime.getMonth()
+    }
+  }
+
+  changeMonthType (monthType) {
+    if (monthType !== this.state.monthType) {
+      this.setState({ monthType: monthType })
+    }
+  }
+
+  selectMonth (montIndex) {
+    if (parseInt(montIndex) !== this.state.montIndex) {
+      this.setState({ selectedMonth: parseInt(montIndex) })
     }
   }
 
@@ -67,6 +82,11 @@ class MainContainer extends React.Component {
                 />
                 <PrayerTimesContent
                   t={this.props.t}
+                  state={this.state}
+                  selectedLanguage={this.props.selectedLanguage}
+                  formattedDateTime={this.props.formattedDateTime}
+                  monthsInSetYear={this.props.monthsInSetYear}
+                  hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
@@ -76,14 +96,21 @@ class MainContainer extends React.Component {
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
                   onInputMinutesChange={this.props.onInputMinutesChange}
                   selectFormula={this.props.selectFormula}
+                  changeMonthType={this.changeMonthType.bind(this)}
+                  selectMonth={this.selectMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
                 />
               </div>
-              )
+            )
           : (
               <div className="prayer-times-container flex flex-col w-full h-full">
                 <PrayerTimesContent
                   t={this.props.t}
+                  state={this.state}
+                  selectedLanguage={this.props.selectedLanguage}
+                  formattedDateTime={this.props.formattedDateTime}
+                  monthsInSetYear={this.props.monthsInSetYear}
+                  hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
@@ -93,6 +120,8 @@ class MainContainer extends React.Component {
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
                   onInputMinutesChange={this.props.onInputMinutesChange}
                   selectFormula={this.props.selectFormula}
+                  changeMonthType={this.changeMonthType.bind(this)}
+                  selectMonth={this.selectMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
                 />
                 <BottomBar
