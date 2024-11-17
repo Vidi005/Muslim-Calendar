@@ -860,7 +860,7 @@ class App extends React.Component {
 
   generateCalendar = () => {
     const currentDate = new Date()
-    const currentLocalString = currentDate.toLocaleString(this.state.selectedLanguage, {
+    const currentLocalString = currentDate.toLocaleString('en', {
       timeZone: this.state.selectedTimeZone,
       year: 'numeric',
       month: 'numeric',
