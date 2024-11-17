@@ -64,6 +64,7 @@ class App extends React.Component {
       hijriEventDates: [],
       moonInfos: [],
       prayerTimes: [],
+      hijriStartDates: [],
       arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
@@ -877,14 +878,19 @@ class App extends React.Component {
           this.setState({
             monthsInSetYear: setCalendarData.months,
             monthsInCurrentYear: setCalendarData.months,
-            hijriEventDates: setCalendarData.hijriEventDates
+            hijriEventDates: setCalendarData.hijriEventDates,
+            hijriStartDates: setCalendarData.hijriStartDates
           })
         }
       })
     } else {
       this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
         if (setCalendarData?.months?.length > 0) {
-          this.setState({ monthsInSetYear: setCalendarData.months, hijriEventDates: setCalendarData.hijriEventDates })
+          this.setState({
+            monthsInSetYear: setCalendarData.months,
+            hijriEventDates: setCalendarData.hijriEventDates,
+            hijriStartDates: setCalendarData.hijriStartDates
+          })
         }
       })
       this.createCalendarWorker(currentDate).then(currentCalendarData => {
@@ -1125,6 +1131,10 @@ class App extends React.Component {
               <PrayerTimesPage
                 t={i18n.t}
                 isSidebarExpanded={this.state.isSidebarExpanded}
+                selectedLanguage={this.state.selectedLanguage}
+                formattedDateTime={this.state.formattedDateTime}
+                monthsInSetYear={this.state.monthsInSetYear}
+                hijriStartDates={this.state.hijriStartDates}
                 selectCalculationMethod={this.selectCalculationMethod.bind(this)}
                 selectAshrTime={this.selectAshrTime.bind(this)}
                 getCurrentConvention={this.getCurrentConvention.bind(this)}
@@ -1135,6 +1145,8 @@ class App extends React.Component {
                 onInputSunAltitudeChange={this.onInputSunAltitudeChange.bind(this)}
                 onInputMinutesChange={this.onInputMinutesChange.bind(this)}
                 selectFormula={this.selectFormula.bind(this)}
+                generatePrayerTimes={this.generatePrayerTimes.bind(this)}
+                generateCalendar={this.generateCalendar.bind(this)}
               />
             </HomePageProvider>
           }/>

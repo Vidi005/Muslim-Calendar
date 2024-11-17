@@ -6,7 +6,7 @@ import PrayerTimesVisualization from "./PrayerTimesVisualization"
 import QiblaDirection from "./QiblaDirection"
 import PrayerTimesList from "./PrayerTimesList"
 
-const PrayerTimesContent = ({ t, selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
+const PrayerTimesContent = ({ t, state, selectedLanguage, formattedDateTime, monthsInSetYear, hijriStartDates, selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectMonth }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <PrayerTimesSettings
@@ -23,8 +23,18 @@ const PrayerTimesContent = ({ t, selectCalculationMethod, selectAshrTime, select
     />
     <div className="current-prayer-times flex flex-wrap">
       <CurrentPrayerTimes/>
-      <PrayerTimesVisualization/>
-      <PrayerTimesList t={t}/>
+      <PrayerTimesVisualization t={t}/>
+      <PrayerTimesList
+        t={t}
+        selectedLanguage={selectedLanguage}
+        formattedDateTime={formattedDateTime}
+        monthsInSetYear={monthsInSetYear}
+        hijriStartDates={hijriStartDates}
+        monthType={state.monthType}
+        selectedMonth={state.selectedMonth}
+        changeMonthType={changeMonthType}
+        selectMonth={selectMonth}
+      />
       <QiblaDirection/>
     </div>
   </article>
