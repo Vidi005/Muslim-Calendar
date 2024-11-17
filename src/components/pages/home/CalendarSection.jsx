@@ -47,13 +47,13 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
 
                   <Slider {...settings} ref={sliderRef}>
                     {state.monthsInSetYear.map((days, monthIndex) => {
-                      const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
-                      const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: "islamic", month: 'numeric' }))
-                      const hijriDate1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage, { calendar: 'islamic', month: 'long', year: 'numeric' })
-                      const hijriDate2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage, { calendar: 'islamic', month: 'long', year: 'numeric' })
+                      const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
+                      const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
+                      const hijriDate1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', month: 'long', year: 'numeric' })
+                      const hijriDate2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', month: 'long', year: 'numeric' })
                       return (
                         <React.Fragment key={monthIndex}>
-                          <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage, { month: 'long', year: 'numeric' })}</h2>
+                          <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { month: 'long', year: 'numeric' })}</h2>
                           <h3 className={`text-base sm:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
                             <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{hijriDate1}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{hijriDate2}</span>
                           </h3>
@@ -126,7 +126,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                   </Slider>
                   <ul className="flex flex-nowrap items-center justify-center list-none mx-auto py-4 space-x-1 md:space-x-2 lg:space-x-4 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage, { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
+                      <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
                     ))}
                   </ul>
                 </React.Fragment>
@@ -145,7 +145,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                   <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
                     {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
                       <tr key={index}>
-                        <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage, { month: 'long', day: '2-digit' })}</td>
+                        <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { month: 'long', day: '2-digit' })}</td>
                         <td>&nbsp;:&nbsp;</td>
                         <td>
                           <span>{t(`muslim_events.${event.eventId}`)} </span>
@@ -161,7 +161,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
           <div className="flex flex-col items-center w-full md:w-1/3 lg:w-1/4 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_info')}</h1>
             {state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date
-              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_moon_info')} {state.formattedDateTime.toLocaleString(state.selectedLanguage, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h24' })}</h5>
+              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_moon_info')} {state.formattedDateTime.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h24' })}</h5>
               : null
             }
             <div className="moon-phase w-full p-4 overflow-hidden">
