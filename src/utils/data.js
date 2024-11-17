@@ -320,7 +320,7 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   let dateKey
   newMoons.forEach(newMoon => {
     date = new Date(newMoon.getFullYear(), newMoon.getMonth(), newMoon.getDate() + 14)
-    hijriDateInDay15 = date.toLocaleDateString(lang, {
+    hijriDateInDay15 = date.toLocaleDateString(lang || 'en', {
       calendar: "islamic",
       month: "numeric",
       year: "numeric"
@@ -391,8 +391,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
-  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
-  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
+  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
+  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
@@ -410,14 +410,14 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     moonLatitude,
     moonLongitude,
     moonElongation,
-    moonrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
-    moonset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    moonrise?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    moonset?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
     lastNewMoonDateTime,
     nextNewMoonDateTime,
     `${sunAltitude.toFixed(2)}°`,
     `${sunAzimuth.toFixed(2)}°`,
-    sunrise?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
-    sunset?.date?.toLocaleTimeString(lang, { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--'
+    sunrise?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--',
+    sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }) || '--:--'
   ]
 }
 

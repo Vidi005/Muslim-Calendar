@@ -363,8 +363,8 @@ class App extends React.Component {
   getCurrentDate () {
     const currentDate = new Date()
     const adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
-    const gregorian = currentDate.toLocaleDateString(this.state.selectedLanguage, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-    const time = currentDate.toLocaleTimeString(this.state.selectedLanguage, { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
+    const gregorian = currentDate.toLocaleDateString(this.state.selectedLanguage || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+    const time = currentDate.toLocaleTimeString(this.state.selectedLanguage || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     if (this.state.monthsInCurrentYear.length > 0) {
       adjustedDateWorker.postMessage({
         type: 'createAdjustedIslamicDate',
@@ -373,7 +373,7 @@ class App extends React.Component {
       })
       adjustedDateWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
-          const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage, { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+          const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
           this.setState({
             currentDate: { gregorian, islamic, time },
             seconds: currentDate.getSeconds()

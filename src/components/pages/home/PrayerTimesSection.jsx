@@ -10,7 +10,7 @@ const PrayerTimesSection = () => (
       <section className="prayer-times-section flex flex-col items-center w-full md:w-1/2 px-3 md:px-5 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
         <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('prayer_times')}</h1>
         {state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date
-          ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage, { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' })}</h5>
+          ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' })}</h5>
           : null
         }
         <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('convention')} {t(`conventions.${state.selectedConvention}.method`)}, {t('ashr_time')} {t(`mahzab.${state.selectedAshrTime}`)}</h5>
