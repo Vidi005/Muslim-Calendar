@@ -252,7 +252,8 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     }
   })
   const hijriEventDates = getHijriEventDates(gregorianDate, newMoons, months, lang)
-  return { months, hijriEventDates }
+  const hijriStartDates = getHijriStartDates(newMoons, months, lang)
+  return { months, hijriEventDates, hijriStartDates }
 }
 
 const adjustedIslamicDate = (currentDate, months) => {
@@ -308,6 +309,21 @@ const muslimEvents = {
   "10-12": "10-12-event", // Ied Adha
 }
 
+const hijriStartDates = {
+  "1-1": "1-1-date", // 1 Muharram
+  "1-2": "1-2-date", // 1 Safar
+  "1-3": "1-3-date", // 1 Rabi' I
+  "1-4": "1-4-date", // 1 Rabi' II
+  "1-5": "1-5-date", // 1 Jumada I
+  "1-6": "1-6-date", // 1 Jumada II
+  "1-7": "1-7-date", // 1 Rajab
+  "1-8": "1-8-date", // 1 Sha'ban
+  "1-9": "1-9-date", // 1 Ramadan
+  "1-10": "1-10-date", // 1 Shawwal
+  "1-11": "1-11-date", // 1 Dhul-Hijjah
+  "1-12": "1-12-date", // 1 Dhul-Qa'dah
+}
+
 const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   const hijriEvents = []
   const filteredUniqueEventDates = new Set()
@@ -354,6 +370,52 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
     })
   })
   return hijriEvents
+}
+
+const getHijriStartDates = (newMoons, months, lang) => {
+  const hijriStarts = []
+  const filteredUniqueStartDates = new Set()
+  let date
+  let hijriDateInDay15
+  let hijriStartDay = 0
+  let hijriMonth = 0
+  let hijriYear
+  let hijriStartInGregorian
+  let dateKey
+  newMoons.forEach(newMoon => {
+    date = new Date(newMoon.getFullYear(), newMoon.getMonth(), newMoon.getDate() + 14)
+    hijriDateInDay15 = date.toLocaleDateString(lang || 'en', {
+      calendar: "islamic",
+      month: "numeric",
+      year: "numeric"
+    })
+    hijriMonth = hijriDateInDay15.split('/')[0]
+    hijriYear = hijriDateInDay15.split('/')[1]
+    Object.entries(hijriStartDates).forEach(([key, dateId]) => {
+      const [startDay, dateMonth] = key.split("-").map(Number)
+      hijriStartDay = 15 - (15 - startDay)
+      if (dateMonth === parseInt(hijriMonth)) {
+        hijriStartInGregorian = new Date(newMoon)
+        hijriStartInGregorian.setDate(newMoon.getDate() + (hijriStartDay - 1))
+        months.forEach((month, monthIdx) => {
+          month.forEach(dayObj => {
+            if (dayObj !== null && dayObj.hijri === hijriStartDay && monthIdx === hijriStartInGregorian.getMonth()) {
+              dateKey = hijriStartInGregorian.toISOString().split('T')[0]
+              if (!filteredUniqueStartDates.has(dateKey)) {
+                filteredUniqueStartDates.add(dateKey)
+                hijriStarts.push({
+                  dateId: dateId,
+                  hijriDate: {day: hijriStartDay, month: dateMonth, year: hijriYear},
+                  gregorianDate: hijriStartInGregorian
+                })
+              }
+            }
+          })
+        })
+      }
+    })
+  })
+  return hijriStarts
 }
 
 const getElementContent = innerHTML => {

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 
-const PrayerTimesPage = ({ t, isSidebarExpanded, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula }) => (
+const PrayerTimesPage = ({ t, isSidebarExpanded, selectedLanguage, formattedDateTime, monthsInSetYear, hijriStartDates, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes, generateCalendar }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('pages.1')}</title>
@@ -12,6 +12,10 @@ const PrayerTimesPage = ({ t, isSidebarExpanded, selectCalculationMethod, select
     <MainContainer
       t={t}
       isSidebarExpanded={isSidebarExpanded}
+      selectedLanguage={selectedLanguage}
+      formattedDateTime={formattedDateTime}
+      monthsInSetYear={monthsInSetYear}
+      hijriStartDates={hijriStartDates}
       selectCalculationMethod={selectCalculationMethod}
       selectAshrTime={selectAshrTime}
       getCurrentConvention={getCurrentConvention}
@@ -22,6 +26,8 @@ const PrayerTimesPage = ({ t, isSidebarExpanded, selectCalculationMethod, select
       onInputSunAltitudeChange={onInputSunAltitudeChange}
       onInputMinutesChange={onInputMinutesChange}
       selectFormula={selectFormula}
+      generatePrayerTimes={generatePrayerTimes}
+      generateCalendar={generateCalendar}
     />
   </div>
 )
