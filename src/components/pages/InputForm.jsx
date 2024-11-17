@@ -1,4 +1,4 @@
-import { Combobox, Transition } from "@headlessui/react"
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react"
 import React, { Fragment } from "react"
 import { HomePageConsumer } from "../contexts/HomPageContext"
 import en from "../../locales/en.json"
@@ -13,6 +13,7 @@ const InputForm = () => (
             <Transition
               appear
               show={state.isToolbarShown}
+              as={"div"}
               className={"flex items-baseline border-b border-b-green-900 dark:border-b-white w-full px-2 py-1 bg-green-500/50 dark:bg-white/50 backdrop-blur-sm duration-200"}
               enter="ease-out duration-300"
               enterFrom="opacity-0 -translate-y-1/2"
@@ -60,23 +61,23 @@ const InputForm = () => (
                   </button>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Combobox as={"span"} className={"flex items-center"} value={state.selectedLocation} onChange={setSelectedLocation}>
-                    <Combobox.Label>{t('location')}&nbsp;</Combobox.Label>
+                  <Combobox as={"text"} className={"flex items-center"} value={state.selectedLocation} onChange={setSelectedLocation}>
+                    <label>{t('location')}&nbsp;</label>
                     <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
-                      <Combobox.Input
+                      <ComboboxInput
                         className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
                         onChange={event => onInputLocationChange(event.target.value)}
                         displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
                         placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
                         aria-disabled={state.isGeocoding}
-                      ></Combobox.Input>
+                      ></ComboboxInput>
                       {state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
+                        <ComboboxButton className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
                           <span className="border-t-2 border-r-2 border-t-green-900 border-r-green-900 w-full h-full rounded-full animate-spin"></span>
-                        </Combobox.Button>
+                        </ComboboxButton>
                       )}
                       {state.inputLocation.length > 0 && !state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
+                        <ComboboxButton className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</ComboboxButton>
                       )}
                       <Transition
                         as={Fragment}
@@ -88,21 +89,21 @@ const InputForm = () => (
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
                         afterLeave={() => onInputLocationChange('')}
                       >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <ComboboxOptions className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_location_found')}</span>
                             : (
                                 state.suggestedLocations.map(location => (
-                                  <Combobox.Option
+                                  <ComboboxOption
                                     key={location.city}
                                     value={location}
                                     className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
                                   >
                                     {`${location.city}, ${location.admin_name}, ${location.country}`}
-                                  </Combobox.Option>
+                                  </ComboboxOption>
                               )))
                           }
-                        </Combobox.Options>
+                        </ComboboxOptions>
                       </Transition>
                     </div>
                   </Combobox>
@@ -197,6 +198,7 @@ const InputForm = () => (
             <Transition
               appear
               show={state.isToolbarShown}
+              as={"div"}
               className={" border-b border-b-green-900 dark:border-b-white w-full p-1 bg-green-500/50 dark:bg-white/50 backdrop-blur-sm"}
               enter="ease-out duration-300"
               enterFrom="opacity-0 -translate-y-1/2"
@@ -260,23 +262,23 @@ const InputForm = () => (
                   </span>
                 </div>
                 <form className="flex flex-wrap items-center justify-center gap-2" onSubmit={e => e.preventDefault()}>
-                  <Combobox as={"span"} className={"flex items-center gap-1 text-sm"} value={state.selectedLocation} onChange={setSelectedLocation}>
-                    <Combobox.Label>{t('location')}&nbsp;</Combobox.Label>
+                  <Combobox as={"text"} className={"flex items-center gap-1 text-sm"} value={state.selectedLocation} onChange={setSelectedLocation}>
+                    <label>{t('location')}&nbsp;</label>
                     <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
-                      <Combobox.Input
+                      <ComboboxInput
                         className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
                         onChange={event => onInputLocationChange(event.target.value)}
                         displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
                         placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
                         aria-disabled={state.isGeocoding}
-                      ></Combobox.Input>
+                      ></ComboboxInput>
                       {state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
+                        <ComboboxButton className={"flex items-center justify-center h-7 w-7 p-1 bg-green-200 dark:bg-gray-200 rounded-r"}>
                           <span className="border-t-2 border-r-2 border-t-green-900 border-r-green-900 w-full h-full rounded-full animate-spin"></span>
-                        </Combobox.Button>
+                        </ComboboxButton>
                       )}
                       {state.inputLocation.length > 0 && !state.isSearching && (
-                        <Combobox.Button className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</Combobox.Button>
+                        <ComboboxButton className={"flex items-center justify-center bg-green-200 dark:bg-gray-200 px-2 py-1 text-base text-red-700 rounded-r"} onClick={() => onClearLocationInput()}>X</ComboboxButton>
                       )}
                       <Transition
                         as={Fragment}
@@ -288,21 +290,21 @@ const InputForm = () => (
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
                         afterLeave={() => onInputLocationChange('')}
                       >
-                        <Combobox.Options className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <ComboboxOptions className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_location_found')}</span>
                             : (
                                 state.suggestedLocations.map(location => (
-                                  <Combobox.Option
+                                  <ComboboxOption
                                     key={location.city}
                                     value={location}
                                     className={({ active }) => `${active ? 'bg-green-500 dark:bg-gray-500 text-white' : 'text-green-900 dark:text-black'} flex flex-nowrap items-center cursor-default select-none p-1 rounded-md duration-200`}
                                   >
                                     {`${location.city}, ${location.admin_name}, ${location.country}`}
-                                  </Combobox.Option>
+                                  </ComboboxOption>
                               )))
                           }
-                        </Combobox.Options>
+                        </ComboboxOptions>
                       </Transition>
                     </div>
                   </Combobox>
