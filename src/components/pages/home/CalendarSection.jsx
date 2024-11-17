@@ -165,7 +165,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
               : null
             }
             <div className="moon-phase w-full p-4 overflow-hidden">
-              <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[6])}deg)` }}>
+              <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[6]) + parseFloat(state.moonInfos[4])}deg)` }}>
                 <img className="w-full object-contain object-center brightness-125" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon Phase" />
                 <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
                   <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/75 drop-shadow"></span>
