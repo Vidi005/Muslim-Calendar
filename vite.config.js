@@ -6,6 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   base: '/',
   server: { port: 3000 },
+  build: {
+    sourcemap: true,
+  },
   plugins: [
     legacy({ targets: ['defaults', 'not IE 11'] }),
     VitePWA({
