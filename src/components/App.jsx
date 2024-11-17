@@ -562,7 +562,7 @@ class App extends React.Component {
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          elevation: position.coords.elevation || 1,
+          elevation: position.coords.altitude || 1,
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
           this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
