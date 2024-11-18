@@ -52,7 +52,7 @@ class App extends React.Component {
       selectedAshrTime: 0,
       selectedConvention: 0,
       sunAltitude: en.conventions[0].sun_altitude,
-      selectedIhtiyath: 1,
+      selectedIhtiyath: 2,
       selectedCorrections: Array(en.prayer_names.length).fill(0),
       selectedDhuhaMethod: 0,
       inputSunAltitude: 4.5,
@@ -374,9 +374,11 @@ class App extends React.Component {
       })
       adjustedDateWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
-          const islamic = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric", month: "long", day: "numeric" })
+          const islamicDayNumber = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", day: "numeric" })
+          const islamicMonth = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", month: "numeric" })
+          const islamicYear = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric" })
           this.setState({
-            currentDate: { gregorian, islamic, time },
+            currentDate: { gregorian, islamicDayNumber, islamicMonth, islamicYear, time },
             seconds: currentDate.getSeconds()
           }, () => adjustedDateWorker.terminate())
         }
@@ -1146,7 +1148,6 @@ class App extends React.Component {
                 onInputMinutesChange={this.onInputMinutesChange.bind(this)}
                 selectFormula={this.selectFormula.bind(this)}
                 generatePrayerTimes={this.generatePrayerTimes.bind(this)}
-                generateCalendar={this.generateCalendar.bind(this)}
               />
             </HomePageProvider>
           }/>

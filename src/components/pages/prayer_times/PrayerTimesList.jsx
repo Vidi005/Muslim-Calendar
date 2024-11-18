@@ -1,7 +1,7 @@
 import { Radio, RadioGroup } from "@headlessui/react"
 import React from "react"
 
-const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYear, hijriStartDates, monthType, selectedMonth, changeMonthType, selectMonth }) => (
+const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, changeMonthType, selectGregorianMonth, selectHijriMonth }) => (
   <section className="w-full p-2 animate__animated animate__fadeInUp">
     <h2 className="text-center text-green-900 dark:text-white duration-200">{t('imsakiyah_schedule')}</h2>
     <h5 className={"px-3 py-1 text-center text-green-700 dark:text-gray-200"}>{t("month_type")}</h5>
@@ -59,9 +59,9 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
           <label className="text-green-900 dark:text-white duration-200">{t('select_month')}</label>
           <select
             className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-            defaultValue={formattedDateTime.getMonth()}
-            value={selectedMonth}
-            onChange={event => selectMonth(event.target.value)}
+            defaultValue={selectedGregorianMonth}
+            value={selectedGregorianMonth}
+            onChange={event => selectGregorianMonth(event.target.value)}
             required
           >
             {monthsInSetYear?.map((_, monthIndex) => <option key={monthIndex} value={monthIndex}>{new Date(formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(selectedLanguage || 'en', {month: 'long' })}</option>)}
@@ -73,12 +73,18 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
           <label className="text-green-900 dark:text-white duration-200">{t('select_month')}</label>
           <select
             className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-            defaultValue={formattedDateTime.getMonth()}
-            value={selectedMonth}
-            onChange={event => selectMonth(event.target.value)}
+            defaultValue={selectedHijriMonth}
+            value={selectedHijriMonth}
+            onChange={event => selectHijriMonth(event.target.value)}
             required
           >
-            {hijriStartDates?.map((item, monthIndex) => <option key={monthIndex} value={item.hijriDate.month}>{t(`islamic_months.${item.hijriDate.month - 1}`)} {item.hijriDate.year}</option>)}
+            {hijriStartDates?.map((item, monthIndex) => {
+              if (item.gregorianDate.getFullYear() <= formattedDateTime.getFullYear()) {
+                return <option key={monthIndex} value={monthIndex}>{t(`islamic_months.${item.hijriDate.month - 1}`)} {item.hijriDate.year}</option>
+              } else {
+                return null
+              }
+            })}
           </select>
         </span>
         )

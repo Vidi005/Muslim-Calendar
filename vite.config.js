@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'Muslim Calendar',
         short_name: 'Muslim Calendar',
         description: 'Welcome to Muslim Calendar. Display Islamic Calendar Information.',
-        theme_color: '#22c55e',
+        theme_color: '#15803d',
         orientation: 'portrait',
         icons: [
           {
