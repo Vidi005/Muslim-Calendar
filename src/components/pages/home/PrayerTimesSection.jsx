@@ -25,14 +25,14 @@ const PrayerTimesSection = () => (
             <table className="table-auto w-full align-middle text-base md:lg lg:text-xl whitespace-nowrap">
               <tr>
                 {en.prayer_times_headers.slice(0, 4).map((_, i) => (
-                  <th key={i} className={`${i === 2 ? "bg-green-500/20 dark:bg-green-500" : ""} border-2 border-green-900 dark:border-white p-2 text-green-900 dark:text-white font-bold duration-200`}>{t(`prayer_times_headers.${i}`)}</th>
+                  <th key={i} className={`${i === 2 ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white p-2 text-green-900 dark:text-white font-bold duration-200`}>{t(`prayer_times_headers.${i}`)}</th>
                 ))}
               </tr>
               {en.prayer_names.map((_, i) => (
                 <tr key={i}>
                   <td className="border border-green-900 dark:border-white p-2 text-green-900 dark:text-white font-bold">{t(`prayer_names.${i}`)}</td>
                   {state.prayerTimes.map((prayerTime, j) => (
-                    <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-500 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
+                    <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
                       {prayerTime[i]?.toLocaleTimeString('en-GB', { hour12: false })}
                     </td>
                   ))}
@@ -41,7 +41,7 @@ const PrayerTimesSection = () => (
             </table>
             )
         }
-        <Link to={pages()[1].path} className="flex items-center justify-center border border-green-900 dark:border-green-500 bg-green-700 dark:bg-green-500 m-4 px-4 py-1.5 hover:bg-green-700/50 dark:hover:bg-green-500/25 text-white duration-200 rounded-lg shadow-md dark:shadow-white/50 overflow-hidden">
+        <Link to={pages()[1].path} className="flex items-center justify-center border border-green-900 dark:border-green-500 bg-green-700 dark:bg-green-600 m-4 px-4 py-1.5 hover:bg-green-700/50 dark:hover:bg-green-500/25 text-white duration-200 rounded-lg shadow-md dark:shadow-white/50 overflow-hidden">
           <h4>{t('more')}</h4>
         </Link>
       </section>

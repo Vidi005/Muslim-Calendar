@@ -47,11 +47,11 @@ const InputForm = () => (
                       required
                     />
                   </span>
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
+                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
                     <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
                   </button>
-                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-300 dark:bg-yellow-500 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
+                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-400 dark:bg-yellow-600 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
                     <img src={`${import.meta.env.BASE_URL}images/restore-datetime-icon.svg`} alt="Restore Datetime" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_datetime')}</span>
                   </button>
@@ -139,7 +139,7 @@ const InputForm = () => (
                       />
                       <p>&nbsp;m</p>
                     </span>
-                    <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
+                    <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
                   </form>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-1">
@@ -179,7 +179,7 @@ const InputForm = () => (
                 <tr className="text-green-900 dark:text-black duration-200">
                   <td>{t('hijri_date')}</td>
                   <td className="pl-1 pr-2">:</td>
-                  <td>{state.currentDate.islamic}</td>
+                  <td>{state.currentDate.islamicDayNumber} {t(`islamic_months.${state.currentDate.islamicMonth - 1}`)} {state.currentDate.islamicYear}</td>
                 </tr>
                 <tr className="border-t border-t-black font-serif font-bold text-lg">
                   <td colSpan={3}>{t('current_time')}&nbsp;<span className="font-sans">{state.currentDate.time}</span></td>
@@ -217,7 +217,7 @@ const InputForm = () => (
                 <tr className="text-green-900 dark:text-black text-xs duration-200">
                   <td>{t('hijri_date')}</td>
                   <td className="pl-0.5 pr-1">:</td>
-                  <td className="w-full">{state.currentDate.islamic}</td>
+                  <td className="w-full">{state.currentDate.islamicDayNumber} {t(`islamic_months.${state.currentDate.islamicMonth - 1}`)} {state.currentDate.islamicYear}</td>
                 </tr>
                 <tr className="font-serif font-bold text-sm">
                   <td colSpan={3}>{t("current_time")}&nbsp;<span className="font-sans text-xs">{state.currentDate.time}</span></td>
@@ -226,11 +226,11 @@ const InputForm = () => (
               <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white duration-200">
                 <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
                 <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
+                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
                     <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
                   </button>
-                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-300 dark:bg-yellow-500 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
+                  <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-400 dark:bg-yellow-600 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
                     <img src={`${import.meta.env.BASE_URL}images/restore-datetime-icon.svg`} alt="Restore Datetime" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_datetime')}</span>
                   </button>
@@ -339,7 +339,7 @@ const InputForm = () => (
                     />
                     <p>&nbsp;m</p>
                   </span>
-                  <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
+                  <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
                 </form>
                 <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
                   <span className="flex items-center">
