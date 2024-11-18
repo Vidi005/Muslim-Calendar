@@ -34,7 +34,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
         <section className="calendar-section flex flex-wrap md:flex-nowrap max-w-full">
           <div className="w-full md:w-2/3 lg:w-3/4 px-7 overflow-hidden">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('calendar')}</h1>
-            <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date ? t('set_month') : t('current_month')}</button>
+            <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date ? t('set_month') : t('current_month')}</button>
             {state.isCalendarLoading
               ? (
                 <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
@@ -49,22 +49,22 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                     {state.monthsInSetYear.map((days, monthIndex) => {
                       const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
                       const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
-                      const hijriDate1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', month: 'long', year: 'numeric' })
-                      const hijriDate2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', month: 'long', year: 'numeric' })
+                      const hijriYear1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' })
+                      const hijriYear2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' })
                       return (
                         <React.Fragment key={monthIndex}>
                           <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { month: 'long', year: 'numeric' })}</h2>
                           <h3 className={`text-base sm:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
-                            <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{hijriDate1}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{hijriDate2}</span>
+                            <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth1 - 1}`)} {hijriYear1}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth2 - 1}`)} {hijriYear2}</span>
                           </h3>
                           <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                             <thead>
                               <tr>
                                 {en.day_names.map((_day, index) => {
                                   if (innerWidth > 1024) {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`)}</th>;
+                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`)}</th>;
                                   } else {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3)}</th>;
+                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3)}</th>;
                                   }
                                 })}
                               </tr>
@@ -104,7 +104,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                         )
                                       } else {
                                         return (
-                                          <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/20 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/20 dark:bg-green-500" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
+                                          <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/20 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/20 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
                                             {day ? (
                                               <React.Fragment>
                                                 <span className={`${dayIndex === 0 ? "text-red-700" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
@@ -165,7 +165,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
               : null
             }
             <div className="moon-phase w-full p-4 overflow-hidden">
-              <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[6]) + parseFloat(state.moonInfos[4])}deg)` }}>
+              <div className="moon-phase relative w-full rounded-full overflow-hidden drop-shadow duration-500" style={{ transform: `rotate(${360 - parseFloat(state.moonInfos[6]) - parseFloat(state.moonInfos[4])}deg)` }}>
                 <img className="w-full object-contain object-center brightness-125" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon Phase" />
                 <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
                   <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/75 drop-shadow"></span>
