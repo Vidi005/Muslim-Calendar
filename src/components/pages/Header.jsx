@@ -5,7 +5,7 @@ import { HomePageConsumer } from "../contexts/HomPageContext"
 const HeaderContainer = () => (
   <HomePageConsumer>
     {({ t, toggleSidebar, changeLanguage, setDisplayMode, state }) => (
-      <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 w-full p-1 shadow-xl z-20">
+      <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 dark:bg-green-700 w-full p-1 shadow-xl z-20">
         <section className="header-title grow flex items-center">
           {innerWidth > 1024
             ? (
@@ -27,7 +27,7 @@ const HeaderContainer = () => (
             title="Theme Setting"
             className={`${
               state.isDarkMode
-                ? "bg-green-700"
+                ? "bg-green-800"
                 : "bg-green-500"
             } relative inline-flex h-6 w-12 px-1 items-center cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-1 rounded-full`}
           >

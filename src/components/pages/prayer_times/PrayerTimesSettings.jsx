@@ -49,12 +49,12 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
             <label htmlFor="ihtiyath"><i>{t('ihtiyath')}</i></label>
             <select
               className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-              defaultValue={1}
+              defaultValue={2}
               value={state.selectedIhtiyath}
               onChange={event => selectIhtiyath(event.target.value)}
               required
             >
-              {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
+              {en.ihtiyath_times.map((type, index) => <option key={type} value={index + 1}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
           {Math.abs(state.latitude) > 48 && (

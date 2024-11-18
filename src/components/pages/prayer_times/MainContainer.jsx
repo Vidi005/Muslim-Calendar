@@ -20,7 +20,21 @@ class MainContainer extends React.Component {
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       arePrayerTimesListLoading: true,
       monthType: 0,
-      selectedMonth: this.props.formattedDateTime.getMonth()
+      selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
+      selectedHijriMonth: this.getHijriMonthFromProps(props),
+    }
+  }
+
+  getHijriMonthFromProps = (props) => {
+    return props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime) - 1
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.formattedDateTime !== this.props.formattedDateTime || prevProps.hijriStartDates !== this.props.hijriStartDates) {
+      this.setState({
+        selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
+        selectedHijriMonth: this.getHijriMonthFromProps(this.props),
+      });
     }
   }
 
@@ -30,9 +44,15 @@ class MainContainer extends React.Component {
     }
   }
 
-  selectMonth (montIndex) {
+  selectGregorianMonth (montIndex) {
     if (parseInt(montIndex) !== this.state.montIndex) {
-      this.setState({ selectedMonth: parseInt(montIndex) })
+      this.setState({ selectedGregorianMonth: parseInt(montIndex) })
+    }
+  }
+
+  selectHijriMonth (montIndex) {
+    if (parseInt(montIndex) !== this.state.montIndex) {
+      this.setState({ selectedHijriMonth: parseInt(montIndex) })
     }
   }
 
@@ -51,7 +71,7 @@ class MainContainer extends React.Component {
         this.props.selectCalculationMethod(0)
         this.props.selectAshrTime(0)
         this.props.getCurrentConvention()
-        this.props.selectIhtiyath(1)
+        this.props.selectIhtiyath(2)
         this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
@@ -97,7 +117,8 @@ class MainContainer extends React.Component {
                   onInputMinutesChange={this.props.onInputMinutesChange}
                   selectFormula={this.props.selectFormula}
                   changeMonthType={this.changeMonthType.bind(this)}
-                  selectMonth={this.selectMonth.bind(this)}
+                  selectGregorianMonth={this.selectGregorianMonth.bind(this)}
+                  selectHijriMonth={this.selectHijriMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
                 />
               </div>
@@ -121,7 +142,8 @@ class MainContainer extends React.Component {
                   onInputMinutesChange={this.props.onInputMinutesChange}
                   selectFormula={this.props.selectFormula}
                   changeMonthType={this.changeMonthType.bind(this)}
-                  selectMonth={this.selectMonth.bind(this)}
+                  selectGregorianMonth={this.selectGregorianMonth.bind(this)}
+                  selectHijriMonth={this.selectHijriMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
                 />
                 <BottomBar
