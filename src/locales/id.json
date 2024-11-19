@@ -66,7 +66,7 @@
     "moon_info": "Informasi Bulan",
     "prayer_times_loading": "Memuat Waktu Sholat...",
     "prayer_times": "Waktu Sholat",
-    "prayer_times_headers": ["Sholat", "Kemarin", "Hari Ini", "Besok", "Hijriah", "Masehi"],
+    "prayer_times_headers": ["Waktu", "Kemarin", "Hari Ini", "Besok", "Tanggal Hijriah", "Tanggal Masehi"],
     "more": "Selengkapnya",
     "error": "Kesalahan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
@@ -185,7 +185,7 @@
         {
             "method": "JAKIM",
             "sun_altitude": {
-                "fajr": 20,
+                "fajr": 18,
                 "isha": 18
             },
             "latitude_range": [0.85, 7.4],
@@ -271,6 +271,7 @@
     "minutes": "menit",
     "degrees": "derajat",
     "visualization": "Visualisasi",
+    "prayer_schedule": "Jadwal Sholat",
     "imsakiyah_schedule": "Jadwal Imsakiyah",
     "month_type": "Pilih Jenis Bulan :",
     "month_types": ["Masehi", "Hijriah"],
