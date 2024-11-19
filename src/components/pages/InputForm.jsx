@@ -179,7 +179,7 @@ const InputForm = () => (
                 <tr className="text-green-900 dark:text-black duration-200">
                   <td>{t('hijri_date')}</td>
                   <td className="pl-1 pr-2">:</td>
-                  <td>{state.currentDate.islamicDayNumber} {t(`islamic_months.${state.currentDate.islamicMonth - 1}`)} {state.currentDate.islamicYear}</td>
+                  <td>{state.currentDate.islamicDayNumber} {t(`islamic_months.${state.currentDate.islamicMonth - 1}`)} {parseInt(state.currentDate.islamicYear)} {t('hijri_abbreviation')}</td>
                 </tr>
                 <tr className="border-t border-t-black font-serif font-bold text-lg">
                   <td colSpan={3}>{t('current_time')}&nbsp;<span className="font-sans">{state.currentDate.time}</span></td>

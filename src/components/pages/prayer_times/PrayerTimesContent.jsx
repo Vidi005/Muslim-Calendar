@@ -36,6 +36,8 @@ const PrayerTimesContent = ({ t, state, selectedLanguage, formattedDateTime, mon
         changeMonthType={changeMonthType}
         selectGregorianMonth={selectGregorianMonth}
         selectHijriMonth={selectHijriMonth}
+        arePrayerTimesListLoading={state.arePrayerTimesListLoading}
+        prayerTimesList={state.prayerTimesList}
       />
       <QiblaDirection/>
     </div>
