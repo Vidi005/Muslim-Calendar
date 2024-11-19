@@ -999,13 +999,13 @@ class App extends React.Component {
       })
       prayerTimesWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createPrayerTimes') {
-          this.setState({ arePrayerTimesLoading: false }, () => prayerTimesWorker.terminate())
+          prayerTimesWorker.terminate()
           resolve(workerEvent.data.result)
         }
       }
       prayerTimesWorker.onerror = error => {
         prayerTimesWorker.terminate()
-        this.setState({ arePrayerTimesLoading: false }, () => console.error(error.message))
+        console.error(error.message)
         reject(error.message)
       }
     })
@@ -1020,7 +1020,7 @@ class App extends React.Component {
       this.generatePrayerTimes(theDayBefore),
       this.generatePrayerTimes(this.state.formattedDateTime),
       this.generatePrayerTimes(theDayAfter)
-    ]).then(prayerTimes => { this.setState({ prayerTimes: prayerTimes }) })
+    ]).then(prayerTimes => { this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes }) })
   }
 
   render() {

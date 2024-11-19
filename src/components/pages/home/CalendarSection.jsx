@@ -49,14 +49,14 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                     {state.monthsInSetYear.map((days, monthIndex) => {
                       const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
                       const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
-                      const hijriYear1 = new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' })
-                      const hijriYear2 = new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' })
+                      const hijriYear1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' }))
+                      const hijriYear2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' }))
                       return (
                         <React.Fragment key={monthIndex}>
                           <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { month: 'long', year: 'numeric' })}</h2>
-                          <h3 className={`text-base sm:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
-                            <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth1 - 1}`)} {hijriYear1}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth2 - 1}`)} {hijriYear2}</span>
-                          </h3>
+                          <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
+                            <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth1 - 1}`)} {hijriYear1} {t('hijri_abbreviation')}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth2 - 1}`)} {hijriYear2} {t('hijri_abbreviation')}</span>
+                          </h4>
                           <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                             <thead>
                               <tr>
@@ -149,7 +149,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                         <td>&nbsp;:&nbsp;</td>
                         <td>
                           <span>{t(`muslim_events.${event.eventId}`)} </span>
-                          <span className="whitespace-nowrap">({event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {event.hijriDate.year})</span>
+                          <span className="whitespace-nowrap">({event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {parseInt(event.hijriDate.year)} {t('hijri_abbreviation')})</span>
                         </td>
                       </tr>
                     ))}
