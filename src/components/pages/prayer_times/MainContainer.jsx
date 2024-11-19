@@ -20,40 +20,76 @@ class MainContainer extends React.Component {
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       arePrayerTimesListLoading: true,
       monthType: 0,
+      prayerTimesList: [],
       selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
-      selectedHijriMonth: this.getHijriMonthFromProps(props),
+      selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
   }
 
-  getHijriMonthFromProps = (props) => {
-    return props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime) - 1
-  }
+  getHijriMonthFromProps = (props) => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime) - 1
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.formattedDateTime !== this.props.formattedDateTime || prevProps.hijriStartDates !== this.props.hijriStartDates) {
-      this.setState({
-        selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
-        selectedHijriMonth: this.getHijriMonthFromProps(this.props),
-      });
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.hijriStartDates !== this.props.hijriStartDates || prevState.monthType !== this.state.monthType) {
+      if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
+      else this.createPrayerTimeInHijriMonth()
     }
   }
 
   changeMonthType (monthType) {
-    if (monthType !== this.state.monthType) {
-      this.setState({ monthType: monthType })
-    }
+    this.setState({
+      monthType: parseInt(monthType),
+      selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
+      selectedHijriMonth: this.getHijriMonthFromProps(this.props),
+      arePrayerTimesListLoading: true
+    }, () => {
+      if (monthType === 0) this.createPrayerTimeInGregorianMonth()
+      else this.createPrayerTimeInHijriMonth()
+    })
   }
 
   selectGregorianMonth (montIndex) {
-    if (parseInt(montIndex) !== this.state.montIndex) {
-      this.setState({ selectedGregorianMonth: parseInt(montIndex) })
-    }
+    this.setState({ selectedGregorianMonth: parseInt(montIndex) }, () => this.createPrayerTimeInGregorianMonth())
   }
 
   selectHijriMonth (montIndex) {
-    if (parseInt(montIndex) !== this.state.montIndex) {
-      this.setState({ selectedHijriMonth: parseInt(montIndex) })
+    this.setState({ selectedHijriMonth: parseInt(montIndex) }, () => this.createPrayerTimeInHijriMonth())
+  }
+
+  createPrayerTimeInGregorianMonth () {
+    const daysInMonth = new Date(this.props.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth + 1, 0).getDate()
+    const prayerTimesPromises = []
+    for (let day = 1; day <= daysInMonth; day++) {
+      const startDate = new Date(this.props.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
+      const formattedStartDate = startDate.toLocaleString(this.props.selectedLanguage || 'en', { day: 'numeric', month: 'long', year: 'numeric' })
+      const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
+        const formattedPrayerTimes = prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false })).slice(1)
+        return [formattedStartDate, ...formattedPrayerTimes]
+      })
+      prayerTimesPromises.push(prayerTimeList)
     }
+    Promise.all(prayerTimesPromises).then(prayerTimesList => this.setState({ prayerTimesList: prayerTimesList, arePrayerTimesListLoading: false }))
+  }
+
+  createPrayerTimeInHijriMonth () {
+    const timeDiff = Math.abs(this.props.hijriStartDates[this.state.selectedHijriMonth + 1]?.gregorianDate - this.props.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
+    const daysInMonth = Math.ceil(timeDiff / 86400000)
+    const prayerTimesPromises = []
+    const hijriMonth = this.props.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month
+    const hijriYear = parseInt(this.props.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)
+    for (let day = 1; day <= daysInMonth; day++) {
+      const gregorianDate = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
+      gregorianDate.setDate(gregorianDate.getDate() + (day - 1))
+      const hijriDate = `${day} ${this.props.t(`islamic_months.${hijriMonth - 1}`)} ${hijriYear} ${this.props.t('hijri_abbreviation')}`
+      const formattedGregorianDate = gregorianDate.toLocaleString(this.props.selectedLanguage || 'en', { day: 'numeric', month: 'long', year: 'numeric' })
+      const prayerTimeList = this.props.generatePrayerTimes(gregorianDate).then(prayerTime => {
+        const formattedPrayerTimes = hijriMonth === 9
+          ? prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false }))
+          : prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false })).slice(1)
+        return [hijriDate, formattedGregorianDate, ...formattedPrayerTimes]
+      })
+      prayerTimesPromises.push(prayerTimeList)
+    }
+    Promise.all(prayerTimesPromises).then(prayerTimesList => this.setState({ prayerTimesList: prayerTimesList, arePrayerTimesListLoading: false }))
   }
 
   resetSettings () {

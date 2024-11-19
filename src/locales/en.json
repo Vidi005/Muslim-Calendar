@@ -66,7 +66,7 @@
     "moon_info": "Moon Info",
     "prayer_times_loading": "Prayer Times are Loading...",
     "prayer_times": "Prayer Times",
-    "prayer_times_headers": ["Prayers", "Yesterday", "Today", "Tomorrow", "Hijri", "Gregorian"],
+    "prayer_times_headers": ["Time", "Yesterday", "Today", "Tomorrow", "Hijri Date", "Gregorian Date"],
     "more": "More...",
     "error": "Error",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -185,7 +185,7 @@
         {
             "method": "JAKIM",
             "sun_altitude": {
-                "fajr": 20,
+                "fajr": 18,
                 "isha": 18
             },
             "latitude_range": [0.85, 7.4],
@@ -271,6 +271,7 @@
     "minutes": "mins",
     "degrees": "degrees",
     "visualization": "Visualization",
+    "prayer_schedule": "Prayer Schedule",
     "imsakiyah_schedule": "Imsakiyah Schedule",
     "month_type": "Select Month Type :",
     "month_types": ["Gregorian", "Hijri"],
