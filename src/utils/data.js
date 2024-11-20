@@ -824,31 +824,31 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
       let higherLat = latitude
       if (latitude > 48) higherLat = 45
       else higherLat = -45
-      fajrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination))))
+      fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination)))))
       fajrTime = transitTime - fajrHourAngle / 15
       const fajrHours = parseInt(fajrTime)
-      const fajrMinutes = ((fajrTime - fajrHours) * 60)
-      const fajrSeconds = ((fajrMinutes - parseInt(fajrMinutes)) * 60)
+      const fajrMinutes = (fajrTime - fajrHours) * 60
+      const fajrSeconds = (fajrMinutes - parseInt(fajrMinutes)) * 60
       fajr = parseDate(gregorianDate, fajrHours, fajrMinutes, fajrSeconds)
-      sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination)))))
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
-      const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-      const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+      const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+      const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
       cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(higherLat - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination)))))
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       const maghribHours = parseInt(maghribTime)
-      const maghribMinutes = ((maghribTime - maghribHours) * 60)
-      const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+      const maghribMinutes = (maghribTime - maghribHours) * 60
+      const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
       maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
       correctedMaghribTime = addTime(maghrib, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
@@ -856,40 +856,40 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
         isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
         correctedIshaTime = isha
       } else {
-        ishaHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination))))
+        ishaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(higherLat)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(higherLat)) * Math.cos(convertToRadians(sunDeclination)))))
         ishaTime = transitTime + ishaHourAngle / 15
         const ishaHours = parseInt(ishaTime)
-        const ishaMinutes = ((ishaTime - ishaHours) * 60)
-        const ishaSeconds = ((ishaMinutes - parseInt(ishaMinutes)) * 60)
+        const ishaMinutes = (ishaTime - ishaHours) * 60
+        const ishaSeconds = (ishaMinutes - parseInt(ishaMinutes)) * 60
         isha = parseDate(gregorianDate, ishaHours, ishaMinutes, ishaSeconds)
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
     } else if (formula === 1) {
-      fajrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       fajrTime = transitTime - fajrHourAngle / 15
       const fajrHours = parseInt(fajrTime)
-      const fajrMinutes = ((fajrTime - fajrHours) * 60)
-      const fajrSeconds = ((fajrMinutes - parseInt(fajrMinutes)) * 60)
+      const fajrMinutes = (fajrTime - fajrHours) * 60
+      const fajrSeconds = (fajrMinutes - parseInt(fajrMinutes)) * 60
       fajr = parseDate(gregorianDate, fajrHours, fajrMinutes, fajrSeconds)
-      sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
-      const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-      const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+      const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+      const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
       cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(meccaCoordinates.latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       const maghribHours = parseInt(maghribTime)
-      const maghribMinutes = ((maghribTime - maghribHours) * 60)
-      const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+      const maghribMinutes = (maghribTime - maghribHours) * 60
+      const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
       maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
       correctedMaghribTime = addTime(maghrib, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
@@ -897,44 +897,44 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
         isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
         correctedIshaTime = isha
       } else {
-        ishaHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+        ishaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         ishaTime = transitTime + ishaHourAngle / 15
         const ishaHours = parseInt(ishaTime)
-        const ishaMinutes = ((ishaTime - ishaHours) * 60)
-        const ishaSeconds = ((ishaMinutes - parseInt(ishaMinutes)) * 60)
+        const ishaMinutes = (ishaTime - ishaHours) * 60
+        const ishaSeconds = (ishaMinutes - parseInt(ishaMinutes)) * 60
         isha = parseDate(gregorianDate, ishaHours, ishaMinutes, ishaSeconds)
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
     } else if (formula === 2) {
-      sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!sunriseHourAngle) {
-        sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))
+        sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))
       }
       cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!ashrHourAngle) {
         cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(setLatitude - sunDeclination))) + shadowFactor
         const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-        ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))        
+        ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))        
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
-      const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-      const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+      const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+      const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
       sunrise = sunrise.setDate(sunrise.getDate() + 1)
       const maghribHours = parseInt(maghribTime)
-      const maghribMinutes = ((maghribTime - maghribHours) * 60)
-      const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+      const maghribMinutes = (maghribTime - maghribHours) * 60
+      const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
       maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
       const sunriseDate = new Date(sunrise)
       sunriseDate.setDate(sunriseDate.getDate() + 1)
@@ -952,34 +952,34 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
     } else if (formula === 3) {
-      sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!sunriseHourAngle) {
-        sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))
+        sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))
       }
       cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!ashrHourAngle) {
         cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(setLatitude - sunDeclination))) + shadowFactor
         const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-        ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))        
+        ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))        
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
-      const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-      const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+      const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+      const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
       const maghribHours = parseInt(maghribTime)
-      const maghribMinutes = ((maghribTime - maghribHours) * 60)
-      const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+      const maghribMinutes = (maghribTime - maghribHours) * 60
+      const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
       maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
       const sunriseDate = new Date(sunrise)
       sunriseDate.setDate(sunriseDate.getDate() + 1)
@@ -997,34 +997,34 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
     } else {
-      sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!sunriseHourAngle) {
-        sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))
+        sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))
       }
       cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!ashrHourAngle) {
         cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(setLatitude - sunDeclination))) + shadowFactor
         const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-        ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination))))        
+        ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
-      const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-      const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+      const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+      const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
       const maghribHours = parseInt(maghribTime)
-      const maghribMinutes = ((maghribTime - maghribHours) * 60)
-      const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+      const maghribMinutes = (maghribTime - maghribHours) * 60
+      const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
       maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
       const sunriseDate = new Date(sunrise)
       sunriseDate.setDate(sunriseDate.getDate() + 1)
@@ -1043,65 +1043,64 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
       }      
     }
   } else {
-    fajrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+    fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
     fajrTime = transitTime - fajrHourAngle / 15
     const fajrHours = parseInt(fajrTime)
-    const fajrMinutes = ((fajrTime - fajrHours) * 60)
-    const fajrSeconds = ((fajrMinutes - parseInt(fajrMinutes)) * 60)
+    const fajrMinutes = (fajrTime - fajrHours) * 60
+    const fajrSeconds = (fajrMinutes - parseInt(fajrMinutes)) * 60
     fajr = parseDate(gregorianDate, fajrHours, fajrMinutes, fajrSeconds)
-    sunriseHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+    sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
     sunriseTime = transitTime - sunriseHourAngle / 15
     const sunriseHours = parseInt(sunriseTime)
-    const sunriseMinutes = ((sunriseTime - sunriseHours) * 60)
-    const sunriseSeconds = ((sunriseMinutes - parseInt(sunriseMinutes)) * 60)
+    const sunriseMinutes = (sunriseTime - sunriseHours) * 60
+    const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
     sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
     cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunDeclination))) + shadowFactor
     const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
     const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-    ashrHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+    ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
     if (isNaN(sunAlt?.maghrib)) {
       maghribTime = transitTime + sunriseHourAngle / 15
     } else {
-      maghribHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       maghribTime = transitTime + maghribHourAngle / 15
     }
     const maghribHours = parseInt(maghribTime)
-    const maghribMinutes = ((maghribTime - maghribHours) * 60)
-    const maghribSeconds = ((maghribMinutes - parseInt(maghribMinutes)) * 60)
+    const maghribMinutes = (maghribTime - maghribHours) * 60
+    const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
     maghrib = parseDate(gregorianDate, maghribHours, maghribMinutes, maghribSeconds)
     correctedMaghribTime = addTime(maghrib, ihtiyath, corrections[6])
-    ishaHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
     if (isNaN(sunAlt.isha)) {
       isha = new Date(correctedMaghribTime)
       isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
       correctedIshaTime = isha
     } else {
-      ishaHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination))))
+      ishaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       ishaTime = transitTime + ishaHourAngle / 15
       const ishaHours = parseInt(ishaTime)
-      const ishaMinutes = ((ishaTime - ishaHours) * 60)
-      const ishaSeconds = ((ishaMinutes - parseInt(ishaMinutes)) * 60)
+      const ishaMinutes = (ishaTime - ishaHours) * 60
+      const ishaSeconds = (ishaMinutes - parseInt(ishaMinutes)) * 60
       isha = parseDate(gregorianDate, ishaHours, ishaMinutes, ishaSeconds)
       correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
     }
   }
   const dhuhrDescendCorrection = 1
   const dhuhrHours = parseInt(transitTime)
-  const dhuhrMinutes = ((transitTime - dhuhrHours) * 60)
-  const dhuhrSeconds = ((dhuhrMinutes - parseInt(dhuhrMinutes)) * 60)
+  const dhuhrMinutes = (transitTime - dhuhrHours) * 60
+  const dhuhrSeconds = (dhuhrMinutes - parseInt(dhuhrMinutes)) * 60
   const dhuhrDate = parseDate(gregorianDate, dhuhrHours, dhuhrMinutes + dhuhrDescendCorrection, dhuhrSeconds)
   ashrTime = transitTime + ashrHourAngle / 15
   const ashrHours = parseInt(ashrTime)
-  const ashrMinutes = ((ashrTime - ashrHours) * 60)
-  const ashrSeconds = ((ashrMinutes - parseInt(ashrMinutes)) * 60)
+  const ashrMinutes = (ashrTime - ashrHours) * 60
+  const ashrSeconds = (ashrMinutes - parseInt(ashrMinutes)) * 60
   ashr = parseDate(gregorianDate, ashrHours, ashrMinutes, ashrSeconds)
   correctedIshaTime = addTime(isha, ihtiyath, corrections[7])
   if (dhuhaMethod === 0) {
-    const dhuhaHourAngle = convertToDegrees(Math.acos(Math.sin(convertToRadians(inputSunAlt)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination))))
+    const dhuhaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(inputSunAlt)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
     const dhuhaTime = transitTime - dhuhaHourAngle / 15
     const dhuhaHours = parseInt(dhuhaTime)
-    const dhuhaMinutes = ((dhuhaTime - dhuhaHours) * 60)
-    const dhuhaSeconds = ((dhuhaMinutes - parseInt(dhuhaMinutes)) * 60)
+    const dhuhaMinutes = (dhuhaTime - dhuhaHours) * 60
+    const dhuhaSeconds = (dhuhaMinutes - parseInt(dhuhaMinutes)) * 60
     dhuha = parseDate(gregorianDate, dhuhaHours, dhuhaMinutes, dhuhaSeconds)
   } else dhuha = addTime(sunrise, inputMins, 0)
   const correctedFajrTime = setTimeZone(addTime(fajr, ihtiyath, corrections[1]), timeZone)
