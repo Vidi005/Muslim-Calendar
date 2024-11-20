@@ -82,7 +82,7 @@
         "1-9-event": "Ramadan Start",
         "17-9-event": "Nuzulul Quran",
         "1-10-event": "Ied Al-Fitr",
-        "9-12-event": "Arafah",
+        "9-12-event": "Arafah Day",
         "10-12-event": "Ied Al-Adha"
     },
     "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation", "Moonrise", "Moonset", "Last Conjunction", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],

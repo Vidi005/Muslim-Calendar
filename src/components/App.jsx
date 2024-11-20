@@ -78,6 +78,7 @@ class App extends React.Component {
     this.sliderRef = React.createRef()
     this.calendarContainerRef = React.createRef()
     this.tooltipRef = React.createRef()
+    this.debounceTimeout = null
   }
 
   componentDidMount() {
@@ -632,11 +633,14 @@ class App extends React.Component {
 
   onInputLocationChange (inputLocation) {
     if (!this.state.isGeocoding) {
+      if (this.debounceTimeout) clearTimeout(this.debounceTimeout)
       if (inputLocation.length < 3) this.setState({ isSearching: false, suggestedLocations: [] })
       else {
-        this.setState({ isSearching: true, inputLocation: inputLocation }, () => {
-          this.loadCitiesData().then(worldCities => this.generateCities(worldCities))
-        })
+        this.debounceTimeout = setTimeout(() => {
+          this.setState({ isSearching: true, inputLocation: inputLocation }, () => {
+            this.loadCitiesData().then(worldCities => this.generateCities(worldCities))
+          })
+        }, 1000)
       }
     }
   }
