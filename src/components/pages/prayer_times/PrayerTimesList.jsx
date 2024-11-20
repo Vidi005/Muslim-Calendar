@@ -95,8 +95,8 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
           {arePrayerTimesListLoading
             ? (
               <div className="flex items-center justify-center w-full mx-auto space-x-2 overflow-hidden">
-                <span className="w-6 h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
-                <span className="text-green-700 dark:text-gray-200 text-lg md:text-xl">{t('prayer_times_loading')}</span>
+                <span className="w-4 h-4 md:w-6 md:h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
+                <span className="text-center text-green-700 dark:text-gray-200 text-base md:text-lg lg:text-xl">{t('prayer_times_loading')}</span>
               </div>
               )
             : (
