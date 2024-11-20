@@ -812,7 +812,8 @@ const calculateManually = (gregorianDate, latitude, longitude, elevation, timeZo
   const sunDeclination = 0.37877 + 23.264 * Math.sin(convertToRadians(57.297 * dateAngle - 79.547)) + 0.3812 * Math.sin(convertToRadians(2 * 57.297 * dateAngle - 82.682)) + 0.17132 * Math.sin(convertToRadians(3 * 57.297 * dateAngle - 59.722))
   const u = (julianDay - 2451545) / 36525
   const sunLongitude = 280.46607 + 36000.7698 * u
-  const equationOfTime = (-(1789 + 237 * u) * Math.sin(sunLongitude) - (7146 - 62 * u) * Math.cos(sunLongitude) + (9934 - 14 * u) * Math.sin(2 * sunLongitude) - (29 + 5 * u) * Math.cos(2 * sunLongitude) + (74 + 10 * u) * Math.sin(3 * sunLongitude) + (320 - 4 * u) * Math.cos(3 * sunLongitude) - 212 * Math.sin(4 * sunLongitude)) / 1000
+  const sunLongitudeInRad = convertToRadians(sunLongitude)
+  const equationOfTime = (-(1789 + 237 * u) * Math.sin(sunLongitudeInRad) - (7146 - 62 * u) * Math.cos(sunLongitudeInRad) + (9934 - 14 * u) * Math.sin(2 * sunLongitudeInRad) - (29 + 5 * u) * Math.cos(2 * sunLongitudeInRad) + (74 + 10 * u) * Math.sin(3 * sunLongitudeInRad) + (320 - 4 * u) * Math.cos(3 * sunLongitudeInRad) - 212 * Math.sin(4 * sunLongitudeInRad)) / 1000
   const transitTime = 12 - getTimeZoneDiff() - longitude / 15 - equationOfTime / 60
   const sunriseAltitude = -5/6 - 0.0347 * Math.sqrt(elevation)
   if (Math.abs(latitude) > 48) {

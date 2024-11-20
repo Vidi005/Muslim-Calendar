@@ -82,7 +82,7 @@
         "1-9-event": "Awal Ramadhan",
         "17-9-event": "Nuzulul Qur'an",
         "1-10-event": "Idul Fitri",
-        "9-12-event": "Arafah",
+        "9-12-event": "Hari Arafah",
         "10-12-event": "Idul Adha"
     },
     "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Kenaikan Kanan", "Deklinasi", "Ketinggian", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
