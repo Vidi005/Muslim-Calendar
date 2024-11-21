@@ -38,7 +38,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
             {state.isCalendarLoading
               ? (
                 <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
-                  <span className="w-4 h-4 md:w-6 md:h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
+                  <span className="w-5 h-5 md:w-6 md:h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
                   <span className="text-center text-green-700 dark:text-gray-200 text-base md:text-lg lg:text-xl">{t('calendar_loading')}</span>
                 </div>
                 )
@@ -90,7 +90,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                       const isMuslimEvent = !!muslimEvent
                                       if (isMuslimEvent) {
                                         return (
-                                          <td className={`bg-sky-500/20 dark:bg-sky-500 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex}>
+                                          <td className={`bg-sky-500/20 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex}>
                                             {day ? (
                                               <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
                                                 <span className={`${muslimEvent.eventId} block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
@@ -126,7 +126,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                   </Slider>
                   <ul className="flex flex-nowrap items-center justify-center list-none mx-auto py-4 space-x-1 md:space-x-2 lg:space-x-4 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-4 h-4 md:w-6 md:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
+                      <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
                     ))}
                   </ul>
                 </React.Fragment>
@@ -135,7 +135,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
             {state.isCalendarLoading
               ? (
                 <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
-                  <span className="w-4 h-4 md:w-6 md:h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
+                  <span className="w-5 h-5 md:w-6 md:h-6 aspect-square border-t-2 border-r-2 border-t-green-700 dark:border-t-gray-200 border-r-green-700 dark:border-r-gray-200 rounded-full bg-transparent animate-spin"></span>
                   <span className="text-center text-green-700 dark:text-gray-200 text-base md:text-lg lg:text-xl">{t('event_list_loading')}</span>
                 </div>
                 )
