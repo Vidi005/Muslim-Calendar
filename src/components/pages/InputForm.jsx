@@ -47,9 +47,9 @@ const InputForm = () => (
                       required
                     />
                   </span>
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
-                    <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
-                    <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
+                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
+                    <img className={`${state.isGettingCoordinates ? "animate__animated animate__flash animate__infinite" : ""}`} src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
+                    <span className="ml-1 text-white text-sm whitespace-nowrap">{state.isGettingCoordinates ? t('locating') : t('current_location')}</span>
                   </button>
                   <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-400 dark:bg-yellow-600 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
                     <img src={`${import.meta.env.BASE_URL}images/restore-datetime-icon.svg`} alt="Restore Datetime" />
@@ -226,9 +226,9 @@ const InputForm = () => (
               <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white duration-200">
                 <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
                 <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation}>
-                    <img src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
-                    <span className="ml-1 text-white text-sm whitespace-nowrap">{t('current_location')}</span>
+                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
+                    <img className={`${state.isGettingCoordinates ? "animate__animated animate__flash animate__infinite" : ""}`} src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
+                    <span className="ml-1 text-white text-sm whitespace-nowrap">{state.isGettingCoordinates ? t('locating') : t('current_location')}</span>
                   </button>
                   <button className="flex items-center p-1 bg-yellow-700 hover:bg-yellow-500 hover:dark:bg-yellow-400 dark:bg-yellow-600 active:bg-yellow-700 dark:active:bg-yellow-900 rounded-md duration-200 shadow" onClick={restoreDateTime}>
                     <img src={`${import.meta.env.BASE_URL}images/restore-datetime-icon.svg`} alt="Restore Datetime" />
