@@ -141,6 +141,7 @@ class MainContainer extends React.Component {
                   state={this.state}
                   selectedLanguage={this.props.selectedLanguage}
                   formattedDateTime={this.props.formattedDateTime}
+                  selectedLocation={this.props.selectedLocation}
                   monthsInSetYear={this.props.monthsInSetYear}
                   hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}
@@ -166,6 +167,7 @@ class MainContainer extends React.Component {
                   state={this.state}
                   selectedLanguage={this.props.selectedLanguage}
                   formattedDateTime={this.props.formattedDateTime}
+                  selectedLocation={this.props.selectedLocation}
                   monthsInSetYear={this.props.monthsInSetYear}
                   hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}

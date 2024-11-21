@@ -28,7 +28,7 @@ const CurrentPrayerTimes = () => (
               </div>
             )
           : (
-            <table className="table-auto w-full align-middle text-sm md:lg lg:text-lg whitespace-nowrap">
+            <table className="table-auto w-full align-middle text-sm md:text-base lg:text-lg whitespace-nowrap">
               <tr>
                 {en.prayer_times_headers.slice(0, 4).map((_, i) => (
                   <th key={i} className={`${i === 2 ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white p-1.5 text-green-900 dark:text-white font-bold duration-200`}>{t(`prayer_times_headers.${i}`)}</th>

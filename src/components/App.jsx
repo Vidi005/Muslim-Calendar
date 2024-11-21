@@ -93,7 +93,7 @@ class App extends React.Component {
 
   componentDidUpdate(_prevProps, prevState) {
     document.body.classList.toggle('dark', this.state.isDarkMode)
-    if (prevState.seconds !== this.state.seconds) {
+    if (prevState.seconds !== this.state.seconds && this.state.inputDate === '' && this.state.inputTime === '') {
       if (this.state.selectedIntervalUpdate === 3 && this.state.seconds % 60 === 0) {
         this.formatDateTime()
       } else if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 30 === 0) {
@@ -369,7 +369,7 @@ class App extends React.Component {
 
   getCurrentDate () {
     const currentDate = new Date()
-    const adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    let adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     const gregorian = currentDate.toLocaleDateString(this.state.selectedLanguage || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
     const time = currentDate.toLocaleTimeString(this.state.selectedLanguage || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     if (this.state.monthsInCurrentYear.length > 0) {
@@ -383,10 +383,11 @@ class App extends React.Component {
           const islamicDayNumber = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", day: "numeric" })
           const islamicMonth = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", month: "numeric" })
           const islamicYear = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric" })
+          adjustedDateWorker.terminate()
           this.setState({
             currentDate: { gregorian, islamicDayNumber, islamicMonth, islamicYear, time },
             seconds: currentDate.getSeconds()
-          }, () => adjustedDateWorker.terminate())
+          }, () => adjustedDateWorker = null)
         }
       }
       adjustedDateWorker.onerror = error => {
@@ -396,7 +397,7 @@ class App extends React.Component {
           icon: 'error',
           confirmButtonText: i18n.t('ok'),
           confirmButtonColor: 'green'
-        }).finally(() => adjustedDateWorker.terminate())
+        }).catch(() => adjustedDateWorker.terminate()).finally(() => adjustedDateWorker = null)
       }
     }
   }
@@ -525,7 +526,7 @@ class App extends React.Component {
 
   generateNearestCity = worldCities => {
     this.setState({ isGettingCoordinates: false, isGeocoding: true, inputLocation: '', selectedLocation: {} })
-    const nearestCityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    let nearestCityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     nearestCityWorker.postMessage({
       type: 'createHaversineDistance',
       cityData: worldCities,
@@ -536,17 +537,17 @@ class App extends React.Component {
       if (workerEvent.data.type === 'createHaversineDistance') {
         this.setState({ selectedLocation: workerEvent.data.result })
       }
-      this.setState({ isGeocoding: false })
       nearestCityWorker.terminate()
+      this.setState({ isGeocoding: false }, () => nearestCityWorker = null)
     }
     nearestCityWorker.onerror = error => {
       nearestCityWorker.terminate()
-      this.setState({ isGeocoding: false, selectedLocation: error.message })
+      this.setState({ isGeocoding: false, selectedLocation: error.message }, () => nearestCityWorker = null)
     }
   }
 
   generateCities = worldCities => {
-    const citiesDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    let citiesDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     citiesDataWorker.postMessage({
       type: 'createCityData',
       cityData: worldCities,
@@ -557,11 +558,11 @@ class App extends React.Component {
         this.setState({ suggestedLocations: workerEvent.data.result })
       }
       citiesDataWorker.terminate()
-      this.setState({ isSearching: false })
+      this.setState({ isSearching: false }, () => citiesDataWorker = null)
     }
     citiesDataWorker.onerror = error => {
       citiesDataWorker.terminate()
-      this.setState({ isSearching: false, selectedLocation: error.message })
+      this.setState({ isSearching: false, selectedLocation: error.message }, () => citiesDataWorker = null)
     }
   }
 
@@ -846,7 +847,7 @@ class App extends React.Component {
 
   createCalendarWorker = gregorianDate => {
     return new Promise((resolve, reject) => {
-      const calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+      let calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
       calendarDataWorker.postMessage({
         type: 'createCalendarData',
         gregorianDate: gregorianDate,
@@ -863,11 +864,14 @@ class App extends React.Component {
           resolve(workerEvent.data.result)
         }
         calendarDataWorker.terminate()
-        this.setState({ isCalendarLoading: false })
+        this.setState({ isCalendarLoading: false }, () => calendarDataWorker = null)
       }
       calendarDataWorker.onerror = error => {
         calendarDataWorker.terminate()
-        this.setState({ isCalendarLoading: false }, () => console.error(error.message))
+        this.setState({ isCalendarLoading: false }, () => {
+          console.error(error.message)
+          calendarDataWorker = null
+        })
         reject(error)
       }
     })
@@ -922,7 +926,7 @@ class App extends React.Component {
   }
 
   showTooltip = event => {
-    const tooltipWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    let tooltipWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     tooltipWorker.postMessage({ type: 'createIncludedElement', innerHTML: event.target.innerHTML })
     tooltipWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createIncludedElement') {
@@ -947,8 +951,13 @@ class App extends React.Component {
               tooltip.style.top = `${event.clientY / 2 - tooltipHeight - 10 - scrollOffset}px`
             }
             tooltipWorker.terminate()
+            tooltipWorker = null
           })
-        } else this.hideTooltip()
+        } else {
+          this.hideTooltip()
+          tooltipWorker.terminate()
+          tooltipWorker = null
+        }
       }
     }
     tooltipWorker.onerror = _error => {
@@ -968,7 +977,7 @@ class App extends React.Component {
   }
 
   generateMoonInfos = () => {
-    const moonInfosWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    let moonInfosWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonInfosWorker.postMessage({
       type: 'createMoonInfos',
       gregorianDate: this.state.formattedDateTime,
@@ -980,18 +989,21 @@ class App extends React.Component {
     })
     moonInfosWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createMoonInfos') {
-        this.setState({ moonInfos: workerEvent.data.result, areMoonInfosLoading: false }, () => moonInfosWorker.terminate())
+        this.setState({ moonInfos: workerEvent.data.result, areMoonInfosLoading: false }, () => {
+          moonInfosWorker.terminate()
+          moonInfosWorker = null
+        })
       }
     }
     moonInfosWorker.onerror = _error => {
       moonInfosWorker.terminate()
-      this.setState({ areMoonInfosLoading: false })
+      this.setState({ areMoonInfosLoading: false }, () => moonInfosWorker = null)
     }
   }
 
   generatePrayerTimes = gregorianDate => {
     return new Promise((resolve, reject) => {
-      const prayerTimesWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+      let prayerTimesWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
       prayerTimesWorker.postMessage({
         type: 'createPrayerTimes',
         gregorianDate: gregorianDate,
@@ -1013,12 +1025,14 @@ class App extends React.Component {
         if (workerEvent.data.type === 'createPrayerTimes') {
           prayerTimesWorker.terminate()
           resolve(workerEvent.data.result)
+          prayerTimesWorker = null
         }
       }
       prayerTimesWorker.onerror = error => {
         prayerTimesWorker.terminate()
         console.error(error.message)
         reject(error.message)
+        prayerTimesWorker = null
       }
     })
   }
@@ -1035,7 +1049,7 @@ class App extends React.Component {
     ]).then(prayerTimes => { this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes }) })
   }
 
-  zeroPadding = value => (value >= 0 && value < 10) ? `0${value}` : value
+  addZeroPad = value => (value >= 0 && value < 10) ? `0${value}` : value
 
   createPrayerTimeCountdown = () => {
     if (this.state.inputDate !== '' && this.state.inputTime !== '') return
@@ -1049,7 +1063,7 @@ class App extends React.Component {
         ? en.prayer_names.map((_, i) => i18n.t(`prayer_names.${i}`))
         : en.prayer_names.map((_, i) => i18n.t(`prayer_names.${i}`)).slice(1)
       if (todayPrayerTimes) {
-        const prayerTimes = hijriMonthNumber === 9 ? todayPrayerTimes : todayPrayerTimes.slice(1)
+        const prayerTimes = hijriMonthNumber === 9 ? todayPrayerTimes : todayPrayerTimes?.slice(1)
         const nextPrayerIndex = prayerTimes?.findIndex(prayerTime => prayerTime > currentDate)
         if (nextPrayerIndex !== -1) {
           nextPrayerName = prayerNames[nextPrayerIndex]
@@ -1057,9 +1071,11 @@ class App extends React.Component {
         }
       }
       if (!nextPrayerTime) {
-        const tomorrowPrayerTimes = this.state.prayerTimes.find(([prayerTime]) => prayerTime.toDateString() === new Date(currentDate.setDate(currentDate.getDate() + 1)).toDateString())
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        const tomorrowPrayerTimes = this.state.prayerTimes.find(([prayerTime]) => prayerTime.toDateString() === tomorrow.toDateString())
         if (!tomorrowPrayerTimes) return
-        const prayerTimes = hijriMonthNumber === 9 ? tomorrowPrayerTimes : tomorrowPrayerTimes.slice(1)
+        const prayerTimes = hijriMonthNumber === 9 ? tomorrowPrayerTimes : tomorrowPrayerTimes?.slice(1)
         const nextPrayerIndex = prayerTimes?.findIndex(prayerTime => prayerTime > currentDate)
         if (nextPrayerIndex !== -1) {
           nextPrayerName = prayerNames[nextPrayerIndex]
@@ -1068,9 +1084,9 @@ class App extends React.Component {
       }
       if (nextPrayerName && nextPrayerTime) {
         const timesRemaining = nextPrayerTime - currentDate
-        const hoursLeft = this.zeroPadding(Math.floor(timesRemaining / 3600000))
-        const minutesLeft = this.zeroPadding(Math.floor((timesRemaining % 3600000) / 60000))
-        const secondsLeft = this.zeroPadding(Math.floor((timesRemaining % 60000) / 1000))
+        const hoursLeft = this.addZeroPad(Math.floor(timesRemaining / 3600000))
+        const minutesLeft = this.addZeroPad(Math.floor((timesRemaining % 3600000) / 60000))
+        const secondsLeft = this.addZeroPad(Math.floor((timesRemaining % 60000) / 1000))
         const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName}: ${hoursLeft}:${minutesLeft}:${secondsLeft}`
         if (hoursLeft === '00' && minutesLeft === '00' && secondsLeft === '00') {
           alert(`${i18n.t('prayer_info.1')} ${nextPrayerName} ${i18n.t('prayer_info.2')}!`)
@@ -1192,6 +1208,7 @@ class App extends React.Component {
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 selectedLanguage={this.state.selectedLanguage}
                 formattedDateTime={this.state.formattedDateTime}
+                selectedLocation={this.state.selectedLocation}
                 monthsInSetYear={this.state.monthsInSetYear}
                 hijriStartDates={this.state.hijriStartDates}
                 selectCalculationMethod={this.selectCalculationMethod.bind(this)}

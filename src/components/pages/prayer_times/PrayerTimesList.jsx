@@ -1,8 +1,9 @@
 import { Radio, RadioGroup } from "@headlessui/react"
 import React from "react"
 import en from "../../../locales/en.json"
+import ReactToPrint from "react-to-print"
 
-const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, prayerTimesList, arePrayerTimesListLoading, changeMonthType, selectGregorianMonth, selectHijriMonth }) => {
+const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, prayerTimesList, arePrayerTimesListLoading, changeMonthType, selectGregorianMonth, selectHijriMonth }) => {
   const isRamadanSelected = hijriStartDates?.findIndex(item => item.dateId === '1-9-date') === selectedHijriMonth
   const prayerTimeHeaders = monthType === 0 ? en.prayer_times_headers.map((_, i) => t(`prayer_times_headers.${i}`)).slice(5) : en.prayer_times_headers.map((_, i) => t(`prayer_times_headers.${i}`)).slice(4)
   const prayerNames = monthType === 1 && isRamadanSelected
@@ -16,7 +17,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
         <Radio value={0} className={({ active, checked }) => `${active ? 'ring-2 ring-green-300 rounded-lg' : ''} ${checked ? 'border border-green-700 dark:border-green-500 text-white rounded-lg' : 'border bg-green-200/50 dark:bg-gray-700 rounded-lg'} border-green-700 dark:border-green-500 text-green-900 dark:text-white shadow-md dark:shadow-white/50 cursor-pointer duration-200`}>
           {({ checked }) => (
             checked ? (
-              <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-500 p-2 cursor-pointer rounded-lg duration-300">
+              <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-600 p-2 cursor-pointer rounded-lg duration-300">
                 <input
                   type="radio"
                   className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
@@ -37,7 +38,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
         <Radio value={1} className={({ active, checked }) => `${active ? 'ring-2 ring-green-300 rounded-lg' : ''} ${checked ? 'border border-green-700 dark:border-green-500 text-white rounded-lg' : 'border bg-green-200/50 dark:bg-gray-700 rounded-lg'} border-green-700 dark:border-green-500 text-green-900 dark:text-white shadow-md dark:shadow-white/50 cursor-pointer duration-200`}>
           {({ checked }) => (
             checked ? (
-              <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-500 p-2 cursor-pointer rounded-lg duration-300">
+              <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-600 p-2 cursor-pointer rounded-lg duration-300">
                 <input
                   type="radio"
                   className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
@@ -100,44 +101,112 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, monthsInSetYe
               </div>
               )
             : (
-              <table className="table-auto min-w-full align-middle text-sm md:lg lg:text-lg whitespace-nowrap">
-                {monthType === 0
-                  ? <>
-                      <tr>
-                        {[...prayerTimeHeaders, ...prayerNames].map(header => (
-                          <th key={header} className="border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200">{header}</th>
-                        ))}
-                      </tr>
-                      {prayerTimesList.map((prayerTimes, i) => (
-                        <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
-                          {prayerTimes.map((prayerTime, j) => (
-                            <td key={i + j} className="border border-green-700 dark:border-gray-200 p-1.5 text-center">
-                            {prayerTime}
-                          </td>
+              <>
+                <table className="table-auto min-w-full align-middle text-sm md:text-base lg:text-lg whitespace-nowrap">
+                  {monthType === 0
+                    ? <>
+                        <tr>
+                          {[...prayerTimeHeaders, ...prayerNames].map(header => (
+                            <th key={header} className="border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200">{header}</th>
                           ))}
                         </tr>
-                      ))}
-                    </>
-                  : <>
-                      <tr>
-                        {[...prayerTimeHeaders, ...prayerNames].map((header, i) => (
-                          <th key={i} className={`${(i === 2 || i === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200`}>{header}</th>
-                        ))}
-                      </tr>
-                      {prayerTimesList.map((prayerTimes, i) => (
-                        <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
-                          {prayerTimes.map((prayerTime, j) => (
-                            <td key={i + j} className={`${(j === 2 || j === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 p-1.5 text-center`}>
-                            {prayerTime}
+                        {prayerTimesList.map((prayerTimes, i) => (
+                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
+                            {prayerTimes.map((prayerTime, j) => (
+                              <td key={i + j} className="border border-green-700 dark:border-gray-200 p-1.5 text-center">
+                              {prayerTime}
                             </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </>
+                    : <>
+                        <tr>
+                          {[...prayerTimeHeaders, ...prayerNames].map((header, i) => (
+                            <th key={i} className={`${(i === 2 || i === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200`}>{header}</th>
                           ))}
                         </tr>
-                      ))}
-                    </>
-                }
-              </table>
+                        {prayerTimesList.map((prayerTimes, i) => (
+                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
+                            {prayerTimes.map((prayerTime, j) => (
+                              <td key={i + j} className={`${(j === 2 || j === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 p-1.5 text-center`}>
+                              {prayerTime}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </>
+                  }
+                </table>
+                <table className={`${isRamadanSelected ? "text-xs" : "text-sm"} prayer-times-list-container hidden table-auto w-[19.6cm] m-[1cm] align-middle whitespace-nowrap`}>
+                  {monthType === 0
+                    ? <>
+                        <tr>
+                          {[...prayerTimeHeaders, ...prayerNames].map(header => (
+                            <th key={header} className="border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200">{header}</th>
+                          ))}
+                        </tr>
+                        {prayerTimesList.map((prayerTimes, i) => (
+                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
+                            {prayerTimes.map((prayerTime, j) => (
+                              <td key={i + j} className="border border-green-700 dark:border-gray-200 p-1.5 text-center">
+                              {prayerTime}
+                            </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </>
+                    : <>
+                        <tr>
+                          {[...prayerTimeHeaders, ...prayerNames].map((header, i) => (
+                            <th key={i} className={`${(i === 2 || i === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200`}>{header}</th>
+                          ))}
+                        </tr>
+                        {prayerTimesList.map((prayerTimes, i) => (
+                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
+                            {prayerTimes.map((prayerTime, j) => (
+                              <td key={i + j} className={`${(j === 2 || j === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 p-1.5 text-center`}>
+                              {prayerTime}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </>
+                  }
+                </table>
+              </>
             )}
         </div>
+      {arePrayerTimesListLoading ? null : (
+        <div className="flex items-center justify-center space-x-2">
+          <button className="flex items-center justify-center m-2 px-3 py-1.5 bg-green-700 dark:bg-green-600 hover:bg-green-900 active:bg-green-800 text-center text-white rounded-md shadow-md dark:shadow-white/50 duration-200">
+            <img className="w-5 h-5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/download-icon.svg`} alt="" />
+            <span className="ml-2">{t('download')}</span>
+          </button>
+          <ReactToPrint
+            trigger={() => <button className="flex items-center justify-center m-2 px-3 py-1.5 bg-sky-700 hover:bg-sky-900 active:bg-sky-800 dark:bg-sky-600 text-center text-white rounded-md shadow-md dark:shadow-white/50 duration-200">
+                <img className="w-5 h-5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/print-icon.svg`} alt="" />
+                <span className="ml-2">{t('print')}</span>
+              </button>}
+            onBeforeGetContent={() => document.querySelector('.prayer-times-list-container').style.display = 'table'}
+            content={() => document.querySelector('.prayer-times-list-container')}
+            documentTitle={`${+new Date()}_${t('prayer_times')}_${selectedLocation?.city}`}
+            removeAfterPrint={false}
+            onPrintError={error => {
+              document.querySelector('.prayer-times-list-container').style.display = 'none'
+              Swal.fire({
+                icon: 'error',
+                title: `${this.props.t('error_alert')}`,
+                text: error.toString(),
+                confirmButtonColor: 'green'
+              })
+            }}
+            onAfterPrint={() => {
+              document.querySelector('.prayer-times-list-container').style.display = 'none'
+            }}
+          />
+        </div>        
+      )}
     </section>
   )
 }
