@@ -278,6 +278,8 @@
     "month_type": "Select Month Type :",
     "month_types": ["Gregorian", "Hijri"],
     "select_month": "Select Month :",
+    "download": "Download",
+    "print": "Print",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",
     "moon_crescent_criteria": "Criteria :",
     "islamic_month": "Month :",

@@ -278,6 +278,8 @@
     "month_type": "Pilih Jenis Bulan :",
     "month_types": ["Masehi", "Hijriah"],
     "select_month": "Pilih Bulan :",
+    "download": "Unduh",
+    "print": "Cetak",
     "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",
     "moon_crescent_criteria ": "Kriteria :",
     "islamic_month": "Bulan :",
