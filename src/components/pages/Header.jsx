@@ -32,7 +32,7 @@ const HeaderContainer = () => (
             } relative inline-flex h-6 w-12 px-1 items-center cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-1 rounded-full`}
           >
             <span className="sr-only">Theme Setting</span>
-            <span className={`${state.isDarkMode ? "translate-x-6" : "translate-x-0"} inline-block h-4 w-4 transform rounded-full bg-white transition duration-300`}>
+            <span className={`${state.isDarkMode ? "translate-x-6" : "translate-x-0"} inline-block h-5 w-5 transform rounded-full bg-white transition duration-300`}>
               <img className="h-full p-0.5 object-contain object-center duration-200 animate__animated animate__fadeIn" src={`${state.isDarkMode ? `${import.meta.env.BASE_URL}images/moon-icon.svg` : `${import.meta.env.BASE_URL}images/sun-icon.svg`}`} alt="Theme Setting" />
             </span>
           </Switch>

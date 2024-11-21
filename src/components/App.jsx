@@ -64,12 +64,14 @@ class App extends React.Component {
       hijriEventDates: [],
       moonInfos: [],
       prayerTimes: [],
+      nextPrayerInfo: '',
       hijriStartDates: [],
       arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
+      isGettingCoordinates: false,
       isGeocoding: false,
       isSearching: false,
       isDarkMode: false
@@ -83,7 +85,10 @@ class App extends React.Component {
 
   componentDidMount() {
     this.checkBrowserStorage()
-    this.intervalId = setInterval(this.getCurrentDate.bind(this), 1000)
+    this.intervalId = setInterval(() => {
+      this.getCurrentDate()
+      this.createPrayerTimeCountdown()
+    }, 1000)
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -519,7 +524,7 @@ class App extends React.Component {
   }
 
   generateNearestCity = worldCities => {
-    this.setState({ isGeocoding: true, inputLocation: '', selectedLocation: {} })
+    this.setState({ isGettingCoordinates: false, isGeocoding: true, inputLocation: '', selectedLocation: {} })
     const nearestCityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     nearestCityWorker.postMessage({
       type: 'createHaversineDistance',
@@ -562,30 +567,32 @@ class App extends React.Component {
 
   getCurrentLocation () {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          elevation: position.coords.altitude || 1,
-          selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        }, () => {
-          this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
-          this.getCurrentCriteria()
-          this.getCurrentConvention()
-          this.formatDateTime()
-            .then(() => this.selectTimeZone(this.state.selectedTimeZone))
-            .then(() => this.create3DaysOfPrayerTimes())
-            .finally(() => {
-              localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
-              localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
-            })
+      this.setState({ isGettingCoordinates: true }, () => {
+        navigator.geolocation.getCurrentPosition(position => {
+          this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            elevation: position.coords.altitude || 1,
+            selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          }, () => {
+            this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
+            this.getCurrentCriteria()
+            this.getCurrentConvention()
+            this.formatDateTime()
+              .then(() => this.selectTimeZone(this.state.selectedTimeZone))
+              .then(() => this.create3DaysOfPrayerTimes())
+              .finally(() => {
+                localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
+                localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
+              })
+          })
+        }, error => {
+          this.setState({ isGettingCoordinates: false, selectedLocation: error.message })
+        }, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 15000
         })
-      }, error => {
-        this.setState({ selectedLocation: error.message })
-      }, {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 15000
       })
     }
   }
@@ -687,6 +694,7 @@ class App extends React.Component {
           this.formatDateTime()
         }
       }).finally(() => {
+        this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
         this.getCurrentCriteria()
         this.getCurrentConvention()
         this.create3DaysOfPrayerTimes()
@@ -1025,6 +1033,51 @@ class App extends React.Component {
       this.generatePrayerTimes(this.state.formattedDateTime),
       this.generatePrayerTimes(theDayAfter)
     ]).then(prayerTimes => { this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes }) })
+  }
+
+  zeroPadding = value => (value >= 0 && value < 10) ? `0${value}` : value
+
+  createPrayerTimeCountdown = () => {
+    if (this.state.inputDate !== '' && this.state.inputTime !== '') return
+    else {
+      const currentDate = new Date()
+      const todayPrayerTimes = this.state.prayerTimes.find(([prayerTime]) => prayerTime.toDateString() === currentDate.toDateString())
+      const hijriMonthNumber = parseInt(currentDate.toLocaleString('en', { calendar: "islamic", month: 'numeric' }))
+      let nextPrayerTime = null
+      let nextPrayerName = null
+      const prayerNames = hijriMonthNumber === 9
+        ? en.prayer_names.map((_, i) => i18n.t(`prayer_names.${i}`))
+        : en.prayer_names.map((_, i) => i18n.t(`prayer_names.${i}`)).slice(1)
+      if (todayPrayerTimes) {
+        const prayerTimes = hijriMonthNumber === 9 ? todayPrayerTimes : todayPrayerTimes.slice(1)
+        const nextPrayerIndex = prayerTimes?.findIndex(prayerTime => prayerTime > currentDate)
+        if (nextPrayerIndex !== -1) {
+          nextPrayerName = prayerNames[nextPrayerIndex]
+          nextPrayerTime = prayerTimes[nextPrayerIndex]
+        }
+      }
+      if (!nextPrayerTime) {
+        const tomorrowPrayerTimes = this.state.prayerTimes.find(([prayerTime]) => prayerTime.toDateString() === new Date(currentDate.setDate(currentDate.getDate() + 1)).toDateString())
+        if (!tomorrowPrayerTimes) return
+        const prayerTimes = hijriMonthNumber === 9 ? tomorrowPrayerTimes : tomorrowPrayerTimes.slice(1)
+        const nextPrayerIndex = prayerTimes?.findIndex(prayerTime => prayerTime > currentDate)
+        if (nextPrayerIndex !== -1) {
+          nextPrayerName = prayerNames[nextPrayerIndex]
+          nextPrayerTime = prayerTimes[nextPrayerIndex]
+        }
+      }
+      if (nextPrayerName && nextPrayerTime) {
+        const timesRemaining = nextPrayerTime - currentDate
+        const hoursLeft = this.zeroPadding(Math.floor(timesRemaining / 3600000))
+        const minutesLeft = this.zeroPadding(Math.floor((timesRemaining % 3600000) / 60000))
+        const secondsLeft = this.zeroPadding(Math.floor((timesRemaining % 60000) / 1000))
+        const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName}: ${hoursLeft}:${minutesLeft}:${secondsLeft}`
+        if (hoursLeft === '00' && minutesLeft === '00' && secondsLeft === '00') {
+          alert(`${i18n.t('prayer_info.1')} ${nextPrayerName} ${i18n.t('prayer_info.2')}!`)
+        }
+        this.setState({ nextPrayerInfo: nextPrayerInfo })
+      }
+    }
   }
 
   render() {
