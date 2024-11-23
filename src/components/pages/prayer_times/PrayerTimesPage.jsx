@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 
-const PrayerTimesPage = ({ t, isSidebarExpanded, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
+const PrayerTimesPage = ({ t, parentState, isSidebarExpanded, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('pages.1')}</title>
@@ -11,6 +11,7 @@ const PrayerTimesPage = ({ t, isSidebarExpanded, selectedLanguage, formattedDate
     <HeaderContainer />
     <MainContainer
       t={t}
+      parentState={parentState}
       isSidebarExpanded={isSidebarExpanded}
       selectedLanguage={selectedLanguage}
       formattedDateTime={formattedDateTime}

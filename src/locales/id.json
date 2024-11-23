@@ -116,7 +116,7 @@
             "method": "Umm al-Qura",
             "sun_altitude": {
                 "fajr": 18.5,
-                "isha": "90 mins"
+                "isha": ["90 mins", "120 mins"]
             },
             "latitude_range": [16, 32],
             "longitude_range": [34, 56]
@@ -278,6 +278,9 @@
     "month_type": "Pilih Jenis Bulan :",
     "month_types": ["Masehi", "Hijriah"],
     "select_month": "Pilih Bulan :",
+    "coordinates": "Koordinat :",
+    "school": "Mahzab :",
+    "source": "Sumber :",
     "download": "Unduh",
     "print": "Cetak",
     "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",

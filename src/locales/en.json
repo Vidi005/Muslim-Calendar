@@ -116,7 +116,7 @@
             "method": "Umm al-Qura",
             "sun_altitude": {
                 "fajr": 18.5,
-                "isha": "90 mins"
+                "isha": ["90 mins", "120 mins"]
             },
             "latitude_range": [16, 32],
             "longitude_range": [34, 56]
@@ -278,6 +278,9 @@
     "month_type": "Select Month Type :",
     "month_types": ["Gregorian", "Hijri"],
     "select_month": "Select Month :",
+    "coordinates": "Coordinates :",
+    "school": "School :",
+    "source": "Source :",
     "download": "Download",
     "print": "Print",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",
