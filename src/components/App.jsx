@@ -106,7 +106,7 @@ class App extends React.Component {
     }
     if (this.state.currentDate?.time) {
       if (this.state.currentDate.time.includes('00:00:00')) {
-        this.create3DaysOfPrayerTimes()
+        this.formatDateTime().then(() => this.generateCalendar())
       }
     }
   }
@@ -200,7 +200,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
+        },() => this.formatDateTime().then(() => this.generateCalendar()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -223,10 +223,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -380,9 +380,11 @@ class App extends React.Component {
       })
       adjustedDateWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
+          const islamicMonthInDay15 = new Date(workerEvent.data.result)
           const islamicDayNumber = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", day: "numeric" })
-          const islamicMonth = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", month: "numeric" })
-          const islamicYear = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric" })
+          islamicMonthInDay15.setDate(islamicDayNumber - (islamicDayNumber - 15))
+          const islamicMonth = islamicMonthInDay15.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", month: "numeric" })
+          const islamicYear = islamicMonthInDay15.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric" })
           adjustedDateWorker.terminate()
           this.setState({
             currentDate: { gregorian, islamicDayNumber, islamicMonth, islamicYear, time },
@@ -420,7 +422,10 @@ class App extends React.Component {
 
   changeLanguage (lang) {
     i18n.changeLanguage(lang)
-    this.setState({ selectedLanguage: lang }, () => this.saveLanguageData(lang))
+    this.setState({ selectedLanguage: lang }, () => {
+      this.saveLanguageData(lang)
+      this.formatDateTime().then(() => this.generateCalendar())
+    })
   }
 
   saveDisplayMode (selectedDisplayMode) {
@@ -450,7 +455,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()))
   }
 
   setDesiredTime (event) {
@@ -458,7 +463,7 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.create3DaysOfPrayerTimes()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()))
   }
 
   formatDateTime () {
@@ -478,13 +483,11 @@ class App extends React.Component {
         const formattedDateTime = new Date(Date.parse(configuredLocaleString))
         if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
           this.setState({ formattedDateTime: formattedDateTime }, () => {
-            this.generateCalendar()
             this.generateMoonInfos()
             this.goToCurrentMonth()
             resolve()
           })
         } else {
-          this.generateCalendar()
           this.generateMoonInfos()
           resolve()
         }
@@ -500,7 +503,6 @@ class App extends React.Component {
           hour12: false
         })
         this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
-          this.generateCalendar()
           this.generateMoonInfos()
           resolve()
         })
@@ -580,6 +582,7 @@ class App extends React.Component {
             this.getCurrentCriteria()
             this.getCurrentConvention()
             this.formatDateTime()
+              .then(() => this.generateCalendar())
               .then(() => this.selectTimeZone(this.state.selectedTimeZone))
               .then(() => this.create3DaysOfPrayerTimes())
               .finally(() => {
@@ -600,7 +603,7 @@ class App extends React.Component {
 
   restoreDateTime () {
     this.setState({ inputDate: '', inputTime: '' }, () => {
-      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
+      this.formatDateTime().then(() => this.generateCalendar())
       this.goToCurrentMonth()
     })
   }
@@ -627,7 +630,7 @@ class App extends React.Component {
           selectedLocation: {},
           selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }, () => {
-          this.formatDateTime().then(() => this.getCurrentLocation())
+          this.getCurrentLocation()
           this.selectTimeZone(this.state.selectedTimeZone)
           this.selectIntervalUpdate(1)
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -692,13 +695,12 @@ class App extends React.Component {
       this.createCalendarWorker(this.state.formattedDateTime).then(calendarData => {
         if (calendarData?.months?.length > 0) {
           localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
-          this.formatDateTime()
+          this.formatDateTime().then(() => this.generateCalendar())
         }
       }).finally(() => {
         this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
         this.getCurrentCriteria()
         this.getCurrentConvention()
-        this.create3DaysOfPrayerTimes()
       })
     }
   }
@@ -721,7 +723,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
-      this.formatDateTime()
+      this.formatDateTime().then(() => this.generateCalendar())
     })
   }
 
@@ -730,7 +732,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
+      this.formatDateTime().then(() => this.generateCalendar())
     })
   }
 
@@ -838,10 +840,16 @@ class App extends React.Component {
   
   selectFormula (value) {
     this.setState({ selectedFormula: parseInt(value) }, () => {
+      if (parseInt(value) === 1) {
+        this.selectTimeZone('Asia/Riyadh')
+      } else {
+        this.selectTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+      }
+      localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
-      this.formatDateTime().then(() => this.create3DaysOfPrayerTimes())
+      this.formatDateTime().then(() => this.generateCalendar())
     })
   }
 
@@ -898,7 +906,7 @@ class App extends React.Component {
             monthsInCurrentYear: setCalendarData.months,
             hijriEventDates: setCalendarData.hijriEventDates,
             hijriStartDates: setCalendarData.hijriStartDates
-          })
+          }, () => this.create3DaysOfPrayerTimes())
         }
       })
     } else {
@@ -908,12 +916,12 @@ class App extends React.Component {
             monthsInSetYear: setCalendarData.months,
             hijriEventDates: setCalendarData.hijriEventDates,
             hijriStartDates: setCalendarData.hijriStartDates
-          })
+          }, () => this.create3DaysOfPrayerTimes())
         }
       })
       this.createCalendarWorker(currentDate).then(currentCalendarData => {
         if (currentCalendarData?.months?.length > 0) {
-          this.setState({ monthsInCurrentYear: currentCalendarData.months })        
+          this.setState({ monthsInCurrentYear: currentCalendarData.months }, () => this.create3DaysOfPrayerTimes())        
         }
       })
     }
@@ -1007,6 +1015,8 @@ class App extends React.Component {
       prayerTimesWorker.postMessage({
         type: 'createPrayerTimes',
         gregorianDate: gregorianDate,
+        formattedDateTime: this.state.formattedDateTime,
+        setMonths: this.state.monthsInSetYear,
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         elevation: this.state.elevation,
@@ -1205,12 +1215,16 @@ class App extends React.Component {
             }}>
               <PrayerTimesPage
                 t={i18n.t}
+                parentState={this.state}
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 selectedLanguage={this.state.selectedLanguage}
                 formattedDateTime={this.state.formattedDateTime}
                 selectedLocation={this.state.selectedLocation}
                 monthsInSetYear={this.state.monthsInSetYear}
                 hijriStartDates={this.state.hijriStartDates}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                elevation={this.state.elevation}
                 selectCalculationMethod={this.selectCalculationMethod.bind(this)}
                 selectAshrTime={this.selectAshrTime.bind(this)}
                 getCurrentConvention={this.getCurrentConvention.bind(this)}
