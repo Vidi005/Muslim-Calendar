@@ -3,12 +3,14 @@ import React from "react"
 import en from "../../../locales/en.json"
 import ReactToPrint from "react-to-print"
 
-const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, prayerTimesList, arePrayerTimesListLoading, changeMonthType, selectGregorianMonth, selectHijriMonth }) => {
+const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, latitude, longitude, elevation, selectedConvention, selectedTimeZone, selectedAshrTime, selectedIhtiyath, prayerTimesList, arePrayerTimesListLoading, changeMonthType, selectGregorianMonth, selectHijriMonth }) => {
   const isRamadanSelected = hijriStartDates?.findIndex(item => item.dateId === '1-9-date') === selectedHijriMonth
   const prayerTimeHeaders = monthType === 0 ? en.prayer_times_headers.map((_, i) => t(`prayer_times_headers.${i}`)).slice(5) : en.prayer_times_headers.map((_, i) => t(`prayer_times_headers.${i}`)).slice(4)
   const prayerNames = monthType === 1 && isRamadanSelected
     ? en.prayer_names.map((_, i) => t(`prayer_names.${i}`))
     : en.prayer_names.map((_, i) => t(`prayer_names.${i}`)).slice(1)
+  const schedule = isRamadanSelected ? t('imsakiyah_schedule') : t('prayer_schedule')
+  const selectedMonth = monthType === 0 ? new Date(formattedDateTime.getFullYear(), selectedGregorianMonth, 1).toLocaleString(selectedLanguage || 'en', { month: 'long', year: 'numeric' }) : `${t(`islamic_months.${hijriStartDates[selectedHijriMonth]?.hijriDate.month - 1}`)}-${parseInt(hijriStartDates[selectedHijriMonth]?.hijriDate.year)}-${t('hijri_abbreviation')}`
   return (
     <section className="w-full p-2 animate__animated animate__fadeInUp">
       <h2 className="text-center text-green-900 dark:text-white duration-200">{isRamadanSelected ? t('imsakiyah_schedule') : t('prayer_schedule')}</h2>
@@ -138,42 +140,54 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                       </>
                   }
                 </table>
-                <table className={`${isRamadanSelected ? "text-xs" : "text-sm"} prayer-times-list-container hidden table-auto w-[19.6cm] m-[1cm] align-middle whitespace-nowrap`}>
-                  {monthType === 0
-                    ? <>
-                        <tr>
-                          {[...prayerTimeHeaders, ...prayerNames].map(header => (
-                            <th key={header} className="border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200">{header}</th>
-                          ))}
-                        </tr>
-                        {prayerTimesList.map((prayerTimes, i) => (
-                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
-                            {prayerTimes.map((prayerTime, j) => (
-                              <td key={i + j} className="border border-green-700 dark:border-gray-200 p-1.5 text-center">
-                              {prayerTime}
-                            </td>
+                <div className="prayer-times-list-container hidden flex-col items-center justify-center flex-nowrap h-[25.9cm] w-[19.5cm] m-[1cm]">
+                  <h2 className="font-serif text-center text-green-900">{schedule} {selectedMonth.replace('-', ' ')}</h2>
+                  <h2 className="font-serif text-center text-green-900">{selectedLocation?.city}, {selectedLocation?.admin_name}, {selectedLocation?.country}</h2>
+                  <h4 className="text-center text-black">{t('coordinates')} ({t('latitude')} {latitude}, {t('longitude')} {longitude}, {t('elevation')} {elevation} m)</h4>
+                  <h5 className="mb-1 text-center text-black">{t('convention')} {t(`conventions.${selectedConvention}.method`)}, {t('timezone')} {selectedTimeZone}, {t('school')} {t(`mahzab.${selectedAshrTime}`)}, <i>Ihtiyath</i> : {t(`ihtiyath_times.${selectedIhtiyath - 1}`)}</h5>
+                  <table className={`${isRamadanSelected ? "text-xs" : "text-sm"} table-auto w-full align-middle whitespace-nowrap`}>
+                    {monthType === 0
+                      ? <>
+                          <tr>
+                            {[...prayerTimeHeaders, ...prayerNames].map(header => (
+                              <th key={header} className="border-2 border-green-900 p-1 text-green-900 font-bold">{header}</th>
                             ))}
                           </tr>
-                        ))}
-                      </>
-                    : <>
-                        <tr>
-                          {[...prayerTimeHeaders, ...prayerNames].map((header, i) => (
-                            <th key={i} className={`${(i === 2 || i === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600" : ""} border-2 border-green-900 dark:border-white bg-green-700/20 dark:bg-gray-200/25 p-1.5 text-green-900 dark:text-white font-bold duration-200`}>{header}</th>
-                          ))}
-                        </tr>
-                        {prayerTimesList.map((prayerTimes, i) => (
-                          <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20 dark:bg-sky-700/50" : ""} text-green-900 dark:text-white duration-200`}>
-                            {prayerTimes.map((prayerTime, j) => (
-                              <td key={i + j} className={`${(j === 2 || j === 8) && isRamadanSelected ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 p-1.5 text-center`}>
-                              {prayerTime}
+                          {prayerTimesList.map((prayerTimes, i) => (
+                            <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20" : ""} text-green-900`}>
+                              {prayerTimes.map((prayerTime, j) => (
+                                <td key={i + j} className="border border-green-700 p-1 text-center">
+                                {prayerTime}
                               </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </>
+                      : <>
+                          <tr>
+                            {[...prayerTimeHeaders, ...prayerNames].map((header, i) => (
+                              <th key={i} className={`${(i === 2 || i === 8) && isRamadanSelected ? "bg-green-500/20" : ""} border-2 border-green-900 p-1 text-green-900 font-bold`}>{header}</th>
                             ))}
                           </tr>
-                        ))}
-                      </>
-                  }
-                </table>
+                          {prayerTimesList.map((prayerTimes, i) => (
+                            <tr key={prayerTimes} className={`${i % 2 !== 0 ? "bg-sky-900/20" : ""} text-green-900`}>
+                              {prayerTimes.map((prayerTime, j) => (
+                                <td key={i + j} className={`${(j === 2 || j === 8) && isRamadanSelected ? "bg-green-500/20 font-bold" : ""} border border-green-700 p-1 text-center`}>
+                                {prayerTime}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </>
+                    }
+                  </table>
+                  <p className="flex items-center justify-between font-serif w-full">
+                    <span>
+                      {t('source')} <a className="text-blue-500 active:text-purple-500" href={location.origin} target="_blank" rel="noreferrer"><u>{location.origin}</u></a>
+                    </span>
+                    <span>{new Date().toDateString(selectedLanguage || "en")}</span>
+                  </p>
+                </div>
               </>
             )}
         </div>
@@ -188,9 +202,9 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                 <img className="w-5 h-5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/print-icon.svg`} alt="" />
                 <span className="ml-2">{t('print')}</span>
               </button>}
-            onBeforeGetContent={() => document.querySelector('.prayer-times-list-container').style.display = 'table'}
+            onBeforeGetContent={() => document.querySelector('.prayer-times-list-container').style.display = 'flex'}
             content={() => document.querySelector('.prayer-times-list-container')}
-            documentTitle={`${+new Date()}_${t('prayer_times')}_${selectedLocation?.city}`}
+            documentTitle={`${+new Date()}_${schedule}_${selectedLocation?.city}_${selectedMonth}`}
             removeAfterPrint={false}
             onPrintError={error => {
               document.querySelector('.prayer-times-list-container').style.display = 'none'

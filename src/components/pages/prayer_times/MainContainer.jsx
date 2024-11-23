@@ -28,6 +28,13 @@ class MainContainer extends React.Component {
 
   getHijriMonthFromProps = (props) => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime) - 1
 
+  componentDidMount() {
+    if (this.props.monthsInSetYear?.length > 0) {
+      if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
+      else this.createPrayerTimeInHijriMonth()
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.hijriStartDates !== this.props.hijriStartDates || prevState.monthType !== this.state.monthType) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
@@ -111,8 +118,8 @@ class MainContainer extends React.Component {
         this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
-        en.prayer_names.forEach((_, index) => this.props.selectCorrections(index, 0))
         this.props.selectFormula(0)
+        en.prayer_names.forEach((_, index) => this.props.selectCorrections(index, 0))
         localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
         localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
@@ -139,6 +146,7 @@ class MainContainer extends React.Component {
                 <PrayerTimesContent
                   t={this.props.t}
                   state={this.state}
+                  parentState={this.props.parentState}
                   selectedLanguage={this.props.selectedLanguage}
                   formattedDateTime={this.props.formattedDateTime}
                   selectedLocation={this.props.selectedLocation}
@@ -165,6 +173,7 @@ class MainContainer extends React.Component {
                 <PrayerTimesContent
                   t={this.props.t}
                   state={this.state}
+                  parentState={this.props.parentState}
                   selectedLanguage={this.props.selectedLanguage}
                   formattedDateTime={this.props.formattedDateTime}
                   selectedLocation={this.props.selectedLocation}
