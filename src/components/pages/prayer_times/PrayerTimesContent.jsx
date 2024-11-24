@@ -6,7 +6,7 @@ import PrayerTimesVisualization from "./PrayerTimesVisualization"
 import QiblaDirection from "./QiblaDirection"
 import PrayerTimesList from "./PrayerTimesList"
 
-const PrayerTimesContent = ({ t, parentState, state, selectedLanguage, formattedDateTime, selectedLocation, monthsInSetYear, hijriStartDates, selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectGregorianMonth, selectHijriMonth }) => (
+const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectGregorianMonth, selectHijriMonth, downloadFile }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <PrayerTimesSettings
@@ -26,11 +26,12 @@ const PrayerTimesContent = ({ t, parentState, state, selectedLanguage, formatted
       <PrayerTimesVisualization t={t}/>
       <PrayerTimesList
         t={t}
-        selectedLanguage={selectedLanguage}
-        formattedDateTime={formattedDateTime}
-        selectedLocation={selectedLocation}
-        monthsInSetYear={monthsInSetYear}
-        hijriStartDates={hijriStartDates}
+        selectedLanguage={parentState.selectedLanguage}
+        formattedDateTime={parentState.formattedDateTime}
+        selectedLocation={parentState.selectedLocation}
+        selectedCriteria={parentState.selectedCriteria}
+        monthsInSetYear={parentState.monthsInSetYear}
+        hijriStartDates={parentState.hijriStartDates}
         monthType={state.monthType}
         selectedGregorianMonth={state.selectedGregorianMonth}
         selectedHijriMonth={state.selectedHijriMonth}
@@ -47,6 +48,7 @@ const PrayerTimesContent = ({ t, parentState, state, selectedLanguage, formatted
         selectHijriMonth={selectHijriMonth}
         arePrayerTimesListLoading={state.arePrayerTimesListLoading}
         prayerTimesList={state.prayerTimesList}
+        downloadFile={downloadFile}
       />
       <QiblaDirection/>
     </div>

@@ -142,7 +142,7 @@ class App extends React.Component {
     const getSidebarStateFromLocal = localStorage.getItem(this.state.SIDEBAR_STATE_STORAGE_KEY)
     try {
       const parsedSidebarState = JSON.parse(getSidebarStateFromLocal)
-      if (parsedSidebarState !== undefined || parsedSidebarState !== null) {
+      if (parsedSidebarState !== null) {
         this.setState({ isSidebarExpanded: parsedSidebarState })
       }
     } catch (error) {
@@ -155,7 +155,7 @@ class App extends React.Component {
     const getToolbarStateFromLocal = localStorage.getItem(this.state.TOOLBAR_STATE_STORAGE_KEY)
     try {
       const parsedToolbarState = JSON.parse(getToolbarStateFromLocal)
-      if (parsedToolbarState !== undefined || parsedToolbarState !== null) {
+      if (parsedToolbarState !== null) {
         this.setState({ isToolbarShown: parsedToolbarState })
       }
     } catch (error) {
@@ -168,7 +168,7 @@ class App extends React.Component {
     const getDisplayModeFromLocal = localStorage.getItem(this.state.DARK_MODE_STORAGE_KEY)
     try {
       const parsedDisplayMode = JSON.parse(getDisplayModeFromLocal)
-      if (parsedDisplayMode !== undefined || parsedDisplayMode !== null) {
+      if (parsedDisplayMode !== null) {
         this.setState({ isDarkMode: parsedDisplayMode })
       }
     } catch (error) {
@@ -181,7 +181,7 @@ class App extends React.Component {
     const getLanguageFromLocal = localStorage.getItem(this.state.LANGUAGE_STORAGE_KEY)
     try {
       const parsedLanguage = JSON.parse(getLanguageFromLocal)
-      if (parsedLanguage !== undefined || parsedLanguage !== null) {
+      if (parsedLanguage !== null) {
         this.setState({ selectedLanguage: parsedLanguage }, () => this.changeLanguage(parsedLanguage))
       } else this.changeLanguage(this.state.selectedLanguage)
     } catch (error) {
@@ -380,11 +380,9 @@ class App extends React.Component {
       })
       adjustedDateWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
-          const islamicMonthInDay15 = new Date(workerEvent.data.result)
-          const islamicDayNumber = workerEvent.data.result.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", day: "numeric" })
-          islamicMonthInDay15.setDate(islamicDayNumber - (islamicDayNumber - 15))
-          const islamicMonth = islamicMonthInDay15.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", month: "numeric" })
-          const islamicYear = islamicMonthInDay15.toLocaleDateString(this.state.selectedLanguage || 'en', { calendar: "islamic", year: "numeric" })
+          const islamicDayNumber = workerEvent.data.result.islamicDayNumber
+          const islamicMonth = workerEvent.data.result.islamicMonth
+          const islamicYear = workerEvent.data.result.islamicYear
           adjustedDateWorker.terminate()
           this.setState({
             currentDate: { gregorian, islamicDayNumber, islamicMonth, islamicYear, time },
@@ -584,7 +582,6 @@ class App extends React.Component {
             this.formatDateTime()
               .then(() => this.generateCalendar())
               .then(() => this.selectTimeZone(this.state.selectedTimeZone))
-              .then(() => this.create3DaysOfPrayerTimes())
               .finally(() => {
                 localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
                 localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -906,7 +903,10 @@ class App extends React.Component {
             monthsInCurrentYear: setCalendarData.months,
             hijriEventDates: setCalendarData.hijriEventDates,
             hijriStartDates: setCalendarData.hijriStartDates
-          }, () => this.create3DaysOfPrayerTimes())
+          }, () => {
+            this.generateMoonInfos()
+            this.create3DaysOfPrayerTimes()
+          })
         }
       })
     } else {
@@ -916,12 +916,18 @@ class App extends React.Component {
             monthsInSetYear: setCalendarData.months,
             hijriEventDates: setCalendarData.hijriEventDates,
             hijriStartDates: setCalendarData.hijriStartDates
-          }, () => this.create3DaysOfPrayerTimes())
+          }, () => {
+            this.generateMoonInfos()
+            this.create3DaysOfPrayerTimes()
+          })
         }
       })
       this.createCalendarWorker(currentDate).then(currentCalendarData => {
         if (currentCalendarData?.months?.length > 0) {
-          this.setState({ monthsInCurrentYear: currentCalendarData.months }, () => this.create3DaysOfPrayerTimes())        
+          this.setState({ monthsInCurrentYear: currentCalendarData.months }, () => {
+            this.generateMoonInfos()
+            this.create3DaysOfPrayerTimes()
+          })        
         }
       })
     }
@@ -1216,15 +1222,6 @@ class App extends React.Component {
               <PrayerTimesPage
                 t={i18n.t}
                 parentState={this.state}
-                isSidebarExpanded={this.state.isSidebarExpanded}
-                selectedLanguage={this.state.selectedLanguage}
-                formattedDateTime={this.state.formattedDateTime}
-                selectedLocation={this.state.selectedLocation}
-                monthsInSetYear={this.state.monthsInSetYear}
-                hijriStartDates={this.state.hijriStartDates}
-                latitude={this.state.latitude}
-                longitude={this.state.longitude}
-                elevation={this.state.elevation}
                 selectCalculationMethod={this.selectCalculationMethod.bind(this)}
                 selectAshrTime={this.selectAshrTime.bind(this)}
                 getCurrentConvention={this.getCurrentConvention.bind(this)}
