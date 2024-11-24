@@ -21,22 +21,22 @@ class MainContainer extends React.Component {
       arePrayerTimesListLoading: true,
       monthType: 0,
       prayerTimesList: [],
-      selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
+      selectedGregorianMonth: this.props.parentState.formattedDateTime.getMonth(),
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
   }
 
-  getHijriMonthFromProps = (props) => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime) - 1
+  getHijriMonthFromProps = (props) => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
 
   componentDidMount() {
-    if (this.props.monthsInSetYear?.length > 0) {
+    if (this.props.parentState.monthsInSetYear?.length > 0) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.hijriStartDates !== this.props.hijriStartDates || prevState.monthType !== this.state.monthType) {
+    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
@@ -45,7 +45,7 @@ class MainContainer extends React.Component {
   changeMonthType (monthType) {
     this.setState({
       monthType: parseInt(monthType),
-      selectedGregorianMonth: this.props.formattedDateTime.getMonth(),
+      selectedGregorianMonth: this.props.parentState.formattedDateTime.getMonth(),
       selectedHijriMonth: this.getHijriMonthFromProps(this.props),
       arePrayerTimesListLoading: true
     }, () => {
@@ -63,11 +63,11 @@ class MainContainer extends React.Component {
   }
 
   createPrayerTimeInGregorianMonth () {
-    const daysInMonth = new Date(this.props.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth + 1, 0).getDate()
+    const daysInMonth = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth + 1, 0).getDate()
     const prayerTimesPromises = []
     for (let day = 1; day <= daysInMonth; day++) {
-      const startDate = new Date(this.props.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
-      const formattedStartDate = startDate.toLocaleString(this.props.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      const startDate = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
+      const formattedStartDate = startDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
         const formattedPrayerTimes = prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false })).slice(1)
         return [formattedStartDate, ...formattedPrayerTimes]
@@ -78,16 +78,16 @@ class MainContainer extends React.Component {
   }
 
   createPrayerTimeInHijriMonth () {
-    const timeDiff = Math.abs(this.props.hijriStartDates[this.state.selectedHijriMonth + 1]?.gregorianDate - this.props.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
+    const timeDiff = Math.abs(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth + 1]?.gregorianDate - this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
     const daysInMonth = Math.ceil(timeDiff / 86400000)
     const prayerTimesPromises = []
-    const hijriMonth = this.props.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month
-    const hijriYear = parseInt(this.props.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)
+    const hijriMonth = this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month
+    const hijriYear = parseInt(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)
     for (let day = 1; day <= daysInMonth; day++) {
-      const gregorianDate = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
+      const gregorianDate = new Date(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
       gregorianDate.setDate(gregorianDate.getDate() + (day - 1))
       const hijriDate = `${day} ${this.props.t(`islamic_months.${hijriMonth - 1}`)} ${hijriYear} ${this.props.t('hijri_abbreviation')}`
-      const formattedGregorianDate = gregorianDate.toLocaleString(this.props.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      const formattedGregorianDate = gregorianDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(gregorianDate).then(prayerTime => {
         const formattedPrayerTimes = hijriMonth === 9
           ? prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false }))
@@ -97,6 +97,38 @@ class MainContainer extends React.Component {
       prayerTimesPromises.push(prayerTimeList)
     }
     Promise.all(prayerTimesPromises).then(prayerTimesList => this.setState({ prayerTimesList: prayerTimesList, arePrayerTimesListLoading: false }))
+  }
+
+  async downloadFile() {
+    try {
+      const isRamadanSelected = this.props.parentState.hijriStartDates?.findIndex(item => item.dateId === '1-9-date') === this.state.selectedHijriMonth
+      const schedule = isRamadanSelected ? this.props.t('imsakiyah_schedule') : this.props.t('prayer_schedule')
+      const selectedMonth = this.state.monthType === 0 ? new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, 1).toLocaleString(this.props.parentState.selectedLanguage || 'en', { month: 'long', year: 'numeric' }) : `${this.props.t(`islamic_months.${this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month - 1}`)}-${parseInt(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)}-${this.props.t('hijri_abbreviation')}`
+      const getPrayerTimeListContainer = document.querySelector('.prayer-times-list-container-download')
+      const preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>"
+      const postHtml = "</body></html>"
+      const htmlToDoc = `${preHtml}${getPrayerTimeListContainer.innerHTML}${postHtml}`
+      const blob = new Blob(['\ufeff', htmlToDoc], { type: 'application/msword' })
+      const url = `data:application/vnd.ms-word;charset=utf-8,${encodeURIComponent(htmlToDoc)}`
+      const fileName = `${+new Date()}_${schedule}_${this.props.parentState.selectedLocation?.city}_${selectedMonth}.doc`
+      const link = document.createElement('a')
+      document.body.appendChild(link)
+      if (navigator?.msSaveOrOpenBlob) {
+        await navigator?.msSaveOrOpenBlob(blob, fileName)
+      } else {
+        link.href = url
+        link.download = fileName
+        link.click()
+      }
+      document.body.removeChild(link)
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: `${this.props.t('error_alert')}`,
+        text: error.message,
+        confirmButtonColor: 'green'
+      })
+    }
   }
 
   resetSettings () {
@@ -141,17 +173,12 @@ class MainContainer extends React.Component {
               <div className="prayer-times-container flex flex-nowrap w-full h-full">
                 <Sidebar
                   t={this.props.t}
-                  isSidebarExpanded={this.props.isSidebarExpanded}
+                  isSidebarExpanded={this.props.parentState.isSidebarExpanded}
                 />
                 <PrayerTimesContent
                   t={this.props.t}
                   state={this.state}
                   parentState={this.props.parentState}
-                  selectedLanguage={this.props.selectedLanguage}
-                  formattedDateTime={this.props.formattedDateTime}
-                  selectedLocation={this.props.selectedLocation}
-                  monthsInSetYear={this.props.monthsInSetYear}
-                  hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
@@ -165,6 +192,7 @@ class MainContainer extends React.Component {
                   selectGregorianMonth={this.selectGregorianMonth.bind(this)}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
+                  downloadFile={this.downloadFile.bind(this)}
                 />
               </div>
             )
@@ -174,11 +202,6 @@ class MainContainer extends React.Component {
                   t={this.props.t}
                   state={this.state}
                   parentState={this.props.parentState}
-                  selectedLanguage={this.props.selectedLanguage}
-                  formattedDateTime={this.props.formattedDateTime}
-                  selectedLocation={this.props.selectedLocation}
-                  monthsInSetYear={this.props.monthsInSetYear}
-                  hijriStartDates={this.props.hijriStartDates}
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
@@ -192,6 +215,7 @@ class MainContainer extends React.Component {
                   selectGregorianMonth={this.selectGregorianMonth.bind(this)}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   resetSettings={this.resetSettings.bind(this)}
+                  downloadFile={this.downloadFile.bind(this)}
                 />
                 <BottomBar
                   t={this.props.t}
