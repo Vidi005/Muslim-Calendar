@@ -257,15 +257,14 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
 }
 
 const adjustedIslamicDate = (currentDate, months) => {
-  const islamicDate = new Date()
-  const islamicDay = currentDate.getDate()
+  const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
-  const fixedDaysInMonth = currentDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
-  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
-  if (fixedDaysInMonth !== calculatedDaysInMonth) {
-    islamicDate.setDate(islamicDay + (calculatedDaysInMonth - fixedDaysInMonth))
-  }
-  return islamicDate
+  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay]?.hijri
+  islamicDate.setDate(15 - (15 - calculatedDaysInMonth))
+  const islamicDayNumber = islamicDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
+  const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
+  const islamicYear = islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
+  return { islamicDayNumber, islamicMonth, islamicYear }
 }
 
 const getCitiesByName = (cityData, query) => cityData.filter(data => data.city.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.city.localeCompare(b.city))
@@ -516,7 +515,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     setHijriDay = setMonths[0][firstDayInGregorianYear + 1]?.hijri - (astroDate.date.getDate() - 30)
   } else if (astroDate.date.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + astroDate.date.getDate()
-  } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay - 1]?.hijri
+  } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay]?.hijri
   islamicDate.setDate(15 - (15 - setHijriDay))
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let observer = observerFromEarth(latitude, longitude, elevation)
@@ -557,11 +556,12 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            // Set fixed Isha'a Time for Ummul Qura Convention in Ramadhan into 120 minutes from array position = 2 ["90 mins", "120 mins"]
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -593,11 +593,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -639,11 +639,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -692,11 +692,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -744,11 +744,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -788,11 +788,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     if (isNaN(sunAlt.isha)) {
       if (Array.isArray(sunAlt.isha)) {
         if (parseInt(islamicMonth) === 9) {
-        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-        correctedIshaTime = isha
+          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+          correctedIshaTime = isha
         } else {
-        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-        correctedIshaTime = isha
+          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+          correctedIshaTime = isha
         }
       } else {
         isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -852,7 +852,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
     setHijriDay = setMonths[0][firstDayInGregorianYear + 1]?.hijri - (gregorianDate.getDate() - 30)
   } else if (gregorianDate.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + gregorianDate.getDate()
-  } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay - 1]?.hijri
+  } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay]?.hijri
   islamicDate.setDate(15 - (15 - setHijriDay))
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let fajrHourAngle = null
@@ -940,11 +940,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(correctedMaghribTime)
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -991,11 +991,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(correctedMaghribTime)
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -1051,11 +1051,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(correctedMaghribTime)
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -1106,11 +1106,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(correctedMaghribTime)
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -1161,11 +1161,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(correctedMaghribTime)
         if (Array.isArray(sunAlt.isha)) {
           if (parseInt(islamicMonth) === 9) {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+            correctedIshaTime = isha
           } else {
-          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-          correctedIshaTime = isha
+            isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+            correctedIshaTime = isha
           }
         } else {
           isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
@@ -1209,11 +1209,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
       isha = new Date(correctedMaghribTime)
       if (Array.isArray(sunAlt.isha)) {
         if (parseInt(islamicMonth) === 9) {
-        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
-        correctedIshaTime = isha
+          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[1]))
+          correctedIshaTime = isha
         } else {
-        isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
-        correctedIshaTime = isha
+          isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha[0]))
+          correctedIshaTime = isha
         }
       } else {
         isha.setMinutes(correctedMaghribTime.getMinutes() + parseInt(sunAlt.isha))
