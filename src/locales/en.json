@@ -46,7 +46,7 @@
             "longitude_range": [95, 141]
         },
         {
-            "criteria": "Ummul Qura",
+            "criteria": "Umm al-Qura",
             "latitude_range": [16, 32],
             "longitude_range": [34, 56]
         }
@@ -60,12 +60,12 @@
     "set_prayer_times": "Prayer Times at :",
     "error_alert": "Error",
     "error_solution": "Please reload the page",
-    "calendar_loading": "Calendar is Loading...",
-    "event_list_loading": "Muslim Holiday List are Loading...",
+    "calendar_loading": "Calendar is being loaded...",
+    "event_list_loading": "Muslim Holiday List are being loaded...",
     "calendar": "Calendar",
     "loading": "Loading...",
     "moon_info": "Moon Info",
-    "prayer_times_loading": "Prayer Times are Loading...",
+    "prayer_times_loading": "Prayer Times are being loaded...",
     "prayer_times": "Prayer Times",
     "prayer_times_headers": ["Time", "Yesterday", "Today", "Tomorrow", "Hijri Date", "Gregorian Date"],
     "more": "More...",
@@ -281,6 +281,7 @@
     "coordinates": "Coordinates :",
     "school": "School :",
     "source": "Source :",
+    "footnotes": ["This Prayer Schedule is calculated based on ", "It might be different several days with other criteria. Please consider to check the Hijri Calendar criteria based on your region."],
     "download": "Download",
     "print": "Print",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",
