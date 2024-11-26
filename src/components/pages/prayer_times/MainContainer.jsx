@@ -32,7 +32,7 @@ class MainContainer extends React.Component {
 
   componentDidMount() {
     if (DeviceOrientationEvent) {
-      addEventListener('deviceorientation', () => this.handleOrientation)
+      addEventListener('deviceorientation', this.handleOrientation)
     }
     this.generateQiblaDirection()
     if (this.props.parentState.monthsInSetYear?.length > 0) {
