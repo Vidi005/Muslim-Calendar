@@ -272,6 +272,8 @@
     "dhuha_methods": ["Tinggi Matahari", "Setelah Terbit"],
     "minutes": "menit",
     "degrees": "derajat",
+    "qibla_direction": "Arah Kiblat",
+    "qibla_directions": ["Arah Kiblat ", " dari Utara"],
     "visualization": "Visualisasi",
     "prayer_schedule": "Jadwal Sholat",
     "imsakiyah_schedule": "Jadwal Imsakiyah",

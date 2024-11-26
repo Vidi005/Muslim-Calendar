@@ -459,7 +459,7 @@ class App extends React.Component {
   setDesiredTime (event) {
     this.setState(prevState => {
       if (prevState.inputTime !== event.target.value) {
-        return { inputTime: event.target.value }
+        return { inputTime: event.target.value.replace(/\./g, ':') }
       }
     }, () => this.formatDateTime().then(() => this.generateCalendar()))
   }

@@ -194,9 +194,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
 }
 
 const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, fajrAlt, formula, lang) => {
-  const newMoons = []
+  const newMoonsFromLastYear = []
+  const newMoonFromNextYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
-  const startGregorianDate = new Date(`${gregorianDate.getFullYear()}-12-31T23:59:59`)
+  const startGregorianDate = new Date(`${gregorianDate.getFullYear() + 1}-01-29T23:59:59`)
   let startDate = new AstroTime(startGregorianDate)
   let newMoonDate = gregorianFirstDate
   let currentMoonDate
@@ -206,9 +207,12 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
     newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, fajrAlt, formula).date
     if (newMoonDate instanceof Date) {
-      newMoons.push(newMoonDate)
+      if (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
+        newMoonsFromLastYear.push(newMoonDate)
+      }
+      newMoonFromNextYear.push(newMoonDate)
       startDate = new AstroTime(newMoonDate)
-      startDate = startDate.AddDays(-29)
+      startDate = startDate.AddDays(-28)
     }
   }
   const months = Array.from({ length: 12 }).map((_, monthIndex) => {
@@ -221,15 +225,15 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     }
     return daysArray
   })
-  newMoons.reverse().forEach(moonDate => {
+  newMoonsFromLastYear.reverse().forEach(moonDate => {
     let hijriDayCounter = 1
     let nextMoonIndex = 0
     months.forEach((month, monthIdx) => {
       month.forEach(dayObj => {
         if (dayObj !== null) {
           // Fill calculated Hijri calendar days into gregorian calendar
-          currentMoonDate = newMoons[nextMoonIndex]
-          nextMoonDate = newMoons[nextMoonIndex + 1]
+          currentMoonDate = newMoonsFromLastYear[nextMoonIndex]
+          nextMoonDate = newMoonsFromLastYear[nextMoonIndex + 1]
           if (dayObj.gregorian === currentMoonDate.getDate() && monthIdx === currentMoonDate.getMonth()) hijriDayCounter = 1
           if (nextMoonDate && dayObj.gregorian === nextMoonDate.getDate() && monthIdx === nextMoonDate.getMonth()) {
             hijriDayCounter = 1
@@ -241,8 +245,8 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
     })
     if (moonDate.getFullYear() >= gregorianDate.getFullYear()) {
       // Fill the last Hijri calendar days if hijri date didn't start from 1 January
-      hijriDayCounter = 33 - newMoons[0].getDate()
-      currentYearDaysOffset = newMoons[1].getDate() + gregorianFirstDate.getDay() - 1
+      hijriDayCounter = 33 - newMoonsFromLastYear[0].getDate()
+      currentYearDaysOffset = newMoonsFromLastYear[1].getDate() + gregorianFirstDate.getDay() - 1
       months[0].forEach((dayObj, dayIdx) => {
         if (dayObj !== null && dayIdx < currentYearDaysOffset) {
           dayObj.hijri = hijriDayCounter++
@@ -251,8 +255,8 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
       hijriDayCounter = 1
     }
   })
-  const hijriEventDates = getHijriEventDates(gregorianDate, newMoons, months, lang)
-  const hijriStartDates = getHijriStartDates(newMoons, months, lang)
+  const hijriEventDates = getHijriEventDates(gregorianDate, newMoonsFromLastYear, months, lang)
+  const hijriStartDates = getHijriStartDates(newMoonFromNextYear.reverse(), lang)
   return { months, hijriEventDates, hijriStartDates }
 }
 
@@ -372,7 +376,7 @@ const getHijriEventDates = (gregorianDate, newMoons, months, lang) => {
   return hijriEvents
 }
 
-const getHijriStartDates = (newMoons, months, lang) => {
+const getHijriStartDates = (newMoons, lang) => {
   const hijriStarts = []
   const filteredUniqueStartDates = new Set()
   let date
@@ -397,21 +401,15 @@ const getHijriStartDates = (newMoons, months, lang) => {
       if (dateMonth === parseInt(hijriMonth)) {
         hijriStartInGregorian = new Date(newMoon)
         hijriStartInGregorian.setDate(newMoon.getDate() + (hijriStartDay - 1))
-        months.forEach((month, monthIdx) => {
-          month.forEach(dayObj => {
-            if (dayObj !== null && dayObj.hijri === hijriStartDay && monthIdx === hijriStartInGregorian.getMonth()) {
-              dateKey = hijriStartInGregorian.toISOString().split('T')[0]
-              if (!filteredUniqueStartDates.has(dateKey)) {
-                filteredUniqueStartDates.add(dateKey)
-                hijriStarts.push({
-                  dateId: dateId,
-                  hijriDate: {day: hijriStartDay, month: dateMonth, year: hijriYear},
-                  gregorianDate: hijriStartInGregorian
-                })
-              }
-            }
+        dateKey = hijriStartInGregorian.toISOString().split('T')[0]
+        if (!filteredUniqueStartDates.has(dateKey)) {
+          filteredUniqueStartDates.add(dateKey)
+          hijriStarts.push({
+            dateId: dateId,
+            hijriDate: {day: hijriStartDay, month: dateMonth, year: hijriYear},
+            gregorianDate: hijriStartInGregorian
           })
-        })
+        }
       }
     })
   })
@@ -841,6 +839,16 @@ const parseDate = (gregorianDate, hours, minutes, seconds) => new Date(
   minutes,
   seconds
 )
+
+const kabaaCoordinates = { latitude: 21.42250833, longitude: 39.82616111 }
+
+const getQiblaDirection = (latitude, longitude) => {
+  const deltaLongitude = kabaaCoordinates.longitude - longitude
+  const cotanQibla = Math.tan(convertToRadians(kabaaCoordinates.latitude)) * Math.cos(convertToRadians(latitude)) / Math.sin(convertToRadians(deltaLongitude)) - Math.sin(convertToRadians(latitude)) / Math.tan(convertToRadians(deltaLongitude))
+  const qiblaAngle = Math.atan(1 / cotanQibla)
+  const qiblaDirection = convertToDegrees(qiblaAngle)
+  return ((qiblaDirection + 360) % 360).toFixed(2)
+}
 
 const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
@@ -1272,4 +1280,4 @@ const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, l
   return calculatedPrayerTimes
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, prayerTimesCorrection, getPrayerTimes }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes }
