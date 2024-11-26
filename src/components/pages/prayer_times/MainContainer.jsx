@@ -53,7 +53,7 @@ class MainContainer extends React.Component {
 
   componentWillUnmount() {
     if (DeviceOrientationEvent) {
-      removeEventListener('deviceorientation', () => this.handleOrientation)
+      removeEventListener('deviceorientation', this.handleOrientation)
     }
   }
 
