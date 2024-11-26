@@ -274,6 +274,7 @@
     "degrees": "degrees",
     "qibla_direction": "Qibla Direction",
     "qibla_directions": ["Qibla direction is ", " from North"],
+    "qibla": "Qibla",
     "visualization": "Visualization",
     "prayer_schedule": "Prayer Schedule",
     "imsakiyah_schedule": "Imsakiyah Schedule",
