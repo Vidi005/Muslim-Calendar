@@ -272,6 +272,8 @@
     "dhuha_methods": ["Sun Altitude Based", "After Sunrise"],
     "minutes": "mins",
     "degrees": "degrees",
+    "qibla_direction": "Qibla Direction",
+    "qibla_directions": ["Qibla direction is ", " from North"],
     "visualization": "Visualization",
     "prayer_schedule": "Prayer Schedule",
     "imsakiyah_schedule": "Imsakiyah Schedule",
