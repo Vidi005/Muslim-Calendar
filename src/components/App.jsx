@@ -76,7 +76,8 @@ class App extends React.Component {
       isSearching: false,
       isDarkMode: false
     }
-    this.intervalId = null
+    this.secondsIntervalId = null
+    this.countdownIntervalId = null
     this.sliderRef = React.createRef()
     this.calendarContainerRef = React.createRef()
     this.tooltipRef = React.createRef()
@@ -85,10 +86,8 @@ class App extends React.Component {
 
   componentDidMount() {
     this.checkBrowserStorage()
-    this.intervalId = setInterval(() => {
-      this.getCurrentDate()
-      this.createPrayerTimeCountdown()
-    }, 1000)
+    this.secondsIntervalId = setInterval(() => this.getCurrentDate(), 1000)
+    this.countdownIntervalId = setInterval(() => this.createPrayerTimeCountdown(), 1000)
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -112,7 +111,8 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.intervalId) clearInterval(this.intervalId)
+    if (this.secondsIntervalId) clearInterval(this.secondsIntervalId)
+    if (this.countdownIntervalId) clearInterval(this.countdownIntervalId)
   }
 
   checkBrowserStorage() {
@@ -368,18 +368,18 @@ class App extends React.Component {
   }
 
   getCurrentDate () {
-    const currentDate = new Date()
     let adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
-    const gregorian = currentDate.toLocaleDateString(this.state.selectedLanguage || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-    const time = currentDate.toLocaleTimeString(this.state.selectedLanguage || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
     if (this.state.monthsInCurrentYear.length > 0) {
       adjustedDateWorker.postMessage({
         type: 'createAdjustedIslamicDate',
-        gregorianDate: currentDate,
-        months: this.state.monthsInCurrentYear
+        months: this.state.monthsInCurrentYear,
+        lang: this.state.selectedLanguage
       })
       adjustedDateWorker.onmessage = workerEvent => {
         if (workerEvent.data.type === 'createAdjustedIslamicDate') {
+          const currentDate = workerEvent.data.result.currentDate
+          const gregorian = workerEvent.data.result.gregorian
+          const time = workerEvent.data.result.time
           const islamicDayNumber = workerEvent.data.result.islamicDayNumber
           const islamicMonth = workerEvent.data.result.islamicMonth
           const islamicYear = workerEvent.data.result.islamicYear
@@ -390,14 +390,9 @@ class App extends React.Component {
           }, () => adjustedDateWorker = null)
         }
       }
-      adjustedDateWorker.onerror = error => {
-        Swal.fire({
-          title: i18n.t('error'),
-          text: error.message,
-          icon: 'error',
-          confirmButtonText: i18n.t('ok'),
-          confirmButtonColor: 'green'
-        }).catch(() => adjustedDateWorker.terminate()).finally(() => adjustedDateWorker = null)
+      adjustedDateWorker.onerror = _error => {
+        adjustedDateWorker.terminate()
+        adjustedDateWorker = null
       }
     }
   }

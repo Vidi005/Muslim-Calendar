@@ -26,12 +26,21 @@ class MainContainer extends React.Component {
       selectedGregorianMonth: this.props.parentState.formattedDateTime.getMonth(),
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
+    this.animationFrameId = null
   }
 
   getHijriMonthFromProps = (props) => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
 
   componentDidMount() {
     if (DeviceOrientationEvent) {
+      this.animationFrameId = null
+      this.handleOrientation = event => {
+        if (this.animationFrameId) return
+        this.animationFrameId = requestAnimationFrame(() => {
+          this.animationFrameId = null
+          this.setState({ heading: event.alpha })
+        })
+      }
       addEventListener('deviceorientation', this.handleOrientation)
     }
     this.generateQiblaDirection()
@@ -54,6 +63,9 @@ class MainContainer extends React.Component {
   componentWillUnmount() {
     if (DeviceOrientationEvent) {
       removeEventListener('deviceorientation', this.handleOrientation)
+    }
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId)
     }
   }
 
