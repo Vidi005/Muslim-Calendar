@@ -3,7 +3,7 @@ import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementConten
 self.onmessage = event => {
   const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins } = event.data
   if (type === 'createAdjustedIslamicDate') {
-    const result = adjustedIslamicDate(gregorianDate, months)
+    const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
   } else if (type === 'createCityData') {
     const result = getCitiesByName(cityData, query)
