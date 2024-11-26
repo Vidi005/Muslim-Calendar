@@ -18,6 +18,8 @@ class MainContainer extends React.Component {
       INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
       INPUT_MINUTES_STORAGE_KEY: "INPUT_MINUTES_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
+      heading: null,
+      qiblaDirection: 0,
       arePrayerTimesListLoading: true,
       monthType: 0,
       prayerTimesList: [],
@@ -29,6 +31,10 @@ class MainContainer extends React.Component {
   getHijriMonthFromProps = (props) => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
 
   componentDidMount() {
+    if (DeviceOrientationEvent) {
+      addEventListener('deviceorientation', () => this.handleOrientation)
+    }
+    this.generateQiblaDirection()
     if (this.props.parentState.monthsInSetYear?.length > 0) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
@@ -39,6 +45,38 @@ class MainContainer extends React.Component {
     if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
+    }
+    if (prevProps.parentState.latitude !== this.props.parentState.latitude || prevProps.parentState.longitude !== this.props.parentState.longitude) {
+      this.generateQiblaDirection()
+    }
+  }
+
+  componentWillUnmount() {
+    if (DeviceOrientationEvent) {
+      removeEventListener('deviceorientation', () => this.handleOrientation)
+    }
+  }
+
+  handleOrientation = event => this.setState({ heading: event.alpha })
+
+  generateQiblaDirection = () => {
+    let qiblaDirectionWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
+    qiblaDirectionWorker.postMessage({
+      type: 'createQiblaDirection',
+      latitude: this.props.parentState.latitude,
+      longitude: this.props.parentState.longitude
+    })
+    qiblaDirectionWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createQiblaDirection') {
+        this.setState({ qiblaDirection: workerEvent.data.result }, () => {
+          qiblaDirectionWorker.terminate()
+          qiblaDirectionWorker = null
+        })
+      }
+    }
+    qiblaDirectionWorker.onerror = _error => {
+      qiblaDirectionWorker.terminate()
+      qiblaDirectionWorker = null
     }
   }
 

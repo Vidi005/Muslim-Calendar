@@ -10,7 +10,7 @@ const CurrentPrayerTimes = () => (
         ? en.prayer_names.map((_, i) => t(`prayer_names.${i}`))
         : en.prayer_names.map((_, i) => t(`prayer_names.${i}`)).slice(1)
       return (
-        <section className="flex-1 flex flex-col items-center w-full md:w-1/2 py-2 px-2 md:px-4 2xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
+        <section className="flex-1 flex flex-col items-center w-full md:w-1/2 p-2 md:px-4 2xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInLeft">
           <h2 className="text-center text-green-900 dark:text-white duration-200">{t('prayer_times')}</h2>
           {
             state.inputDate !== '' && state.inputTime !== ''

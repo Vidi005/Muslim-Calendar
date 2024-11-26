@@ -21,8 +21,9 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
       selectFormula={selectFormula}
       resetSettings={resetSettings}
     />
-    <div className="current-prayer-times flex flex-wrap">
+    <div className="current-prayer-times flex flex-wrap items-stretch">
       <CurrentPrayerTimes/>
+      <QiblaDirection t={t} heading={state.heading} qiblaDirection={state.qiblaDirection}/>
       <PrayerTimesVisualization t={t}/>
       <PrayerTimesList
         t={t}
@@ -50,7 +51,6 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
         prayerTimesList={state.prayerTimesList}
         downloadFile={downloadFile}
       />
-      <QiblaDirection/>
     </div>
   </article>
 )
