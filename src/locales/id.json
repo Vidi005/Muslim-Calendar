@@ -274,6 +274,7 @@
     "degrees": "derajat",
     "qibla_direction": "Arah Kiblat",
     "qibla_directions": ["Arah Kiblat ", " dari Utara"],
+    "qibla": "Kiblat",
     "visualization": "Visualisasi",
     "prayer_schedule": "Jadwal Sholat",
     "imsakiyah_schedule": "Jadwal Imsakiyah",

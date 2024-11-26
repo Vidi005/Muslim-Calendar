@@ -212,7 +212,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
       }
       newMoonFromNextYear.push(newMoonDate)
       startDate = new AstroTime(newMoonDate)
-      startDate = startDate.AddDays(-28)
+      startDate = startDate.AddDays(-29)
     }
   }
   const months = Array.from({ length: 12 }).map((_, monthIndex) => {
@@ -260,7 +260,10 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   return { months, hijriEventDates, hijriStartDates }
 }
 
-const adjustedIslamicDate = (currentDate, months) => {
+const adjustedIslamicDate = (months, lang) => {
+  const currentDate = new Date()
+  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay]?.hijri
@@ -268,7 +271,7 @@ const adjustedIslamicDate = (currentDate, months) => {
   const islamicDayNumber = islamicDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   const islamicYear = islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
-  return { islamicDayNumber, islamicMonth, islamicYear }
+  return { currentDate, gregorian, islamicDayNumber, islamicMonth, islamicYear, time }
 }
 
 const getCitiesByName = (cityData, query) => cityData.filter(data => data.city.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.city.localeCompare(b.city))
