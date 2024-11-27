@@ -847,10 +847,11 @@ const kabaaCoordinates = { latitude: 21.42250833, longitude: 39.82616111 }
 
 const getQiblaDirection = (latitude, longitude) => {
   const deltaLongitude = kabaaCoordinates.longitude - longitude
-  const cotanQibla = Math.tan(convertToRadians(kabaaCoordinates.latitude)) * Math.cos(convertToRadians(latitude)) / Math.sin(convertToRadians(deltaLongitude)) - Math.sin(convertToRadians(latitude)) / Math.tan(convertToRadians(deltaLongitude))
-  const qiblaAngle = Math.atan(1 / cotanQibla)
+  const yAxis = Math.sin(deltaLongitude)
+  const xAxis = Math.cos(convertToRadians(latitude)) * Math.tan(convertToRadians(kabaaCoordinates.latitude)) - Math.sin(convertToRadians(latitude)) * Math.cos(deltaLongitude)
+  const qiblaAngle = Math.atan2(yAxis, xAxis)
   const qiblaDirection = convertToDegrees(qiblaAngle)
-  return ((qiblaDirection + 360) % 360).toFixed(2)
+  return ((360 - qiblaDirection) % 360).toFixed(2)
 }
 
 const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
