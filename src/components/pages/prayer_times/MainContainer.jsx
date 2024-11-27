@@ -18,7 +18,6 @@ class MainContainer extends React.Component {
       INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
       INPUT_MINUTES_STORAGE_KEY: "INPUT_MINUTES_STORAGE_KEY",
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
-      heading: null,
       qiblaDirection: 0,
       arePrayerTimesListLoading: true,
       monthType: 0,
@@ -26,23 +25,11 @@ class MainContainer extends React.Component {
       selectedGregorianMonth: this.props.parentState.formattedDateTime.getMonth(),
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
-    this.animationFrameId = null
   }
 
   getHijriMonthFromProps = (props) => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
 
   componentDidMount() {
-    if (DeviceOrientationEvent) {
-      this.animationFrameId = null
-      this.handleOrientation = event => {
-        if (this.animationFrameId) return
-        this.animationFrameId = requestAnimationFrame(() => {
-          this.animationFrameId = null
-          this.setState({ heading: event.alpha })
-        })
-      }
-      addEventListener('deviceorientation', this.handleOrientation)
-    }
     this.generateQiblaDirection()
     if (this.props.parentState.monthsInSetYear?.length > 0) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
@@ -59,17 +46,6 @@ class MainContainer extends React.Component {
       this.generateQiblaDirection()
     }
   }
-
-  componentWillUnmount() {
-    if (DeviceOrientationEvent) {
-      removeEventListener('deviceorientation', this.handleOrientation)
-    }
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId)
-    }
-  }
-
-  handleOrientation = event => this.setState({ heading: event.alpha })
 
   generateQiblaDirection = () => {
     let qiblaDirectionWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
