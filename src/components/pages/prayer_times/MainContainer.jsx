@@ -32,7 +32,7 @@ class MainContainer extends React.Component {
     this.animationFrameId = null
   }
 
-  getHijriMonthFromProps = (props) => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
+  getHijriMonthFromProps = props => props.parentState.hijriStartDates?.findIndex(item => item.gregorianDate > props.parentState.formattedDateTime) - 1
 
   componentDidMount() {
     if (DeviceOrientationEvent) {
