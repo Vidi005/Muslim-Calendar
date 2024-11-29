@@ -283,7 +283,6 @@
     "astronomical_twilight": ["Astronomical Dawn", "Astronomical Dusk"],
     "horizons": ["East Horizon", "West Horizon"],
     "sun_info": "Sun Information",
-    "visualization_loading": "Visualization is being loaded...",
     "set_sun_info": "Sun Info at :",
     "objects": ["Sun", "Moon"],
     "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Latitude", "Longitude", "Culmination"],

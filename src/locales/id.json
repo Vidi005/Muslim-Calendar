@@ -283,7 +283,6 @@
     "astronomical_twilight": ["Fajar Astronomi", "Senja Astronomi"],
     "horizons": ["Ufuk Timur", "Ufuk Barat"],
     "sun_info": "Informasi Matahari",
-    "visualization_loading": "Memuat visualisasi...",
     "set_sun_info": "Informasi Matahari pada :",
     "objects": ["Matahari", "Bulan"],
     "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Kenaikan Kanan", "Deklinasi", "Lintang", "Bujur", "Kulminasi"],
