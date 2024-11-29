@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet } from "astronomy-engine"
+import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -432,6 +432,8 @@ const getElementContent = innerHTML => {
 const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
+  const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
+  const startAstroTime = new AstroTime(startDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
   const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} days`
   const moonIllumination = Illumination(Body.Moon, astroDate)
@@ -451,16 +453,16 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
   const elongation = AngleFromSun(Body.Moon, astroDate)
   const moonElongation = `${elongation.toFixed(2)}°`
-  const moonrise = SearchRiseSet(Body.Moon, observer, +1, astroDate, 1, elevation)
-  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, elevation)
+  const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone })}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
-  const sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
-  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
+  const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, startAstroTime, 1, elevation)
   return [
     moonAge,
     illuminationPercent,
@@ -843,12 +845,12 @@ const parseDate = (gregorianDate, hours, minutes, seconds) => new Date(
   seconds
 )
 
-const kabaaCoordinates = { latitude: 21.42250833, longitude: 39.82616111 }
+const kaabaCoordinates = { latitude: 21.42250833, longitude: 39.82616111 }
 
 const getQiblaDirection = (latitude, longitude) => {
-  const deltaLongitude = kabaaCoordinates.longitude - longitude
+  const deltaLongitude = kaabaCoordinates.longitude - longitude
   const yAxis = Math.sin(convertToRadians(deltaLongitude))
-  const xAxis = Math.cos(convertToRadians(latitude)) * Math.tan(convertToRadians(kabaaCoordinates.latitude)) - Math.sin(convertToRadians(latitude)) * Math.cos(convertToRadians(deltaLongitude))
+  const xAxis = Math.cos(convertToRadians(latitude)) * Math.tan(convertToRadians(kaabaCoordinates.latitude)) - Math.sin(convertToRadians(latitude)) * Math.cos(convertToRadians(deltaLongitude))
   const qiblaAngle = Math.atan2(yAxis, xAxis)
   const qiblaDirection = convertToDegrees(qiblaAngle)
   return ((360 + qiblaDirection) % 360).toFixed(2)
@@ -1284,4 +1286,40 @@ const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, l
   return calculatedPrayerTimes
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes }
+const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, mahzab, lang) => {
+  let shadowFactor = 1
+  if (mahzab === 0) shadowFactor = 1
+  else shadowFactor = 2
+  const observer = observerFromEarth(latitude, longitude, elevation)
+  const astroDate = new AstroTime(gregorianDate)
+  const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
+  const startAstroTime = new AstroTime(startDate)
+  const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, startAstroTime, 1, elevation)
+  const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
+  const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
+  const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
+  const sunRightAscension = `${sunEquator.ra.toFixed(2)}°`
+  const sunDeclination = `${sunEquator.dec.toFixed(2)}°`
+  const sunLatittude = SunPosition(astroDate).elat
+  const sunLongitude = SunPosition(astroDate).elon
+  const culmination = SearchHourAngle(Body.Sun, observer, 0, startAstroTime, 1).time.date
+  const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunEquator.dec))) + shadowFactor
+  const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
+  const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
+  return [
+    sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }) || '--:--',
+    sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }) || '--:--',
+    `${sunAltitude.toFixed(2)}°`,
+    `${sunAzimuth.toFixed(2)}°`,
+    sunRightAscension,
+    sunDeclination,
+    `${sunLatittude}°`,
+    `${sunLongitude.toFixed(2)}°`,
+    `${culmination.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "long", timeZone: timeZone })}`,
+    culmination,
+    `${ashrSunAltitude.toFixed(2)}°`
+  ]
+}
+
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos }
