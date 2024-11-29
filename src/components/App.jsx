@@ -103,7 +103,7 @@ class App extends React.Component {
         this.formatDateTime()
       }
     }
-    if (this.state.currentDate?.time) {
+    if (this.state.currentDate?.time && this.state.inputTime !== '') {
       if (this.state.currentDate.time.includes('00:00:00')) {
         this.formatDateTime().then(() => this.generateCalendar())
       }

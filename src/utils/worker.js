@@ -1,4 +1,4 @@
-import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection } from "./data"
+import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
 
 self.onmessage = event => {
   const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins } = event.data
@@ -26,5 +26,8 @@ self.onmessage = event => {
   } else if (type === 'createPrayerTimes') {
     const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
+  } else if (type === 'createSunInfos') {
+    const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
+    self.postMessage({ type: 'createSunInfos', result })
   }
 }
