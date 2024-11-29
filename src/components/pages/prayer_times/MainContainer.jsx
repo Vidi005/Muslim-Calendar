@@ -20,6 +20,9 @@ class MainContainer extends React.Component {
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       heading: null,
       qiblaDirection: 0,
+      transitTime: 0,
+      areSunInfosLoading: true,
+      sunInfos: [],
       arePrayerTimesListLoading: true,
       monthType: 0,
       prayerTimesList: [],
@@ -43,6 +46,7 @@ class MainContainer extends React.Component {
       }
       addEventListener('deviceorientation', this.handleOrientation)
     }
+    this.generateSunInfos()
     this.generateQiblaDirection()
     if (this.props.parentState.monthsInSetYear?.length > 0) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
@@ -56,7 +60,19 @@ class MainContainer extends React.Component {
       else this.createPrayerTimeInHijriMonth()
     }
     if (prevProps.parentState.latitude !== this.props.parentState.latitude || prevProps.parentState.longitude !== this.props.parentState.longitude) {
+      this.generateSunInfos()
       this.generateQiblaDirection()
+    }
+    if (this.props.parentState.inputDate === '' && this.props.parentState.inputTime === '') {
+      if (this.props.parentState.selectedIntervalUpdate === 3 && this.props.parentState.seconds % 60 === 0) {
+        this.generateSunInfos()
+      } else if (this.props.parentState.selectedIntervalUpdate === 2 && this.props.parentState.seconds % 30 === 0) {
+        this.generateSunInfos()     
+      } else if (this.props.parentState.selectedIntervalUpdate === 1 && this.props.parentState.seconds % 15 === 0) {
+        this.generateSunInfos()
+      } else if (this.props.parentState.selectedIntervalUpdate === 0 && this.props.parentState.seconds % 5 === 0) {
+        this.generateSunInfos()
+      }
     }
   }
 
@@ -89,6 +105,32 @@ class MainContainer extends React.Component {
     qiblaDirectionWorker.onerror = _error => {
       qiblaDirectionWorker.terminate()
       qiblaDirectionWorker = null
+    }
+  }
+
+  generateSunInfos = () => {
+    let sunInfosWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
+    sunInfosWorker.postMessage({
+      type: 'createSunInfos',
+      gregorianDate: this.props.parentState.formattedDateTime,
+      timeZone: this.props.parentState.selectedTimeZone,
+      latitude: this.props.parentState.latitude,
+      longitude: this.props.parentState.longitude,
+      elevation: this.props.parentState.elevation,
+      mahzab: this.props.parentState.selectedAshrTime,
+      lang: this.props.parentState.selectedLanguage
+    })
+    sunInfosWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createSunInfos') {
+        this.setState({ sunInfos: workerEvent.data.result, areSunInfosLoading: false }, () => {
+          sunInfosWorker.terminate()
+          sunInfosWorker = null
+        })
+      }
+    }
+    sunInfosWorker.onerror = _error => {
+      sunInfosWorker.terminate()
+      this.setState({ areSunInfosLoading: false }, () => sunInfosWorker = null)
     }
   }
 

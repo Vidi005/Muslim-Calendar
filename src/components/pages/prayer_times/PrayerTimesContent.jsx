@@ -24,7 +24,20 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
     <div className="current-prayer-times flex flex-wrap md:items-stretch">
       <CurrentPrayerTimes/>
       <QiblaDirection t={t} heading={state.heading} qiblaDirection={state.qiblaDirection}/>
-      <PrayerTimesVisualization t={t}/>
+      <PrayerTimesVisualization
+        t={t}
+        selectedLanguage={parentState.selectedLanguage}
+        inputDate={parentState.inputDate}
+        inputTime={parentState.inputTime}
+        formattedDateTime={parentState.formattedDateTime}
+        timeZone={parentState.selectedTimezone}
+        sunAltitude={parentState.sunAltitude}
+        selectedDhuhaMethod={parentState.selectedDhuhaMethod}
+        dhuhaSunAltitude={parentState.inputSunAltitude}
+        currentPrayerTimes={parentState.prayerTimes[1]}
+        areSunInfosLoading={state.areSunInfosLoading}
+        sunInfos={state.sunInfos}
+      />
       <PrayerTimesList
         t={t}
         selectedLanguage={parentState.selectedLanguage}
