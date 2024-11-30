@@ -285,7 +285,7 @@
     "sun_info": "Sun Information",
     "set_sun_info": "Sun Info at :",
     "objects": ["Sun", "Moon"],
-    "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Latitude", "Longitude", "Culmination", "Midnight"],
+    "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Latitude", "Longitude", "Culmination", "Midnight", "Moon Phase", "Moon Altitude", "Moon Azimuth", "Moon Declination", "Moonrise", "Moonset"],
     "at": "at",
     "prayer_schedule": "Prayer Schedule",
     "imsakiyah_schedule": "Imsakiyah Schedule",

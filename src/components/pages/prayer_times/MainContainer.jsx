@@ -63,6 +63,9 @@ class MainContainer extends React.Component {
       this.generateSunInfos()
       this.generateQiblaDirection()
     }
+    if (prevProps.parentState.inputDate !== this.props.parentState.inputDate || prevProps.parentState.inputTime !== this.props.parentState.inputTime) {
+      this.generateSunInfos()
+    }
     if (this.props.parentState.inputDate === '' && this.props.parentState.inputTime === '') {
       if (this.props.parentState.selectedIntervalUpdate === 3 && this.props.parentState.seconds % 60 === 0) {
         this.generateSunInfos()
