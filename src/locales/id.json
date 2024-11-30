@@ -285,7 +285,7 @@
     "sun_info": "Informasi Matahari",
     "set_sun_info": "Informasi Matahari pada :",
     "objects": ["Matahari", "Bulan"],
-    "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Kenaikan Kanan", "Deklinasi", "Lintang", "Bujur", "Kulminasi"],
+    "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Kenaikan Kanan", "Deklinasi", "Lintang", "Bujur", "Kulminasi", "Tengah Malam"],
     "at": "pukul",
     "prayer_schedule": "Jadwal Sholat",
     "imsakiyah_schedule": "Jadwal Imsakiyah",
