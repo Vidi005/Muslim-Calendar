@@ -1309,6 +1309,10 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunEquator.dec))) + shadowFactor
   const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
   const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
+  const midnight = new AstroTime(new Date(culmination.date.getTime() + 43200000))
+  const sunEquatorAtMidnight = Equator(Body.Sun, midnight, observer, true, true)
+  const sunDeclinationAtMidnight = sunEquatorAtMidnight.dec
+  const midnightSunAltitude = -(90 - Math.abs(observer.latitude - sunDeclinationAtMidnight))
   return [
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }) || '--:--',
     sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }) || '--:--',
@@ -1319,9 +1323,11 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${sunLatittude}°`,
     `${sunLongitude.toFixed(2)}°`,
     `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "long", timeZone: timeZone })}`,
+    `${midnight.date.toLocaleString(lang || 'en', { day: "2-digit", month: "long", year: "numeric", weekday: "long", hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "short", timeZone: timeZone })}`,
     culmination.date,
     `${culminationSunAltitude.toFixed(2)}°`,
-    `${ashrSunAltitude.toFixed(2)}°`
+    `${ashrSunAltitude.toFixed(2)}°`,
+    `${midnightSunAltitude.toFixed(2)}°`
   ]
 }
 

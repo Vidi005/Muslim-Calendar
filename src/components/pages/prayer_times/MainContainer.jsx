@@ -117,7 +117,7 @@ class MainContainer extends React.Component {
       latitude: this.props.parentState.latitude,
       longitude: this.props.parentState.longitude,
       elevation: this.props.parentState.elevation,
-      mahzab: this.props.parentState.selectedAshrTime,
+      ashrTime: this.props.parentState.selectedAshrTime,
       lang: this.props.parentState.selectedLanguage
     })
     sunInfosWorker.onmessage = workerEvent => {
