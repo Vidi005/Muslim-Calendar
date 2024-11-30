@@ -276,7 +276,7 @@
     "qibla_directions": ["Arah Kiblat ", " dari Utara"],
     "qibla": "Kiblat",
     "visualization": "Visualisasi",
-    "zenith": "Puncak",
+    "zenith": "Zenit",
     "nadir": "Nadir",
     "civil_twilight": ["Fajar Sipil", "Senja Sipil"],
     "nautical_twilight": ["Fajar Nautikal", "Senja Nautikal"],
