@@ -266,9 +266,8 @@ const adjustedIslamicDate = (months, lang) => {
   const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
-  const calculatedDaysInMonth = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay]?.hijri
-  islamicDate.setDate(15 - (15 - calculatedDaysInMonth))
-  const islamicDayNumber = islamicDate.toLocaleDateString('en', { calendar: "islamic", day: "numeric" })
+  const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
+  islamicDate.setDate(15 - (15 - islamicDayNumber))
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   const islamicYear = islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
   return { currentDate, gregorian, islamicDayNumber, islamicMonth, islamicYear, time }
@@ -518,7 +517,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     setHijriDay = setMonths[0][firstDayInGregorianYear + 1]?.hijri - (astroDate.date.getDate() - 30)
   } else if (astroDate.date.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + astroDate.date.getDate()
-  } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay]?.hijri
+  } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay - 1]?.hijri
   islamicDate.setDate(15 - (15 - setHijriDay))
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let observer = observerFromEarth(latitude, longitude, elevation)
@@ -866,7 +865,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
     setHijriDay = setMonths[0][firstDayInGregorianYear + 1]?.hijri - (gregorianDate.getDate() - 30)
   } else if (gregorianDate.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + gregorianDate.getDate()
-  } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay]?.hijri
+  } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay - 1]?.hijri
   islamicDate.setDate(15 - (15 - setHijriDay))
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let fajrHourAngle = null
@@ -1303,7 +1302,10 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const sunDeclination = `${sunEquator.dec.toFixed(2)}°`
   const sunLatittude = SunPosition(astroDate).elat
   const sunLongitude = SunPosition(astroDate).elon
-  const culmination = SearchHourAngle(Body.Sun, observer, 0, startAstroTime, 1).time.date
+  const culmination = SearchHourAngle(Body.Sun, observer, 0, startAstroTime, 1).time
+  const sunEquatorAtCulmination = Equator(Body.Sun, culmination, observer, true, true)
+  const sunDeclinationAtCulmination = sunEquatorAtCulmination.dec
+  const culminationSunAltitude = 90 - Math.abs(observer.latitude - sunDeclinationAtCulmination)
   const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunEquator.dec))) + shadowFactor
   const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
   const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
@@ -1316,8 +1318,9 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     sunDeclination,
     `${sunLatittude}°`,
     `${sunLongitude.toFixed(2)}°`,
-    `${culmination.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "long", timeZone: timeZone })}`,
-    culmination,
+    `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "long", timeZone: timeZone })}`,
+    culmination.date,
+    `${culminationSunAltitude.toFixed(2)}°`,
     `${ashrSunAltitude.toFixed(2)}°`
   ]
 }
