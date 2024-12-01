@@ -161,7 +161,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
           <div className="flex flex-col items-center w-full md:w-1/3 lg:w-1/4 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_info')}</h1>
             {state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date
-              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_moon_info')} {state.formattedDateTime.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h24' })}</h5>
+              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_moon_info')} {state.formattedDateTime.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23' })}</h5>
               : null
             }
             <div className="moon-phase w-full p-4 overflow-hidden">
