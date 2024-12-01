@@ -113,28 +113,30 @@ class MainContainer extends React.Component {
 
   generateSunInfos = () => {
     let sunInfosWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
-    sunInfosWorker.postMessage({
-      type: 'createSunInfos',
-      gregorianDate: this.props.parentState.formattedDateTime,
-      timeZone: this.props.parentState.selectedTimeZone,
-      latitude: this.props.parentState.latitude,
-      longitude: this.props.parentState.longitude,
-      elevation: this.props.parentState.elevation,
-      ashrTime: this.props.parentState.selectedAshrTime,
-      lang: this.props.parentState.selectedLanguage
-    })
-    sunInfosWorker.onmessage = workerEvent => {
-      if (workerEvent.data.type === 'createSunInfos') {
-        this.setState({ sunInfos: workerEvent.data.result, areSunInfosLoading: false }, () => {
-          sunInfosWorker.terminate()
-          sunInfosWorker = null
-        })
+    setTimeout(() => {
+      sunInfosWorker.postMessage({
+        type: 'createSunInfos',
+        gregorianDate: this.props.parentState.formattedDateTime,
+        timeZone: this.props.parentState.selectedTimeZone,
+        latitude: this.props.parentState.latitude,
+        longitude: this.props.parentState.longitude,
+        elevation: this.props.parentState.elevation,
+        ashrTime: this.props.parentState.selectedAshrTime,
+        lang: this.props.parentState.selectedLanguage
+      })
+      sunInfosWorker.onmessage = workerEvent => {
+        if (workerEvent.data.type === 'createSunInfos') {
+          this.setState({ sunInfos: workerEvent.data.result, areSunInfosLoading: false }, () => {
+            sunInfosWorker.terminate()
+            sunInfosWorker = null
+          })
+        }
       }
-    }
-    sunInfosWorker.onerror = _error => {
-      sunInfosWorker.terminate()
-      this.setState({ areSunInfosLoading: false }, () => sunInfosWorker = null)
-    }
+      sunInfosWorker.onerror = _error => {
+        sunInfosWorker.terminate()
+        this.setState({ areSunInfosLoading: false }, () => sunInfosWorker = null)
+      }
+    }, 100)
   }
 
   changeMonthType (monthType) {
