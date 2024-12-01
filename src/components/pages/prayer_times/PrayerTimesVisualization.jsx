@@ -60,28 +60,28 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
             </div>
             <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/2 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${duhrPosition}%` }}></span>
-            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})</b></span>
+            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})</b></span>
             {formattedDateTime < sunInfos[sunInfos.length - 4] && dhuhaPosition > 0 && (
               <React.Fragment>
-                <span className="absolute -m-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}><b>{t('prayer_names.3')} {t('at')} {currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)</b></span>
+                <span className="absolute -m-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}><b>{t('prayer_names.3')} {t('at')} {currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)</b></span>
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${dhuhaPosition}%` }}></span>
               </React.Fragment>
             )}
             {formattedDateTime < sunInfos[sunInfos.length - 4] && (
               <React.Fragment>
-                <span className="absolute m-1 w-full duration-200" style={{ bottom: `${fajrPosition}%` }}><b>{t('prayer_names.1')} {t('at')} {currentPrayerTimes?.at(1)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.fajr}°)</b></span>
+                <span className="absolute m-1 w-full duration-200" style={{ bottom: `${fajrPosition}%` }}><b>{t('prayer_names.1')} {t('at')} {currentPrayerTimes?.at(1)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.fajr}°)</b></span>
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${fajrPosition}%` }}></span>
               </React.Fragment>
             )}
             {formattedDateTime > sunInfos[sunInfos.length - 4] && (
               <React.Fragment>
-                <span className="absolute m-0.5 w-full duration-200" style={{ top: `${ashrPosition}%` }}><b>{t('prayer_names.5')} {t('at')} {currentPrayerTimes?.at(5)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 2]})</b></span>
+                <span className="absolute m-0.5 w-full duration-200" style={{ top: `${ashrPosition}%` }}><b>{t('prayer_names.5')} {t('at')} {currentPrayerTimes?.at(5)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 2]})</b></span>
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${ashrPosition}%` }}></span>
               </React.Fragment>
             )}
             {formattedDateTime > sunInfos[sunInfos.length - 4] && ishaPosition > 0 && (
               <React.Fragment>
-                <span className="absolute -m-5 w-full duration-200" style={{ bottom: `${ishaPosition}%` }}><b>{t('prayer_names.7')} {t('at')} {currentPrayerTimes?.at(7)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.isha}°)</b></span>
+                <span className="absolute -m-5 w-full duration-200" style={{ bottom: `${ishaPosition}%` }}><b>{t('prayer_names.7')} {t('at')} {currentPrayerTimes?.at(7)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.isha}°)</b></span>
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${ishaPosition}%` }}></span>
               </React.Fragment>
             )}
@@ -90,8 +90,8 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
             <span className="absolute w-full bottom-1/2 text-center text-green-500 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('horizons.1') : t('horizons.0')}</span>
             <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-500 dark:border-gray-300 w-full"></span>
             {formattedDateTime > sunInfos[sunInfos.length - 4]
-              ? <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.6')} {t('at')} {currentPrayerTimes?.at(6)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
-              : <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.2')} {t('at')} {currentPrayerTimes?.at(2)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h24",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
+              ? <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.6')} {t('at')} {currentPrayerTimes?.at(6)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
+              : <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.2')} {t('at')} {currentPrayerTimes?.at(2)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
             }
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
             <span className="absolute w-full -mt-5 text-center duration-200" style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 1]})</b></span>
