@@ -267,7 +267,7 @@ const adjustedIslamicDate = (months, lang) => {
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - (15 - islamicDayNumber))
+  islamicDate.setDate(15 - islamicDayNumber)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   const islamicYear = islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
   return { currentDate, gregorian, islamicDayNumber, islamicMonth, islamicYear, time }
@@ -518,7 +518,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
   } else if (astroDate.date.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + astroDate.date.getDate()
   } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - (15 - setHijriDay))
+  islamicDate.setDate(15 - setHijriDay)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let observer = observerFromEarth(latitude, longitude, elevation)
   let fajr = null
@@ -866,7 +866,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   } else if (gregorianDate.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + gregorianDate.getDate()
   } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - (15 - setHijriDay))
+  islamicDate.setDate(15 - setHijriDay)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let fajrHourAngle = null
   let sunriseHourAngle = null
