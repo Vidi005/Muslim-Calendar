@@ -263,7 +263,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
   const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short" })
+  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "numeric", timeZoneName: "short" })
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
@@ -455,8 +455,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
-  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone }).replace(/\./, ':')}`
-  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZone: timeZone }).replace(/\./, ':')}`
+  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
@@ -474,14 +474,14 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     moonLatitude,
     moonLongitude,
     moonElongation,
-    moonrise?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
-    moonset?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
+    moonrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
+    moonset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     lastNewMoonDateTime,
     nextNewMoonDateTime,
     `${sunAltitude.toFixed(2)}°`,
     `${sunAzimuth.toFixed(2)}°`,
-    sunrise?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
-    sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "numeric", hourCycle: "h24", minute: "numeric", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--'
+    sunrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
+    sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--'
   ]
 }
 
@@ -1326,22 +1326,22 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const illuminationPercent = moonIllumination.phase_fraction * 100
   return [
-    sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
-    sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
+    sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
+    sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     `${sunAltitude.toFixed(2)}°`,
     `${sunAzimuth.toFixed(2)}°`,
     sunRightAscension,
     sunDeclination,
     `${sunLatittude}°`,
     `${sunLongitude.toFixed(2)}°`,
-    `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
-    `${midnight.date.toLocaleString(lang || 'en', { day: "2-digit", month: "long", year: "numeric", weekday: "long", hour: "2-digit", hourCycle: "h24", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./gm, ':')}`,
+    `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
+    `${midnight.date.toLocaleString(lang || 'en', { day: "2-digit", month: "long", year: "numeric", weekday: "long", hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${moonPhase}° (${moonStatus})`,
     moonAltitude,
     moonAzimuth,
     moonDeclinationJ2000,
-    moonrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
-    moonset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h24", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
+    moonrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
+    moonset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     illuminationPercent,
     culmination.date,
     `${culminationSunAltitude.toFixed(2)}°`,
