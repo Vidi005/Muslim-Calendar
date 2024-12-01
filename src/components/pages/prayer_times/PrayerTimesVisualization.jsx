@@ -13,7 +13,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
   const ishaPosition = isNaN(sunAltitude.isha) ? 0 :((90 - sunAltitude.isha) / 90) * 50
   const midnightPosition = ((90 - parseFloat(sunInfos[sunInfos.length - 1])) / 90) * 50
   const isWaxing = parseFloat(sunInfos[10]) <= 180
-  const isCrescent = parseFloat(sunInfos[15]) <= 50
+  const isCrescent = parseFloat(sunInfos[16]) <= 50
   const moonAzimuthPosition = parseFloat(sunInfos[12]) <= 180
     ? (parseFloat(sunInfos[12]) / 180) * 100
     : ((parseFloat(sunInfos[12]) - 180) / 180) * 100
@@ -32,7 +32,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
         <p className="text-sm md:text-base xl:text-lg">{t('zenith')} (90°)</p>
           <div className="relative flex-auto flex flex-col items-center justify-center border border-green-900 dark:border-white w-full h-max text-xs lg:text-sm 2xl:text-base duration-300 overflow-hidden">
             <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/rectangle-bg.png`} alt="Visualization Container" />
-            <span className="absolute w-[3%] border border-orange-700 bg-yellow-400 rounded-full -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>
+            <span className="absolute w-[3%] border border-orange-400 bg-yellow-400 rounded-full -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>
               <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/circle-icon.png`} alt="Sun" />
             </span>
             <span className={`${parseFloat(sunInfos[3]) > 90 && parseFloat(sunInfos[3]) <= 180 || (parseFloat(sunInfos[3]) > 270 && parseFloat(sunInfos[3]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/2 -ml-2 text-xs md:text-sm xl:text-base text-center text-yellow-600 dark:text-yellow-300 duration-300`} style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>{t('objects.0')}</span>

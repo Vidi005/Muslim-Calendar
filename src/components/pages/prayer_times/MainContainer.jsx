@@ -136,7 +136,7 @@ class MainContainer extends React.Component {
         sunInfosWorker.terminate()
         this.setState({ areSunInfosLoading: false }, () => sunInfosWorker = null)
       }
-    }, 100)
+    }, 10)
   }
 
   changeMonthType (monthType) {
