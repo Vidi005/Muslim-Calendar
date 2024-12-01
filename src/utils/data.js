@@ -1309,10 +1309,10 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunEquator.dec))) + shadowFactor
   const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
   const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-  const midnight = new AstroTime(new Date(culmination.date.getTime() + 43200000))
+  const midnight = SearchHourAngle(Body.Sun, observer, 12, startAstroTime, 2).time
   const sunEquatorAtMidnight = Equator(Body.Sun, midnight, observer, true, true)
   const sunDeclinationAtMidnight = sunEquatorAtMidnight.dec
-  const midnightSunAltitude = -(90 - Math.abs(observer.latitude - sunDeclinationAtMidnight))
+  const midnightSunAltitude = -(90 - Math.abs(- observer.latitude - sunDeclinationAtMidnight))
   const moonPhase = MoonPhase(astroDate).toFixed(2)
   const moonStatus = moonPhase <= 90 ? 'Waxing Crescent' : moonPhase <= 180 ? 'Waxing Gibbous' : moonPhase <= 270 ? 'Waning Gibbous' : 'Waning Crescent'
   const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
