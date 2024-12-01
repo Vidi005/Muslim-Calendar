@@ -186,10 +186,10 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 </div>
               </div>
             </div>
-            <table className="table-auto text-base md:text-sm lg:text-base whitespace-nowrap">
+            <table className="table-auto text-base md:text-sm lg:text-base">
               {en.moon_infos.map((_, index) => (
-                <tr key={index}>
-                  <td>{t(`moon_infos.${index}`)}</td>
+                <tr className="align-top" key={index}>
+                  <td className="whitespace-nowrap">{t(`moon_infos.${index}`)}</td>
                   <td>&nbsp;:&nbsp;</td>
                   <td>{state.areMoonInfosLoading ? t("loading") : state.moonInfos[index]}</td>
                 </tr>
