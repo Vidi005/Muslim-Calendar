@@ -32,11 +32,11 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
         <p className="text-sm md:text-base xl:text-lg">{t('zenith')} (90°)</p>
           <div className="relative flex-auto flex flex-col items-center justify-center border border-green-900 dark:border-white w-full h-max text-xs lg:text-sm 2xl:text-base duration-300 overflow-hidden">
             <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/rectangle-bg.png`} alt="Visualization Container" />
-            <span className="absolute w-[3%] border border-orange-400 bg-yellow-400 rounded-full -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>
+            <span className="absolute w-[2%] border border-yellow-500 bg-yellow-400 rounded-full -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>
               <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/circle-icon.png`} alt="Sun" />
             </span>
-            <span className={`${parseFloat(sunInfos[3]) > 90 && parseFloat(sunInfos[3]) <= 180 || (parseFloat(sunInfos[3]) > 270 && parseFloat(sunInfos[3]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/2 -ml-2 text-xs md:text-sm xl:text-base text-center text-yellow-600 dark:text-yellow-300 duration-300`} style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>{t('objects.0')}</span>
-            <div className="moon absolute w-[3%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
+            <span className={`${parseFloat(sunInfos[3]) > 90 && parseFloat(sunInfos[3]) <= 180 || (parseFloat(sunInfos[3]) > 270 && parseFloat(sunInfos[3]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-yellow-600 dark:text-yellow-300 duration-300`} style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>{t('objects.0')}</span>
+            <div className="moon absolute w-[2%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
               <div className="relative w-full rounded-full overflow-hidden duration-500" style={{ transform: `rotate(${360 - parseFloat(sunInfos[12]) - parseFloat(sunInfos[13])}deg)` }}>
                 <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon" />
                 <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
@@ -58,7 +58,14 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 </div>
               </div>
             </div>
-            <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/2 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
+            <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
+            <span className="absolute w-full h-1/2 bottom-0 bg-green-900/20 dark:bg-white/25"></span>
+            <span className="civil-twilight absolute w-full px-1 md:px-2 bottom-[46.67%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('civil_twilight.1') : t('civil_twilight.0')} (-6°)</span>
+            <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-500 dark:border-gray-300 w-full"></span>
+            <span className="nautical-twilight absolute bottom-[43.33%] border border-dashed border-green-500 dark:border-gray-300 w-full"></span>
+            <span className="absolute w-full px-1 md:px-2 bottom-[43.33%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('nautical_twilight.1') : t('nautical_twilight.0')} (-12°)</span>
+            <span className="astronomical-twilight absolute bottom-[40%] border border-double border-green-500 dark:border-gray-300 w-full"></span>
+            <span className="absolute w-full px-1 md:px-2 bottom-[40%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('astronomical_twilight.1') : t('astronomical_twilight.0')} (-18°)</span>
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${duhrPosition}%` }}></span>
             <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})</b></span>
             {formattedDateTime < sunInfos[sunInfos.length - 4] && dhuhaPosition > 0 && (
@@ -85,21 +92,14 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${ishaPosition}%` }}></span>
               </React.Fragment>
             )}
-            <span className="absolute horizon border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white"></span>
-            <span className="absolute w-full h-1/2 bottom-0 bg-green-900/20 dark:bg-white/25"></span>
-            <span className="absolute w-full bottom-1/2 text-center text-green-500 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('horizons.1') : t('horizons.0')}</span>
-            <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-500 dark:border-gray-300 w-full"></span>
+            <span className="absolute horizon border-t-2 md:border-2 border-solid border-t-green-900 dark:border-t-white w-full bg-green-900 dark:bg-white"></span>
+            <span className="absolute w-full mb-0.5 bottom-1/2 text-center text-green-500 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('horizons.1') : t('horizons.0')}</span>
             {formattedDateTime > sunInfos[sunInfos.length - 4]
               ? <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.6')} {t('at')} {currentPrayerTimes?.at(6)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
               : <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white"><b>{t('prayer_names.2')} {t('at')} {currentPrayerTimes?.at(2)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
             }
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
-            <span className="absolute w-full -mt-5 text-center duration-200" style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 1]})</b></span>
-            <span className="civil-twilight absolute w-full px-1 md:px-2 bottom-[46.67%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('civil_twilight.1') : t('civil_twilight.0')} (-6°)</span>
-            <span className="nautical-twilight absolute bottom-[43.33%] border border-dashed border-green-500 dark:border-gray-300 w-full"></span>
-            <span className="absolute w-full px-1 md:px-2 bottom-[43.33%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('nautical_twilight.1') : t('nautical_twilight.0')} (-12°)</span>
-            <span className="astronomical-twilight absolute bottom-[40%] border border-double border-green-500 dark:border-gray-300 w-full"></span>
-            <span className="absolute w-full px-1 md:px-2 bottom-[40%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('astronomical_twilight.1') : t('astronomical_twilight.0')} (-18°)</span>
+            <span className="absolute w-full mt-1 text-center duration-200" style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 1]})</b></span>
           </div>
           <p className="text-sm md:text-base xl:text-lg">{t('nadir')} (-90°)</p>
         </div>
