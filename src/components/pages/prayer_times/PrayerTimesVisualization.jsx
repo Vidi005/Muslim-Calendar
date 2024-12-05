@@ -70,7 +70,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
             <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})</b></span>
             {formattedDateTime < sunInfos[sunInfos.length - 4] && dhuhaPosition > 0 && (
               <React.Fragment>
-                <span className="absolute -mt-5 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}><b>{t('prayer_names.3')} {t('at')} {currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)</b></span>
+                <span className="absolute -mt-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}><b>{t('prayer_names.3')} {t('at')} {currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)</b></span>
                 <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${dhuhaPosition}%` }}></span>
               </React.Fragment>
             )}
