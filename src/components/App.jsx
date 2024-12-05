@@ -76,8 +76,8 @@ class App extends React.Component {
       isSearching: false,
       isDarkMode: false
     }
-    this.secondsIntervalId = null
-    this.countdownIntervalId = null
+    this.animationFrame = null
+    this.lastTime = performance.now()
     this.sliderRef = React.createRef()
     this.calendarContainerRef = React.createRef()
     this.tooltipRef = React.createRef()
@@ -86,8 +86,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.checkBrowserStorage()
-    this.secondsIntervalId = setInterval(() => this.getCurrentDate(), 1000)
-    this.countdownIntervalId = setInterval(() => this.createPrayerTimeCountdown(), 1000)
+    this.startTimers()
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -111,8 +110,23 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.secondsIntervalId) clearInterval(this.secondsIntervalId)
-    if (this.countdownIntervalId) clearInterval(this.countdownIntervalId)
+    if (this.animationFrame) cancelAnimationFrame(this.animationFrame)
+  }
+
+  startTimers = () => {
+    this.lastTime = performance.now()
+    this.tick()
+  }
+
+  tick = () => {
+    const now = performance.now()
+    const elapsed = now - this.lastTime
+    if (elapsed >= 1000) {
+      this.getCurrentDate()
+      this.createPrayerTimeCountdown()
+      this.lastTime += 1000
+    }
+    this.animationFrame = requestAnimationFrame(this.tick)
   }
 
   checkBrowserStorage() {
