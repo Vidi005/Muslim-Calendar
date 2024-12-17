@@ -143,7 +143,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                 <div className="prayer-times-list-container-print hidden flex-col items-center flex-nowrap h-[25.9cm] w-[19.5cm] m-[1cm]">
                   <h2 className={`${monthType === 0 ? "leading-tight" : ""} font-serif text-center text-green-900`}>{schedule} {selectedMonth.replace(/-/gm, ' ')}</h2>
                   <h3 className={`${monthType === 0 ? "leading-tight" : ""} font-serif text-center text-green-900`}>{selectedLocation?.city}, {selectedLocation?.admin_name}, {selectedLocation?.country}</h3>
-                  <h4 className={`${monthType === 0 ? "leading-tight" : ""} text-center text-black`}>{t('coordinates')} ({t('latitude')} {latitude}, {t('longitude')} {longitude}, {t('elevation')} {elevation} m)</h4>
+                  <h4 className={`${monthType === 0 ? "leading-tight" : ""} text-center text-black`}>{t('coordinates')} ({t('latitude')} {latitude}, {t('longitude')} {longitude}, {t('elevation')} {elevation.toFixed(1)} m)</h4>
                   <h5 className={`${monthType === 0 ? "leading-tight" : ""} mb-1 text-center text-black`}>{t('convention')} {t(`conventions.${selectedConvention}.method`)}, {t('timezone')} {selectedTimeZone}, {t('school')} {t(`mahzab.${selectedAshrTime}`)}, <i>Ihtiyath</i> : ±{t(`ihtiyath_times.${selectedIhtiyath - 1}`)}</h5>
                   <table className={`${monthType === 1 ? "text-xs leading-relaxed" : "text-sm leading-snug"} table-auto w-full align-middle whitespace-nowrap`}>
                     {monthType === 0
@@ -192,7 +192,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                 <div className="prayer-times-list-container-download hidden">
                   <h2 style={{ lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Times New Roman', 'Serif'", fontSize: "16pt", color: "#14532d" }}>{schedule} {selectedMonth.replace(/-/gm, ' ')}</h2>
                   <h3 style={{ lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Times New Roman', 'Serif'", fontSize: "14pt", color: "#14532d" }}>{selectedLocation?.city}, {selectedLocation?.admin_name}, {selectedLocation?.country}</h3>
-                  <h4 style={{ lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Helvetica', 'Arial'", fontSize: "12pt", color: "black" }}>{t('coordinates')} ({t('latitude')} {latitude}, {t('longitude')} {longitude}, {t('elevation')} {elevation} m)</h4>
+                  <h4 style={{ lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Helvetica', 'Arial'", fontSize: "12pt", color: "black" }}>{t('coordinates')} ({t('latitude')} {latitude}, {t('longitude')} {longitude}, {t('elevation')} {elevation.toFixed(1)} m)</h4>
                   <h5 style={{ marginBottom: "1pt", lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Helvetica', 'Arial'", fontSize: "11pt", color: "black" }}>{t('convention')} {t(`conventions.${selectedConvention}.method`)}, {t('timezone')} {selectedTimeZone}, {t('school')} {t(`mahzab.${selectedAshrTime}`)}, <i>Ihtiyath</i> : ±{t(`ihtiyath_times.${selectedIhtiyath - 1}`)}</h5>
                   <table style={{ display: "table", tableLayout: "auto", width: "100%", verticalAlign: "middle", border: "solid", borderWidth: "1.5pt", borderColor: "#14532d" }}>
                     {monthType === 0
