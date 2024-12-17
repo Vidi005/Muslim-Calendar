@@ -14,7 +14,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
   const midnightPosition = ((90 - parseFloat(sunInfos[sunInfos.length - 1])) / 90) * 50
   const isWaxing = parseFloat(sunInfos[10]) <= 180
   const isCrescent = parseFloat(sunInfos[16]) <= 50
-  const moonAzimuthPosition = parseFloat(sunInfos[12]) <= 180
+  const moonAzimuthPosition = parseFloat(sunInfos[3]) <= 180
     ? (parseFloat(sunInfos[12]) / 180) * 100
     : ((parseFloat(sunInfos[12]) - 180) / 180) * 100
   const [yMoonPosition, xMoonPosition] = [((parseFloat(sunInfos[11]) + 90) / 180) * 100, moonAzimuthPosition]
@@ -36,36 +36,29 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
               <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/circle-icon.png`} alt="Sun" />
             </span>
             <span className={`${parseFloat(sunInfos[3]) > 90 && parseFloat(sunInfos[3]) <= 180 || (parseFloat(sunInfos[3]) > 270 && parseFloat(sunInfos[3]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-yellow-600 dark:text-yellow-300 duration-300`} style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>{t('objects.0')}</span>
-            {formattedDateTime > sunInfos[sunInfos.length - 4] && xMoonPosition > 180 || formattedDateTime <= sunInfos[sunInfos.length - 4] && xMoonPosition <= 180
-              ? (
-                <React.Fragment>
-                  <div className="moon absolute w-[2%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
-                    <div className="relative w-full rounded-full overflow-hidden duration-500" style={{ transform: `rotate(${360 - parseFloat(sunInfos[12]) - parseFloat(sunInfos[13])}deg)` }}>
-                      <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon" />
-                      <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
-                        <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/50"></span>
-                        <span
-                          className="absolute inset-0 translate-x-1/2 bg-black/50 border-none border-transparent border-spacing-0 duration-500"
-                          style={{ clipPath: ellipse1 }}
-                        ></span>
-                        <span
-                          className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0 duration-500"
-                          style={{ clipPath: ellipse2 }}
-                        >
-                          <img
-                            className={`${isWaxing ? "rotate-0" : "rotate-180"} border-none border-transparent border-spacing-0 w-full translate-x-1/2 object-contain object-center brightness-125`}
-                            src={`${import.meta.env.BASE_URL}images/moon.png`}
-                            alt="Half Phase"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
-                </React.Fragment>
-                )
-              : null
-            }
+            <div className="moon absolute w-[2%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
+              <div className="relative w-full rounded-full overflow-hidden duration-500" style={{ transform: `rotate(${360 - parseFloat(sunInfos[12]) - parseFloat(sunInfos[13])}deg)` }}>
+                <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon" />
+                <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
+                  <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/50"></span>
+                  <span
+                    className="absolute inset-0 translate-x-1/2 bg-black/50 border-none border-transparent border-spacing-0 duration-500"
+                    style={{ clipPath: ellipse1 }}
+                  ></span>
+                  <span
+                    className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0 duration-500"
+                    style={{ clipPath: ellipse2 }}
+                  >
+                    <img
+                      className={`${isWaxing ? "rotate-0" : "rotate-180"} border-none border-transparent border-spacing-0 w-full translate-x-1/2 object-contain object-center brightness-125`}
+                      src={`${import.meta.env.BASE_URL}images/moon.png`}
+                      alt="Half Phase"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
             <span className="absolute w-full h-1/2 bottom-0 bg-green-900/20 dark:bg-white/25"></span>
             <span className="civil-twilight absolute w-full px-1 md:px-2 bottom-[46.67%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('civil_twilight.1') : t('civil_twilight.0')} (-6°)</span>
             <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-500 dark:border-gray-300 w-full"></span>
