@@ -36,29 +36,36 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
               <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/circle-icon.png`} alt="Sun" />
             </span>
             <span className={`${parseFloat(sunInfos[3]) > 90 && parseFloat(sunInfos[3]) <= 180 || (parseFloat(sunInfos[3]) > 270 && parseFloat(sunInfos[3]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-yellow-600 dark:text-yellow-300 duration-300`} style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>{t('objects.0')}</span>
-            <div className="moon absolute w-[2%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
-              <div className="relative w-full rounded-full overflow-hidden duration-500" style={{ transform: `rotate(${360 - parseFloat(sunInfos[12]) - parseFloat(sunInfos[13])}deg)` }}>
-                <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon" />
-                <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
-                  <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/50"></span>
-                  <span
-                    className="absolute inset-0 translate-x-1/2 bg-black/50 border-none border-transparent border-spacing-0 duration-500"
-                    style={{ clipPath: ellipse1 }}
-                  ></span>
-                  <span
-                    className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0 duration-500"
-                    style={{ clipPath: ellipse2 }}
-                  >
-                    <img
-                      className={`${isWaxing ? "rotate-0" : "rotate-180"} border-none border-transparent border-spacing-0 w-full translate-x-1/2 object-contain object-center brightness-125`}
-                      src={`${import.meta.env.BASE_URL}images/moon.png`}
-                      alt="Half Phase"
-                    />
-                  </span>
-                </div>
-              </div>
-            </div>
-            <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
+            {formattedDateTime > sunInfos[sunInfos.length - 4] && xMoonPosition > 180 || formattedDateTime <= sunInfos[sunInfos.length - 4] && xMoonPosition <= 180
+              ? (
+                <React.Fragment>
+                  <div className="moon absolute w-[2%] -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>
+                    <div className="relative w-full rounded-full overflow-hidden duration-500" style={{ transform: `rotate(${360 - parseFloat(sunInfos[12]) - parseFloat(sunInfos[13])}deg)` }}>
+                      <img className="w-full object-contain object-center" src={`${import.meta.env.BASE_URL}images/moon.png`} alt="Moon" />
+                      <div className={`${isWaxing ? "rotate-0" : "rotate-180"} absolute inset-0`}>
+                        <span className="absolute top-0 left-0 w-1/2 h-full border-none border-transparent border-spacing-0 bg-black/50"></span>
+                        <span
+                          className="absolute inset-0 translate-x-1/2 bg-black/50 border-none border-transparent border-spacing-0 duration-500"
+                          style={{ clipPath: ellipse1 }}
+                        ></span>
+                        <span
+                          className="absolute inset-0 -translate-x-1/2 border-none border-transparent border-spacing-0 duration-500"
+                          style={{ clipPath: ellipse2 }}
+                        >
+                          <img
+                            className={`${isWaxing ? "rotate-0" : "rotate-180"} border-none border-transparent border-spacing-0 w-full translate-x-1/2 object-contain object-center brightness-125`}
+                            src={`${import.meta.env.BASE_URL}images/moon.png`}
+                            alt="Half Phase"
+                          />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/2"} absolute translate-y-1/3 -ml-2 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')}</span>
+                </React.Fragment>
+                )
+              : null
+            }
             <span className="absolute w-full h-1/2 bottom-0 bg-green-900/20 dark:bg-white/25"></span>
             <span className="civil-twilight absolute w-full px-1 md:px-2 bottom-[46.67%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('civil_twilight.1') : t('civil_twilight.0')} (-6°)</span>
             <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-500 dark:border-gray-300 w-full"></span>
@@ -67,7 +74,8 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
             <span className="astronomical-twilight absolute bottom-[40%] border border-double border-green-500 dark:border-gray-300 w-full"></span>
             <span className="absolute w-full px-1 md:px-2 bottom-[40%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 4] ? t('astronomical_twilight.1') : t('astronomical_twilight.0')} (-18°)</span>
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${duhrPosition}%` }}></span>
-            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})</b></span>
+            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('prayer_names.4')} {t('at')} {currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}</b></span>
+            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 4] ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('sun_infos.8')} (+{sunInfos[sunInfos.length - 3]})</b></span>
             {formattedDateTime < sunInfos[sunInfos.length - 4] && dhuhaPosition > 0 && (
               <React.Fragment>
                 <span className="absolute -mt-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}><b>{t('prayer_names.3')} {t('at')} {currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)</b></span>
