@@ -6,7 +6,21 @@ import MoonCrescentMapContent from "./MoonCrescentMapContent"
 class MainContainer extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      MOON_VISIBILITY_CRITERIA_STORAGE_KEY: "MOON_VISIBILITY_CRITERIA_STORAGE_KEY",
+      areMoonVisibilityCriteriaMapsLoading: true,
+      selectedHijriMonth: this.getHijriMonthFromProps(props)
+    }
+  }
+
+  getHijriMonthFromProps = props => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime)
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.hijriStartDates !== this.props.hijriStartDates) this.setState({ selectedHijriMonth: this.getHijriMonthFromProps(this.props) })
+  }
+
+  selectHijriMonth (montIndex) {
+    this.setState({ selectedHijriMonth: parseInt(montIndex) })
   }
 
   render() {
@@ -19,12 +33,18 @@ class MainContainer extends React.Component {
                   t={this.props.t}
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
-                <MoonCrescentMapContent />
+                <MoonCrescentMapContent
+                  state={this.state}
+                  selectHijriMonth={this.selectHijriMonth.bind(this)}
+                />
               </div>
               )
           : (
               <div className="moon-crescent-map-container flex flex-col w-full h-full">
-                <MoonCrescentMapContent />
+                <MoonCrescentMapContent
+                  state={this.state}
+                  selectHijriMonth={this.selectHijriMonth.bind(this)}
+                />
                 <BottomBar
                   t={this.props.t}
                 />

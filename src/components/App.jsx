@@ -32,6 +32,7 @@ class App extends React.Component {
       INPUT_SUN_ALTITUDE_STORAGE_KEY: 'INPUT_SUN_ALTITUDE_STORAGE_KEY',
       INPUT_MINUTES_STORAGE_KEY: 'INPUT_MINUTES_STORAGE_KEY',
       FORMULA_STORAGE_KEY: 'FORMULA_STORAGE_KEY',
+      MOON_VISIBILITY_CRITERIA_STORAGE_KEY: 'MOON_VISIBILITY_CRITERIA_STORAGE_KEY',
       selectedLanguage: 'en',
       currentDate: {},
       seconds: 0,
@@ -66,6 +67,7 @@ class App extends React.Component {
       prayerTimes: [],
       nextPrayerInfo: '',
       hijriStartDates: [],
+      selectedMoonVisibilityCriteria: 1,
       arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
@@ -149,6 +151,7 @@ class App extends React.Component {
       this.checkSavedInputtedSunAltitude()
       this.checkSavedInputtedMinutes()
       this.checkSavedFormula()
+      this.checkSavedMoonVisibilityCriteria()
     }
   }
 
@@ -379,6 +382,19 @@ class App extends React.Component {
       localStorage.removeItem(this.state.FORMULA_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }    
+  }
+
+  checkSavedMoonVisibilityCriteria () {
+    const getSavedMoonVisibilityCriteriaFromLocal = localStorage.getItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
+    try {
+      const parsedSavedMoonVisibilityCriteria = JSON.parse(getSavedMoonVisibilityCriteriaFromLocal)
+      if (parsedSavedMoonVisibilityCriteria !== null) {
+        this.setState({ selectedMoonVisibilityCriteria: parseInt(parsedSavedMoonVisibilityCriteria) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
   }
 
   getCurrentDate () {
@@ -859,6 +875,14 @@ class App extends React.Component {
     })
   }
 
+  selectMoonVisibilityCriteria (value) {
+    this.setState({ selectedMoonVisibilityCriteria: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedMoonVisibilityCriteria))
+      }
+    })
+  }
+
   createCalendarWorker = gregorianDate => {
     return new Promise((resolve, reject) => {
       let calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
@@ -1267,9 +1291,15 @@ class App extends React.Component {
               onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
               onInputLongitudeChange: this.onInputLongitudeChange.bind(this),
               onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
-              applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
+              applyLocationCoordinates: this.applyLocationCoordinates.bind(this),
+              selectMoonVisibilityCriteria: this.selectMoonVisibilityCriteria.bind(this)
             }}>
-              <MoonCrescentMapPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+              <MoonCrescentMapPage
+                t={i18n.t}
+                formattedDateTime={this.state.formattedDateTime}
+                hijriStartDates={this.state.hijriStartDates}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+              />
             </HomePageProvider>
           }/>
           <Route path="*" element={<NoPage t={i18n.t} />} />
