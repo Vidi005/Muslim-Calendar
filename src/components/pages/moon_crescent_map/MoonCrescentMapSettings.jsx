@@ -2,7 +2,7 @@ import React from "react"
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 
-const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth }) => (
+const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restoreToDefault }) => (
   <HomePageConsumer>
     {({ t, state, selectMoonVisibilityCriteria, }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
@@ -38,8 +38,15 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth }) => (
               {en.visibility_criteria.map((type, index) => <option key={type} value={index}>{t(`visibility_criteria.${index}`)}</option>)}
             </select>
           </span>
-          <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow">
+          <button className="flex items-center p-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow">
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('create_map')}</span>
+          </button>
+          <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
+            selectMoonVisibilityCriteria(1)
+            restoreToDefault()
+          }}>
+            <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Restore to Default" />
+            <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
           </button>
         </div>
       </section>

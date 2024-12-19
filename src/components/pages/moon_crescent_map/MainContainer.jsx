@@ -23,6 +23,12 @@ class MainContainer extends React.Component {
     this.setState({ selectedHijriMonth: parseInt(montIndex) })
   }
 
+  restoreToDefault () {
+    this.setState({ selectedHijriMonth: this.getHijriMonthFromProps(this.props) }, () => {
+      localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
+    })
+  }
+
   render() {
     return (
       <main className="moon-crescent-map-page h-0 flex-auto flex-nowrap bg-green-100 dark:bg-gray-800 duration-200">
@@ -36,6 +42,7 @@ class MainContainer extends React.Component {
                 <MoonCrescentMapContent
                   state={this.state}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
+                  restoreToDefault={this.restoreToDefault.bind(this)}
                 />
               </div>
               )
@@ -44,6 +51,7 @@ class MainContainer extends React.Component {
                 <MoonCrescentMapContent
                   state={this.state}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
+                  restoreToDefault={this.restoreToDefault.bind(this)}
                 />
                 <BottomBar
                   t={this.props.t}
