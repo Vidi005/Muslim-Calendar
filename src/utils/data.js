@@ -458,6 +458,12 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
+  const moonIlluminationAngle = convertToDegrees(
+    Math.atan2(
+      Math.cos(moonEquatorJ2000.dec) * Math.sin(moonEquatorJ2000.ra - sunEquator.ra),
+      Math.sin(moonEquatorJ2000.dec) * Math.cos(sunEquator.ra) - Math.cos(moonEquatorJ2000.dec) * Math.sin(sunEquator.dec) * Math.cos(moonEquatorJ2000.ra - sunEquator.ra)
+    )
+  )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
@@ -481,7 +487,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     `${sunAltitude.toFixed(2)}°`,
     `${sunAzimuth.toFixed(2)}°`,
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
-    sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--'
+    sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
+    `${moonIlluminationAngle.toFixed(2)}°`
   ]
 }
 
@@ -1325,6 +1332,12 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const illuminationPercent = moonIllumination.phase_fraction * 100
+  const moonIlluminationAngle = convertToDegrees(
+    Math.atan2(
+      Math.cos(moonEquatorJ2000.dec) * Math.sin(moonEquatorJ2000.ra - sunEquator.ra),
+      Math.sin(moonEquatorJ2000.dec) * Math.cos(sunEquator.ra) - Math.cos(moonEquatorJ2000.dec) * Math.sin(sunEquator.dec) * Math.cos(moonEquatorJ2000.ra - sunEquator.ra)
+    )
+  )
   return [
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
@@ -1346,7 +1359,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     culmination.date,
     `${culminationSunAltitude.toFixed(2)}°`,
     `${ashrSunAltitude.toFixed(2)}°`,
-    `${midnightSunAltitude.toFixed(2)}°`
+    `${midnightSunAltitude.toFixed(2)}°`,
+    `${moonIlluminationAngle.toFixed(2)}°`
   ]
 }
 
