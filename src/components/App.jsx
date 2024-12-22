@@ -33,6 +33,7 @@ class App extends React.Component {
       INPUT_MINUTES_STORAGE_KEY: 'INPUT_MINUTES_STORAGE_KEY',
       FORMULA_STORAGE_KEY: 'FORMULA_STORAGE_KEY',
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: 'MOON_VISIBILITY_CRITERIA_STORAGE_KEY',
+      COORDINATE_STEPS_STORAGE_KEY: 'COORDINATE_STEPS_STORAGE_KEY',
       selectedLanguage: 'en',
       currentDate: {},
       seconds: 0,
@@ -67,12 +68,15 @@ class App extends React.Component {
       prayerTimes: [],
       nextPrayerInfo: '',
       hijriStartDates: [],
+      moonCrescentVisibility: [],
       selectedMoonVisibilityCriteria: 1,
+      selectedCoordinateSteps: 3,
       arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
+      isMoonCrescentVisibilityMapLoading: true,
       isGettingCoordinates: false,
       isGeocoding: false,
       isSearching: false,
@@ -106,7 +110,7 @@ class App extends React.Component {
     }
     if (this.state.currentDate?.time && this.state.inputTime !== '') {
       if (this.state.currentDate.time.includes('00:00:00')) {
-        this.formatDateTime().then(() => this.generateCalendar())
+        this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
       }
     }
   }
@@ -152,6 +156,7 @@ class App extends React.Component {
       this.checkSavedInputtedMinutes()
       this.checkSavedFormula()
       this.checkSavedMoonVisibilityCriteria()
+      this.checkSavedCoordinateSteps()
     }
   }
 
@@ -217,7 +222,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.generateCalendar()))
+        },() => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -240,10 +245,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -397,6 +402,19 @@ class App extends React.Component {
     }
   }
 
+  checkSavedCoordinateSteps () {
+    const getSavedCoordinateStepsFromLocal = localStorage.getItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
+    try {
+      const parsedSavedCoordinateSteps = JSON.parse(getSavedCoordinateStepsFromLocal)
+      if (parsedSavedCoordinateSteps !== null) {
+        this.setState({ selectedCoordinateSteps: parseInt(parsedSavedCoordinateSteps) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
   getCurrentDate () {
     let adjustedDateWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     if (this.state.monthsInCurrentYear.length > 0) {
@@ -478,7 +496,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
   }
 
   setDesiredTime (event) {
@@ -486,7 +504,7 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value.replace(/\./g, ':') }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
   }
 
   formatDateTime () {
@@ -607,6 +625,7 @@ class App extends React.Component {
             this.formatDateTime()
               .then(() => this.generateCalendar())
               .then(() => this.selectTimeZone(this.state.selectedTimeZone))
+              .then(() => this.getMoonCrescentVisibility())
               .finally(() => {
                 localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
                 localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -625,7 +644,7 @@ class App extends React.Component {
 
   restoreDateTime () {
     this.setState({ inputDate: '', inputTime: '' }, () => {
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
       this.goToCurrentMonth()
     })
   }
@@ -717,7 +736,7 @@ class App extends React.Component {
       this.createCalendarWorker(this.state.formattedDateTime).then(calendarData => {
         if (calendarData?.months?.length > 0) {
           localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
-          this.formatDateTime().then(() => this.generateCalendar())
+          this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
         }
       }).finally(() => {
         this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
@@ -745,7 +764,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
     })
   }
 
@@ -754,7 +773,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
     })
   }
 
@@ -871,7 +890,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
     })
   }
 
@@ -880,6 +899,16 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedMoonVisibilityCriteria))
       }
+      this.getMoonCrescentVisibility()
+    })
+  }
+
+  selectCoordinateSteps (value) {
+    this.setState({ selectedCoordinateSteps: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.COORDINATE_STEPS_STORAGE_KEY, JSON.stringify(this.state.selectedCoordinateSteps))
+      }
+      this.getMoonCrescentVisibility()
     })
   }
 
@@ -1145,6 +1174,42 @@ class App extends React.Component {
     }
   }
 
+  generateMoonCrescentVisibility = (conjunctionDate) => new Promise((resolve, reject) => {
+    this.setState({ isMoonCrescentVisibilityMapLoading: true })
+    let moonCrescentVisibilityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    moonCrescentVisibilityWorker.postMessage({
+      type: 'createMoonCrescentVisibility',
+      conjunctionDate: conjunctionDate,
+      moonVisibilityCriteria: this.state.selectedMoonVisibilityCriteria,
+      steps: this.state.selectedCoordinateSteps
+    })
+    moonCrescentVisibilityWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createMoonCrescentVisibility') {
+        moonCrescentVisibilityWorker.terminate()
+        resolve(workerEvent.data.result)
+        moonCrescentVisibilityWorker = null
+      }
+    }
+    moonCrescentVisibilityWorker.onerror = error => {
+      moonCrescentVisibilityWorker.terminate()
+      console.error(error.message)
+      reject(error.message)
+      moonCrescentVisibilityWorker = null
+    }
+  })
+
+  getMoonCrescentVisibility = () => {
+    const ijtimaDay = new Date(this.state.formattedDateTime)
+    const currentFirstMonthGregorianDay = new Date(this.state.formattedDateTime.getFullYear(), this.state.formattedDateTime.getMonth(), 1).getDay()
+    const islamicDayNumber = this.state.monthsInSetYear[this.state.formattedDateTime.getMonth()][this.state.formattedDateTime.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
+    ijtimaDay.setDate(ijtimaDay.getDate() + 29 - islamicDayNumber)
+    this.generateMoonCrescentVisibility(ijtimaDay).then(result => {
+      if (Object.keys(result).length > 0) {
+        this.setState({ moonCrescentVisibility: result }, () => console.log(this.state.moonCrescentVisibility))
+      }
+    }).finally(() => this.setState({ isMoonCrescentVisibilityMapLoading: false }))
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -1292,7 +1357,8 @@ class App extends React.Component {
               onInputLongitudeChange: this.onInputLongitudeChange.bind(this),
               onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this),
-              selectMoonVisibilityCriteria: this.selectMoonVisibilityCriteria.bind(this)
+              selectMoonVisibilityCriteria: this.selectMoonVisibilityCriteria.bind(this),
+              selectCoordinateSteps: this.selectCoordinateSteps.bind(this)
             }}>
               <MoonCrescentMapPage
                 t={i18n.t}

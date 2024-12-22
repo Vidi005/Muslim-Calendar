@@ -139,7 +139,7 @@ const InputForm = () => (
                       />
                       <p>&nbsp;m</p>
                     </span>
-                    <button type="submit" className="flex items-center px-2 py-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
+                    <button type="submit" className="flex items-center px-3 py-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 text-sm text-white rounded-md duration-200 shadow" onClick={applyLocationCoordinates}>{t('apply')}</button>
                   </form>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-1">
