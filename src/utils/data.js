@@ -1,4 +1,4 @@
-import { AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, Horizon, Illumination, MoonPhase, Observer, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -86,6 +86,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   let sunset
   let moonEquator
   let moonHorizon
+  let sunEquator
   if (criteria === 0) {
     // Global Hijri Calendar/KHGT
     while (true) {
@@ -134,9 +135,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(sabangCoordinates.latitude, sabangCoordinates.longitude, sabangCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      moonElongation = Elongation(Body.Moon, sunset)
+      sunEquator = Equator(Body.Sun, sunset, observer, true, true)
       moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
+      moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
       if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
@@ -267,7 +269,7 @@ const adjustedIslamicDate = (months, lang) => {
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - islamicDayNumber)
+  islamicDate.setDate(islamicDate.getDate() + 15 - islamicDayNumber)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   const islamicYear = islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
   return { currentDate, gregorian, islamicDayNumber, islamicMonth, islamicYear, time }
@@ -460,8 +462,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const moonIlluminationAngle = convertToDegrees(
     Math.atan2(
-      Math.cos(moonEquatorJ2000.dec) * Math.sin(moonEquatorJ2000.ra - sunEquator.ra),
-      Math.sin(moonEquatorJ2000.dec) * Math.cos(sunEquator.ra) - Math.cos(moonEquatorJ2000.dec) * Math.sin(sunEquator.dec) * Math.cos(moonEquatorJ2000.ra - sunEquator.ra)
+      Math.cos(moonEquatorJ2000.dec) * Math.sin(convertToRadians(moonEquatorJ2000.ra - sunEquator.ra)),
+      Math.sin(moonEquatorJ2000.dec) * Math.cos(sunEquator.dec) - Math.cos(moonEquatorJ2000.dec) * Math.sin(sunEquator.dec) * Math.cos(convertToRadians(moonEquatorJ2000.ra - sunEquator.ra))
     )
   )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
@@ -525,7 +527,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
   } else if (astroDate.date.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + astroDate.date.getDate()
   } else setHijriDay = setMonths[astroDate.date.getMonth()][astroDate.date.getDate() + firstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - setHijriDay)
+  islamicDate.setDate(islamicDate.getDate() + 15 - setHijriDay)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let observer = observerFromEarth(latitude, longitude, elevation)
   let fajr = null
@@ -873,7 +875,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   } else if (gregorianDate.getFullYear() > formattedDateTime.getFullYear()) {
     setHijriDay = setMonths[11][30 + lastMonthGregorianYear]?.hijri + gregorianDate.getDate()
   } else setHijriDay = setMonths[gregorianDate.getMonth()][gregorianDate.getDate() + firstMonthGregorianDay - 1]?.hijri
-  islamicDate.setDate(15 - setHijriDay)
+  islamicDate.setDate(islamicDate.getDate() + 15 - setHijriDay)
   const islamicMonth = islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" })
   let fajrHourAngle = null
   let sunriseHourAngle = null
@@ -1364,4 +1366,126 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos }
+const calculateVisibilityYallop = (arcv, w) => {
+  const q = arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+  let zone = 'F'
+  if (q > 0.216) zone = 'A'
+  else if (q > -0.014) zone = 'B'
+  else if (q > -0.160) zone = 'C'
+  else if (q > -0.232) zone = 'D'
+  else if (q > -0.293) zone = 'E'
+  return { q, zone }
+}
+
+const calculateVisibilityOdeh = (arcv, w) => {
+  const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+  let zone = 'D'
+  if (visibilityValue >= 5.65) zone = 'A'
+  else if (visibilityValue >= 2.0) zone = 'B'
+  else if (visibilityValue >= -0.96) zone = 'C'
+  return { visibilityValue, zone }
+}
+
+const checkYallop = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime < 0) bestTime = sunset
+  else bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
+  const moonElongationEvent = Elongation(Body.Moon, bestTime)
+  const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
+  const lunarParallax = semiDiameter / 0.27245
+  const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
+  const arcl = convertToDegrees(moonElongationEvent)
+  const geomoon = GeoVector(Body.Moon, bestTime, true)
+  const geosun = GeoVector(Body.Sun, bestTime, true)
+  const rot = Rotation_EQJ_EQD(bestTime)
+  const rotmoon = RotateVector(rot, geomoon)
+  const rotsun = RotateVector(rot, geosun)
+  const meq = EquatorFromVector(rotmoon)
+  const seq = EquatorFromVector(rotsun)
+  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
+  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
+  const arcv = mhor.altitude - shor.altitude
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(convertToRadians(arcl)))
+  return calculateVisibilityYallop(arcv, wTopocentric)
+}
+
+const checkOdeh = (astroDate, latitude, longitude) => {
+  const observer = new Observer(latitude, longitude, 0)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime < 0) bestTime = sunset
+  else bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
+  const lunarParallax = semiDiameter / 0.27245
+  const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
+  const arcl = convertToDegrees(moonElongationTopocentric)
+  const daz = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(convertToRadians(arcl)) / Math.cos(convertToRadians(daz))
+  let arcv
+  if (-1 <= cosARCV <= 1) {
+    arcv = convertToDegrees(Math.acos(cosARCV))
+  } else if (condition) {
+    arcv = convertToDegrees(Math.acos(-1))
+  } else {
+    arcv = convertToDegrees(Math.acos(1))
+  }
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(convertToRadians(arcl)))
+  return calculateVisibilityOdeh(arcv, wTopocentric)
+}
+
+const calculateYallop = (astroDate, lat, lng) => {
+  const result = checkYallop(astroDate, lat, lng)
+  if (result?.zone?.length > 0) {
+    return { latitude: lat, longitude: lng, zone: result.zone }
+  }
+}
+
+const calculateOdeh = (astroDate, lat, lng) => {
+  const result = checkOdeh(astroDate, lat, lng)
+  if (result?.zone?.length > 0) {
+    return { latitude: lat, longitude: lng, zone: result.zone }
+  }
+}
+
+const gridSearchLongitude = (astroDate, criteria, steps) => {
+  let results = []
+  for (let lng = -180; lng < 180; lng += steps) {
+    for (let lat = 60; lat >= -60; lat -= steps) {
+      let result
+      if (criteria === 0) {
+        result = calculateYallop(astroDate, lat, lng)
+      } else if (criteria === 1) {
+        result = calculateOdeh(astroDate, lat, lng)
+      } else {
+        result = calculateOdeh(astroDate, lat, lng)
+      }
+      if (result?.zone?.length > 0) {
+        results.push(result)
+      }
+    }
+  }
+  return results
+}
+
+const getMoonCrescentVisibilityMap = (conjunctionDate, criteria, steps) => {
+  const startDate = new Date(conjunctionDate.getFullYear(), conjunctionDate.getMonth(), conjunctionDate.getDate(), 0, 0, 0)
+  const astroDate = MakeTime(startDate)
+  return gridSearchLongitude(astroDate, criteria, steps)
+}
+
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, getMoonCrescentVisibilityMap }
