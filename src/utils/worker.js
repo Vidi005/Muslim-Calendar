@@ -1,6 +1,6 @@
-import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
+import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonCrescentVisibilityMap, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v1.1' // Update the version when deploying new builds
+const CACHE_NAME = 'app-cache-v1.2' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,9 +10,7 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE)
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   )
   self.skipWaiting()
 })
@@ -34,14 +32,12 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request)
-    })
+    caches.match(event.request).then((response) => response || fetch(event.request))
   )
 })
 
 self.onmessage = event => {
-  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins } = event.data
+  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, conjunctionDate, moonVisibilityCriteria, steps } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
@@ -69,5 +65,8 @@ self.onmessage = event => {
   } else if (type === 'createSunInfos') {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
     self.postMessage({ type: 'createSunInfos', result })
+  } else if (type === 'createMoonCrescentVisibility') {
+    const result = getMoonCrescentVisibilityMap(conjunctionDate, moonVisibilityCriteria, steps)
+    self.postMessage({ type: 'createMoonCrescentVisibility', result })
   }
 }

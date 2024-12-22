@@ -8,6 +8,7 @@ class MainContainer extends React.Component {
     super(props)
     this.state = {
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: "MOON_VISIBILITY_CRITERIA_STORAGE_KEY",
+      COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
       areMoonVisibilityCriteriaMapsLoading: true,
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
@@ -26,6 +27,7 @@ class MainContainer extends React.Component {
   restoreToDefault () {
     this.setState({ selectedHijriMonth: this.getHijriMonthFromProps(this.props) }, () => {
       localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
+      localStorage.removeItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
     })
   }
 
