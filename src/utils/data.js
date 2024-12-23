@@ -139,7 +139,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
       moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
-      if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
+      if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
