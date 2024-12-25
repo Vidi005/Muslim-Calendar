@@ -8,7 +8,7 @@ const MoonCrescentMapSection = () => (
     {({ t, state }) => (
       <section className="moon-crescent-map-section flex flex-col items-center w-full md:w-1/2 px-3 md:px-5 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
         <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_crescent_map')}</h1>
-        <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('moon_crescent_criteria')} {t(`visibility_criteria.${state.selectedMoonVisibilityCriteria}`)}</h5>
+        <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('hijri_date_criteria')} {t(`visibility_criteria.${state.selectedMoonVisibilityCriteria}`)}</h5>
         <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('conjunction')} {state.moonInfos[14]}</h5>
         {state.isMoonCrescentMapLoading
           ? (
@@ -21,6 +21,18 @@ const MoonCrescentMapSection = () => (
             <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded overflow-hidden">
               {/* https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png */}
               <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
+              {[60, 30, 0, -30, -60].map((degree, index) => (
+                <>
+                  <span key={index} className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
+                  <span key={degree} className="absolute w-full px-1 opacity-50 text-xs lg:text-sm 2xl:text-base text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
+                </>
+              ))}
+              {[150, 120, 90, 60, 30, 0, -30, -60, 90, 120, 150].map((degree, index) => (
+                <>
+                  <span key={index} className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
+                  <span key={degree} className="absolute h-full px-1 opacity-50 text-xs lg:text-sm 2xl:text-base text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
+                </>
+              ))}
               {state.moonCrescentVisibility.map((marker, index) => (
                 <span key={index} className="absolute opacity-50" style={{
                   width: `${marker.width}%`,
