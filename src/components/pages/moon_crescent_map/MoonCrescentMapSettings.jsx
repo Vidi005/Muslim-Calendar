@@ -16,7 +16,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={selectedHijriMonth}
               onChange={event => selectHijriMonth(event.target.value)}
               required
-              disabled={state.isMoonCrescentVisibilityMapLoading}
+              disabled={state.isMoonCrescentMapLoading}
             >
               {state.hijriStartDates?.map((item, monthIndex) => {
                 if (item.gregorianDate.getFullYear() >= state.formattedDateTime.getFullYear()) {
@@ -35,7 +35,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={state.selectedMoonVisibilityCriteria}
               onChange={event => selectMoonVisibilityCriteria(event.target.value)}
               required
-              disabled={state.isMoonCrescentVisibilityMapLoading}
+              disabled={state.isMoonCrescentMapLoading}
             >
               {en.visibility_criteria.map((type, index) => <option key={type} value={index}>{t(`visibility_criteria.${index}`)}</option>)}
             </select>
@@ -48,20 +48,20 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={state.selectedCoordinateSteps}
               onChange={event => selectCoordinateSteps(event.target.value)}
               required
-              disabled={state.isMoonCrescentVisibilityMapLoading}
+              disabled={state.isMoonCrescentMapLoading}
             >
               {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
             <label htmlFor="coordinate-steps">{t('steps')}</label>
           </span>
-          <button className="flex items-center p-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow" disabled={state.isMoonCrescentVisibilityMapLoading}>
+          <button className="flex items-center p-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow" disabled={state.isMoonCrescentMapLoading}>
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('create_map')}</span>
           </button>
           <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
             selectCoordinateSteps(3)
             selectMoonVisibilityCriteria(1)
             restoreToDefault()
-          }} disabled={state.isMoonCrescentVisibilityMapLoading}>
+          }} disabled={state.isMoonCrescentMapLoading}>
             <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Restore to Default" />
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
           </button>
