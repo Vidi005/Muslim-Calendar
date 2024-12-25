@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { isStorageExist } from "../utils/data"
+import { addZeroPad, isStorageExist } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -67,6 +67,8 @@ class App extends React.Component {
       moonInfos: [],
       prayerTimes: [],
       nextPrayerInfo: '',
+      formattedIslamicMonth: 0,
+      formattedIslamicYear: 0,
       hijriStartDates: [],
       moonCrescentVisibility: [],
       selectedMoonVisibilityCriteria: 1,
@@ -76,7 +78,7 @@ class App extends React.Component {
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
-      isMoonCrescentVisibilityMapLoading: true,
+      isMoonCrescentMapLoading: true,
       isGettingCoordinates: false,
       isGeocoding: false,
       isSearching: false,
@@ -222,7 +224,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
+        },() => this.formatDateTime().then(() => this.generateCalendar()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -245,10 +247,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -625,7 +627,6 @@ class App extends React.Component {
             this.formatDateTime()
               .then(() => this.generateCalendar())
               .then(() => this.selectTimeZone(this.state.selectedTimeZone))
-              .then(() => this.getMoonCrescentVisibility())
               .finally(() => {
                 localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
                 localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -736,7 +737,7 @@ class App extends React.Component {
       this.createCalendarWorker(this.state.formattedDateTime).then(calendarData => {
         if (calendarData?.months?.length > 0) {
           localStorage.setItem(this.state.LOCATION_STATE_STORAGE_KEY, JSON.stringify(locationData))
-          this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+          this.formatDateTime().then(() => this.generateCalendar())
         }
       }).finally(() => {
         this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
@@ -773,7 +774,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+      this.formatDateTime().then(() => this.generateCalendar())
     })
   }
 
@@ -890,7 +891,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+      this.formatDateTime().then(() => this.generateCalendar())
     })
   }
 
@@ -1127,8 +1128,6 @@ class App extends React.Component {
     ]).then(prayerTimes => { this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes }) })
   }
 
-  addZeroPad = value => (value >= 0 && value < 10) ? `0${value}` : value
-
   createPrayerTimeCountdown = () => {
     if (this.state.inputDate !== '' && this.state.inputTime !== '') return
     else {
@@ -1162,9 +1161,9 @@ class App extends React.Component {
       }
       if (nextPrayerName && nextPrayerTime) {
         const timesRemaining = nextPrayerTime - currentDate
-        const hoursLeft = this.addZeroPad(Math.floor(timesRemaining / 3600000))
-        const minutesLeft = this.addZeroPad(Math.floor((timesRemaining % 3600000) / 60000))
-        const secondsLeft = this.addZeroPad(Math.floor((timesRemaining % 60000) / 1000))
+        const hoursLeft = addZeroPad(Math.floor(timesRemaining / 3600000))
+        const minutesLeft = addZeroPad(Math.floor((timesRemaining % 3600000) / 60000))
+        const secondsLeft = addZeroPad(Math.floor((timesRemaining % 60000) / 1000))
         const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName}: ${hoursLeft}:${minutesLeft}:${secondsLeft}`
         if (hoursLeft === '00' && minutesLeft === '00' && secondsLeft === '00') {
           alert(`${i18n.t('prayer_info.1')} ${nextPrayerName} ${i18n.t('prayer_info.2')}!`)
@@ -1174,12 +1173,12 @@ class App extends React.Component {
     }
   }
 
-  generateMoonCrescentVisibility = (conjunctionDate) => new Promise((resolve, reject) => {
-    this.setState({ isMoonCrescentVisibilityMapLoading: true })
+  generateMoonCrescentVisibility = (ijtimaDate) => new Promise((resolve, reject) => {
+    this.setState({ isMoonCrescentMapLoading: true })
     let moonCrescentVisibilityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonCrescentVisibilityWorker.postMessage({
       type: 'createMoonCrescentVisibility',
-      conjunctionDate: conjunctionDate,
+      ijtimaDate: ijtimaDate,
       moonVisibilityCriteria: this.state.selectedMoonVisibilityCriteria,
       steps: this.state.selectedCoordinateSteps
     })
@@ -1199,15 +1198,21 @@ class App extends React.Component {
   })
 
   getMoonCrescentVisibility = () => {
-    const ijtimaDay = new Date(this.state.formattedDateTime)
+    const ijtimaDate = new Date(this.state.formattedDateTime)
+    const islamicDate = new Date(this.state.formattedDateTime)
     const currentFirstMonthGregorianDay = new Date(this.state.formattedDateTime.getFullYear(), this.state.formattedDateTime.getMonth(), 1).getDay()
     const islamicDayNumber = this.state.monthsInSetYear[this.state.formattedDateTime.getMonth()][this.state.formattedDateTime.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
-    ijtimaDay.setDate(ijtimaDay.getDate() + 29 - islamicDayNumber)
-    this.generateMoonCrescentVisibility(ijtimaDay).then(result => {
+    ijtimaDate.setDate(ijtimaDate.getDate() + 29 - islamicDayNumber)
+    islamicDate.setDate(islamicDate.getDate() + 45 - islamicDayNumber)
+    this.generateMoonCrescentVisibility(ijtimaDate).then(result => {
       if (Object.keys(result).length > 0) {
-        this.setState({ moonCrescentVisibility: result }, () => console.log(this.state.moonCrescentVisibility))
+        this.setState({ moonCrescentVisibility: result })
       }
-    }).finally(() => this.setState({ isMoonCrescentVisibilityMapLoading: false }))
+    }).finally(() => this.setState({
+      formattedIslamicMonth: islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" }),
+      formattedIslamicYear: islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" }),
+      isMoonCrescentMapLoading: false
+    }))
   }
 
   render() {

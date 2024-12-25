@@ -112,7 +112,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       }
-      moonElongation = Elongation(Body.Moon, sunset)
+      moonElongation = Elongation(Body.Moon, sunset) // Geocentric Elongation
       moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
       moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
       if (moonElongation.elongation >= 8 && moonHorizon.altitude >= 5) {
@@ -138,7 +138,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       sunEquator = Equator(Body.Sun, sunset, observer, true, true)
       moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
-      moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
+      moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec) // Topocentric Elongation
       if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
@@ -1366,30 +1366,57 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityYallop = (arcv, w) => {
+const calculateVisibilityYallop = (arcv, w, lagTime) => {
   const q = arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
-  let zone = 'F'
-  if (q > 0.216) zone = 'A'
-  else if (q > -0.014) zone = 'B'
-  else if (q > -0.160) zone = 'C'
-  else if (q > -0.232) zone = 'D'
-  else if (q > -0.293) zone = 'E'
-  return { q, zone }
+  let zone = 'G'
+  let color = ''
+  if (q > 0.216 && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (q > -0.014 && lagTime > 0) {
+    zone = 'B'
+    color = '#9EFF00'
+  } else if (q > -0.160 && lagTime > 0) {
+    zone = 'C'
+    color = '#FF783C'
+  } else if (q > -0.232 && lagTime > 0) {
+    zone = 'D'
+    color = '#6AAD0D'
+  } else if (q > -0.293 && lagTime > 0) {
+    zone = 'E'
+    color = '#FF0000'
+  } else if (lagTime < 0) {
+    zone = 'F'
+    color = '#808080'
+  }
+  return { q, zone, color }
 }
 
-const calculateVisibilityOdeh = (arcv, w) => {
+const calculateVisibilityOdeh = (arcv, w, lagTime) => {
   const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
-  let zone = 'D'
-  if (visibilityValue >= 5.65) zone = 'A'
-  else if (visibilityValue >= 2.0) zone = 'B'
-  else if (visibilityValue >= -0.96) zone = 'C'
-  return { visibilityValue, zone }
+  let zone = 'E'
+  let color = ''
+  if (visibilityValue >= 5.65 && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (visibilityValue >= 2.0 && lagTime > 0) {
+    zone = 'B'
+    color = '#9EFF00'
+  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+    zone = 'C'
+    color = '#FF783C'
+  } else if (lagTime < 0) {
+    zone = 'D'
+    color = '#808080'
+  }
+  return { visibilityValue, zone, color }
 }
 
 const checkYallop = (astroDate, latitude, longitude) => {
   const observer = observerFromEarth(latitude, longitude, 0)
-  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, 0)
-  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
   let bestTime
   const lagTime = moonset.ut - sunset.ut
@@ -1397,11 +1424,11 @@ const checkYallop = (astroDate, latitude, longitude) => {
   else bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
-  const moonElongationEvent = Elongation(Body.Moon, bestTime)
+  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
-  const arcl = convertToDegrees(moonElongationEvent)
+  const arcl = convertToRadians(moonElongationEvent)
   const geomoon = GeoVector(Body.Moon, bestTime, true)
   const geosun = GeoVector(Body.Sun, bestTime, true)
   const rot = Rotation_EQJ_EQD(bestTime)
@@ -1412,14 +1439,15 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
   const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
   const arcv = mhor.altitude - shor.altitude
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(convertToRadians(arcl)))
-  return calculateVisibilityYallop(arcv, wTopocentric)
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  return calculateVisibilityYallop(convertToRadians(arcv), wTopocentric, lagTime)
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
   const observer = new Observer(latitude, longitude, 0)
-  const sunset = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, 0)
-  const moonset = SearchRiseSet(Body.Moon, observer, -1, astroDate, 1, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
   let bestTime
   const lagTime = moonset.ut - sunset.ut
@@ -1433,32 +1461,54 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
-  const arcl = convertToDegrees(moonElongationTopocentric)
+  const arcl = convertToRadians(moonElongationTopocentric)
   const daz = sunHorizon.azimuth - moonHorizon.azimuth
-  const cosARCV = Math.cos(convertToRadians(arcl)) / Math.cos(convertToRadians(daz))
+  const cosARCV = Math.cos(arcl) / Math.cos(convertToRadians(daz))
   let arcv
   if (-1 <= cosARCV <= 1) {
     arcv = convertToDegrees(Math.acos(cosARCV))
-  } else if (condition) {
+  } else if (cosARCV < -1) {
     arcv = convertToDegrees(Math.acos(-1))
   } else {
     arcv = convertToDegrees(Math.acos(1))
   }
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(convertToRadians(arcl)))
-  return calculateVisibilityOdeh(arcv, wTopocentric)
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  return calculateVisibilityOdeh(arcv, wTopocentric, lagTime)
 }
 
-const calculateYallop = (astroDate, lat, lng) => {
+const calculateYallop = (astroDate, lat, lng, steps) => {
   const result = checkYallop(astroDate, lat, lng)
+  const width = steps * 100 / 360
+  const height = steps * 100 / 180
+  const xPosition = 100 * (180 + lng) / 360
+  const yPosition = 100 * (90 - lat) / 180
   if (result?.zone?.length > 0) {
-    return { latitude: lat, longitude: lng, zone: result.zone }
+    return {
+      width,
+      height,
+      yPos: yPosition,
+      xPos: xPosition,
+      zone: result.zone,
+      color: result.color
+    }
   }
 }
 
-const calculateOdeh = (astroDate, lat, lng) => {
+const calculateOdeh = (astroDate, lat, lng, steps) => {
   const result = checkOdeh(astroDate, lat, lng)
+  const width = steps * 100 / 360
+  const height = steps * 100 / 180
+  const xPosition = 100 * (180 + lng) / 360
+  const yPosition = 100 * (90 - lat) / 180
   if (result?.zone?.length > 0) {
-    return { latitude: lat, longitude: lng, zone: result.zone }
+    return {
+      width,
+      height,
+      yPos: yPosition,
+      xPos: xPosition,
+      zone: result.zone,
+      color: result.color
+    }
   }
 }
 
@@ -1468,11 +1518,11 @@ const gridSearchLongitude = (astroDate, criteria, steps) => {
     for (let lat = 60; lat >= -60; lat -= steps) {
       let result
       if (criteria === 0) {
-        result = calculateYallop(astroDate, lat, lng)
+        result = calculateYallop(astroDate, lat, lng, steps)
       } else if (criteria === 1) {
-        result = calculateOdeh(astroDate, lat, lng)
+        result = calculateOdeh(astroDate, lat, lng, steps)
       } else {
-        result = calculateOdeh(astroDate, lat, lng)
+        result = calculateOdeh(astroDate, lat, lng, steps)
       }
       if (result?.zone?.length > 0) {
         results.push(result)
@@ -1482,10 +1532,12 @@ const gridSearchLongitude = (astroDate, criteria, steps) => {
   return results
 }
 
-const getMoonCrescentVisibilityMap = (conjunctionDate, criteria, steps) => {
-  const startDate = new Date(conjunctionDate.getFullYear(), conjunctionDate.getMonth(), conjunctionDate.getDate(), 0, 0, 0)
+const addZeroPad = value => (value >= 0 && value < 10) ? `0${value}` : value
+
+const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
+  const startDate = new Date(`${ijtimaDate.getFullYear()}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
   return gridSearchLongitude(astroDate, criteria, steps)
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, getMoonCrescentVisibilityMap }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility }
