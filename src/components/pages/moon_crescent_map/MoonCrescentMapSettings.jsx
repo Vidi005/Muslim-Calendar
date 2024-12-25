@@ -28,7 +28,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
             </select>
           </span>
           <span className="flex items-center">
-            <label htmlFor="moon-crescent-criteria">{t('moon_crescent_criteria')}</label>
+            <label htmlFor="moon-crescent-criteria">{t('hijri_date_criteria')}</label>
             <select
               className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
               defaultValue={1}
@@ -52,7 +52,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
             >
               {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
-            <label htmlFor="coordinate-steps">{t('steps')}</label>
+            <label htmlFor="coordinate-steps">{t('degrees')}</label>
           </span>
           <button className="flex items-center p-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow" disabled={state.isMoonCrescentMapLoading}>
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('create_map')}</span>

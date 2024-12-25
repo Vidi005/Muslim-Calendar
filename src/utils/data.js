@@ -1367,7 +1367,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
 }
 
 const calculateVisibilityYallop = (arcv, w, lagTime) => {
-  const q = arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+  const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'G'
   let color = ''
   if (q > 0.216 && lagTime > 0) {
@@ -1381,10 +1381,10 @@ const calculateVisibilityYallop = (arcv, w, lagTime) => {
     color = '#FF783C'
   } else if (q > -0.232 && lagTime > 0) {
     zone = 'D'
-    color = '#6AAD0D'
+    color = '#FF0000'
   } else if (q > -0.293 && lagTime > 0) {
     zone = 'E'
-    color = '#FF0000'
+    color = '#B50757'
   } else if (lagTime < 0) {
     zone = 'F'
     color = '#808080'
@@ -1440,7 +1440,7 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
   const arcv = mhor.altitude - shor.altitude
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
-  return calculateVisibilityYallop(convertToRadians(arcv), wTopocentric, lagTime)
+  return calculateVisibilityYallop(arcv, wTopocentric, lagTime)
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
