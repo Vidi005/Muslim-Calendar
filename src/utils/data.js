@@ -1366,9 +1366,9 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityYallop = (arcv, w, lagTime) => {
+const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
   const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
-  let zone = 'G'
+  let zone = 'H'
   let color = ''
   if (q > 0.216 && lagTime > 0) {
     zone = 'A'
@@ -1385,16 +1385,19 @@ const calculateVisibilityYallop = (arcv, w, lagTime) => {
   } else if (q > -0.293 && lagTime > 0) {
     zone = 'E'
     color = '#B50757'
-  } else if (lagTime < 0) {
+  } else if (newMoon) {
     zone = 'F'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'G'
     color = '#808080'
   }
   return { q, zone, color }
 }
 
-const calculateVisibilityOdeh = (arcv, w, lagTime) => {
+const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
   const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
-  let zone = 'E'
+  let zone = 'F'
   let color = ''
   if (visibilityValue >= 5.65 && lagTime > 0) {
     zone = 'A'
@@ -1405,8 +1408,11 @@ const calculateVisibilityOdeh = (arcv, w, lagTime) => {
   } else if (visibilityValue >= -0.96 && lagTime > 0) {
     zone = 'C'
     color = '#FF783C'
-  } else if (lagTime < 0) {
+  } else if (newMoon) {
     zone = 'D'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'E'
     color = '#808080'
   }
   return { visibilityValue, zone, color }
@@ -1440,7 +1446,8 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
   const arcv = mhor.altitude - shor.altitude
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
-  return calculateVisibilityYallop(arcv, wTopocentric, lagTime)
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityYallop(arcv, wTopocentric, lagTime, newMoon)
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
@@ -1473,7 +1480,8 @@ const checkOdeh = (astroDate, latitude, longitude) => {
     arcv = convertToDegrees(Math.acos(1))
   }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
-  return calculateVisibilityOdeh(arcv, wTopocentric, lagTime)
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityOdeh(arcv, wTopocentric, lagTime, newMoon)
 }
 
 const calculateYallop = (astroDate, lat, lng, steps) => {
