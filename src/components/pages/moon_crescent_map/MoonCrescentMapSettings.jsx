@@ -52,11 +52,8 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
             >
               {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
-            <label htmlFor="coordinate-steps">{t('degrees')}</label>
+            <label htmlFor="coordinate-steps" className="mx-1">{t('degrees')}</label>
           </span>
-          <button className="flex items-center p-1.5 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-800 dark:active:bg-green-900 rounded-md duration-200 shadow" disabled={state.isMoonCrescentMapLoading}>
-            <span className="ml-1 text-white text-sm whitespace-nowrap">{t('create_map')}</span>
-          </button>
           <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
             selectCoordinateSteps(3)
             selectMoonVisibilityCriteria(1)
