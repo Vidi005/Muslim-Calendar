@@ -307,6 +307,5 @@
     "hijri_abbreviation": "H",
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"],
     "sampling": "Sampling :",
-    "coordinate_steps": [1, 2, 3, 4, 5],
-    "create_map": "Buat Peta"
+    "coordinate_steps": [1, 2, 3, 4, 5]
 }

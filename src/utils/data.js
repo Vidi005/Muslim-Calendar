@@ -1444,7 +1444,7 @@ const checkYallop = (astroDate, latitude, longitude) => {
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
-  const observer = new Observer(latitude, longitude, 0)
+  const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
@@ -1540,4 +1540,9 @@ const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
   return gridSearchLongitude(astroDate, criteria, steps)
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility }
+const coordinateScale = {
+  latitudes: [60, 30, 0, -30, -60],
+  longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
+}
+
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, coordinateScale }
