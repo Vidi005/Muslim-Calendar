@@ -1368,7 +1368,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
 
 const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
   const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
-  let zone = 'H'
+  let zone = 'F'
   let color = ''
   if (q > 0.216 && lagTime > 0) {
     zone = 'A'
@@ -1386,7 +1386,7 @@ const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
     zone = 'E'
     color = '#B50757'
   } else if (newMoon) {
-    zone = 'F'
+    zone = 'H'
     color = '#000000'
   } else if (lagTime < 0) {
     zone = 'G'
@@ -1397,7 +1397,7 @@ const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
 
 const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
   const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
-  let zone = 'F'
+  let zone = 'D'
   let color = ''
   if (visibilityValue >= 5.65 && lagTime > 0) {
     zone = 'A'
@@ -1409,7 +1409,7 @@ const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
     zone = 'C'
     color = '#FF783C'
   } else if (newMoon) {
-    zone = 'D'
+    zone = 'F'
     color = '#000000'
   } else if (lagTime < 0) {
     zone = 'E'

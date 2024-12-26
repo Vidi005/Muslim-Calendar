@@ -307,5 +307,156 @@
     "hijri_abbreviation": "H",
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"],
     "sampling": "Sampling :",
-    "coordinate_steps": [1, 2, 3, 4, 5]
+    "coordinate_steps": [1, 2, 3, 4, 5],
+    "moon_visibility_zones": [
+        [
+            {
+                "visibility": "Mudah dilihat dengan mata",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Terlihat jika cuaca cerah",
+                "color": "#9EFF00"
+            },
+            {
+                "visibility": "Mungkin perlu bantuan alat optik",
+                "color": "#FF783C"
+            },
+            {
+                "visibility": "Perlu bantuan alat optik",
+                "color": "#FF0000"
+            },
+            {
+                "visibility": "Hanya terlihat dengan teleskop",
+                "color": "#B50757"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Mudah dilihat dengan mata",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Mungkin perlu bantuan alat optik",
+                "color": "#9EFF00"
+            },
+            {
+                "visibility": "Hanya terlihat dengan alat optik",
+                "color": "#FF783C"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Mudah dilihat oleh mata",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Terlihat jika cuaca cerah",
+                "color": "#9EFF00"
+            },
+            {
+                "visibility": "Mungkin perlu bantuan alat optik",
+                "color": "#FF783C"
+            },
+            {
+                "visibility": "Hanya terlihat dengan alat optik",
+                "color": "#FF0000"
+            },
+            {
+                "visibility": "Sulit dilihat meski dengan alat optik",
+                "color": "#B50757"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Bisa terlihat dengan mata",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            "Mudah dilihat dengan mata",
+            "Terlihat jika cuaca cerah",
+            "Mungkin perlu bantuan alat optik",
+            "Hanya terlihat dengan alat optik",
+            "Bulan di atas ufuk, tidak kasat mata",
+            "Bulan sudah tenggelam",
+            "Bulan belum ijtima'",
+            {
+                "visibility": "Mudah dilihat dengan mata",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Terlihat jika cuaca cerah",
+                "color": "#9EFF00"
+            },
+            {
+                "visibility": "Mungkin perlu bantuan alat optik",
+                "color": "#FF783C"
+            },
+            {
+                "visibility": "Hanya terlihat dengan alat optik",
+                "color": "#FF0000"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ]
+    ]
 }
