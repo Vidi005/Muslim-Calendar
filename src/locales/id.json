@@ -405,7 +405,7 @@
         ],
         [
             {
-                "visibility": "Bisa terlihat dengan mata",
+                "visibility": "Bisa terlihat mata (Ketinggian > 4° & Elongasi > 6,4°)",
                 "color": "#00FF3E"
             },
             {
@@ -422,13 +422,6 @@
             }
         ],
         [
-            "Mudah dilihat dengan mata",
-            "Terlihat jika cuaca cerah",
-            "Mungkin perlu bantuan alat optik",
-            "Hanya terlihat dengan alat optik",
-            "Bulan di atas ufuk, tidak kasat mata",
-            "Bulan sudah tenggelam",
-            "Bulan belum ijtima'",
             {
                 "visibility": "Mudah dilihat dengan mata",
                 "color": "#00FF3E"

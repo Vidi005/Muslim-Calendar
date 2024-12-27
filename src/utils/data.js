@@ -1418,16 +1418,86 @@ const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
   return { visibilityValue, zone, color }
 }
 
+const calculateVisibilityQureshi = (arcv, w, lagTime, newMoon) => {
+  const s = arcv - 0.351964 * Math.pow(w, 3) + 2.222075 * Math.pow(w, 2) - 5.422643 * w + 10.43418
+  let zone = 'F'
+  let color = ''
+  if (s > 0.216 && lagTime > 0) {
+    zone = 'A'
+    // color = '#00FF3E'
+  } else if (s > -0.014 && lagTime > 0) {
+    zone = 'B'
+    // color = '#9EFF00'
+  } else if (s > -0.160 && lagTime > 0) {
+    zone = 'C'
+    // color = '#FF783C'
+  } else if (s > -0.232 && lagTime > 0) {
+    zone = 'D'
+    // color = '#FF0000'
+  } else if (s > -0.293 && lagTime > 0) {
+    zone = 'E'
+    // color = '#B50757'
+  } else if (newMoon) {
+    zone = 'H'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'G'
+    color = '#808080'
+  }
+  return { s, zone, color }
+}
+
+const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoon) => {
+  let zone = 'B'
+  let color = ''
+  if (isMeetCriteria && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (newMoon) {
+    zone = 'D'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'C'
+    color = '#808080'
+  }
+  return { isMeetCriteria, zone, color }
+}
+
+const calculateVisibilityShaukat = (arcv, w, lagTime, newMoon) => {
+  const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+  let zone = 'E'
+  let color = ''
+  if (visibilityValue >= 5.65 && lagTime > 0) {
+    zone = 'A'
+    // color = '#00FF3E'
+  } else if (visibilityValue >= 2.0 && lagTime > 0) {
+    zone = 'B'
+    // color = '#9EFF00'
+  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+    zone = 'C'
+    // color = '#FF783C'
+  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+    zone = 'D'
+    // color = '#FF783C'
+  } else if (newMoon) {
+    zone = 'G'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'F'
+    color = '#808080'
+  }
+  return { visibilityValue, zone, color }
+}
+
 const checkYallop = (astroDate, latitude, longitude) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime
+  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime < 0) bestTime = sunset
-  else bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
   const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
@@ -1456,10 +1526,9 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime
+  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime < 0) bestTime = sunset
-  else bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
@@ -1484,26 +1553,102 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   return calculateVisibilityOdeh(arcv, wTopocentric, lagTime, newMoon)
 }
 
-const calculateYallop = (astroDate, lat, lng, steps) => {
-  const result = checkYallop(astroDate, lat, lng)
-  const width = steps * 100 / 360
-  const height = steps * 100 / 180
-  const xPosition = 100 * (180 + lng) / 360
-  const yPosition = 100 * (90 - lat) / 180
-  if (result?.zone?.length > 0) {
-    return {
-      width,
-      height,
-      yPos: yPosition,
-      xPos: xPosition,
-      zone: result.zone,
-      color: result.color
-    }
-  }
+const checkQureshi = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
+  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
+  const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
+  const lunarParallax = semiDiameter / 0.27245
+  const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
+  const arcl = convertToRadians(moonElongationEvent)
+  const geomoon = GeoVector(Body.Moon, bestTime, true)
+  const geosun = GeoVector(Body.Sun, bestTime, true)
+  const rot = Rotation_EQJ_EQD(bestTime)
+  const rotmoon = RotateVector(rot, geomoon)
+  const rotsun = RotateVector(rot, geosun)
+  const meq = EquatorFromVector(rotmoon)
+  const seq = EquatorFromVector(rotsun)
+  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
+  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
+  const arcv = mhor.altitude - shor.altitude
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityQureshi(arcv, wTopocentric, lagTime, newMoon)
 }
 
-const calculateOdeh = (astroDate, lat, lng, steps) => {
-  const result = checkOdeh(astroDate, lat, lng)
+const checkLAPAN = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
+  let isMeetCriteria = false
+  if (moonElongation > 6.4 && moonHorizon.altitude > 4) isMeetCriteria = true
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityLAPAN(isMeetCriteria, lagTime, newMoon)
+}
+
+const checkShaukat = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
+  const lunarParallax = semiDiameter / 0.27245
+  const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
+  const arcl = convertToRadians(moonElongationTopocentric)
+  const daz = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcl) / Math.cos(convertToRadians(daz))
+  let arcv
+  if (-1 <= cosARCV <= 1) {
+    arcv = convertToDegrees(Math.acos(cosARCV))
+  } else if (cosARCV < -1) {
+    arcv = convertToDegrees(Math.acos(-1))
+  } else {
+    arcv = convertToDegrees(Math.acos(1))
+  }
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityShaukat(arcv, wTopocentric, lagTime, newMoon)
+}
+
+const createZones = (criteria, astroDate, lat, lng, steps) => {
+  let result
+  if (criteria === 0) {
+    result = checkYallop(astroDate, lat, lng, steps)
+  } else if (criteria === 1) {
+    result = checkOdeh(astroDate, lat, lng, steps)
+  } else if (criteria === 2) {
+    result = checkQureshi(astroDate, lat, lng, steps)
+  } else if (criteria === 3) {
+    result = checkLAPAN(astroDate, lat, lng, steps)
+  } else {
+    result = checkShaukat(astroDate, lat, lng, steps)
+  }
   const width = steps * 100 / 360
   const height = steps * 100 / 180
   const xPosition = 100 * (180 + lng) / 360
@@ -1524,14 +1669,7 @@ const gridSearchLongitude = (astroDate, criteria, steps) => {
   let results = []
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
-      let result
-      if (criteria === 0) {
-        result = calculateYallop(astroDate, lat, lng, steps)
-      } else if (criteria === 1) {
-        result = calculateOdeh(astroDate, lat, lng, steps)
-      } else {
-        result = calculateOdeh(astroDate, lat, lng, steps)
-      }
+      const result = createZones(criteria, astroDate, lat, lng, steps)
       if (result?.zone?.length > 0) {
         results.push(result)
       }
