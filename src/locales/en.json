@@ -370,14 +370,6 @@
             }
         ],
         [
-            "Easily visible by naked eye",
-            "Visible if perfect conditions",
-            "May need optical aid",
-            "Only visible using optical aid",
-            "Difficult to be seen even with optical aid",
-            "Moon over the horizon, not visible",
-            "Moon has set",
-            "Moon before conjunction",
             {
                 "visibility": "Easily visible by naked eye",
                 "color": "#00FF3E"
@@ -413,7 +405,7 @@
         ],
         [
             {
-                "visibility": "Can visible with eye",
+                "visibility": "Can be seen by eye (Altitude > 4° & Elongation > 6.4°)",
                 "color": "#00FF3E"
             },
             {
