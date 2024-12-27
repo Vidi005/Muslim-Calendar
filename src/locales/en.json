@@ -387,10 +387,6 @@
                 "color": "#FF0000"
             },
             {
-                "visibility": "Difficult to be seen even with optical aid",
-                "color": "#B50757"
-            },
-            {
                 "visibility": "Moon over the horizon, not visible",
                 "color": ""
             },
