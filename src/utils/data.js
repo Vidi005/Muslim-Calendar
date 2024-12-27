@@ -1419,24 +1419,21 @@ const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
 }
 
 const calculateVisibilityQureshi = (arcv, w, lagTime, newMoon) => {
-  const s = arcv - 0.351964 * Math.pow(w, 3) + 2.222075 * Math.pow(w, 2) - 5.422643 * w + 10.43418
+  const s = (arcv - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
   let zone = 'F'
   let color = ''
-  if (s > 0.216 && lagTime > 0) {
+  if (s >= 0.15 && lagTime > 0) {
     zone = 'A'
-    // color = '#00FF3E'
-  } else if (s > -0.014 && lagTime > 0) {
+    color = '#00FF3E'
+  } else if (s >= 0.05 && lagTime > 0) {
     zone = 'B'
-    // color = '#9EFF00'
-  } else if (s > -0.160 && lagTime > 0) {
+    color = '#9EFF00'
+  } else if (s >= -0.06 && lagTime > 0) {
     zone = 'C'
-    // color = '#FF783C'
-  } else if (s > -0.232 && lagTime > 0) {
+    color = '#FF783C'
+  } else if (s >= -0.16 && lagTime > 0) {
     zone = 'D'
-    // color = '#FF0000'
-  } else if (s > -0.293 && lagTime > 0) {
-    zone = 'E'
-    // color = '#B50757'
+    color = '#FF0000'
   } else if (newMoon) {
     zone = 'H'
     color = '#000000'
@@ -1464,21 +1461,21 @@ const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoon) => {
 }
 
 const calculateVisibilityShaukat = (arcv, w, lagTime, newMoon) => {
-  const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+  const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'E'
   let color = ''
-  if (visibilityValue >= 5.65 && lagTime > 0) {
+  if (q >= 0.27 && lagTime > 0) {
     zone = 'A'
-    // color = '#00FF3E'
-  } else if (visibilityValue >= 2.0 && lagTime > 0) {
+    color = '#00FF3E'
+  } else if (q >= -0.024 && lagTime > 0) {
     zone = 'B'
-    // color = '#9EFF00'
-  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+    color = '#9EFF00'
+  } else if (q >= -0.212 && lagTime > 0) {
     zone = 'C'
-    // color = '#FF783C'
-  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+    color = '#FF783C'
+  } else if (q >= -0.48 && lagTime > 0) {
     zone = 'D'
-    // color = '#FF783C'
+    color = '#FF0000'
   } else if (newMoon) {
     zone = 'G'
     color = '#000000'
@@ -1486,7 +1483,7 @@ const calculateVisibilityShaukat = (arcv, w, lagTime, newMoon) => {
     zone = 'F'
     color = '#808080'
   }
-  return { visibilityValue, zone, color }
+  return { q, zone, color }
 }
 
 const checkYallop = (astroDate, latitude, longitude) => {
@@ -1564,21 +1561,23 @@ const checkQureshi = (astroDate, latitude, longitude) => {
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
-  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
-  const arcl = convertToRadians(moonElongationEvent)
-  const geomoon = GeoVector(Body.Moon, bestTime, true)
-  const geosun = GeoVector(Body.Sun, bestTime, true)
-  const rot = Rotation_EQJ_EQD(bestTime)
-  const rotmoon = RotateVector(rot, geomoon)
-  const rotsun = RotateVector(rot, geosun)
-  const meq = EquatorFromVector(rotmoon)
-  const seq = EquatorFromVector(rotsun)
-  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
-  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
-  const arcv = mhor.altitude - shor.altitude
+  const arcl = convertToRadians(moonElongationTopocentric)
+  const daz = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcl) / Math.cos(convertToRadians(daz))
+  let arcv
+  if (-1 <= cosARCV <= 1) {
+    arcv = convertToDegrees(Math.acos(cosARCV))
+  } else if (cosARCV < -1) {
+    arcv = convertToDegrees(Math.acos(-1))
+  } else {
+    arcv = convertToDegrees(Math.acos(1))
+  }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
   return calculateVisibilityQureshi(arcv, wTopocentric, lagTime, newMoon)
@@ -1614,23 +1613,21 @@ const checkShaukat = (astroDate, latitude, longitude) => {
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
-  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
-  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
-  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
-  const arcl = convertToRadians(moonElongationTopocentric)
-  const daz = sunHorizon.azimuth - moonHorizon.azimuth
-  const cosARCV = Math.cos(arcl) / Math.cos(convertToRadians(daz))
-  let arcv
-  if (-1 <= cosARCV <= 1) {
-    arcv = convertToDegrees(Math.acos(cosARCV))
-  } else if (cosARCV < -1) {
-    arcv = convertToDegrees(Math.acos(-1))
-  } else {
-    arcv = convertToDegrees(Math.acos(1))
-  }
+  const arcl = convertToRadians(moonElongationEvent)
+  const geomoon = GeoVector(Body.Moon, bestTime, true)
+  const geosun = GeoVector(Body.Sun, bestTime, true)
+  const rot = Rotation_EQJ_EQD(bestTime)
+  const rotmoon = RotateVector(rot, geomoon)
+  const rotsun = RotateVector(rot, geosun)
+  const meq = EquatorFromVector(rotmoon)
+  const seq = EquatorFromVector(rotsun)
+  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
+  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
+  const arcv = mhor.altitude - shor.altitude
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
   return calculateVisibilityShaukat(arcv, wTopocentric, lagTime, newMoon)
