@@ -1592,9 +1592,9 @@ const checkLAPAN = (astroDate, latitude, longitude) => {
   let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
-  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
-  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
-  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (moonElongation > 6.4 && moonHorizon.altitude > 4) isMeetCriteria = true
