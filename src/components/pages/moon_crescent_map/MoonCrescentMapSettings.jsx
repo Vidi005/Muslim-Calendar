@@ -2,7 +2,7 @@ import React from "react"
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 
-const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restoreToDefault }) => (
+const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoonVisibilityCriteriaMapsLoading, restoreToDefault }) => (
   <HomePageConsumer>
     {({ t, state, selectMoonVisibilityCriteria, selectCoordinateSteps }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
@@ -16,7 +16,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={selectedHijriMonth}
               onChange={event => selectHijriMonth(event.target.value)}
               required
-              disabled={state.isMoonCrescentMapLoading}
+              disabled={areMoonVisibilityCriteriaMapsLoading}
             >
               {state.hijriStartDates?.map((item, monthIndex) => {
                 if (item.gregorianDate.getFullYear() >= state.formattedDateTime.getFullYear()) {
@@ -35,7 +35,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={state.selectedMoonVisibilityCriteria}
               onChange={event => selectMoonVisibilityCriteria(event.target.value)}
               required
-              disabled={state.isMoonCrescentMapLoading}
+              disabled={areMoonVisibilityCriteriaMapsLoading}
             >
               {en.visibility_criteria.map((type, index) => <option key={type} value={index}>{t(`visibility_criteria.${index}`)}</option>)}
             </select>
@@ -48,7 +48,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
               value={state.selectedCoordinateSteps}
               onChange={event => selectCoordinateSteps(event.target.value)}
               required
-              disabled={state.isMoonCrescentMapLoading}
+              disabled={areMoonVisibilityCriteriaMapsLoading}
             >
               {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
@@ -58,7 +58,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, restore
             selectCoordinateSteps(3)
             selectMoonVisibilityCriteria(1)
             restoreToDefault()
-          }} disabled={state.isMoonCrescentMapLoading}>
+          }} disabled={areMoonVisibilityCriteriaMapsLoading}>
             <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Restore to Default" />
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
           </button>

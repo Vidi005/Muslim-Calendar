@@ -9,23 +9,65 @@ class MainContainer extends React.Component {
     this.state = {
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: "MOON_VISIBILITY_CRITERIA_STORAGE_KEY",
       COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
-      areMoonVisibilityCriteriaMapsLoading: true,
+      areMoonVisibilityCriteriaMapsLoading: false,
+      moonCrescentVisibilities: [],
+      ijtimaDates: [],
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
   }
 
   getHijriMonthFromProps = props => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime)
+  
+  componentDidMount() {
+    if (this.props.monthInSetyear?.length > 0) {
+      this.setState({ areMoonVisibilityCriteriaMapsLoading: true }, () => {
+        this.createMoonCrescentVisibilities()
+      })
+    }
+  }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.hijriStartDates !== this.props.hijriStartDates) this.setState({ selectedHijriMonth: this.getHijriMonthFromProps(this.props) })
+    if (prevProps.monthInSetyear !== this.props.monthInSetyear || prevProps.hijriStartDates !== this.props.hijriStartDates || prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
+      this.setState({
+        areMoonVisibilityCriteriaMapsLoading: true,
+        selectedHijriMonth: this.getHijriMonthFromProps(this.props)
+      }, () => {
+        this.createMoonCrescentVisibilities()
+      })
+    }
   }
 
   selectHijriMonth (montIndex) {
-    this.setState({ selectedHijriMonth: parseInt(montIndex) })
+    this.setState({
+      areMoonVisibilityCriteriaMapsLoading: true,
+      selectedHijriMonth: parseInt(montIndex)
+    }, () => this.createMoonCrescentVisibilities())
+  }
+
+  createMoonCrescentVisibilities () {
+    const theDayBeforeIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    theDayBeforeIjtima.setDate(theDayBeforeIjtima.getDate() + 27)
+    const ijtimaDay = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    const theDayAfterIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    ijtimaDay.setDate(ijtimaDay.getDate() + 28)
+    theDayAfterIjtima.setDate(theDayAfterIjtima.getDate() + 29)
+    Promise.all([
+      this.props.generateMoonCrescentVisibility(theDayBeforeIjtima),
+      this.props.generateMoonCrescentVisibility(ijtimaDay),
+      this.props.generateMoonCrescentVisibility(theDayAfterIjtima)
+    ]).then(moonCrescentVisibilities => {
+      this.setState({
+        areMoonVisibilityCriteriaMapsLoading: false,
+        moonCrescentVisibilities: moonCrescentVisibilities,
+        ijtimaDates: [theDayBeforeIjtima, ijtimaDay, theDayAfterIjtima]
+      })
+    })
   }
 
   restoreToDefault () {
-    this.setState({ selectedHijriMonth: this.getHijriMonthFromProps(this.props) }, () => {
+    this.setState({ areMoonVisibilityCriteriaMapsLoading: true, selectedHijriMonth: this.getHijriMonthFromProps(this.props)
+    }, () => {
+      this.createMoonCrescentVisibilities()
       localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
       localStorage.removeItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
     })
@@ -42,7 +84,11 @@ class MainContainer extends React.Component {
                   isSidebarExpanded={this.props.isSidebarExpanded}
                 />
                 <MoonCrescentMapContent
+                  t={this.props.t}
                   state={this.state}
+                  moonInfos={this.props.moonInfos}
+                  selectedLanguage={this.props.selectedLanguage}
+                  selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}
                 />
@@ -51,7 +97,11 @@ class MainContainer extends React.Component {
           : (
               <div className="moon-crescent-map-container flex flex-col w-full h-full">
                 <MoonCrescentMapContent
+                  t={this.props.t}
                   state={this.state}
+                  moonInfos={this.props.moonInfos}
+                  selectedLanguage={this.props.selectedLanguage}
+                  selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}
                 />
