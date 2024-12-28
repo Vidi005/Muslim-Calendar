@@ -1367,9 +1367,14 @@ class App extends React.Component {
             }}>
               <MoonCrescentMapPage
                 t={i18n.t}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+                selectedLanguage={this.state.selectedLanguage}
                 formattedDateTime={this.state.formattedDateTime}
                 hijriStartDates={this.state.hijriStartDates}
-                isSidebarExpanded={this.state.isSidebarExpanded}
+                moonInfos={this.state.moonInfos}
+                selectedMoonVisibilityCriteria={this.state.selectedMoonVisibilityCriteria}
+                selectedCoordinateSteps={this.state.selectedCoordinateSteps}
+                generateMoonCrescentVisibility={this.generateMoonCrescentVisibility.bind(this)}
               />
             </HomePageProvider>
           }/>
