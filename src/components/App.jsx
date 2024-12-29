@@ -115,7 +115,7 @@ class App extends React.Component {
         this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
       }
     }
-    if (prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria) {
+    if (prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria && this.state.monthsInSetYear.length > 0) {
       this.getMoonCrescentVisibility()
     }
   }
