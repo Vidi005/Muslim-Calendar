@@ -4,7 +4,7 @@ import en from "../../../locales/en.json"
 
 const MoonCrescentVisibilityMap = ({ index, t, selectedLanguage, selectedMoonVisibilityCriteria, ijtimaDate, visibility }) => (
   <div className="moon-crescent-map flex flex-col items-center w-full px-3 md:px-5 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
-    <h5 className="m-1 md:m-2 text-center text-green-700 dark:text-gray-200 duration-200">{(t(`ijtima_days.${index}`))} ({ijtimaDate.toLocaleDateString(selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' })})</h5>
+    <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t(`ijtima_days.${index}`))} ({ijtimaDate.toLocaleDateString(selectedLanguage || 'en', { weekday: "long", day: '2-digit', month: 'long', year: 'numeric' })})</h4>
     <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
       <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
       {coordinateScale.latitudes.map((degree, index) => (

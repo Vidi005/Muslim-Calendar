@@ -1680,7 +1680,12 @@ const addZeroPad = value => (value >= 0 && value < 10) ? `0${value}` : value
 const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
   const startDate = new Date(`${ijtimaDate.getFullYear()}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
-  return gridSearchLongitude(astroDate, criteria, steps)
+  const conjunctionDate = new Date(ijtimaDate.setDate(ijtimaDate.getDate() - 2))
+  const conjunction = SearchMoonPhase(0, conjunctionDate, 5)
+  return {
+    zoneCoordinates: gridSearchLongitude(astroDate, criteria, steps),
+    conjunction: conjunction?.date
+  }
 }
 
 const coordinateScale = {
