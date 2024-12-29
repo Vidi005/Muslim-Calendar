@@ -93,7 +93,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       // Search for New Moon backward
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
+      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       eastObserver = observerFromEarth(0, 135, elevation)
       westObserver = observerFromEarth(0, -120, elevation)
@@ -131,7 +131,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
+      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(sabangCoordinates.latitude, sabangCoordinates.longitude, sabangCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
@@ -152,7 +152,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
+      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       if (!sunset) {
@@ -180,7 +180,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
+      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
@@ -1464,16 +1464,16 @@ const calculateVisibilityShaukat = (arcv, w, lagTime, newMoon) => {
   const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'E'
   let color = ''
-  if (q >= 0.27 && lagTime > 0) {
+  if (q >= 0.122 && lagTime > 0) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (q >= -0.024 && lagTime > 0) {
+  } else if (q >= -0.15 && lagTime > 0) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (q >= -0.212 && lagTime > 0) {
+  } else if (q >= -0.32 && lagTime > 0) {
     zone = 'C'
     color = '#FF783C'
-  } else if (q >= -0.48 && lagTime > 0) {
+  } else if (q >= -0.59 && lagTime > 0) {
     zone = 'D'
     color = '#FF0000'
   } else if (newMoon) {
@@ -1613,21 +1613,23 @@ const checkShaukat = (astroDate, latitude, longitude) => {
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
-  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(convertToRadians(moonHorizon.altitude)) * Math.sin(convertToRadians(lunarParallax / 60)))
-  const arcl = convertToRadians(moonElongationEvent)
-  const geomoon = GeoVector(Body.Moon, bestTime, true)
-  const geosun = GeoVector(Body.Sun, bestTime, true)
-  const rot = Rotation_EQJ_EQD(bestTime)
-  const rotmoon = RotateVector(rot, geomoon)
-  const rotsun = RotateVector(rot, geosun)
-  const meq = EquatorFromVector(rotmoon)
-  const seq = EquatorFromVector(rotsun)
-  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
-  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
-  const arcv = mhor.altitude - shor.altitude
+  const arcl = convertToRadians(moonElongationTopocentric)
+  const daz = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcl) / Math.cos(convertToRadians(daz))
+  let arcv
+  if (-1 <= cosARCV <= 1) {
+    arcv = convertToDegrees(Math.acos(cosARCV))
+  } else if (cosARCV < -1) {
+    arcv = convertToDegrees(Math.acos(-1))
+  } else {
+    arcv = convertToDegrees(Math.acos(1))
+  }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
   return calculateVisibilityShaukat(arcv, wTopocentric, lagTime, newMoon)
