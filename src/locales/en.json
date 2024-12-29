@@ -69,8 +69,9 @@
     "prayer_times": "Prayer Times",
     "prayer_times_headers": ["Time", "Yesterday", "Today", "Tomorrow", "Hijri Date", "Gregorian Date"],
     "more": "More...",
-    "moon_crescent_map_loading": "Moon Crescent Map are being loaded...",
+    "moon_crescent_map_loading": "Moon Crescent Map is being loaded...",
     "moon_crescent_map": "Moon Crescent Map",
+    "moon_crescent_maps_loading": "Moon Crescent Maps are being loaded...",
     "conjunction": "Conjunction :",
     "error": "Error",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -308,7 +309,7 @@
     "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
-    "ijtima_days": ["Ijtima day - 1", "Ijtima day", "Ijtima day + 1"],
+    "ijtima_days": ["Ijtima' day - 1", "Ijtima' day", "Ijtima' day + 1"],
     "moon_visibility_zones": [
         [
             {

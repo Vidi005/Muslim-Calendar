@@ -9,7 +9,7 @@ class MainContainer extends React.Component {
     this.state = {
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: "MOON_VISIBILITY_CRITERIA_STORAGE_KEY",
       COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
-      areMoonVisibilityCriteriaMapsLoading: false,
+      areMoonVisibilityCriteriaMapsLoading: true,
       moonCrescentVisibilities: [],
       ijtimaDates: [],
       selectedHijriMonth: this.getHijriMonthFromProps(props)
@@ -19,11 +19,7 @@ class MainContainer extends React.Component {
   getHijriMonthFromProps = props => props.hijriStartDates?.findIndex(item => item.gregorianDate > props.formattedDateTime)
   
   componentDidMount() {
-    if (this.props.monthInSetyear?.length > 0) {
-      this.setState({ areMoonVisibilityCriteriaMapsLoading: true }, () => {
-        this.createMoonCrescentVisibilities()
-      })
-    }
+    this.createMoonCrescentVisibilities()
   }
 
   componentDidUpdate(prevProps) {
@@ -65,7 +61,9 @@ class MainContainer extends React.Component {
   }
 
   restoreToDefault () {
-    this.setState({ areMoonVisibilityCriteriaMapsLoading: true, selectedHijriMonth: this.getHijriMonthFromProps(this.props)
+    this.setState({
+      areMoonVisibilityCriteriaMapsLoading: true,
+      selectedHijriMonth: this.getHijriMonthFromProps(this.props)
     }, () => {
       this.createMoonCrescentVisibilities()
       localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
@@ -86,8 +84,8 @@ class MainContainer extends React.Component {
                 <MoonCrescentMapContent
                   t={this.props.t}
                   state={this.state}
-                  moonInfos={this.props.moonInfos}
                   selectedLanguage={this.props.selectedLanguage}
+                  selectedTimeZone={this.props.selectedTimeZone}
                   selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}
@@ -99,8 +97,8 @@ class MainContainer extends React.Component {
                 <MoonCrescentMapContent
                   t={this.props.t}
                   state={this.state}
-                  moonInfos={this.props.moonInfos}
                   selectedLanguage={this.props.selectedLanguage}
+                  selectedTimeZone={this.props.selectedTimeZone}
                   selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}
