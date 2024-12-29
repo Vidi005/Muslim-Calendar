@@ -115,6 +115,9 @@ class App extends React.Component {
         this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
       }
     }
+    if (prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria) {
+      this.getMoonCrescentVisibility()
+    }
   }
 
   componentWillUnmount() {
@@ -1174,7 +1177,6 @@ class App extends React.Component {
   }
 
   generateMoonCrescentVisibility = (ijtimaDate) => new Promise((resolve, reject) => {
-    this.setState({ isMoonCrescentMapLoading: true })
     let moonCrescentVisibilityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonCrescentVisibilityWorker.postMessage({
       type: 'createMoonCrescentVisibility',
@@ -1369,9 +1371,9 @@ class App extends React.Component {
                 t={i18n.t}
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 selectedLanguage={this.state.selectedLanguage}
+                selectedTimeZone={this.state.selectedTimeZone}
                 formattedDateTime={this.state.formattedDateTime}
                 hijriStartDates={this.state.hijriStartDates}
-                moonInfos={this.state.moonInfos}
                 selectedMoonVisibilityCriteria={this.state.selectedMoonVisibilityCriteria}
                 selectedCoordinateSteps={this.state.selectedCoordinateSteps}
                 generateMoonCrescentVisibility={this.generateMoonCrescentVisibility.bind(this)}
