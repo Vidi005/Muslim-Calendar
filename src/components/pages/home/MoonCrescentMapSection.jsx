@@ -9,8 +9,6 @@ const MoonCrescentMapSection = () => (
     {({ t, state }) => (
       <section className="moon-crescent-map-section flex flex-col items-center w-full md:w-1/2 px-3 md:px-5 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
         <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_crescent_map')}</h1>
-        <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('hijri_date_criteria')} {t(`visibility_criteria.${state.selectedMoonVisibilityCriteria}`)}</h5>
-        <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('conjunction')} {state.moonInfos[14]}</h5>
         {state.isMoonCrescentMapLoading
           ? (
             <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
@@ -20,6 +18,8 @@ const MoonCrescentMapSection = () => (
           )
           : (
             <React.Fragment>
+              <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('hijri_date_criteria')} {t(`visibility_criteria.${state.selectedMoonVisibilityCriteria}`)}</h5>
+              <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('conjunction')} {state.moonCrescentVisibility.conjunction?.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: state.selectedTimeZone })}</h5>
               <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
                 <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
                 {coordinateScale.latitudes.map((degree, index) => (
@@ -34,7 +34,7 @@ const MoonCrescentMapSection = () => (
                     <span key={degree} className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
                   </>
                 ))}
-                {state.moonCrescentVisibility.map((marker, index) => (
+                {state.moonCrescentVisibility.zoneCoordinates?.map((marker, index) => (
                   <span key={index} className="absolute opacity-50" style={{
                     width: `${marker.width}%`,
                     height: `${marker.height}%`,
