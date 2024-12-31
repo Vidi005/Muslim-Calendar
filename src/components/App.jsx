@@ -10,6 +10,8 @@ import Swal from "sweetalert2"
 import PrayerTimesPage from "./pages/prayer_times/PrayerTimesPage"
 import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
 import en from "./../locales/en.json"
+import AboutPage from "./pages/about/AboutPage"
+import EclipsesPage from "./pages/eclipses/EclipsesPage"
 
 class App extends React.Component {
   constructor(props) {
@@ -1380,6 +1382,28 @@ class App extends React.Component {
               />
             </HomePageProvider>
           }/>
+          <Route path="/about" element={
+            <HomePageProvider value={{
+              t: i18n.t,
+              state: this.state,
+              toggleSidebar: this.toggleSidebar.bind(this),
+              changeLanguage: this.changeLanguage.bind(this),
+              setDisplayMode: this.setDisplayMode.bind(this)
+            }}>
+              <AboutPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+            </HomePageProvider>
+          } />
+          <Route path="/eclipses" element={
+            <HomePageProvider value={{
+              t: i18n.t,
+              state: this.state,
+              toggleSidebar: this.toggleSidebar.bind(this),
+              changeLanguage: this.changeLanguage.bind(this),
+              setDisplayMode: this.setDisplayMode.bind(this)
+            }}>
+              <EclipsesPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
+            </HomePageProvider>
+          } />
           <Route path="*" element={<NoPage t={i18n.t} />} />
         </Routes>
       </React.Fragment>
