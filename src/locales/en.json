@@ -449,5 +449,93 @@
                 "color": "#000000"
             }
         ]
+    ],
+    "version": "Updated December 2024",
+    "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
+    "resources": "Resources",
+    "resource_items": [
+        {
+            "name": "World Cities Database",
+            "url": "https://www.kaggle.com/datasets/juanmah/world-cities/data"
+        },
+        {
+            "name": "Grey Moon Illustration",
+            "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
+        },
+        {
+            "name": "Base World Map",
+            "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
+        }
+    ],
+    "references": "References",
+    "reference_items": [
+        {
+            "name": "Astronomy Engine",
+            "url": "https://github.com/cosinekitty/astronomy"
+        },
+        {
+            "name": "Imkanu Rukyah",
+            "url": "https://journal.syamilahpublishing.com/index.php/fatawa/article/view/164/71"
+        },
+        {
+            "name": "Global Hijri Calendar",
+            "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Wujudul Hilal Calculation",
+            "url": "https://muhammadiyah.or.id/2022/02/hisab-hakiki-wujudul-hilal-apa-dan-bagaimana/"
+        },
+        {
+            "name": "Islamic Hijri Calendar Resources",
+            "url": "https://www.al-habib.info/islamic-calendar/"
+        },
+        {
+            "name": "Moon Info",
+            "url": "https://github.com/faisalr/faisalr.github.io"
+        },
+        {
+            "name": "Calculating Prayer Times",
+            "url": "https://radhifadlillah.com/blog/2020-09-06-calculating-prayer-times/"
+        },
+        {
+            "name": "Ephemeris Hisab Rukyat 2024",
+            "url": "https://simbi.kemenag.go.id/eliterasi/portal-web/buku-digital/ephemeris-hisab-rukyat-2024"
+        },
+        {
+            "name": "Celestial Body Mechanics",
+            "url": "https://simpan.ugm.ac.id/s/GcxKuyZWn8Rshnn#pdfviewer"
+        },
+        {
+            "name": "Prayer Times Calculation",
+            "url": "http://praytimes.org/calculation"
+        },
+        {
+            "name": "Crescent Moon Visibility Map",
+            "url": "https://www.al-habib.info/islamic-calendar/hilalmap-crescent-moon-visibility-map.htm"
+        },
+        {
+            "name": "Odeh Moon Crescent Visibility Criterion",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_odeh_2006.pdf"
+        },
+        {
+            "name": "Yallop Moon Crescent Visibility Criterion",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_yallop_1997.pdf"
+        },
+        {
+            "name": "LAPAN Moon Crescent Visibility Criterion",
+            "url": "https://tdjamaluddin.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+        },
+        {
+            "name": "Shaukat Moon Crescent Visibility Criterion",
+            "url": "https://www.moonsighting.com/visibility.html"
+        },
+        {
+            "name": "Designing New Moon Visibility Criterion",
+            "url": "https://www.researchgate.net/publication/324561120_Themes_in_Designing_The_New_Moon_Visibility_Criterion"
+        },
+        {
+            "name": "Crescent Moon Visibility",
+            "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
+        }
     ]
 }
