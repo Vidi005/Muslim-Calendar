@@ -449,5 +449,93 @@
                 "color": "#000000"
             }
         ]
+    ],
+    "version": "Diperbarui pada Desember 2024",
+    "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
+    "resources": "Sumber Aset",
+    "resource_items": [
+        {
+            "name": "Basis Data Kota-kota di Dunia",
+            "url": "https://www.kaggle.com/datasets/juanmah/world-cities/data"
+        },
+        {
+            "name": "Gambar Ilustrasi Bulan",
+            "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
+        },
+        {
+            "name": "Dasar Peta Dunia",
+            "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
+        }
+    ],
+    "references": "Referensi",
+    "reference_items": [
+        {
+            "name": "Astronomy Engine",
+            "url": "https://github.com/cosinekitty/astronomy"
+        },
+        {
+            "name": "Imkanu Rukyah",
+            "url": "https://journal.syamilahpublishing.com/index.php/fatawa/article/view/164/71"
+        },
+        {
+            "name": "Kalender Hijriah Global Tunggal",
+            "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Hisab Hakiki Wujudul Hilal",
+            "url": "https://muhammadiyah.or.id/2022/02/hisab-hakiki-wujudul-hilal-apa-dan-bagaimana/"
+        },
+        {
+            "name": "Informasi Kalender Islam",
+            "url": "https://www.al-habib.info/kalender-islam/"
+        },
+        {
+            "name": "Informasi Bulan",
+            "url": "https://github.com/faisalr/faisalr.github.io"
+        },
+        {
+            "name": "Menghitung Waktu Sholat",
+            "url": "https://radhifadlillah.com/blog/2020-09-06-calculating-prayer-times/"
+        },
+        {
+            "name": "Ephemeris Hisab Rukyat 2024",
+            "url": "https://simbi.kemenag.go.id/eliterasi/portal-web/buku-digital/ephemeris-hisab-rukyat-2024"
+        },
+        {
+            "name": "Mekanika Benda Langit",
+            "url": "https://simpan.ugm.ac.id/s/GcxKuyZWn8Rshnn#pdfviewer"
+        },
+        {
+            "name": "Perhitungan Waktu Sholat",
+            "url": "http://praytimes.org/calculation"
+        },
+        {
+            "name": "Peta Visibilitas Hilal",
+            "url": "https://www.al-habib.info/kalender-islam/hilalmap-peta-visibilitas-hilal-js.htm"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Odeh",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_odeh_2006.pdf"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Yallop",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_yallop_1997.pdf"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit LAPAN",
+            "url": "https://tdjamaluddin.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Shaukat",
+            "url": "https://www.moonsighting.com/visibility.html"
+        },
+        {
+            "name": "Perancangan Kriteria Visibilitas Bulan Baru",
+            "url": "https://www.researchgate.net/publication/324561120_Themes_in_Designing_The_New_Moon_Visibility_Criterion"
+        },
+        {
+            "name": "Visibilitas Bulan Sabit",
+            "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
+        }
     ]
 }
