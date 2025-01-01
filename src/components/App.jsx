@@ -649,7 +649,7 @@ class App extends React.Component {
   }
 
   restoreDateTime () {
-    this.setState({ inputDate: '', inputTime: '' }, () => {
+    this.setState({ inputDate: '', inputTime: '', isMoonCrescentMapLoading: true }, () => {
       this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
       this.goToCurrentMonth()
     })
@@ -671,6 +671,7 @@ class App extends React.Component {
           inputLocation: '',
           inputDate: '',
           inputTime: '',
+          isMoonCrescentMapLoading: true,
           latitude: 0,
           longitude: 0,
           elevation: 0,
@@ -766,7 +767,7 @@ class App extends React.Component {
   }
 
   selectCriteria (value) {
-    this.setState({ selectedCriteria: parseInt(value) }, () => {
+    this.setState({ selectedCriteria: parseInt(value), isMoonCrescentMapLoading: true }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
