@@ -306,7 +306,7 @@
     "islamic_month": "Month :",
     "islamic_year": "Year :",
     "hijri_abbreviation": "AH",
-    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"],
+    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "Turkey, 2016", "MABIMS, 2021"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Ijtima' day - 1", "Ijtima' day", "Ijtima' day + 1"],
@@ -437,6 +437,46 @@
                 "color": "#FF0000"
             },
             {
+                "visibility": "Elongation = 8° & Moon Altitude = 5°",
+                "color": "#FAFF00"
+            },
+            {
+                "visibility": "Moon over the horizon, not visible",
+                "color": ""
+            },
+            {
+                "visibility": "Moon has set",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Moon before conjunction",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Can be seen by eye (Altitude >= 5° & Elongation >= 8°)",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Moon over the horizon, not visible",
+                "color": ""
+            },
+            {
+                "visibility": "Moon has set",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Moon before conjunction",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Can be seen by eye (Altitude >= 3° & Elongation >= 6.4°)",
+                "color": "#00FF3E"
+            },
+            {
                 "visibility": "Moon over the horizon, not visible",
                 "color": ""
             },
@@ -480,6 +520,10 @@
         {
             "name": "Global Hijri Calendar",
             "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Global Hijri Calendar Simplification",
+            "url": "https://tdjamaluddin.com/2024/04/24/simplifikasi-khgt-abaikan-keberadaan-pengamal-rukyat/"
         },
         {
             "name": "Wujudul Hilal Calculation",

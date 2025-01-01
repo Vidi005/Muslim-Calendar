@@ -86,7 +86,6 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   let sunset
   let moonEquator
   let moonHorizon
-  let sunEquator
   if (criteria === 0) {
     // Global Hijri Calendar/KHGT
     while (true) {
@@ -95,8 +94,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      eastObserver = observerFromEarth(0, 135, elevation)
-      westObserver = observerFromEarth(0, -120, elevation)
+      eastObserver = observerFromEarth(0, 150, elevation)
+      westObserver = observerFromEarth(0, -150, elevation)
       fajr = SearchAltitude(Body.Sun, eastObserver, +1, newMoonDate, 1, -fajrAlt)
       sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       if (!sunset) {
@@ -112,7 +111,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       }
-      moonElongation = Elongation(Body.Moon, sunset) // Geocentric Elongation
+      moonElongation = Elongation(Body.Moon, sunset)
       moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
       moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
       if (moonElongation.elongation >= 8 && moonHorizon.altitude >= 5) {
@@ -135,11 +134,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(sabangCoordinates.latitude, sabangCoordinates.longitude, sabangCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      sunEquator = Equator(Body.Sun, sunset, observer, true, true)
       moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
-      moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec) // Topocentric Elongation
-      if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) {
+      moonElongation = Elongation(Body.Moon, sunset)
+      if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
@@ -1460,30 +1458,65 @@ const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoon) => {
   return { isMeetCriteria, zone, color }
 }
 
-const calculateVisibilityShaukat = (arcv, w, lagTime, newMoon) => {
+const calculateVisibilityShaukat = (arcv, areEqualsToValues, w, lagTime, newMoon) => {
   const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
-  let zone = 'E'
+  let zone = 'F'
   let color = ''
-  if (q >= 0.122 && lagTime > 0) {
+  if (q >= 0.122 && lagTime > 0 && !areEqualsToValues) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (q >= -0.15 && lagTime > 0) {
+  } else if (q >= -0.15 && lagTime > 0 && !areEqualsToValues) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (q >= -0.32 && lagTime > 0) {
+  } else if (q >= -0.32 && lagTime > 0 && !areEqualsToValues) {
     zone = 'C'
     color = '#FF783C'
-  } else if (q >= -0.59 && lagTime > 0) {
+  } else if (q >= -0.59 && lagTime > 0 && !areEqualsToValues) {
     zone = 'D'
     color = '#FF0000'
+  } else if (q >= -0.59 && lagTime > 0 && areEqualsToValues && lagTime > 0) {
+    zone = 'E'
+    color = '#FAFF00'
   } else if (newMoon) {
-    zone = 'G'
+    zone = 'H'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'F'
+    zone = 'G'
     color = '#808080'
   }
   return { q, zone, color }
+}
+
+const calculateVisibilityTurkey = (isMeetCriteria, lagTime, newMoon) => {
+  let zone = 'B'
+  let color = ''
+  if (isMeetCriteria && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (newMoon) {
+    zone = 'D'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'C'
+    color = '#808080'
+  }
+  return { isMeetCriteria, zone, color }
+}
+
+const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoon) => {
+  let zone = 'B'
+  let color = ''
+  if (isMeetCriteria && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (newMoon) {
+    zone = 'D'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'C'
+    color = '#808080'
+  }
+  return { isMeetCriteria, zone, color }
 }
 
 const checkYallop = (astroDate, latitude, longitude) => {
@@ -1631,8 +1664,47 @@ const checkShaukat = (astroDate, latitude, longitude) => {
     arcv = convertToDegrees(Math.acos(1))
   }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const moonElongationGeocentric = Elongation(Body.Moon, sunset).elongation
+  let areEqualsToValues = false
+  if (moonElongationGeocentric > 7.95 && moonElongationGeocentric < 8.05) areEqualsToValues = true
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityShaukat(arcv, wTopocentric, lagTime, newMoon)
+  return calculateVisibilityShaukat(arcv, areEqualsToValues, wTopocentric, lagTime, newMoon)
+}
+
+const checkTurkey = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonElongation = Elongation(Body.Moon, sunset).elongation
+  let isMeetCriteria = false
+  if (moonElongation >= 8 && moonHorizon.altitude >= 5) isMeetCriteria = true
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityTurkey(isMeetCriteria, lagTime, newMoon)
+}
+
+const checkMABIMS = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonElongation = Elongation(Body.Moon, sunset).elongation
+  let isMeetCriteria = false
+  if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) isMeetCriteria = true
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityMABIMS(isMeetCriteria, lagTime, newMoon)
 }
 
 const createZones = (criteria, astroDate, lat, lng, steps) => {
@@ -1645,8 +1717,12 @@ const createZones = (criteria, astroDate, lat, lng, steps) => {
     result = checkQureshi(astroDate, lat, lng, steps)
   } else if (criteria === 3) {
     result = checkLAPAN(astroDate, lat, lng, steps)
-  } else {
+  } else if (criteria === 4) {
     result = checkShaukat(astroDate, lat, lng, steps)
+  } else if (criteria === 5) {
+    result = checkTurkey(astroDate, lat, lng, steps)
+  } else {
+    result = checkMABIMS(astroDate, lat, lng, steps)
   }
   const width = steps * 100 / 360
   const height = steps * 100 / 180

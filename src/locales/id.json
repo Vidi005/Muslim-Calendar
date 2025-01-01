@@ -306,7 +306,7 @@
     "islamic_month": "Bulan :",
     "islamic_year": "Tahun :",
     "hijri_abbreviation": "H",
-    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011"],
+    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT, 2016", "MABIMS, 2021"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],
@@ -437,6 +437,46 @@
                 "color": "#FF0000"
             },
             {
+                "visibility": "Elongasi = 8° & Ketinggian Bulan = 5°",
+                "color": "#FAFF00"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Bisa terlihat mata (Ketinggian >= 5° & Elongasi >= 8°)",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Bisa terlihat mata (Ketinggian >= 3° & Elongasi >= 6.4°)",
+                "color": "#00FF3E"
+            },
+            {
                 "visibility": "Bulan di atas ufuk, tidak kasat mata",
                 "color": ""
             },
@@ -480,6 +520,10 @@
         {
             "name": "Kalender Hijriah Global Tunggal",
             "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Simplifikasi KHGT",
+            "url": "https://tdjamaluddin.com/2024/04/24/simplifikasi-khgt-abaikan-keberadaan-pengamal-rukyat/"
         },
         {
             "name": "Hisab Hakiki Wujudul Hilal",
