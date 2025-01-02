@@ -455,7 +455,7 @@
         ],
         [
             {
-                "visibility": "Bisa terlihat mata (Ketinggian >= 5° & Elongasi >= 8°)",
+                "visibility": "Bisa terlihat mata (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
                 "color": "#00FF3E"
             },
             {
@@ -473,7 +473,7 @@
         ],
         [
             {
-                "visibility": "Bisa terlihat mata (Ketinggian >= 3° & Elongasi >= 6.4°)",
+                "visibility": "Bisa terlihat mata (Ketinggian ≥ 3° & Elongasi ≥ 6.4°)",
                 "color": "#00FF3E"
             },
             {
@@ -490,7 +490,7 @@
             }
         ]
     ],
-    "version": "Diperbarui pada Desember 2024",
+    "version": "Diperbarui pada Januari 2025",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",
     "resource_items": [
