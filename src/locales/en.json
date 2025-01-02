@@ -455,7 +455,7 @@
         ],
         [
             {
-                "visibility": "Can be seen by eye (Altitude >= 5° & Elongation >= 8°)",
+                "visibility": "Can be seen by eye (Altitude ≥ 5° & Elongation ≥ 8°)",
                 "color": "#00FF3E"
             },
             {
@@ -473,7 +473,7 @@
         ],
         [
             {
-                "visibility": "Can be seen by eye (Altitude >= 3° & Elongation >= 6.4°)",
+                "visibility": "Can be seen by eye (Altitude ≥ 3° & Elongation ≥ 6.4°)",
                 "color": "#00FF3E"
             },
             {
@@ -490,7 +490,7 @@
             }
         ]
     ],
-    "version": "Updated December 2024",
+    "version": "Updated January 2025",
     "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
     "resources": "Resources",
     "resource_items": [
