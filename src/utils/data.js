@@ -463,7 +463,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const parallacticAngle = convertToDegrees(
     Math.atan2(
       Math.sin(convertToRadians(hourAngle)),
-      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec) * Math.cos(convertToRadians(hourAngle)))
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(convertToRadians(hourAngle))
     )
   )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
@@ -1339,7 +1339,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const parallacticAngle = convertToDegrees(
     Math.atan2(
       Math.sin(convertToRadians(hourAngle)),
-      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec) * Math.cos(convertToRadians(hourAngle)))
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(convertToRadians(hourAngle))
     )
   )
   return [
