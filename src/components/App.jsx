@@ -233,7 +233,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.generateCalendar()))
+        },() => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -256,10 +256,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -476,7 +476,7 @@ class App extends React.Component {
     i18n.changeLanguage(lang)
     this.setState({ selectedLanguage: lang }, () => {
       this.saveLanguageData(lang)
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getEclipseInfos())
     })
   }
 
