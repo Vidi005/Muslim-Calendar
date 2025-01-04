@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, Pivot, RotateVector, Rotation_EQD_HOR, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SiderealTime, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -458,20 +458,14 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
-  let rotation = Rotation_EQD_HOR(astroDate, observer)
-  rotation = Pivot(rotation, 2, moonHorizon.azimuth)
-  rotation = Pivot(rotation, 1, moonHorizon.altitude)
-  let vector = RotateVector(rotation, moonEquatorOfDate.vec)
-  const radius = vector.Length()
-  vector.x /= radius
-  vector.y /= radius
-  vector.z /= radius
-  let moonTiltAngle = 0
-  if (!Number.isFinite(vector.x) || !Number.isFinite(vector.y) || !Number.isFinite(vector.z)) moonTiltAngle = 1
-  else {
-    vector = RotateVector(rotation, sunEquator.vec)
-    moonTiltAngle = convertToDegrees(Math.atan2(vector.y, vector.z))
-  }
+  const siderealTime = SiderealTime(astroDate)
+  const hourAngle = (siderealTime * 15 + longitude - moonEquatorOfDate.ra) % 360
+  const parallacticAngle = convertToDegrees(
+    Math.atan2(
+      Math.sin(convertToRadians(hourAngle)),
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec) * Math.cos(convertToRadians(hourAngle)))
+    )
+  )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
@@ -496,7 +490,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     `${sunAzimuth.toFixed(2)}°`,
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     sunset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
-    `${moonTiltAngle.toFixed(2)}°`
+    `${parallacticAngle.toFixed(2)}°`
   ]
 }
 
@@ -1340,20 +1334,14 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const illuminationPercent = moonIllumination.phase_fraction * 100
-  let rotation = Rotation_EQD_HOR(astroDate, observer)
-  rotation = Pivot(rotation, 2, moonHorizon.azimuth)
-  rotation = Pivot(rotation, 1, moonHorizon.altitude)
-  let vector = RotateVector(rotation, moonEquatorOfDate.vec)
-  const radius = vector.Length()
-  vector.x /= radius
-  vector.y /= radius
-  vector.z /= radius
-  let moonTiltAngle = 0
-  if (!Number.isFinite(vector.x) || !Number.isFinite(vector.y) || !Number.isFinite(vector.z)) moonTiltAngle = 1
-  else {
-    vector = RotateVector(rotation, sunEquator.vec)
-    moonTiltAngle = convertToDegrees(Math.atan2(vector.y, vector.z))
-  }
+  const siderealTime = SiderealTime(astroDate)
+  const hourAngle = (siderealTime * 15 + longitude - moonEquatorOfDate.ra) % 360
+  const parallacticAngle = convertToDegrees(
+    Math.atan2(
+      Math.sin(convertToRadians(hourAngle)),
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec) * Math.cos(convertToRadians(hourAngle)))
+    )
+  )
   return [
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
@@ -1376,7 +1364,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${culminationSunAltitude.toFixed(2)}°`,
     `${ashrSunAltitude.toFixed(2)}°`,
     `${midnightSunAltitude.toFixed(2)}°`,
-    `${moonTiltAngle.toFixed(2)}°`
+    `${parallacticAngle.toFixed(2)}°`
   ]
 }
 
