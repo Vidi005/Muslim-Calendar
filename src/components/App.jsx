@@ -72,15 +72,18 @@ class App extends React.Component {
       formattedIslamicMonth: 0,
       formattedIslamicYear: 0,
       hijriStartDates: [],
-      moonCrescentVisibility: [],
+      moonCrescentVisibility: {},
       selectedMoonVisibilityCriteria: 1,
       selectedCoordinateSteps: 3,
+      localSolarEclipseInfo: {},
+      lunarEclipseInfo: {},
       arePrayerTimesLoading: true,
       isSidebarExpanded: true,
       isToolbarShown: true,
       isCalendarLoading: true,
       areMoonInfosLoading: true,
       isMoonCrescentMapLoading: true,
+      areEclipseInfosLoading: true,
       isGettingCoordinates: false,
       isGeocoding: false,
       isSearching: false,
@@ -114,11 +117,12 @@ class App extends React.Component {
     }
     if (this.state.currentDate?.time && this.state.inputTime !== '') {
       if (this.state.currentDate.time.includes('00:00:00')) {
-        this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+        this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
       }
     }
     if (prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria && this.state.monthsInSetYear.length > 0) {
       this.getMoonCrescentVisibility()
+      this.getEclipseInfos()
     }
   }
 
@@ -503,7 +507,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
   }
 
   setDesiredTime (event) {
@@ -511,7 +515,7 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value.replace(/\./g, ':') }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
   }
 
   formatDateTime () {
@@ -650,7 +654,7 @@ class App extends React.Component {
 
   restoreDateTime () {
     this.setState({ inputDate: '', inputTime: '', isMoonCrescentMapLoading: true }, () => {
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
       this.goToCurrentMonth()
     })
   }
@@ -771,7 +775,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility())
+      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
     })
   }
 
@@ -907,6 +911,7 @@ class App extends React.Component {
         localStorage.setItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedMoonVisibilityCriteria))
       }
       this.getMoonCrescentVisibility()
+      this.getEclipseInfos()
     })
   }
 
@@ -916,6 +921,7 @@ class App extends React.Component {
         localStorage.setItem(this.state.COORDINATE_STEPS_STORAGE_KEY, JSON.stringify(this.state.selectedCoordinateSteps))
       }
       this.getMoonCrescentVisibility()
+      this.getEclipseInfos()
     })
   }
 
@@ -1179,7 +1185,7 @@ class App extends React.Component {
     }
   }
 
-  generateMoonCrescentVisibility = (ijtimaDate) => new Promise((resolve, reject) => {
+  generateMoonCrescentVisibility = ijtimaDate => new Promise((resolve, reject) => {
     let moonCrescentVisibilityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonCrescentVisibilityWorker.postMessage({
       type: 'createMoonCrescentVisibility',
@@ -1218,6 +1224,59 @@ class App extends React.Component {
       formattedIslamicYear: islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" }),
       isMoonCrescentMapLoading: false
     }))
+  }
+
+  generateLocalSolarEclipseInfo = localSolarEclipseDate => new Promise((resolve, reject) => {
+    let localSolarEclipseInfoWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    localSolarEclipseInfoWorker.postMessage({
+      type: 'createLocalSolarEclipse',
+      localSolarEclipseDate: localSolarEclipseDate,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      elevation: this.state.elevation
+    })
+    localSolarEclipseInfoWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createLocalSolarEclipse') {
+        localSolarEclipseInfoWorker.terminate()
+        resolve(workerEvent.data.result)
+        localSolarEclipseInfoWorker = null
+      }
+    }
+    localSolarEclipseInfoWorker.onerror = error => {
+      localSolarEclipseInfoWorker.terminate()
+      console.error(error.message)
+      reject(error.message)
+      localSolarEclipseInfoWorker = null
+    }
+  })
+
+  generateLunarEclipseInfo = lunarEclipseDate => new Promise((resolve, reject) => {
+    let lunarEclipseInfoWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+    lunarEclipseInfoWorker.postMessage({
+      type: 'createLunarEclipse',
+      lunarEclipseDate: lunarEclipseDate,
+    })
+    lunarEclipseInfoWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createLunarEclipse') {
+        lunarEclipseInfoWorker.terminate()
+        resolve(workerEvent.data.result)
+        lunarEclipseInfoWorker = null
+      }
+    }
+    lunarEclipseInfoWorker.onerror = error => {
+      lunarEclipseInfoWorker.terminate()
+      console.error(error.message)
+      reject(error.message)
+      lunarEclipseInfoWorker = null
+    }
+  })
+
+  getEclipseInfos = () => {
+    this.generateLocalSolarEclipseInfo(this.state.formattedDateTime).then(result => {
+      if (Object.keys(result).length > 0) this.setState({ localSolarEclipseInfo: result })
+    }).then(() => this.generateLunarEclipseInfo(this.state.formattedDateTime).then(result => {
+      if (Object.keys(result).length > 0) this.setState({ lunarEclipseInfo: result })
+    })).finally(() => this.setState({ areEclipseInfosLoading: false }))
   }
 
   render() {

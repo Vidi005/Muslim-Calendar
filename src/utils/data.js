@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, Pivot, RotateVector, Rotation_EQD_HOR, Rotation_EQJ_EQD, SearchAltitude, SearchHourAngle, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, Pivot, RotateVector, Rotation_EQD_HOR, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -1782,9 +1782,62 @@ const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
   }
 }
 
+const getGlobalSolarEclipse = date => {
+  const astroDate = MakeTime(date)
+  const globalSolarEclipse = SearchGlobalSolarEclipse(astroDate)
+  return {
+    distance: globalSolarEclipse.distance || 0,
+    kind: globalSolarEclipse.kind || '',
+    latitude: globalSolarEclipse.latitude || 0,
+    longitude: globalSolarEclipse.longitude || 0,
+    obscuration: globalSolarEclipse.obscuration || 0,
+    peak: globalSolarEclipse.peak || 0
+  }
+}
+
+const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
+  const astroDate = MakeTime(date)
+  const observer = observerFromEarth(latitude, longitude, elevation)
+  const localSolarEclipse = SearchLocalSolarEclipse(astroDate, observer)
+  return {
+    kind: localSolarEclipse.kind || '',
+    obscuration: localSolarEclipse.obscuration || 0,
+    partialBeginAltitude: localSolarEclipse.partial_begin.altitude || 0,
+    partialBeginTime: localSolarEclipse.partial_begin.time.date || 0,
+    partialEndAltitude: localSolarEclipse.partial_end.altitude || 0,
+    partialEndTime: localSolarEclipse.partial_end.time.date || 0,
+    peakAltitude: localSolarEclipse.peak.altitude || 0,
+    peakTime: localSolarEclipse.peak.time.date || 0,
+    totalBeginAltitude: localSolarEclipse.total_begin?.altitude || 0,
+    totalBeginTime: localSolarEclipse.total_begin?.time?.date || 0,
+    totalEndAltitude: localSolarEclipse.total_end?.altitude || 0,
+    totalEndTime: localSolarEclipse.total_end?.time?.date || 0
+  }
+}
+
+const getLunarEclipse = date => {
+  const astroDate = MakeTime(date)
+  const lunarEclipse = SearchLunarEclipse(astroDate)
+  return {
+    kind: lunarEclipse.kind || '',
+    obscuration: lunarEclipse.obscuration || 0,
+    peak: lunarEclipse.peak.date || 0,
+    sdPartial: lunarEclipse.sd_partial || 0,
+    sdPenum: lunarEclipse.sd_penum || 0,
+    sdTotal: lunarEclipse.sd_total || 0
+  }
+}
+
+const convertMinutesToTime = (time, hrs, mins, secs) => {
+  const hours = Math.floor((time % 60) / 60)
+  const minutes = Math.floor(time % 60)
+  const seconds = Math.floor((time * 60) % 60)
+  return `${hours} ${hrs} ${minutes} ${mins} ${seconds} ${secs}`
+}
+
 const coordinateScale = {
   latitudes: [60, 30, 0, -30, -60],
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }

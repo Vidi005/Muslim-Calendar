@@ -490,6 +490,15 @@
             }
         ]
     ],
+    "eclipses": "Gerhana",
+    "global_solar_eclipse": "Gerhana Matahari Global",
+    "local_solar_eclipse": "Gerhana Matahari Lokal",
+    "lunar_eclipse": "Gerhana Bulan",
+    "global_solar_eclipse_infos": ["Jarak", "Jenis Gerhana Matahari", "Lintang", "Bujur", "Tertutup", "Waktu Puncak", "Visibilitas"],
+    "local_solar_eclipse_infos": ["Jenis Gerhana Matahari", "Tertutup", "Ketinggian Awal Sebagian", "Awal Waktu Sebagian", "Ketinggian Akhir Sebagian", "Akhir Waktu Sebagian", "Ketinggian Puncak", "Waktu Puncak", "Ketinggian Awal Total", "Awal Waktu Total", "Ketinggian Akhir Total", "Akhir Waktu Total", "Tidak Ada"],
+    "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Puncak", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Visibilitas"],
+    "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
+    "time_suffixes": ["jam", "menit", "detik"],
     "version": "Diperbarui pada Januari 2025",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",
