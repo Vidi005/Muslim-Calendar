@@ -1,4 +1,4 @@
-import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
+import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
 
 const CACHE_NAME = 'app-cache-v1.5' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
@@ -37,7 +37,7 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.onmessage = event => {
-  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, ijtimaDate, moonVisibilityCriteria, steps } = event.data
+  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, ijtimaDate, moonVisibilityCriteria, steps, localSolarEclipseDate, lunarEclipseDate } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
@@ -68,5 +68,14 @@ self.onmessage = event => {
   } else if (type === 'createMoonCrescentVisibility') {
     const result = getMoonCrescentVisibility(ijtimaDate, moonVisibilityCriteria, steps)
     self.postMessage({ type: 'createMoonCrescentVisibility', result })
+  } else if (type === 'createGlobalSolarEclipse') {
+    const result = getGlobalSolarEclipse(gregorianDate)
+    self.postMessage({ type: 'createGlobalSolarEclipse', result })
+  } else if (type === 'createLocalSolarEclipse') {
+    const result = getLocalSolarEclipse(localSolarEclipseDate, latitude, longitude, elevation)
+    self.postMessage({ type: 'createLocalSolarEclipse', result })
+  } else if (type === 'createLunarEclipse') {
+    const result = getLunarEclipse(lunarEclipseDate)
+    self.postMessage({ type: 'createLunarEclipse', result })
   }
 }
