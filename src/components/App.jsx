@@ -522,19 +522,8 @@ class App extends React.Component {
     return new Promise(resolve => {
       if (this.state.inputDate !== '' && this.state.inputTime !== '') {
         const configuredDateTime = new Date(`${this.state.inputDate}T${this.state.inputTime}`)
-        const configuredLocaleString = configuredDateTime.toLocaleString('en', {
-          timeZone: this.state.selectedTimeZone,
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        })
-        const formattedDateTime = new Date(Date.parse(configuredLocaleString))
-        if (formattedDateTime instanceof Date && formattedDateTime.toString() !== this.state.formattedDateTime.toString()) {
-          this.setState({ formattedDateTime: formattedDateTime }, () => {
+        if (configuredDateTime instanceof Date && configuredDateTime.toString() !== this.state.formattedDateTime.toString()) {
+          this.setState({ formattedDateTime: configuredDateTime }, () => {
             this.generateMoonInfos()
             this.goToCurrentMonth()
             resolve()
@@ -544,17 +533,7 @@ class App extends React.Component {
           resolve()
         }
       } else {
-        const localeString = new Date().toLocaleString('en', {
-          timeZone: this.state.selectedTimeZone,
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        })
-        this.setState({ formattedDateTime: new Date(Date.parse(localeString)) }, () => {
+        this.setState({ formattedDateTime: new Date() }, () => {
           this.generateMoonInfos()
           resolve()
         })
@@ -959,18 +938,7 @@ class App extends React.Component {
 
   generateCalendar = () => {
     const currentDate = new Date()
-    const currentLocalString = currentDate.toLocaleString('en', {
-      timeZone: this.state.selectedTimeZone,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    })
-    const formattedDateTime = new Date(Date.parse(currentLocalString))
-    if (formattedDateTime.getDate() === this.state.formattedDateTime.getDate() && formattedDateTime.getHours() === this.state.formattedDateTime.getHours() && formattedDateTime.getMinutes() === this.state.formattedDateTime.getMinutes()) {
+    if (currentDate.getDate() === this.state.formattedDateTime.getDate() && currentDate.getHours() === this.state.formattedDateTime.getHours() && currentDate.getMinutes() === this.state.formattedDateTime.getMinutes()) {
       this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
         if (setCalendarData?.months?.length > 0) {
           this.setState({
@@ -1442,6 +1410,45 @@ class App extends React.Component {
               />
             </HomePageProvider>
           }/>
+          <Route path="/eclipses" element={
+            <HomePageProvider value={{
+              t: i18n.t,
+              state: this.state,
+              toggleSidebar: this.toggleSidebar.bind(this),
+              changeLanguage: this.changeLanguage.bind(this),
+              setDisplayMode: this.setDisplayMode.bind(this),
+              toggleToolbar: this.toggleToolbar.bind(this),
+              setDesiredDate: this.setDesiredDate.bind(this),
+              setDesiredTime: this.setDesiredTime.bind(this),
+              getCurrentLocation: this.getCurrentLocation.bind(this),
+              restoreDateTime: this.restoreDateTime.bind(this),
+              resetSettings: this.resetSettings.bind(this),
+              onInputLocationChange: this.onInputLocationChange.bind(this),
+              onClearLocationInput: this.onClearLocationInput.bind(this),
+              selectCriteria: this.selectCriteria.bind(this),
+              selectTimeZone: this.selectTimeZone.bind(this),
+              selectIntervalUpdate: this.selectIntervalUpdate.bind(this),
+              setSelectedLocation: this.setSelectedLocation.bind(this),
+              onInputLatitudeChange: this.onInputLatitudeChange.bind(this),
+              onInputLongitudeChange: this.onInputLongitudeChange.bind(this),
+              onInputAltitudeChange: this.onInputAltitudeChange.bind(this),
+              applyLocationCoordinates: this.applyLocationCoordinates.bind(this)
+            }}>
+              <EclipsesPage
+                t={i18n.t}
+                isSidebarExpanded={this.state.isSidebarExpanded}
+                formattedDateTime={this.state.formattedDateTime}
+                monthsInSetYear={this.state.monthsInSetYear}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                elevation={this.state.elevation}
+                inputDate={this.state.inputDate}
+                inputTime={this.state.inputTime}
+                generateLocalSolarEclipseInfo={this.generateLocalSolarEclipseInfo.bind(this)}
+                generateLunarEclipseInfo={this.generateLunarEclipseInfo.bind(this)}
+              />
+            </HomePageProvider>
+          } />
           <Route path="/about" element={
             <HomePageProvider value={{
               t: i18n.t,
@@ -1451,17 +1458,6 @@ class App extends React.Component {
               setDisplayMode: this.setDisplayMode.bind(this)
             }}>
               <AboutPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
-            </HomePageProvider>
-          } />
-          <Route path="/eclipses" element={
-            <HomePageProvider value={{
-              t: i18n.t,
-              state: this.state,
-              toggleSidebar: this.toggleSidebar.bind(this),
-              changeLanguage: this.changeLanguage.bind(this),
-              setDisplayMode: this.setDisplayMode.bind(this)
-            }}>
-              <EclipsesPage t={i18n.t} isSidebarExpanded={this.state.isSidebarExpanded} />
             </HomePageProvider>
           } />
           <Route path="*" element={<NoPage t={i18n.t} />} />

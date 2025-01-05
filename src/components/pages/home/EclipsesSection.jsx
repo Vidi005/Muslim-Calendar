@@ -35,7 +35,7 @@ const EclipsesSection = () => (
       ]
       const lunarEclipseKind = state.lunarEclipseInfo?.kind?.charAt(0)?.toUpperCase() + state.lunarEclipseInfo?.kind?.slice(1)
       const lunarEclipseObscuration = `${state.lunarEclipseInfo?.obscuration?.toFixed(2) * 100}%`
-      const lunarEclipsePeakTime = state.lunarEclipseInfo?.peak?.toLocaleString(state.selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone, hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      const lunarEclipsePeakTime = state.lunarEclipseInfo?.peak?.toLocaleString(state.selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' })
       const semiDurationPartial = convertMinutesToTime(state.lunarEclipseInfo?.sdPartial, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const semiDurationPenum = convertMinutesToTime(state.lunarEclipseInfo?.sdPenum, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const semiDurationTotal = convertMinutesToTime(state.lunarEclipseInfo?.sdTotal, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
