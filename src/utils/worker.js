@@ -37,7 +37,7 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.onmessage = event => {
-  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, ijtimaDate, moonVisibilityCriteria, steps, localSolarEclipseDate, lunarEclipseDate } = event.data
+  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, ijtimaDate, moonVisibilityCriteria, steps, globalSolarEclipseDate, localSolarEclipseDate, lunarEclipseDate } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
@@ -60,7 +60,7 @@ self.onmessage = event => {
     const result = getQiblaDirection(latitude, longitude)
     self.postMessage({ type: 'createQiblaDirection', result })
   } else if (type === 'createPrayerTimes') {
-    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
   } else if (type === 'createSunInfos') {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
@@ -69,7 +69,7 @@ self.onmessage = event => {
     const result = getMoonCrescentVisibility(ijtimaDate, moonVisibilityCriteria, steps)
     self.postMessage({ type: 'createMoonCrescentVisibility', result })
   } else if (type === 'createGlobalSolarEclipse') {
-    const result = getGlobalSolarEclipse(gregorianDate)
+    const result = getGlobalSolarEclipse(globalSolarEclipseDate)
     self.postMessage({ type: 'createGlobalSolarEclipse', result })
   } else if (type === 'createLocalSolarEclipse') {
     const result = getLocalSolarEclipse(localSolarEclipseDate, latitude, longitude, elevation)

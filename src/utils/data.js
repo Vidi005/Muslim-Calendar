@@ -263,7 +263,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
   const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "numeric", timeZoneName: "short" })
+  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" })
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
@@ -455,8 +455,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
-  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "numeric", day: "numeric", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const siderealTime = SiderealTime(astroDate)
   const hourAngle = (siderealTime * 15 + longitude - moonEquatorOfDate.ra) % 360
@@ -502,21 +502,7 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const setTimeZone = (date, timeZone) => {
-  const localeString = date.toLocaleString('en', {
-    timeZone: timeZone,
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  })
-  return new Date(Date.parse(localeString))
-}
-
-const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(astroDate.date)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -827,16 +813,16 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     // Calculate Dhuha Time based Sunrise time
     dhuha = addTime(sunrise.date, inputMins, 0)
   }
-  const correctedFajrTime = setTimeZone(addTime(fajr.date, ihtiyath, corrections[1]), timeZone)
+  const correctedFajrTime = addTime(fajr.date, ihtiyath, corrections[1])
   const imsakTime = addTime(correctedFajrTime, -10, 0)
-  const correctedSunrise = setTimeZone(addTime(sunrise.date, -ihtiyath, 0), timeZone)
-  const correctedDhuhaTime = setTimeZone(addTime(dhuha, ihtiyath, 0), timeZone)
+  const correctedSunrise = addTime(sunrise.date, -ihtiyath, 0)
+  const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
   const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
   const dhuhrDescendCorrection = 1
-  const correctedDhuhrTime = setTimeZone(addTime(dhuhr.date, ihtiyath + dhuhrDescendCorrection, corrections[4]), timeZone)
-  correctedAshrTime = setTimeZone(correctedAshrTime, timeZone)
-  correctedMaghribTime = setTimeZone(correctedMaghribTime, timeZone)
-  correctedIshaTime = setTimeZone(correctedIshaTime, timeZone)
+  const correctedDhuhrTime = addTime(dhuhr.date, ihtiyath + dhuhrDescendCorrection, corrections[4])
+  correctedAshrTime = correctedAshrTime
+  correctedMaghribTime = correctedMaghribTime
+  correctedIshaTime = correctedIshaTime
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
@@ -864,7 +850,7 @@ const getQiblaDirection = (latitude, longitude) => {
   return ((360 + qiblaDirection) % 360).toFixed(2)
 }
 
-const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -1269,27 +1255,27 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
     const dhuhaSeconds = (dhuhaMinutes - parseInt(dhuhaMinutes)) * 60
     dhuha = parseDate(gregorianDate, dhuhaHours, dhuhaMinutes, dhuhaSeconds)
   } else dhuha = addTime(sunrise, inputMins, 0)
-  const correctedFajrTime = setTimeZone(addTime(fajr, ihtiyath, corrections[1]), timeZone)
+  const correctedFajrTime = addTime(fajr, ihtiyath, corrections[1])
   const imsakTime = addTime(correctedFajrTime, -10, 0)
-  const correctedSunrise = setTimeZone(addTime(sunrise, -ihtiyath, 0), timeZone)
-  const correctedDhuhaTime = setTimeZone(addTime(dhuha, ihtiyath, 0), timeZone)
-  const correctedDhuhrTime = setTimeZone(addTime(dhuhrDate, ihtiyath, corrections[4]), timeZone)
-  const correctedAshrTime = setTimeZone(addTime(ashr, ihtiyath, corrections[5]), timeZone)
-  correctedMaghribTime = setTimeZone(correctedMaghribTime, timeZone)
-  correctedIshaTime = setTimeZone(correctedIshaTime, timeZone)
+  const correctedSunrise = addTime(sunrise, -ihtiyath, 0)
+  const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
+  const correctedDhuhrTime = addTime(dhuhrDate, ihtiyath, corrections[4])
+  const correctedAshrTime = addTime(ashr, ihtiyath, corrections[5])
+  correctedMaghribTime = correctedMaghribTime
+  correctedIshaTime = correctedIshaTime
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }
@@ -1352,7 +1338,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${sunLatittude}°`,
     `${sunLongitude.toFixed(2)}°`,
     `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
-    `${midnight.date.toLocaleString(lang || 'en', { day: "2-digit", month: "long", year: "numeric", weekday: "long", hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./gm, ':')}`,
+    `${midnight.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${moonPhase}° (${moonStatus})`,
     moonAltitude,
     moonAzimuth,
@@ -1779,7 +1765,7 @@ const getGlobalSolarEclipse = date => {
     latitude: globalSolarEclipse.latitude || 0,
     longitude: globalSolarEclipse.longitude || 0,
     obscuration: globalSolarEclipse.obscuration || 0,
-    peak: globalSolarEclipse.peak || 0
+    peak: globalSolarEclipse.peak.date || 0
   }
 }
 
