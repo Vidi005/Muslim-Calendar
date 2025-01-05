@@ -166,7 +166,7 @@ class MainContainer extends React.Component {
       const startDate = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
       const formattedStartDate = startDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
-        const formattedPrayerTimes = prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false })).slice(1)
+        const formattedPrayerTimes = prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone })).slice(1)
         return [formattedStartDate, ...formattedPrayerTimes]
       })
       prayerTimesPromises.push(prayerTimeList)
@@ -187,8 +187,8 @@ class MainContainer extends React.Component {
       const formattedGregorianDate = gregorianDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(gregorianDate).then(prayerTime => {
         const formattedPrayerTimes = hijriMonth === 9
-          ? prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false }))
-          : prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false })).slice(1)
+          ? prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }))
+          : prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone })).slice(1)
         return [hijriDate, formattedGregorianDate, ...formattedPrayerTimes]
       })
       prayerTimesPromises.push(prayerTimeList)
