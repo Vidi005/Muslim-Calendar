@@ -39,7 +39,7 @@ const CurrentPrayerTimes = () => (
                   <td className="border border-green-900 dark:border-white p-1.5 text-green-900 dark:text-white font-bold">{prayerName}</td>
                   {state.prayerTimes.map((prayerTime, j) => (
                     <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
-                    {prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: state.selectedTimeZone })}
+                    {prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: state.selectedTimeZone }).replace(/\./g, ':')}
                   </td>
                   ))}
                 </tr>
