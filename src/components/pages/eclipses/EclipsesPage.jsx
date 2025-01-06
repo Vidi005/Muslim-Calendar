@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 
-const EclipsesPage = ({ t, isSidebarExpanded, formattedDateTime, monthInSetYear, latitude, longitude, elevation, inputDate, inputTime, generateLocalSolarEclipseInfo, generateLunarEclipseInfo }) => (
+const EclipsesPage = ({ t, selectedLanguage, isSidebarExpanded, selectedTimeZone, formattedDateTime, monthInSetYear, latitude, longitude, elevation, inputDate, inputTime, generateLocalSolarEclipseInfo, generateLunarEclipseInfo }) => (
   <div className="eclipses-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('app_name') + ' | ' + t('pages.3')}</title>
@@ -12,7 +12,9 @@ const EclipsesPage = ({ t, isSidebarExpanded, formattedDateTime, monthInSetYear,
     <HeaderContainer/>
     <MainContainer
       t={t}
+      selectedLanguage={selectedLanguage}
       isSidebarExpanded={isSidebarExpanded}
+      selectedTimeZone={selectedTimeZone}
       formattedDateTime={formattedDateTime}
       monthInSetYear={monthInSetYear}
       latitude={latitude}

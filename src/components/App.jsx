@@ -1436,9 +1436,11 @@ class App extends React.Component {
             }}>
               <EclipsesPage
                 t={i18n.t}
+                selectedLanguage={this.state.selectedLanguage}
                 isSidebarExpanded={this.state.isSidebarExpanded}
+                selectedTimeZone={this.state.selectedTimeZone}
                 formattedDateTime={this.state.formattedDateTime}
-                monthsInSetYear={this.state.monthsInSetYear}
+                monthInSetYear={this.state.monthInSetYear}
                 latitude={this.state.latitude}
                 longitude={this.state.longitude}
                 elevation={this.state.elevation}
