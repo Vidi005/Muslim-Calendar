@@ -473,7 +473,7 @@
         ],
         [
             {
-                "visibility": "Bisa terlihat mata (Ketinggian ≥ 3° & Elongasi ≥ 6.4°)",
+                "visibility": "Bisa terlihat (Ketinggian ≥ 3° & Elongasi ≥ 6.4°)",
                 "color": "#00FF3E"
             },
             {
@@ -492,11 +492,14 @@
     ],
     "eclipses": "Gerhana",
     "global_solar_eclipse": "Gerhana Matahari Global",
+    "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",
     "local_solar_eclipse": "Gerhana Matahari Lokal",
+    "local_solar_eclipses_loading": "Memuat Gerhana Matahari Lokal...",
     "lunar_eclipse": "Gerhana Bulan",
-    "global_solar_eclipse_infos": ["Jarak", "Jenis Gerhana Matahari", "Lintang", "Bujur", "Tertutup", "Waktu Puncak", "Visibilitas"],
+    "lunar_eclipses_loading": "Memuat Gerhana Bulan...",
+    "global_solar_eclipse_infos": ["Jarak", "Jenis Gerhana Matahari", "Lintang", "Bujur", "Tertutup", "Waktu Puncak","Tidak Diketahui"],
     "local_solar_eclipse_infos": ["Jenis Gerhana Matahari", "Tertutup", "Ketinggian Awal Sebagian", "Awal Waktu Sebagian", "Ketinggian Akhir Sebagian", "Akhir Waktu Sebagian", "Ketinggian Puncak", "Waktu Puncak", "Ketinggian Awal Total", "Awal Waktu Total", "Ketinggian Akhir Total", "Akhir Waktu Total", "Tidak Ada"],
-    "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Puncak", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Visibilitas"],
+    "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Puncak", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Visibilitas", "Tidak Ada"],
     "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
     "time_suffixes": ["jam", "menit", "detik"],
     "version": "Diperbarui pada Januari 2025",

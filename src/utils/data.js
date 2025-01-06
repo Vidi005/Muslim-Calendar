@@ -263,7 +263,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
   const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
-  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" })
+  const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }).replace(/\./g, ':')
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
   const islamicDayNumber = months[currentDate.getMonth()][currentDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
@@ -443,7 +443,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonRightAscension = `${moonEquatorJ2000.ra.toFixed(2)}°`
   const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
-  const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
+  const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°${moonHorizon.altitude < 0 ? ' (Not Visible)' : ''}`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
   const distanceInKm = `${(geoDistanceAU * 14959787069098932 / 100000000).toFixed(2)} km`
@@ -1765,7 +1765,8 @@ const getGlobalSolarEclipse = date => {
     latitude: globalSolarEclipse.latitude || 0,
     longitude: globalSolarEclipse.longitude || 0,
     obscuration: globalSolarEclipse.obscuration || 0,
-    peak: globalSolarEclipse.peak.date || 0
+    peak: globalSolarEclipse.peak.date || 0,
+    nextDate: globalSolarEclipse.peak.AddDays(1).date || 0,
   }
 }
 
@@ -1785,7 +1786,8 @@ const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
     totalBeginAltitude: localSolarEclipse.total_begin?.altitude || 0,
     totalBeginTime: localSolarEclipse.total_begin?.time?.date || 0,
     totalEndAltitude: localSolarEclipse.total_end?.altitude || 0,
-    totalEndTime: localSolarEclipse.total_end?.time?.date || 0
+    totalEndTime: localSolarEclipse.total_end?.time?.date || 0,
+    nextDate: localSolarEclipse.partial_end.time.AddDays(1).date || 0
   }
 }
 
@@ -1798,7 +1800,8 @@ const getLunarEclipse = date => {
     peak: lunarEclipse.peak.date || 0,
     sdPartial: lunarEclipse.sd_partial || 0,
     sdPenum: lunarEclipse.sd_penum || 0,
-    sdTotal: lunarEclipse.sd_total || 0
+    sdTotal: lunarEclipse.sd_total || 0,
+    nextDate: lunarEclipse.peak.AddDays(1).date || 0
   }
 }
 

@@ -473,7 +473,7 @@
         ],
         [
             {
-                "visibility": "Can be seen by eye (Altitude ≥ 3° & Elongation ≥ 6.4°)",
+                "visibility": "Can be seen (Altitude ≥ 3° & Elongation ≥ 6.4°)",
                 "color": "#00FF3E"
             },
             {
@@ -492,11 +492,14 @@
     ],
     "eclipses": "Eclipses",
     "global_solar_eclipse": "Global Solar Eclipse",
+    "global_solar_eclipses_loading": "Loading Global Solar Eclipses...",
     "local_solar_eclipse": "Local Solar Eclipse",
+    "local_solar_eclipses_loading": "Loading Local Solar Eclipses...",
     "lunar_eclipse": "Lunar Eclipse",
-    "global_solar_eclipse_infos": ["Distance", "Solar Eclipse Kind", "Latitude", "Longitude", "Obscuration", "Peak Time", "Visibility"],
+    "lunar_eclipses_loading": "Loading Lunar Eclipses...",
+    "global_solar_eclipse_infos": ["Distance", "Solar Eclipse Kind", "Latitude", "Longitude", "Obscuration", "Peak Time", "Unknown"],
     "local_solar_eclipse_infos": ["Solar Eclipse Kind", "Obscuration", "Partial Begin Altitude", "Partial Begin Time", "Partial End Altitude", "Partial End Time", "Peak Altitude", "Peak Time", "Total Begin Altitude", "Total Begin Time", "Total End Altitude", "Total End Time", "Not Available"],
-    "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Peak Time", "Semi Duration Penumbral", "Semi Duration Partial", "Semi Duration Total", "Visibility"],
+    "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Peak Time", "Semi Duration Penumbral", "Semi Duration Partial", "Semi Duration Total", "Visibility", "Not Available"],
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
     "time_suffixes": ["hours", "minutes", "seconds"],

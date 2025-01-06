@@ -7,11 +7,11 @@ class MainContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      globalSolarEclipseList: [],
       localSolarEclipseList: [],
+      globalSolarEclipseList: [],
       lunarEclipseList: [],
-      areGlobalSolarEclipseListLoading: true,
       areLocalSolarEclipseListLoading: true,
+      areGlobalSolarEclipseListLoading: true,
       areLunarEclipseListLoading: true
     }
   }
@@ -33,23 +33,23 @@ class MainContainer extends React.Component {
   createLocalSolarEclipseList = async () => {
     const results = []
     let date = this.props.formattedDateTime
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index <= 5; index++) {
       try {
         const result = await this.props.generateLocalSolarEclipseInfo(date)
         results.push(result)
         if (result.partialEndTime) {
-          date = result.partialEndTime
+          date = result.nextDate
         } else {
           this.setState({ areLocalSolarEclipseListLoading: false })
           break
         }
-        this.setState({ areLocalSolarEclipseListLoading: index != 4 })
+        this.setState({ areLocalSolarEclipseListLoading: index != 5 })
       } catch (error) {
         this.setState({ areLocalSolarEclipseListLoading: false })
         break
       }
     }
-    this.setState({ areLocalSolarEclipseListLoading: false, localSolarEclipseList: results }, () => console.log("localSolarEclipseList", this.state.localSolarEclipseList))
+    this.setState({ areLocalSolarEclipseListLoading: false, localSolarEclipseList: results })
   }
 
   generateGlobalSolarEclipseInfo = globalSolarEclipseDate => new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ class MainContainer extends React.Component {
         const result = await this.generateGlobalSolarEclipseInfo(date)
         results.push(result)
         if (result.peak) {
-          date = result.peak
+          date = result.nextDate
         } else {
           this.setState({ areGlobalSolarEclipseListLoading: false })
           break
@@ -95,7 +95,7 @@ class MainContainer extends React.Component {
         break
       }
     }
-    this.setState({ areGlobalSolarEclipseListLoading: false, globalSolarEclipseList: results }, () => console.log("globalSolarEclipseList", this.state.globalSolarEclipseList))
+    this.setState({ areGlobalSolarEclipseListLoading: false, globalSolarEclipseList: results })
   }
 
   createLunarEclipseList = async () => {
@@ -106,7 +106,7 @@ class MainContainer extends React.Component {
         const result = await this.props.generateLunarEclipseInfo(date)
         results.push(result)
         if (result.peak) {
-          date = result.peak
+          date = result.nextDate
         } else {
           this.setState({ areLunarEclipseListLoading: false })
           break
@@ -117,7 +117,7 @@ class MainContainer extends React.Component {
         break
       }
     }
-    this.setState({ areLunarEclipseListLoading: false, lunarEclipseList: results }, () => console.log("lunarEclipseList", this.state.lunarEclipseList))
+    this.setState({ areLunarEclipseListLoading: false, lunarEclipseList: results })
   }
   
   render() {
@@ -126,11 +126,31 @@ class MainContainer extends React.Component {
         {innerWidth > 1024 ? (
           <div className="eclipses-container flex flex-nowrap w-full h-full">
             <Sidebar t={this.props.t} isSidebarExpanded={this.props.isSidebarExpanded} />
-            <EclipsesContent t={this.props.t} />
+            <EclipsesContent
+              t={this.props.t}
+              selectedLanguage={this.props.selectedLanguage}
+              selectedTimeZone={this.props.selectedTimeZone}
+              areLocalSolarEclipseListLoading={this.state.areLocalSolarEclipseListLoading}
+              areGlobalSolarEclipseListLoading={this.state.areGlobalSolarEclipseListLoading}
+              areLunarEclipseListLoading={this.state.areLunarEclipseListLoading}
+              localSolarEclipseList={this.state.localSolarEclipseList}
+              globalSolarEclipseList={this.state.globalSolarEclipseList}
+              lunarEclipseList={this.state.lunarEclipseList}
+            />
           </div>
         ) : (
           <div className="eclipses-container flex flex-col w-full h-full">
-            <EclipsesContent t={this.props.t} />
+            <EclipsesContent
+              t={this.props.t}
+              selectedLanguage={this.props.selectedLanguage}
+              selectedTimeZone={this.props.selectedTimeZone}
+              areLocalSolarEclipseListLoading={this.state.areLocalSolarEclipseListLoading}
+              areGlobalSolarEclipseListLoading={this.state.areGlobalSolarEclipseListLoading}
+              areLunarEclipseListLoading={this.state.areLunarEclipseListLoading}
+              localSolarEclipseList={this.state.localSolarEclipseList}
+              globalSolarEclipseList={this.state.globalSolarEclipseList}
+              lunarEclipseList={this.state.lunarEclipseList}
+            />
             <BottomBar t={this.props.t} />
           </div>
         )}
