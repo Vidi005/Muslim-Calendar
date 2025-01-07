@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, Libration, MakeTime, MoonPhase, Observer, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SiderealTime, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -446,7 +446,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°${moonHorizon.altitude < 0 ? ' (Not Visible)' : ''}`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
-  const distanceInKm = `${(geoDistanceAU * 14959787069098932 / 100000000).toFixed(2)} km`
+  const distanceInKm = `${(geoDistanceAU * KM_PER_AU).toFixed(2)} km`
   const moonEcliptic = EclipticGeoMoon(astroDate)
   const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
   const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
@@ -458,12 +458,11 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
-  const siderealTime = SiderealTime(astroDate)
-  const hourAngle = (siderealTime * 15 + longitude - moonEquatorOfDate.ra) % 360
+  const hourAngle = HourAngle(Body.Moon, astroDate, observer)
   const parallacticAngle = convertToDegrees(
     Math.atan2(
-      Math.sin(convertToRadians(hourAngle)),
-      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(convertToRadians(hourAngle))
+      Math.sin(hourAngle * HOUR2RAD),
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(hourAngle * HOUR2RAD)
     )
   )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
@@ -1320,12 +1319,11 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const illuminationPercent = moonIllumination.phase_fraction * 100
-  const siderealTime = SiderealTime(astroDate)
-  const hourAngle = (siderealTime * 15 + longitude - moonEquatorOfDate.ra) % 360
+  const hourAngle = HourAngle(Body.Moon, astroDate, observer)
   const parallacticAngle = convertToDegrees(
     Math.atan2(
-      Math.sin(convertToRadians(hourAngle)),
-      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(convertToRadians(hourAngle))
+      Math.sin(hourAngle * HOUR2RAD),
+      Math.tan(convertToRadians(latitude)) * Math.cos(convertToRadians(moonEquatorOfDate.dec)) - Math.sin(convertToRadians(moonEquatorOfDate.dec)) * Math.cos(hourAngle * HOUR2RAD)
     )
   )
   return [
