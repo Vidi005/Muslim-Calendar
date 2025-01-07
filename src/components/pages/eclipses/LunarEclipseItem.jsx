@@ -6,16 +6,16 @@ const LunarEclipseItem = ({ t, selectedLanguage, selectedTimeZone, lunarEclipse 
   const lunarEclipseKind = lunarEclipse?.kind?.charAt(0)?.toUpperCase() + lunarEclipse?.kind?.slice(1)
   const lunarEclipseObscuration = `${lunarEclipse?.obscuration?.toFixed(2) * 100}%`
   const lunarEclipsePeakTime = lunarEclipse?.peak?.toLocaleTimeString(selectedLanguage || 'en', { timeZone: selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')
-  const semiDurationPenum = convertMinutesToTime(lunarEclipse?.penumbralDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
-  const semiDurationPartial = lunarEclipse?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(lunarEclipse?.partialDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
-  const semiDurationTotal = lunarEclipse?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(lunarEclipse?.totalDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+  const penumbralDuration = convertMinutesToTime(lunarEclipse?.penumbralDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+  const partialDuration = lunarEclipse?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(lunarEclipse?.partialDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+  const totalDuration = lunarEclipse?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(lunarEclipse?.totalDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
   const lunarEclipseArrayData = [
     lunarEclipseKind,
     lunarEclipseObscuration,
     lunarEclipsePeakTime,
-    semiDurationPenum,
-    semiDurationPartial,
-    semiDurationTotal,
+    penumbralDuration,
+    partialDuration,
+    totalDuration,
     t('eclipse_visibilities.2')
   ]
   return (
