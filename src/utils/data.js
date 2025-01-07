@@ -428,6 +428,14 @@ const getElementContent = innerHTML => {
   return hijriEvent
 }
 
+const convertRAToHMS = raDecimalHours => {
+  const hours = Math.floor(raDecimalHours)
+  const minutes = Math.floor((raDecimalHours - hours) * 60)
+  const seconds = Math.round(((raDecimalHours - hours) * 60 - minutes) * 60)
+  const formatted = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  return formatted
+}
+
 const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
@@ -440,7 +448,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
   const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
   const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, false)
-  const moonRightAscension = `${moonEquatorJ2000.ra.toFixed(2)}°`
+  const moonRightAscension = `${convertRAToHMS(moonEquatorJ2000.ra)}`
   const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°${moonHorizon.altitude < 0 ? ' (Not Visible)' : ''}`
@@ -1292,7 +1300,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
-  const sunRightAscension = `${sunEquator.ra.toFixed(2)}°`
+  const sunRightAscension = `${convertRAToHMS(sunEquator.ra)}`
   const sunDeclination = `${sunEquator.dec.toFixed(2)}°`
   const sunLatittude = SunPosition(astroDate).elat
   const sunLongitude = SunPosition(astroDate).elon
@@ -1796,15 +1804,15 @@ const getLunarEclipse = date => {
     kind: lunarEclipse.kind || '',
     obscuration: lunarEclipse.obscuration || 0,
     peak: lunarEclipse.peak.date || 0,
-    sdPartial: lunarEclipse.sd_partial || 0,
-    sdPenum: lunarEclipse.sd_penum || 0,
-    sdTotal: lunarEclipse.sd_total || 0,
+    partialDuration: lunarEclipse.sd_partial * 2 - lunarEclipse.sd_total * 2 || 0,
+    penumbralDuration: lunarEclipse.sd_penum * 2 - lunarEclipse.sd_partial * 2 || 0,
+    totalDuration: lunarEclipse.sd_total * 2 || 0,
     nextDate: lunarEclipse.peak.AddDays(1).date || 0
   }
 }
 
 const convertMinutesToTime = (time, hrs, mins, secs) => {
-  const hours = Math.floor((time % 60) / 60)
+  const hours = Math.floor(time / 60)
   const minutes = Math.floor(time % 60)
   const seconds = Math.floor((time * 60) % 60)
   return `${hours} ${hrs} ${minutes} ${mins} ${seconds} ${secs}`

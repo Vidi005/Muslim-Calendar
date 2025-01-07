@@ -499,7 +499,7 @@
     "lunar_eclipses_loading": "Loading Lunar Eclipses...",
     "global_solar_eclipse_infos": ["Distance", "Solar Eclipse Kind", "Latitude", "Longitude", "Obscuration", "Peak Time", "Unknown"],
     "local_solar_eclipse_infos": ["Solar Eclipse Kind", "Obscuration", "Partial Begin Altitude", "Partial Begin Time", "Partial End Altitude", "Partial End Time", "Peak Altitude", "Peak Time", "Total Begin Altitude", "Total Begin Time", "Total End Altitude", "Total End Time", "Not Available"],
-    "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Peak Time", "Semi Duration Penumbral", "Semi Duration Partial", "Semi Duration Total", "Visibility", "Not Available"],
+    "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Peak Time", "Penumbral Phase Duration", "Partial Phase Duration", "Total Phase Duration", "Visibility", "Not Available"],
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
     "time_suffixes": ["hours", "minutes", "seconds"],
