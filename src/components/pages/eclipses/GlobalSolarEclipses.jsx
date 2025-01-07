@@ -2,7 +2,7 @@ import React from "react"
 import GlobalSolarEclipseItem from "./GlobalsolarEclipseItem"
 
 const GlobalSolarEclipses = ({ t, selectedLanguage, selectedTimeZone, areGlobalSolarEclipseListLoading, globalSolarEclipseList }) => (
-  <section className="w-full mb-2 md:mb-4 xl:mb-8 md:w-1/2 p-2 md:px-4 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInLeft">
+  <section className="w-full md:w-1/2 p-2 md:px-4 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInLeft">
     <h2 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('global_solar_eclipse')}</h2>
     {areGlobalSolarEclipseListLoading
       ? (
