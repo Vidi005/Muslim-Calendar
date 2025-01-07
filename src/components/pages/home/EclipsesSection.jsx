@@ -36,9 +36,9 @@ const EclipsesSection = () => (
       const lunarEclipseKind = state.lunarEclipseInfo?.kind?.charAt(0)?.toUpperCase() + state.lunarEclipseInfo?.kind?.slice(1)
       const lunarEclipseObscuration = `${state.lunarEclipseInfo?.obscuration?.toFixed(2) * 100}%`
       const lunarEclipsePeakTime = state.lunarEclipseInfo?.peak?.toLocaleString(state.selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')
-      const semiDurationPenum = convertMinutesToTime(state.lunarEclipseInfo?.sdPenum, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
-      const semiDurationPartial = state.lunarEclipseInfo?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.sdPartial, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
-      const semiDurationTotal = state.lunarEclipseInfo?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.sdTotal, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+      const semiDurationPenum = convertMinutesToTime(state.lunarEclipseInfo?.penumbralDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+      const semiDurationPartial = state.lunarEclipseInfo?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.partialDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
+      const semiDurationTotal = state.lunarEclipseInfo?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.totalDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const lunarEclipseArrayData = [
         lunarEclipseKind,
         lunarEclipseObscuration,
