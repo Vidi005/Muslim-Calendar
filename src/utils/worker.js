@@ -75,7 +75,7 @@ self.onmessage = event => {
     const result = getLocalSolarEclipse(localSolarEclipseDate, latitude, longitude, elevation)
     self.postMessage({ type: 'createLocalSolarEclipse', result })
   } else if (type === 'createLunarEclipse') {
-    const result = getLunarEclipse(lunarEclipseDate)
+    const result = getLunarEclipse(lunarEclipseDate, latitude, longitude, elevation)
     self.postMessage({ type: 'createLunarEclipse', result })
   }
 }
