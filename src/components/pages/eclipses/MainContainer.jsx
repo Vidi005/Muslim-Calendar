@@ -79,7 +79,7 @@ class MainContainer extends React.Component {
   createGlobalSolarEclipseList = async () => {
     const results = []
     let date = this.props.formattedDateTime
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index <= 7; index++) {
       try {
         const result = await this.generateGlobalSolarEclipseInfo(date)
         results.push(result)
