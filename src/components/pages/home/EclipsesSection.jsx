@@ -35,18 +35,29 @@ const EclipsesSection = () => (
       ]
       const lunarEclipseKind = state.lunarEclipseInfo?.kind?.charAt(0)?.toUpperCase() + state.lunarEclipseInfo?.kind?.slice(1)
       const lunarEclipseObscuration = `${state.lunarEclipseInfo?.obscuration?.toFixed(2) * 100}%`
-      const lunarEclipsePeakTime = state.lunarEclipseInfo?.peak?.toLocaleString(state.selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')
+      const penumbralBeginTime = `${state.lunarEclipseInfo?.penumbralBeginTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isPenumbralBeginVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const lunarPartialBeginTime = state.lunarEclipseInfo?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : `${state.lunarEclipseInfo?.partialBeginTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isPartialBeginVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const lunarTotalBeginTime = state.lunarEclipseInfo?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : `${state.lunarEclipseInfo?.totalBeginTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isTotalBeginVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const lunarEclipsePeakTime = `${state.lunarEclipseInfo?.peak?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isPeakTimeVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const lunarTotalEndTime = state.lunarEclipseInfo?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : `${state.lunarEclipseInfo?.totalEndTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isTotalEndVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const lunarPartialEndTime = state.lunarEclipseInfo?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : `${state.lunarEclipseInfo?.partialEndTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isPartialEndVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
+      const penumbralEndTime = `${state.lunarEclipseInfo?.penumbralEndTime?.toLocaleString(state.selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: state.selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':')} (${state.lunarEclipseInfo?.isPenumbralEndVisible ? t('eclipse_visibilities.0') : t('eclipse_visibilities.1')})`
       const penumbralDuration = convertMinutesToTime(state.lunarEclipseInfo?.penumbralDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const partialDuration = state.lunarEclipseInfo?.kind === 'penumbral' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.partialDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const totalDuration = state.lunarEclipseInfo?.kind !== 'total' ? t(`lunar_eclipse_infos.${en.lunar_eclipse_infos.length - 1}`) : convertMinutesToTime(state.lunarEclipseInfo?.totalDuration, t('time_suffixes.0'), t('time_suffixes.1'), t('time_suffixes.2'))
       const lunarEclipseArrayData = [
         lunarEclipseKind,
         lunarEclipseObscuration,
+        penumbralBeginTime,
+        lunarPartialBeginTime,
+        lunarTotalBeginTime,
         lunarEclipsePeakTime,
+        lunarTotalEndTime,
+        lunarPartialEndTime,
+        penumbralEndTime,
         penumbralDuration,
         partialDuration,
-        totalDuration,
-        t('eclipse_visibilities.2')
+        totalDuration
       ]
       return (
         <section className="eclipses-section flex flex-col items-center w-full p-1 md:p-2 animate__animated animate__fadeInUp">

@@ -1223,6 +1223,9 @@ class App extends React.Component {
     lunarEclipseInfoWorker.postMessage({
       type: 'createLunarEclipse',
       lunarEclipseDate: lunarEclipseDate,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      elevation: this.state.elevation
     })
     lunarEclipseInfoWorker.onmessage = workerEvent => {
       if (workerEvent.data.type === 'createLunarEclipse') {
