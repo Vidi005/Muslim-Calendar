@@ -110,7 +110,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
             className="w-10 md:w-12 ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
             defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? 4.5 : 18}
             value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? state.inputSunAltitude : state.inputMinutes}
-            onChange={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? onInputSunAltitudeChange : onInputMinutesChange}
+            onChange={event => state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 48 ? onInputSunAltitudeChange(event.target.value) : onInputMinutesChange(event.target.value)}
             required
           />
           <span>{state.selectedDhuhaMethod === 0 ? t('degrees') : t('minutes')}</span>

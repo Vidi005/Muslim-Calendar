@@ -849,9 +849,9 @@ class App extends React.Component {
     })
   }
 
-  onInputSunAltitudeChange (event) {
-    if (parseFloat(event.target.value) < 4 || parseFloat(event.target.value) > 8) return
-    this.setState({ inputSunAltitude: parseFloat(event.target.value) }, () => {
+  onInputSunAltitudeChange (value) {
+    if (parseFloat(value) < 4 || parseFloat(value) > 8) return
+    this.setState({ inputSunAltitude: parseFloat(value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
       }
@@ -859,9 +859,9 @@ class App extends React.Component {
     })
   }
 
-  onInputMinutesChange (event) {
-    if (parseInt(event.target.value) < 10 || parseInt(event.target.value) > 40) return
-    this.setState({ inputMinutes: parseInt(event.target.value) }, () => {
+  onInputMinutesChange (value) {
+    if (parseInt(value) < 10 || parseInt(value) > 40) return
+    this.setState({ inputMinutes: parseInt(value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.INPUT_MINUTES_STORAGE_KEY, JSON.stringify(this.state.inputMinutes))
       }
@@ -876,8 +876,8 @@ class App extends React.Component {
       } else {
         this.selectTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
       }
-      localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
       if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
         localStorage.setItem(this.state.FORMULA_STORAGE_KEY, JSON.stringify(this.state.selectedFormula))
       }
       this.formatDateTime().then(() => this.generateCalendar())
