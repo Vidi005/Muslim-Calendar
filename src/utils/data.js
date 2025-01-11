@@ -638,7 +638,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       }
       const nightDuration = sunrise.AddDays(1).date - maghrib.date
       const fajrTime = sunrise.date.getTime() - nightDuration / 2
-      fajr = new AstroTime(new Date(fajrTime))
+      fajr = MakeTime(new Date(fajrTime))
       correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
@@ -691,7 +691,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       }
       const nightDuration = sunrise.AddDays(1).date - maghrib.date
       const fajrTime = sunrise.date.getTime() - nightDuration / 7
-      fajr = new AstroTime(new Date(fajrTime))
+      fajr = MakeTime(new Date(fajrTime))
       correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
@@ -743,7 +743,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       }
       const nightDuration = sunrise.AddDays(1).date - maghrib.date
       const fajrTime = sunrise.date.getTime() - nightDuration * sunAlt.fajr / 60
-      fajr = new AstroTime(new Date(fajrTime))
+      fajr = MakeTime(new Date(fajrTime))
       correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
       if (isNaN(sunAlt.isha)) {
         if (Array.isArray(sunAlt.isha)) {
@@ -1051,7 +1051,6 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
       const sunriseMinutes = (sunriseTime - sunriseHours) * 60
       const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
-      sunrise = sunrise.setDate(sunrise.getDate() + 1)
       const maghribHours = parseInt(maghribTime)
       const maghribMinutes = (maghribTime - maghribHours) * 60
       const maghribSeconds = (maghribMinutes - parseInt(maghribMinutes)) * 60
