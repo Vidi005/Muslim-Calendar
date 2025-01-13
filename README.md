@@ -1,7 +1,10 @@
 # Muslim-Calendar
 Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.
 
-#### This Project is still in WIP (Work In Progress...) and might still contains any unexpected result.
+#### This Project is still in WIP (Work In Progress...) and might still produces any unexpected result.
+#### Currently some features Might Not Supported for:
+- Prayer Times in Higher Latitudes
+- Hijri Dates in Western Region
 
 ### Features
 - Display Islamic Calendar, Moon Information, Prayer Times, Prayer Schedule List, Qibla Direction, Moon Crescent Visibility map, and Eclipses (Solar and Lunar Eclipses)
