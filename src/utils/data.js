@@ -100,14 +100,14 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       if (!sunset) {
         // If sunset is not found, search for sunset on the lower latitude by using lower latitude observer or Mecca observer (based selected formula)
-        if (formula === 0) {
+        if (formula === 1) {
           if (latitude > 48) westObserver = observerFromEarth(45, longitude, elevation)
           else westObserver = observerFromEarth(-45, longitude, elevation)
-        } else if (formula === 1) {
+        } else if (formula === 2) {
           westObserver = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
         } else {
-          if (latitude > 48) westObserver = observerFromEarth(48, longitude, elevation)
-          else westObserver = observerFromEarth(-48, longitude, elevation)
+          if (latitude > 60) westObserver = observerFromEarth(60, longitude, elevation)
+          else westObserver = observerFromEarth(-60, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
       }
@@ -154,14 +154,14 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       if (!sunset) {
-        if (formula === 0) {
+        if (formula === 1) {
           if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
           else observer = observerFromEarth(-45, longitude, elevation)
-        } else if (formula === 1) {
+        } else if (formula === 2) {
           observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
         } else {
-          if (latitude > 48) observer = observerFromEarth(48, longitude, elevation)
-          else observer = observerFromEarth(-48, longitude, elevation)
+          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
+          else observer = observerFromEarth(-60, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
@@ -537,11 +537,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
   if (mahzab === 0) shadowFactor = 1
   // For Hanafi school
   else shadowFactor = 2
-  if (Math.abs(latitude) > 48) {
+  if (Math.abs(latitude) > 60) {
     let setLatitude = latitude
-    if (latitude > 48) setLatitude = 48
-    else setLatitude = -48
-    if (formula === 0) {
+    if (latitude > 60) setLatitude = 60
+    else setLatitude = -60
+    if (formula === 1) {
       // Follow ±45 degrees latitude
       let higherLat = latitude
       if (latitude > 48) higherLat = 45
@@ -581,7 +581,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
-    } else if (formula === 1) {
+    } else if (formula === 2) {
       // Follow mecca coordinates
       observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
@@ -617,7 +617,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
-    } else if (formula === 2) {
+    } else if (formula === 3) {
       // Middle of the night
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
@@ -672,7 +672,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
       }
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
-    } else if (formula === 3) {
+    } else if (formula === 4) {
       // One-seventh of the night
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
@@ -916,11 +916,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   const equationOfTime = (-(1789 + 237 * u) * Math.sin(sunLongitudeInRad) - (7146 - 62 * u) * Math.cos(sunLongitudeInRad) + (9934 - 14 * u) * Math.sin(2 * sunLongitudeInRad) - (29 + 5 * u) * Math.cos(2 * sunLongitudeInRad) + (74 + 10 * u) * Math.sin(3 * sunLongitudeInRad) + (320 - 4 * u) * Math.cos(3 * sunLongitudeInRad) - 212 * Math.sin(4 * sunLongitudeInRad)) / 1000
   const transitTime = 12 - getTimeZoneDiff() - longitude / 15 - equationOfTime / 60
   const sunriseAltitude = -5/6 - 0.0347 * Math.sqrt(elevation)
-  if (Math.abs(latitude) > 48) {
+  if (Math.abs(latitude) > 60) {
     let setLatitude = latitude
-    if (latitude > 48) setLatitude = 48
-    else setLatitude = -48
-    if (formula === 0) {
+    if (latitude > 60) setLatitude = 60
+    else setLatitude = -60
+    if (formula === 1) {
       let higherLat = latitude
       if (latitude > 48) higherLat = 45
       else higherLat = -45
@@ -974,7 +974,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = parseDate(gregorianDate, ishaHours, ishaMinutes, ishaSeconds)
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
-    } else if (formula === 1) {
+    } else if (formula === 2) {
       fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       fajrTime = transitTime - fajrHourAngle / 15
       const fajrHours = parseInt(fajrTime)
@@ -1025,7 +1025,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = parseDate(gregorianDate, ishaHours, ishaMinutes, ishaSeconds)
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
-    } else if (formula === 2) {
+    } else if (formula === 3) {
       sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!sunriseHourAngle) {
         sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))
@@ -1080,7 +1080,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         isha = new Date(ishaTime)
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
-    } else if (formula === 3) {
+    } else if (formula === 4) {
       sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (!sunriseHourAngle) {
         sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(setLatitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(setLatitude)) * Math.cos(convertToRadians(sunDeclination)))))

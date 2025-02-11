@@ -267,7 +267,7 @@
     "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
     "restore_to_default": "Restore to Default",
     "calculation_method": "Method :",
-    "formulas": ["Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
+    "formulas": ["Not Configured", "Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
     "observer_times": ["Astral Conjunction -1", "Astral Conjunction", "Astral Conjunction +1"],
     "prayer_times_config": "Prayer Times Configuration :",
     "time_correction": "Times Correction :",

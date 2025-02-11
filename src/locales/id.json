@@ -267,7 +267,7 @@
     "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
     "restore_to_default": "Ke Pengaturan Awal",
     "calculation_method": "Metode :",
-    "formulas": ["Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
+    "formulas": ["Tidak diatur","Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
     "prayer_times_config": "Pengaturan Waktu Sholat :",
     "time_correction": "Koreksi Waktu :",
