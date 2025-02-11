@@ -61,7 +61,7 @@ class App extends React.Component {
       selectedDhuhaMethod: 0,
       inputSunAltitude: 4.5,
       inputMinutes: 18,
-      selectedFormula: 0,
+      selectedFormula: 1,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
       tooltipId: '',
@@ -701,7 +701,7 @@ class App extends React.Component {
   onInputLatitudeChange (event) {
     if (Math.abs(event.target.value) > 90) return
     this.setState({ latitude: parseFloat(event.target.value) }, () => {
-      if (Math.abs(this.state.latitude) > 48) this.selectDhuhaMethod(1)
+      if (Math.abs(this.state.latitude) > 60) this.selectDhuhaMethod(1)
     })
   }
 
@@ -871,7 +871,7 @@ class App extends React.Component {
   
   selectFormula (value) {
     this.setState({ selectedFormula: parseInt(value) }, () => {
-      if (parseInt(value) === 1) {
+      if (parseInt(value) === 2) {
         this.selectTimeZone('Asia/Riyadh')
       } else {
         this.selectTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
