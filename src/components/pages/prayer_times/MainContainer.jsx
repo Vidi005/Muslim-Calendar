@@ -247,7 +247,7 @@ class MainContainer extends React.Component {
         this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
-        this.props.selectFormula(0)
+        this.props.selectFormula(1)
         en.prayer_names.forEach((_, index) => this.props.selectCorrections(index, 0))
         localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
