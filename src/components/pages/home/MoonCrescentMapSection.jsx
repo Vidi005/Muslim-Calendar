@@ -22,6 +22,8 @@ const MoonCrescentMapSection = () => (
               <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('conjunction')} {state.moonCrescentVisibility.conjunction?.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: state.selectedTimeZone }).replace(/\./g, ':')}</h5>
               <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
                 <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
+                <span className="absolute w-full h-1/6 top-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
+                <span className="absolute w-full h-1/6 bottom-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
                 {coordinateScale.latitudes.map((degree, index) => (
                   <>
                     <span key={index} className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
