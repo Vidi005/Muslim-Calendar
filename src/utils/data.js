@@ -1537,8 +1537,8 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const rotsun = RotateVector(rot, geosun)
   const meq = EquatorFromVector(rotmoon)
   const seq = EquatorFromVector(rotsun)
-  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec, 'normal')
-  const shor = Horizon(bestTime, observer, seq.ra, seq.dec, 'normal')
+  const mhor = Horizon(bestTime, observer, meq.ra, meq.dec)
+  const shor = Horizon(bestTime, observer, seq.ra, seq.dec)
   const arcv = mhor.altitude - shor.altitude
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
