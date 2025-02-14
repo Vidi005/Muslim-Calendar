@@ -117,7 +117,7 @@ class App extends React.Component {
     }
     if (this.state.currentDate?.time && this.state.inputTime !== '') {
       if (this.state.currentDate.time.includes('00:00:00')) {
-        this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
+        this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
       }
     }
     if (prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria && this.state.monthsInSetYear.length > 0) {
@@ -233,7 +233,7 @@ class App extends React.Component {
           latitude: parsedSavedLocation?.latitude,
           longitude: parsedSavedLocation?.longitude,
           elevation: parsedSavedLocation?.elevation
-        },() => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
+        },() => this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos()))
       } else this.getCurrentLocation()
     } catch (error) {
       localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
@@ -256,10 +256,10 @@ class App extends React.Component {
     const getSavedTimeZoneFromLocal = localStorage.getItem(this.state.TIMEZONE_STORAGE_KEY)
     try {
       const parsedSavedTimeZone = JSON.parse(getSavedTimeZoneFromLocal)
-      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
+      if (parsedSavedTimeZone !== null) this.setState({ selectedTimeZone: parsedSavedTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos()))
       else {
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
+        this.setState({ selectedTimeZone: userTimeZone }, () => this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos()))
       }
     } catch (error) {
       localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -507,7 +507,7 @@ class App extends React.Component {
       if (prevState.inputDate !== event.target.value) {
         return { inputDate: event.target.value }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos()))
   }
 
   setDesiredTime (event) {
@@ -515,7 +515,7 @@ class App extends React.Component {
       if (prevState.inputTime !== event.target.value) {
         return { inputTime: event.target.value.replace(/\./g, ':') }
       }
-    }, () => this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos()))
+    }, () => this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos()))
   }
 
   formatDateTime () {
@@ -633,7 +633,7 @@ class App extends React.Component {
 
   restoreDateTime () {
     this.setState({ inputDate: '', inputTime: '', isMoonCrescentMapLoading: true }, () => {
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
       this.goToCurrentMonth()
     })
   }
@@ -754,7 +754,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getMoonCrescentVisibility()).then(() => this.getEclipseInfos())
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
     })
   }
 
@@ -890,7 +890,6 @@ class App extends React.Component {
         localStorage.setItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedMoonVisibilityCriteria))
       }
       this.getMoonCrescentVisibility()
-      this.getEclipseInfos()
     })
   }
 
@@ -900,7 +899,6 @@ class App extends React.Component {
         localStorage.setItem(this.state.COORDINATE_STEPS_STORAGE_KEY, JSON.stringify(this.state.selectedCoordinateSteps))
       }
       this.getMoonCrescentVisibility()
-      this.getEclipseInfos()
     })
   }
 
@@ -936,10 +934,10 @@ class App extends React.Component {
     })
   }
 
-  generateCalendar = () => {
+  generateCalendar = async() => {
     const currentDate = new Date()
     if (currentDate.getDate() === this.state.formattedDateTime.getDate() && currentDate.getHours() === this.state.formattedDateTime.getHours() && currentDate.getMinutes() === this.state.formattedDateTime.getMinutes()) {
-      this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
+      await this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
         if (setCalendarData?.months?.length > 0) {
           this.setState({
             monthsInSetYear: setCalendarData.months,
@@ -953,7 +951,7 @@ class App extends React.Component {
         }
       })
     } else {
-      this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
+      await this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
         if (setCalendarData?.months?.length > 0) {
           this.setState({
             monthsInSetYear: setCalendarData.months,
@@ -965,7 +963,7 @@ class App extends React.Component {
           })
         }
       })
-      this.createCalendarWorker(currentDate).then(currentCalendarData => {
+      await this.createCalendarWorker(currentDate).then(currentCalendarData => {
         if (currentCalendarData?.months?.length > 0) {
           this.setState({ monthsInCurrentYear: currentCalendarData.months }, () => {
             this.generateMoonInfos()
@@ -1443,7 +1441,7 @@ class App extends React.Component {
                 isSidebarExpanded={this.state.isSidebarExpanded}
                 selectedTimeZone={this.state.selectedTimeZone}
                 formattedDateTime={this.state.formattedDateTime}
-                monthInSetYear={this.state.monthInSetYear}
+                monthsInSetYear={this.state.monthsInSetYear}
                 latitude={this.state.latitude}
                 longitude={this.state.longitude}
                 elevation={this.state.elevation}
