@@ -23,7 +23,7 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.monthInSetYear !== this.props.monthInSetYear || prevProps.latitude !== this.props.latitude || prevProps.longitude !== this.props.longitude || prevProps.inputDate !== this.props.inputDate || prevProps.inputTime !== this.props.inputTime) {
+    if (prevProps.monthsInSetYear !== this.props.monthsInSetYear || prevProps.latitude !== this.props.latitude || prevProps.longitude !== this.props.longitude || prevProps.inputDate !== this.props.inputDate || prevProps.inputTime !== this.props.inputTime) {
       this.createLocalSolarEclipseList()
       this.createGlobalSolarEclipseList()
       this.createLunarEclipseList()
