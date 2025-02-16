@@ -2,8 +2,9 @@ import React from "react"
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { prayerTimesCorrection } from "../../../utils/data"
+import { Checkbox, Field, Label } from "@headlessui/react"
 
-const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, selectAshrTime, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
+const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, selectAshrTime, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
   <HomePageConsumer>
     {({ t, state }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200 animate__animated animate__fadeInUp">
@@ -57,6 +58,14 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
               {en.ihtiyath_times.map((type, index) => <option key={type} value={index + 1}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
+          <Field className={"flex items-center m-1 cursor-pointer"}>
+            <Checkbox checked={state.isPreciseToSeconds} onChange={onChangePrecision} className={"group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200"}>
+              <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
+                <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Checkbox>
+            <Label className={"p-1 cursor-pointer"}>{t('precise_to_seconds')}</Label>
+          </Field>
           {Math.abs(state.latitude) > 48 && (
             <span className="flex items-center">
               <label htmlFor="calculation_method">{t('calculation_method')}</label>
