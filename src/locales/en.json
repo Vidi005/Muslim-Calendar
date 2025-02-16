@@ -265,6 +265,7 @@
     ],
     "ihtiyath": "Ihtiyath :",
     "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
+    "precise_to_seconds": "Precise to seconds",
     "restore_to_default": "Restore to Default",
     "calculation_method": "Method :",
     "formulas": ["Not Configured", "Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
