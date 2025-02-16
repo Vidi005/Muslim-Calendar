@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 
-const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
+const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('pages.1')}</title>
@@ -17,6 +17,7 @@ const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTi
       getCurrentConvention={getCurrentConvention}
       selectConvention={selectConvention}
       selectIhtiyath={selectIhtiyath}
+      onChangePrecision={onChangePrecision}
       selectCorrections={selectCorrections}
       selectDhuhaMethod={selectDhuhaMethod}
       onInputSunAltitudeChange={onInputSunAltitudeChange}

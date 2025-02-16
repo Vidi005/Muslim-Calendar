@@ -1,7 +1,7 @@
 import React from "react"
 import en from "../../../locales/en.json"
 
-const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, formattedDateTime, timeZone, seletedDhuhaMethod, dhuhaSunAltitude, sunAltitude, currentPrayerTimes, areSunInfosLoading, sunInfos }) => {
+const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, formattedDateTime, timeZone, isPreciseToSeconds, seletedDhuhaMethod, dhuhaSunAltitude, sunAltitude, currentPrayerTimes, areSunInfosLoading, sunInfos }) => {
   const sunAzimuthPosition = parseFloat(sunInfos[3]) <= 180
     ? (parseFloat(sunInfos[3]) / 180) * 100
     : ((parseFloat(sunInfos[3]) - 180) / 180) * 100

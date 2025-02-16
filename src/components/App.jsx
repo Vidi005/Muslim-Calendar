@@ -29,6 +29,7 @@ class App extends React.Component {
       ASHR_TIME_STORAGE_KEY: 'ASHR_TIME_STORAGE_KEY',
       CONVENTION_STORAGE_KEY: 'CONVENTION_STORAGE_KEY',
       IHTIYATH_STORAGE_KEY: 'IHTIYATH_STORAGE_KEY',
+      SECONDS_PRECISION_STORAGE_KEY: 'SECONDS_PRECISION_STORAGE_KEY',
       CORRECTIONS_STORAGE_KEY: 'CORRECTIONS_STORAGE_KEY',
       DHUHA_METHOD_STORAGE_KEY: 'DHUHA_METHOD_STORAGE_KEY',
       INPUT_SUN_ALTITUDE_STORAGE_KEY: 'INPUT_SUN_ALTITUDE_STORAGE_KEY',
@@ -57,6 +58,7 @@ class App extends React.Component {
       selectedConvention: 0,
       sunAltitude: en.conventions[0].sun_altitude,
       selectedIhtiyath: 2,
+      isPreciseToSeconds: false,
       selectedCorrections: Array(en.prayer_names.length).fill(0),
       selectedDhuhaMethod: 0,
       inputSunAltitude: 4.5,
@@ -161,6 +163,7 @@ class App extends React.Component {
       this.checkSavedAshrTime()
       this.checkSavedConvention()
       this.checkSavedIhtiyath()
+      this.checkSavedSecondsPrecision()
       this.checkSavedCorrections()
       this.checkSavedDhuhaMethod()
       this.checkSavedInputtedSunAltitude()
@@ -333,6 +336,19 @@ class App extends React.Component {
       localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }    
+  }
+
+  checkSavedSecondsPrecision () {
+    const getSavedSecondsPrecisionFromLocal = localStorage.getItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
+    try {
+      const parsedSavedSecondsPrecision = JSON.parse(getSavedSecondsPrecisionFromLocal)
+      if (parsedSavedSecondsPrecision !== null) {
+        this.setState({ isPreciseToSeconds: parsedSavedSecondsPrecision })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
   }
 
   checkSavedCorrections () {
@@ -827,6 +843,15 @@ class App extends React.Component {
     })
   }
 
+  onChangePrecision (value) {
+    this.setState({ isPreciseToSeconds: value }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.SECONDS_PRECISION_STORAGE_KEY, JSON.stringify(this.state.isPreciseToSeconds))
+      }
+      this.create3DaysOfPrayerTimes()
+    })
+  }
+
   selectCorrections (index, value) {
     this.setState(prevState => {
       const newCorrections = [...prevState.selectedCorrections]
@@ -1103,7 +1128,22 @@ class App extends React.Component {
       this.generatePrayerTimes(theDayBefore),
       this.generatePrayerTimes(this.state.formattedDateTime),
       this.generatePrayerTimes(theDayAfter)
-    ]).then(prayerTimes => { this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes }) })
+    ]).then(prayerTimes => {
+      if (this.state.isPreciseToSeconds) {
+        this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes })
+      } else {
+        en.prayer_names.map((_, i) => {
+          prayerTimes.map(prayerTime => {
+            if (prayerTime[i].getSeconds() > 30) {
+              return prayerTime[i].setMinutes(prayerTime[i].getMinutes() + 1)
+            } else {
+              return prayerTime[i].setSeconds(0)
+            }
+          })
+        })
+        this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes })
+      }
+    })
   }
 
   createPrayerTimeCountdown = () => {
@@ -1363,6 +1403,7 @@ class App extends React.Component {
                 getCurrentConvention={this.getCurrentConvention.bind(this)}
                 selectConvention={this.selectConvention.bind(this)}
                 selectIhtiyath={this.selectIhtiyath.bind(this)}
+                onChangePrecision={this.onChangePrecision.bind(this)}
                 selectCorrections={this.selectCorrections.bind(this)}
                 selectDhuhaMethod={this.selectDhuhaMethod.bind(this)}
                 onInputSunAltitudeChange={this.onInputSunAltitudeChange.bind(this)}
