@@ -13,6 +13,7 @@ class MainContainer extends React.Component {
       ASHR_TIME_STORAGE_KEY: "ASHR_TIME_STORAGE_KEY",
       CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
+      SECONDS_PRECISION_STORAGE_KEY: "SECONDS_PRECISION_STORAGE_KEY",
       CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
       DHUHA_METHOD_STORAGE_KEY: "DHUHA_METHOD_STORAGE_KEY",
       INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
@@ -166,7 +167,18 @@ class MainContainer extends React.Component {
       const startDate = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
       const formattedStartDate = startDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
-        const formattedPrayerTimes = prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')).slice(1)
+        const formattedPrayerTimes = prayerTime.map(time => {
+          if (this.props.parentState.isPreciseToSeconds) {
+            return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+          } else {
+            if (time.getSeconds() > 30) {
+              time.setMinutes(time.getMinutes() + 1)
+            } else {
+              time.setSeconds(0)
+            }
+            return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+          }
+        }).slice(1)
         return [formattedStartDate, ...formattedPrayerTimes]
       })
       prayerTimesPromises.push(prayerTimeList)
@@ -187,8 +199,30 @@ class MainContainer extends React.Component {
       const formattedGregorianDate = gregorianDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' })
       const prayerTimeList = this.props.generatePrayerTimes(gregorianDate).then(prayerTime => {
         const formattedPrayerTimes = hijriMonth === 9
-          ? prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':'))
-          : prayerTime.map(time => time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')).slice(1)
+          ? prayerTime.map(time => {
+            if (this.props.parentState.isPreciseToSeconds) {
+              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            } else {
+              if (time.getSeconds() > 30) {
+                time.setMinutes(time.getMinutes() + 1)
+              } else {
+                time.setSeconds(0)
+              }
+              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            }
+          })
+          : prayerTime.map(time => {
+            if (this.props.parentState.isPreciseToSeconds) {
+              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            } else {
+              if (time.getSeconds() > 30) {
+                time.setMinutes(time.getMinutes() + 1)
+              } else {
+                time.setSeconds(0)
+              }
+              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            }
+          }).slice(1)
         return [hijriDate, formattedGregorianDate, ...formattedPrayerTimes]
       })
       prayerTimesPromises.push(prayerTimeList)
@@ -244,6 +278,7 @@ class MainContainer extends React.Component {
         this.props.selectAshrTime(0)
         this.props.getCurrentConvention()
         this.props.selectIhtiyath(2)
+        this.props.onChangePrecision(false)
         this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
@@ -253,6 +288,7 @@ class MainContainer extends React.Component {
         localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
         localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
         localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
+        localStorage.removeItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
         localStorage.removeItem(this.state.CORRECTIONS_STORAGE_KEY)
         localStorage.removeItem(this.state.DHUHA_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY)
@@ -280,6 +316,7 @@ class MainContainer extends React.Component {
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
                   selectIhtiyath={this.props.selectIhtiyath}
+                  onChangePrecision={this.props.onChangePrecision}
                   selectCorrections={this.props.selectCorrections}
                   selectDhuhaMethod={this.props.selectDhuhaMethod}
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
@@ -303,6 +340,7 @@ class MainContainer extends React.Component {
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
                   selectIhtiyath={this.props.selectIhtiyath}
+                  onChangePrecision={this.props.onChangePrecision}
                   selectCorrections={this.props.selectCorrections}
                   selectDhuhaMethod={this.props.selectDhuhaMethod}
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
