@@ -265,6 +265,7 @@
     ],
     "ihtiyath": "Ikhtiyat :",
     "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
+    "precise_to_seconds": "Tepat hingga detik",
     "restore_to_default": "Ke Pengaturan Awal",
     "calculation_method": "Metode :",
     "formulas": ["Tidak diatur","Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
