@@ -1135,10 +1135,9 @@ class App extends React.Component {
         en.prayer_names.map((_, i) => {
           prayerTimes.map(prayerTime => {
             if (prayerTime[i].getSeconds() > 30) {
-              return prayerTime[i].setMinutes(prayerTime[i].getMinutes() + 1)
-            } else {
-              return prayerTime[i].setSeconds(0)
+              prayerTime[i].setMinutes(prayerTime[i].getMinutes() + 1)
             }
+            return prayerTime[i].setSeconds(0)
           })
         })
         this.setState({ arePrayerTimesLoading: false, prayerTimes: prayerTimes })
