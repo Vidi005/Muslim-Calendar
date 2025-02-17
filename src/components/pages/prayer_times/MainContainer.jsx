@@ -56,7 +56,7 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType) {
+    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
@@ -173,9 +173,8 @@ class MainContainer extends React.Component {
           } else {
             if (time.getSeconds() > 30) {
               time.setMinutes(time.getMinutes() + 1)
-            } else {
-              time.setSeconds(0)
             }
+            time.setSeconds(0)
             return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
           }
         }).slice(1)
@@ -205,9 +204,8 @@ class MainContainer extends React.Component {
             } else {
               if (time.getSeconds() > 30) {
                 time.setMinutes(time.getMinutes() + 1)
-              } else {
-                time.setSeconds(0)
               }
+              time.setSeconds(0)
               return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             }
           })
@@ -217,9 +215,8 @@ class MainContainer extends React.Component {
             } else {
               if (time.getSeconds() > 30) {
                 time.setMinutes(time.getMinutes() + 1)
-              } else {
-                time.setSeconds(0)
               }
+              time.setSeconds(0)
               return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             }
           }).slice(1)
