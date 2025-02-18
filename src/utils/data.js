@@ -69,7 +69,14 @@ const getTimeZoneList = () => {
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
 const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
-const sabangCoordinates = { latitude: 5.894, longitude: 95.316, elevation: 43.6 }
+const westernIndonesianCitiesCoordinates = [
+  // Sabang
+  { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
+  // Padang
+  { latitude: -0.95, longitude: 100.3531, elevation: 0 },
+  // Bengkulu
+  { latitude: -3.7956, longitude: 102.2592, elevation: 0 },
+]
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
@@ -127,17 +134,21 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     }
   } else if (criteria === 1) {
     // MABIMS
+    let metCriteria
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      observer = observerFromEarth(sabangCoordinates.latitude, sabangCoordinates.longitude, sabangCoordinates.elevation)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-      moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
-      moonElongation = Elongation(Body.Moon, sunset)
-      if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
+      metCriteria = westernIndonesianCitiesCoordinates.some(city => {
+        observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+        moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+        moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
+        moonElongation = Elongation(Body.Moon, sunset)
+        return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
+      })
+      if (metCriteria) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
