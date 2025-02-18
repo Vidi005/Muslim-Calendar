@@ -31,7 +31,7 @@
     "hijri_date_criteria": "Kriteria :",
     "date_criteria": [
         {
-            "criteria": "KHGT",
+            "criteria": "KHGT/Turki",
             "latitude_range": [-90, 90],
             "longitude_range": [-180, 180]
         },
@@ -41,7 +41,7 @@
             "longitude_range": [95, 141]
         },
         {
-            "criteria": "Wujudul Hilal",
+            "criteria": "Wujudul Hilal (Lokal)",
             "latitude_range": [-11, 6],
             "longitude_range": [95, 141]
         },
@@ -307,7 +307,7 @@
     "islamic_month": "Bulan :",
     "islamic_year": "Tahun :",
     "hijri_abbreviation": "H",
-    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT, 2016", "MABIMS, 2021"],
+    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT/Turki, 2016", "MABIMS, 2021"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],
