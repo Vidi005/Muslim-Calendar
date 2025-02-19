@@ -69,13 +69,27 @@ const getTimeZoneList = () => {
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
 const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
+
 const westernIndonesianCitiesCoordinates = [
   // Sabang
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
   // Padang
-  { latitude: -0.95, longitude: 100.3531, elevation: 0 },
+  { latitude: -0.95, longitude: 100.3531, elevation: 10 },
   // Bengkulu
-  { latitude: -3.7956, longitude: 102.2592, elevation: 0 },
+  { latitude: -3.7956, longitude: 102.2592, elevation: 10 },
+]
+
+const anyAmericaCitiesCoordinates = [
+  // Portland
+  { latitude: 45.5371, longitude: -122.65, elevation: 0 },
+  // San Francisco
+  { latitude: 37.7558, longitude: -122.4449, elevation: 0 },
+  // Guadalajara
+  { latitude: 20.6767, longitude: -103.3475, elevation: 0 },
+  // Manta
+  { latitude: -0.95, longitude: -80.7162, elevation: 0 },
+  // Puerto Montt
+  { latitude: -41.4667, longitude: -72.9333, elevation: 0 },
 ]
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
@@ -87,45 +101,32 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   let newMoon
   let moonElongation
   let dateInNewMoon
-  let eastObserver
   let westObserver
-  let fajr
   let sunset
   let moonEquator
   let moonHorizon
   if (criteria === 0) {
     // Global Hijri Calendar/KHGT
+    let isMetCriteria = false
     while (true) {
       // Search for New Moon backward
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      eastObserver = observerFromEarth(0, 150, elevation)
-      westObserver = observerFromEarth(0, -150, elevation)
-      fajr = SearchAltitude(Body.Sun, eastObserver, +1, newMoonDate, 1, -fajrAlt)
-      sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
-      if (!sunset) {
-        // If sunset is not found, search for sunset on the lower latitude by using lower latitude observer or Mecca observer (based selected formula)
-        if (formula === 1) {
-          if (latitude > 48) westObserver = observerFromEarth(45, longitude, elevation)
-          else westObserver = observerFromEarth(-45, longitude, elevation)
-        } else if (formula === 2) {
-          westObserver = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
-        } else {
-          if (latitude > 60) westObserver = observerFromEarth(60, longitude, elevation)
-          else westObserver = observerFromEarth(-60, longitude, elevation)
-        }
+      isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
+        westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
-      }
-      moonElongation = Elongation(Body.Moon, sunset)
-      moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
-      moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
-      if (moonElongation.elongation >= 8 && moonHorizon.altitude >= 5) {
-        // Met the Global Hijri Calendar criteria
+        moonElongation = Elongation(Body.Moon, sunset)
+        moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
+        moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
+        return moonElongation.elongation >= 8 && moonHorizon.altitude >= 5
+      })
+      if (newMoon.date.getUTCHours() < 12) {
+        // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
         return newMoonDate.AddDays(1)
-      } else if (newMoonDate.date < fajr.date) {
-        // Met the Global Hijri Calendar criteria
+      } else if (isMetCriteria) {
+        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC)
         return newMoonDate.AddDays(1)
       } else {
         // Didn't meet the Global Hijri Calendar criteria
@@ -134,13 +135,13 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     }
   } else if (criteria === 1) {
     // MABIMS
-    let metCriteria
+    let isMetCriteria = false
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      metCriteria = westernIndonesianCitiesCoordinates.some(city => {
+      isMetCriteria = westernIndonesianCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
@@ -148,7 +149,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         moonElongation = Elongation(Body.Moon, sunset)
         return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
       })
-      if (metCriteria) {
+      if (isMetCriteria) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
