@@ -44,7 +44,6 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 )
               : (
                 <React.Fragment>
-
                   <Slider {...settings} ref={sliderRef}>
                     {state.monthsInSetYear.map((days, monthIndex) => {
                       const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
@@ -129,6 +128,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                       <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
                     ))}
                   </ul>
+                  <h5 className="font-normal sm:font-bold mb-2 text-sm text-amber-600 dark:text-amber-200 leading-tight">{t('hijri_date_info')}</h5>
                 </React.Fragment>
                 )
             }
