@@ -2,6 +2,7 @@ import { Radio, RadioGroup } from "@headlessui/react"
 import React from "react"
 import en from "../../../locales/en.json"
 import ReactToPrint from "react-to-print"
+import Swal from "sweetalert2"
 
 const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocation, selectedCriteria, monthsInSetYear, hijriStartDates, monthType, selectedGregorianMonth, selectedHijriMonth, latitude, longitude, elevation, selectedConvention, selectedTimeZone, selectedAshrTime, selectedIhtiyath, prayerTimesList, arePrayerTimesListLoading, changeMonthType, selectGregorianMonth, selectHijriMonth, downloadFile }) => {
   const isRamadanSelected = hijriStartDates?.findIndex(item => item.dateId === '1-9-date') === selectedHijriMonth
