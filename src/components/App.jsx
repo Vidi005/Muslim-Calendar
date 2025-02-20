@@ -937,7 +937,6 @@ class App extends React.Component {
         longitude: this.state.longitude,
         elevation: this.state.elevation,
         criteria: this.state.selectedCriteria,
-        sunAltitude: this.state.sunAltitude,
         formula: this.state.selectedFormula,
         lang: this.state.selectedLanguage
       })

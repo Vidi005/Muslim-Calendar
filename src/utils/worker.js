@@ -48,7 +48,7 @@ self.onmessage = event => {
     const result = getNearestCity(cityData, latitude, longitude)
     self.postMessage({ type: 'createHaversineDistance', result })
   } else if (type === 'createCalendarData') {
-    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, sunAltitude.fajr, formula, lang)
+    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, formula, lang)
     self.postMessage({ type: 'createCalendarData', result })
   } else if (type === 'createIncludedElement') {
     const result = getElementContent(innerHTML)
