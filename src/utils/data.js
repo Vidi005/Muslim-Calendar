@@ -94,7 +94,7 @@ const anyAmericaCitiesCoordinates = [
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
-const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, fajrAlt, formula) => {
+const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, formula) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let date = startDate
   let newMoonDate
@@ -205,7 +205,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   }
 }
 
-const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, fajrAlt, formula, lang) => {
+const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, formula, lang) => {
   const newMoonsFromLastYear = []
   const newMoonFromNextYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
@@ -217,7 +217,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
     // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
-    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, fajrAlt, formula).date
+    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula).date
     if (newMoonDate instanceof Date) {
       if (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
         newMoonsFromLastYear.push(newMoonDate)
