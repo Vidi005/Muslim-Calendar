@@ -73,10 +73,14 @@ const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevatio
 const westernIndonesianCitiesCoordinates = [
   // Sabang
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
+  // Sibolga
+  { latitude: 1.746060, longitude: 98.769111, elevation: 5 },
   // Padang
   { latitude: -0.95, longitude: 100.3531, elevation: 10 },
   // Bengkulu
   { latitude: -3.7956, longitude: 102.2592, elevation: 10 },
+  // Pandeglang
+  { latitude: -6.240263, longitude: 105.825405, elevation: 3 },
 ]
 
 const anyAmericaCitiesCoordinates = [
@@ -84,10 +88,20 @@ const anyAmericaCitiesCoordinates = [
   { latitude: 45.5371, longitude: -122.65, elevation: 0 },
   // San Francisco
   { latitude: 37.7558, longitude: -122.4449, elevation: 0 },
-  // Guadalajara
-  { latitude: 20.6767, longitude: -103.3475, elevation: 0 },
+  // San Diego
+  { latitude: 32.7157, longitude: -117.1611, elevation: 0 },
+  // Puerto Vallarta
+  { latitude: 20.6767, longitude: -105.25, elevation: 0 },
+  // Mariato, Panama
+  { latitude: 7.500532, longitude: -80.971786, elevation: 0 },
   // Manta
   { latitude: -0.95, longitude: -80.7162, elevation: 0 },
+  // Lima
+  { latitude: -12.0432, longitude: -77.0282, elevation: 0 },
+  // Antofagasta
+  { latitude: -23.4433, longitude: -70.3997, elevation: 0 },
+  // Talcahuano
+  { latitude: -36.72375, longitude: -73.144618, elevation: 0 },
   // Puerto Montt
   { latitude: -41.4667, longitude: -72.9333, elevation: 0 },
 ]
