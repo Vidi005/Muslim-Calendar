@@ -12,6 +12,8 @@ class MainContainer extends React.Component {
       CALCULATION_METHOD_STORAGE_KEY: "CALCULATION_METHOD_STORAGE_KEY",
       ASHR_TIME_STORAGE_KEY: "ASHR_TIME_STORAGE_KEY",
       CONVENTION_STORAGE_KEY: "CONVENTION_STORAGE_KEY",
+      INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
+      INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
       SECONDS_PRECISION_STORAGE_KEY: "SECONDS_PRECISION_STORAGE_KEY",
       CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
@@ -56,7 +58,7 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds) {
+    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.inputCustomFajrAngle !== this.props.parentState.inputCustomFajrAngle || prevProps.parentState.inputCustomIshaAngle !== this.props.parentState.inputCustomIshaAngle || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
@@ -273,6 +275,8 @@ class MainContainer extends React.Component {
       if (result.isConfirmed) {
         this.props.selectCalculationMethod(0)
         this.props.selectAshrTime(0)
+        this.props.onInputCustomFajrAngleChange(16)
+        this.props.onInputCustomIshaAngleChange(14)
         this.props.getCurrentConvention()
         this.props.selectIhtiyath(2)
         this.props.onChangePrecision(false)
@@ -284,6 +288,8 @@ class MainContainer extends React.Component {
         localStorage.removeItem(this.state.CALCULATION_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.ASHR_TIME_STORAGE_KEY)
         localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
+        localStorage.removeItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY)
+        localStorage.removeItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY)
         localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
         localStorage.removeItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
         localStorage.removeItem(this.state.CORRECTIONS_STORAGE_KEY)
@@ -312,6 +318,8 @@ class MainContainer extends React.Component {
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
+                  onInputCustomFajrAngleChange={this.props.onInputCustomFajrAngleChange}
+                  onInputCustomIshaAngleChange={this.props.onInputCustomIshaAngleChange}
                   selectIhtiyath={this.props.selectIhtiyath}
                   onChangePrecision={this.props.onChangePrecision}
                   selectCorrections={this.props.selectCorrections}
@@ -336,6 +344,8 @@ class MainContainer extends React.Component {
                   selectCalculationMethod={this.props.selectCalculationMethod}
                   selectAshrTime={this.props.selectAshrTime}
                   selectConvention={this.props.selectConvention}
+                  onInputCustomFajrAngleChange={this.props.onInputCustomFajrAngleChange}
+                  onInputCustomIshaAngleChange={this.props.onInputCustomIshaAngleChange}
                   selectIhtiyath={this.props.selectIhtiyath}
                   onChangePrecision={this.props.onChangePrecision}
                   selectCorrections={this.props.selectCorrections}

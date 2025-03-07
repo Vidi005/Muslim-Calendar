@@ -4,7 +4,7 @@ import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { prayerTimesCorrection } from "../../../utils/data"
 import { Checkbox, Field, Label } from "@headlessui/react"
 
-const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, selectAshrTime, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
+const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectAshrTime, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
   <HomePageConsumer>
     {({ t, state }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200 animate__animated animate__fadeInUp">
@@ -46,6 +46,34 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, select
               {en.conventions.map((type, index) => <option key={type.method} value={index}>{t(`conventions.${index}.method`)}</option>)}
             </select>
           </span>
+          {state.selectedConvention === en.conventions.length - 1 && (
+            <React.Fragment>
+              <span className="flex items-center">
+                <label className="whitespace-nowrap" htmlFor="fajr-angle">{t('fajr_angle')}</label>
+                <input
+                  type="number"
+                  className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                  defaultValue={16}
+                  value={state.inputCustomFajrAngle}
+                  onChange={event => onInputCustomFajrAngleChange(event.target.value)}
+                  required
+                />
+                <span>{t('degrees')}</span>
+              </span>
+              <span className="flex items-center">
+                <label className="whitespace-nowrap" htmlFor="isha-angle">{t('isha_angle')}</label>
+                <input
+                  type="number"
+                  className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                  defaultValue={14}
+                  value={state.inputCustomIshaAngle}
+                  onChange={event => onInputCustomIshaAngleChange(event.target.value)}
+                  required
+                />
+                <span>{t('degrees')}</span>
+              </span>
+            </React.Fragment>
+          )}
           <span className="flex items-center">
             <label htmlFor="ihtiyath"><i>{t('ihtiyath')}</i></label>
             <select
