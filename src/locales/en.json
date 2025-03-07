@@ -262,8 +262,19 @@
             },
             "latitude_range": [25, 39.8],
             "longitude_range": [44, 63.3]
+        },
+        {
+            "method": "Custom",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
         }
     ],
+    "fajr_angle": "Fajr Angle :",
+    "isha_angle": "Isha Angle :",
     "ihtiyath": "Ihtiyath :",
     "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
     "precise_to_seconds": "Precise to seconds",
@@ -505,7 +516,7 @@
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
     "time_suffixes": ["hours", "minutes", "seconds"],
-    "version": "Updated February 2025",
+    "version": "Updated March 2025",
     "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
     "resources": "Resources",
     "resource_items": [

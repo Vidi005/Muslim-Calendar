@@ -262,9 +262,20 @@
             },
             "latitude_range": [25, 39.8],
             "longitude_range": [44, 63.3]
+        },
+        {
+            "method": "Kustom",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
         }
     ],
-    "ihtiyath": "Ikhtiyat :",
+    "fajr_angle": "Sudut Shubuh :",
+    "isha_angle": "Sudut Isya' :",
+    "ihtiyath": "Ihtiyath :",
     "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
     "precise_to_seconds": "Tepat hingga detik",
     "restore_to_default": "Ke Pengaturan Awal",
@@ -273,7 +284,7 @@
     "observer_times": ["Hari Ijtima' -1", "Hari Ijtima'", "Hari Ijtima' +1"],
     "prayer_times_config": "Pengaturan Waktu Sholat :",
     "time_correction": "Koreksi Waktu :",
-    "prayer_names": ["Imsak", "Subuh", "Terbit", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya"],
+    "prayer_names": ["Imsak", "Subuh", "Terbit", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya'"],
     "dhuha_method": "Perhitungan Dhuha :",
     "dhuha_methods": ["Tinggi Matahari", "Setelah Terbit"],
     "minutes": "menit",
@@ -504,7 +515,7 @@
     "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Penumbra Awal", "Waktu Parsial Awal", "Waktu Total Awal", "Waktu Puncak", "Waktu Total Akhir", "Waktu Parsial Akhir", "Waktu Penumbra Akhir", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Tidak Ada"],
     "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
     "time_suffixes": ["jam", "menit", "detik"],
-    "version": "Diperbarui pada Februari 2025",
+    "version": "Diperbarui pada Maret 2025",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",
     "resource_items": [
