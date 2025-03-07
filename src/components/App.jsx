@@ -28,6 +28,8 @@ class App extends React.Component {
       CALCULATION_METHOD_STORAGE_KEY: 'CALCULATION_METHOD_STORAGE_KEY',
       ASHR_TIME_STORAGE_KEY: 'ASHR_TIME_STORAGE_KEY',
       CONVENTION_STORAGE_KEY: 'CONVENTION_STORAGE_KEY',
+      INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
+      INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: 'IHTIYATH_STORAGE_KEY',
       SECONDS_PRECISION_STORAGE_KEY: 'SECONDS_PRECISION_STORAGE_KEY',
       CORRECTIONS_STORAGE_KEY: 'CORRECTIONS_STORAGE_KEY',
@@ -56,6 +58,8 @@ class App extends React.Component {
       selectedCalculationMethod: 0,
       selectedAshrTime: 0,
       selectedConvention: 0,
+      inputCustomFajrAngle: 16,
+      inputCustomIshaAngle: 14,
       sunAltitude: en.conventions[0].sun_altitude,
       selectedIhtiyath: 2,
       isPreciseToSeconds: false,
@@ -314,13 +318,40 @@ class App extends React.Component {
     try {
       const parsedSavedConvention = JSON.parse(getSavedConventionFromLocal)
       if (parsedSavedConvention !== null) {
-        this.setState({
-          selectedConvention: parseInt(parsedSavedConvention),
-          sunAltitude: en.conventions[parseInt(parsedSavedConvention)].sun_altitude
-        })
+        if (parseInt(parsedSavedConvention) === en.conventions.length - 1) {
+          const getSavedCustomFajrAngleFromLocal = localStorage.getItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY)
+          const getSavedCustomIshaAngleFromLocal = localStorage.getItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY)
+          const parsedSavedCustomFajrAngle = JSON.parse(getSavedCustomFajrAngleFromLocal)
+          const parsedSavedCustomIshaAngle = JSON.parse(getSavedCustomIshaAngleFromLocal)
+          if (isNaN(parsedSavedCustomFajrAngle) && isNaN(parsedSavedCustomIshaAngle)) {
+            this.setState({
+              selectedConvention: parseInt(parsedSavedConvention),
+              sunAltitude: {
+                fajr: this.state.inputCustomFajrAngle,
+                isha: this.state.inputCustomIshaAngle
+              }
+            })
+          } else {
+            this.setState({
+              selectedConvention: parseInt(parsedSavedConvention),
+              inputCustomFajrAngle: parsedSavedCustomFajrAngle,
+              inputCustomIshaAngle: parsedSavedCustomIshaAngle,
+              sunAltitude: {
+                fajr: parsedSavedCustomFajrAngle,
+                isha: parsedSavedCustomIshaAngle
+              }
+            })
+          }
+        } else {
+          this.setState({
+            selectedConvention: parseInt(parsedSavedConvention),
+            sunAltitude: en.conventions[parseInt(parsedSavedConvention)].sun_altitude
+          })
+        }
       }
     } catch (error) {
       localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
+      localStorage.removeItem(this.state.CUSTOM_CONVENTION_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -793,7 +824,7 @@ class App extends React.Component {
 
   getCurrentConvention () {
     const conventions = en.conventions.map(convention => ({ ...convention }))
-    for (let index = 1; index < conventions.length; index++) {
+    for (let index = 1; index < conventions.length - 1; index++) {
       const item = conventions[index]
       const [latMin, latMax] = item.latitude_range
       const [lonMin, lonMax] = item.longitude_range
@@ -823,12 +854,50 @@ class App extends React.Component {
   }
 
   selectConvention (value) {
+    if (parseInt(value) === en.conventions.length - 1) {
+      this.setState({
+        selectedConvention: parseInt(value),
+        sunAltitude: { fajr: this.state.inputCustomFajrAngle, isha: this.state.inputCustomIshaAngle }
+      }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
+        }
+        this.create3DaysOfPrayerTimes()
+      })
+    } else {
+      this.setState({
+        selectedConvention: parseInt(value),
+        sunAltitude: en.conventions[parseInt(value)].sun_altitude
+      }, () => {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
+        }
+        this.create3DaysOfPrayerTimes()
+      })
+    }
+  }
+
+  onInputCustomFajrAngleChange (value) {
+    if (parseFloat(value) < 9 || parseFloat(value) > 23.5) return
     this.setState({
-      selectedConvention: parseInt(value),
-      sunAltitude: en.conventions[parseInt(value)].sun_altitude
+      inputCustomFajrAngle: parseFloat(value),
+      sunAltitude: { fajr: parseFloat(value), isha: this.state.inputCustomIshaAngle }
     }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.CONVENTION_STORAGE_KEY, JSON.stringify(this.state.selectedConvention))
+        localStorage.setItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomFajrAngle))
+      }
+      this.create3DaysOfPrayerTimes()
+    })
+  }
+
+  onInputCustomIshaAngleChange (value) {
+    if (parseFloat(value) < 9 || parseFloat(value) > 23.5) return
+      this.setState({
+        inputCustomIshaAngle: parseFloat(value),
+        sunAltitude: { fajr: this.state.inputCustomFajrAngle, isha: parseFloat(value) }
+    }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomIshaAngle))
       }
       this.create3DaysOfPrayerTimes()
     })
@@ -1400,6 +1469,8 @@ class App extends React.Component {
                 selectAshrTime={this.selectAshrTime.bind(this)}
                 getCurrentConvention={this.getCurrentConvention.bind(this)}
                 selectConvention={this.selectConvention.bind(this)}
+                onInputCustomFajrAngleChange={this.onInputCustomFajrAngleChange.bind(this)}
+                onInputCustomIshaAngleChange={this.onInputCustomIshaAngleChange.bind(this)}
                 selectIhtiyath={this.selectIhtiyath.bind(this)}
                 onChangePrecision={this.onChangePrecision.bind(this)}
                 selectCorrections={this.selectCorrections.bind(this)}
