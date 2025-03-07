@@ -6,13 +6,15 @@ import PrayerTimesVisualization from "./PrayerTimesVisualization"
 import QiblaDirection from "./QiblaDirection"
 import PrayerTimesList from "./PrayerTimesList"
 
-const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, selectAshrTime, selectConvention, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectGregorianMonth, selectHijriMonth, downloadFile }) => (
+const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, selectAshrTime, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectIhtiyath, onChangePrecision, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectGregorianMonth, selectHijriMonth, downloadFile }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <PrayerTimesSettings
       selectCalculationMethod={selectCalculationMethod}
       selectAshrTime={selectAshrTime}
       selectConvention={selectConvention}
+      onInputCustomFajrAngleChange={onInputCustomFajrAngleChange}
+      onInputCustomIshaAngleChange={onInputCustomIshaAngleChange}
       selectIhtiyath={selectIhtiyath}
       onChangePrecision={onChangePrecision}
       selectCorrections={selectCorrections}
