@@ -878,28 +878,30 @@ class App extends React.Component {
   }
 
   onInputCustomFajrAngleChange (value) {
-    if (parseFloat(value) < 9 || parseFloat(value) > 23.5) return
     this.setState({
       inputCustomFajrAngle: parseFloat(value),
       sunAltitude: { fajr: parseFloat(value), isha: this.state.inputCustomIshaAngle }
     }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomFajrAngle))
+      if (parseFloat(value) >= 9 && parseFloat(value) <= 23.5) {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomFajrAngle))
+        }
+        this.create3DaysOfPrayerTimes()
       }
-      this.create3DaysOfPrayerTimes()
     })
   }
 
   onInputCustomIshaAngleChange (value) {
-    if (parseFloat(value) < 9 || parseFloat(value) > 23.5) return
-      this.setState({
-        inputCustomIshaAngle: parseFloat(value),
-        sunAltitude: { fajr: this.state.inputCustomFajrAngle, isha: parseFloat(value) }
+    this.setState({
+      inputCustomIshaAngle: parseFloat(value),
+      sunAltitude: { fajr: this.state.inputCustomFajrAngle, isha: parseFloat(value) }
     }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomIshaAngle))
+      if (parseFloat(value) >= 9 && parseFloat(value) <= 23.5) {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomIshaAngle))
+        }
+        this.create3DaysOfPrayerTimes()
       }
-      this.create3DaysOfPrayerTimes()
     })
   }
 
@@ -944,22 +946,24 @@ class App extends React.Component {
   }
 
   onInputSunAltitudeChange (value) {
-    if (parseFloat(value) < 4 || parseFloat(value) > 8) return
     this.setState({ inputSunAltitude: parseFloat(value) }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
+      if (parseFloat(value) >= 4 && parseFloat(value) <= 8) {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
+        }
+        this.create3DaysOfPrayerTimes()
       }
-      this.create3DaysOfPrayerTimes()
     })
   }
 
   onInputMinutesChange (value) {
-    if (parseInt(value) < 10 || parseInt(value) > 40) return
     this.setState({ inputMinutes: parseInt(value) }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.INPUT_MINUTES_STORAGE_KEY, JSON.stringify(this.state.inputMinutes))
+      if (parseInt(value) >= 10 && parseInt(value) <= 40) {
+        if (isStorageExist(i18n.t('browser_warning'))) {
+          localStorage.setItem(this.state.INPUT_MINUTES_STORAGE_KEY, JSON.stringify(this.state.inputMinutes))
+        }
+        this.create3DaysOfPrayerTimes()
       }
-      this.create3DaysOfPrayerTimes()
     })
   }
   
