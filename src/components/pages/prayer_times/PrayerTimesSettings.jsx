@@ -52,9 +52,12 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
                 <label className="whitespace-nowrap" htmlFor="fajr-angle">{t('fajr_angle')}</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                   defaultValue={16}
                   value={state.inputCustomFajrAngle}
+                  min={9}
+                  max={23.5}
                   onChange={event => onInputCustomFajrAngleChange(event.target.value)}
                   required
                 />
@@ -63,10 +66,14 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               <span className="flex items-center">
                 <label className="whitespace-nowrap" htmlFor="isha-angle">{t('isha_angle')}</label>
                 <input
+                  lang={state.selectedLanguage}
                   type="number"
+                  inputMode="decimal"
                   className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                   defaultValue={14}
                   value={state.inputCustomIshaAngle}
+                  min={9}
+                  max={23.5}
                   onChange={event => onInputCustomIshaAngleChange(event.target.value)}
                   required
                 />
@@ -143,10 +150,14 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             {en.dhuha_methods.map((type, index) => <option key={type} value={index}>{t(`dhuha_methods.${index}`)}</option>)}
           </select>
           <input
+            lang={state.selectedLanguage}
             type="number"
+            inputMode={state.selectDhuhaMethod === 0 ? 'decimal' : 'numeric'}
             className="w-10 md:w-12 ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
             defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? 4.5 : 18}
             value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? state.inputSunAltitude : state.inputMinutes}
+            min={state.selectedDhuhaMethod === 0 ? 4 : 10}
+            max={state.selectedDhuhaMethod === 0 ? 8 : 40}
             onChange={event => state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? onInputSunAltitudeChange(event.target.value) : onInputMinutesChange(event.target.value)}
             required
           />
