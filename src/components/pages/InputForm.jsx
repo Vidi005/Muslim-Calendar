@@ -111,7 +111,9 @@ const InputForm = () => (
                     <span className="flex items-center">
                       <label htmlFor="latitude">{t('latitude')}&nbsp;</label>
                       <input
+                        lang={selectedLanguage}
                         type="number"
+                        inputMode="decimal"
                         className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 shadow-inner rounded duration-200"
                         onChange={onInputLatitudeChange}
                         value={state.latitude}
@@ -121,7 +123,9 @@ const InputForm = () => (
                     <span className="flex items-center">
                       <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
                       <input
+                        lang={selectedLanguage}
                         type="number"
+                        inputMode="decimal"
                         className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputLongitudeChange}
                         value={state.longitude}
@@ -131,7 +135,9 @@ const InputForm = () => (
                     <span className="flex items-center">
                       <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
                       <input
+                        lang={selectedLanguage}
                         type="number"
+                        inputMode="decimal"
                         className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputAltitudeChange}
                         value={state.elevation}
@@ -311,7 +317,9 @@ const InputForm = () => (
                   <span className="flex items-center text-sm">
                     <label htmlFor="latitude">{t('latitude')}&nbsp;</label>
                     <input
+                      lang={selectedLanguage}
                       type="number"
+                      inputMode="decimal"
                       className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.latitude}
                       onChange={onInputLatitudeChange}
@@ -321,7 +329,9 @@ const InputForm = () => (
                   <span className="flex items-center text-sm">
                     <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
                     <input
+                      lang={selectedLanguage}
                       type="number"
+                      inputMode="decimal"
                       className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.longitude}
                       onChange={onInputLongitudeChange}
@@ -331,7 +341,9 @@ const InputForm = () => (
                   <span className="flex items-center text-sm">
                     <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
                     <input
+                      lang={selectedLanguage}
                       type="number"
+                      inputMode="decimal"
                       className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.elevation}
                       onChange={onInputAltitudeChange}
