@@ -671,7 +671,7 @@ class App extends React.Component {
           this.setState({ isGettingCoordinates: false, selectedLocation: error.message })
         }, {
           enableHighAccuracy: true,
-          timeout: 10000,
+          timeout: 30000,
           maximumAge: 15000
         })
       })
