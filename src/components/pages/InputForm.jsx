@@ -26,7 +26,7 @@ const InputForm = () => (
                 <h4 className="font-serif whitespace-nowrap">{t('app_config')}</h4>
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="flex items-center">
-                    <label htmlFor="date">{t('date')}</label>
+                    <label htmlFor="date">{t('local_date')}</label>
                     <input
                       type="date"
                       lang={selectedLanguage}
@@ -37,7 +37,7 @@ const InputForm = () => (
                     />
                   </span>
                   <span className="flex items-center">
-                    <label htmlFor="time">{t('time')}</label>
+                    <label htmlFor="time">{t('local_time')}</label>
                     <input
                       type="time"
                       lang={selectedLanguage}
@@ -245,7 +245,7 @@ const InputForm = () => (
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{t('reset_settings')}</span>
                   </button>
                   <span className="flex items-center text-sm">
-                    <label htmlFor="date">{t('date')}</label>
+                    <label htmlFor="date">{t('local_date')}</label>
                     <input
                       type="date"
                       lang={selectedLanguage}
@@ -256,7 +256,7 @@ const InputForm = () => (
                     />
                   </span>
                   <span className="flex items-center text-sm">
-                    <label htmlFor="time">{t('time')}</label>
+                    <label htmlFor="time">{t('local_time')}</label>
                     <input
                       type="time"
                       lang={selectedLanguage}
