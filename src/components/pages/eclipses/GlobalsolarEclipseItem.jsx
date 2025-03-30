@@ -1,16 +1,16 @@
 import React from "react"
-import en from "./../../../locales/en.json"
+import en from "../../../locales/en.json"
 
 const GlobalSolarEclipseItem = ({ t, selectedLanguage, selectedTimeZone, globalSolarEclipse }) => {
-  const distance = `${globalSolarEclipse?.distance?.toFixed(6)} km`
   const solarEclipseKind = globalSolarEclipse?.kind?.charAt(0)?.toUpperCase() + globalSolarEclipse?.kind?.slice(1)
+  const distance = `${globalSolarEclipse?.distance?.toFixed(6)} km`
   const latitude = `${globalSolarEclipse?.kind === 'partial' ? t(`global_solar_eclipse_infos.${en.global_solar_eclipse_infos.length - 1}`) : globalSolarEclipse?.latitude + '°'}`
   const longitude = `${globalSolarEclipse?.kind === 'partial' ? t(`global_solar_eclipse_infos.${en.global_solar_eclipse_infos.length - 1}`) : globalSolarEclipse?.longitude + '°'}`
   const solarEclipseObscuration = `${globalSolarEclipse?.kind === 'partial' ? t(`global_solar_eclipse_infos.${en.global_solar_eclipse_infos.length - 1}`) : (globalSolarEclipse?.obscuration * 100).toFixed(2) + '%'}`
   const solarEclipsePeakTime = `${globalSolarEclipse?.peak?.toLocaleTimeString(selectedLanguage || 'en', { timeZone: selectedTimeZone, timeZoneName: 'short', hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')}`
   const globalSolarEclipseArrayData = [
-    distance,
     solarEclipseKind,
+    distance,
     latitude,
     longitude,
     solarEclipseObscuration,
