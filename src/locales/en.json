@@ -46,7 +46,7 @@
             "longitude_range": [95, 141]
         },
         {
-            "criteria": "Umm al-Qura",
+            "criteria": "Umm Al-Qura",
             "latitude_range": [16, 32],
             "longitude_range": [34, 56]
         }
@@ -75,7 +75,7 @@
     "conjunction": "Conjunction :",
     "error": "Error",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-    "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qai'dah", "Dhu'l-Hijjah"],
+    "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qa'dah", "Dhu'l-Hijjah"],
     "hijri_date_info": "* This Hijri Date calculation may differ by a few days. So, keep to follow the decisions of Muslim Agencies/Organizations in your region.",
     "muslim_holidays": "Muslim Holidays in ",
     "muslim_events": {
@@ -118,7 +118,7 @@
             "longitude_range": [-168, -52]
         },
         {
-            "method": "Umm al-Qura",
+            "method": "Umm Al-Qura",
             "sun_altitude": {
                 "fajr": 18.5,
                 "isha": ["90 mins", "120 mins"]
@@ -516,7 +516,7 @@
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
     "time_suffixes": ["hours", "minutes", "seconds"],
-    "version": "Updated March 2025",
+    "version": "Updated April 2025",
     "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
     "resources": "Resources",
     "resource_items": [
