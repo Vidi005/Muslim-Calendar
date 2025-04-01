@@ -68,8 +68,6 @@ const getTimeZoneList = () => {
 
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
-const meccaCoordinates = { latitude: 21.4224779, longitude: 39.8251832, elevation: 302 }
-
 const westernIndonesianCitiesCoordinates = [
   // Sabang
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
@@ -184,7 +182,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
           if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
           else observer = observerFromEarth(-45, longitude, elevation)
         } else if (formula === 2) {
-          observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
+          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
           if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
           else observer = observerFromEarth(-60, longitude, elevation)
@@ -206,7 +204,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
+      observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       if (newMoon.date < sunset.date) {
         // Met the Ummul Qura criteria
@@ -609,7 +607,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     } else if (formula === 2) {
       // Follow mecca coordinates
-      observer = observerFromEarth(meccaCoordinates.latitude, meccaCoordinates.longitude, meccaCoordinates.elevation)
+      observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (isNaN(sunAlt?.maghrib)) {
@@ -638,7 +636,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
       const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(meccaCoordinates.latitude - sunDeclination))) + shadowFactor
+      const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(kaabaCoordinates.latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
@@ -872,7 +870,8 @@ const parseDate = (gregorianDate, hours, minutes, seconds) => new Date(
   seconds
 )
 
-const kaabaCoordinates = { latitude: 21.42250833, longitude: 39.82616111 }
+// Kaaba Coordinates in Mecca
+const kaabaCoordinates = { latitude: 21.42250833, longitude: 39.82616111, elevation: 302 }
 
 const getQiblaDirection = (latitude, longitude) => {
   const deltaLongitude = kaabaCoordinates.longitude - longitude
@@ -1001,26 +1000,26 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
         correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
       }
     } else if (formula === 2) {
-      fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
+      fajrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.fajr)) - Math.sin(convertToRadians(kaabaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(kaabaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       fajrTime = transitTime - fajrHourAngle / 15
       const fajrHours = parseInt(fajrTime)
       const fajrMinutes = (fajrTime - fajrHours) * 60
       const fajrSeconds = (fajrMinutes - parseInt(fajrMinutes)) * 60
       fajr = parseDate(gregorianDate, fajrHours, fajrMinutes, fajrSeconds)
-      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
+      sunriseHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(sunriseAltitude)) - Math.sin(convertToRadians(kaabaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(kaabaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
       const sunriseMinutes = (sunriseTime - sunriseHours) * 60
       const sunriseSeconds = (sunriseMinutes - parseInt(sunriseMinutes)) * 60
       sunrise = parseDate(gregorianDate, sunriseHours, sunriseMinutes, sunriseSeconds)
-      cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(meccaCoordinates.latitude - sunDeclination))) + shadowFactor
+      cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(kaabaCoordinates.latitude - sunDeclination))) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
+      ashrHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(ashrSunAltitude)) - Math.sin(convertToRadians(kaabaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(kaabaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
+        maghribHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.maghrib)) - Math.sin(convertToRadians(kaabaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(kaabaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         maghribTime = transitTime + maghribHourAngle / 15
       }
       const maghribHours = parseInt(maghribTime)
@@ -1043,7 +1042,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
           correctedIshaTime = isha
         }
       } else {
-        ishaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(meccaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(meccaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
+        ishaHourAngle = convertToDegrees(Math.acos((Math.sin(convertToRadians(-sunAlt.isha)) - Math.sin(convertToRadians(kaabaCoordinates.latitude)) * Math.sin(convertToRadians(sunDeclination))) / (Math.cos(convertToRadians(kaabaCoordinates.latitude)) * Math.cos(convertToRadians(sunDeclination)))))
         ishaTime = transitTime + ishaHourAngle / 15
         const ishaHours = parseInt(ishaTime)
         const ishaMinutes = (ishaTime - ishaHours) * 60
