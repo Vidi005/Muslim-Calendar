@@ -301,7 +301,7 @@ const getCitiesByName = (cityData, query) => cityData.filter(data => data.city.t
 
 const getCitiesDistance = (lat1, lon1, lat2, lon2) => {
   const toRad = (angle) => (Math.PI / 180) * angle
-  const earthRadius = 6378.14
+  const earthRadius = 6371.0087714
   const dLat = toRad(lat2 - lat1)
   const dLon = toRad(lon2 - lon1)
   const a = 
@@ -1335,7 +1335,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const cotSunAltitudeAshr = Math.tan(convertToRadians(Math.abs(latitude - sunEquator.dec))) + shadowFactor
   const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
   const ashrSunAltitude = convertToDegrees(Math.atan(tanSunAltitudeAshr))
-  const midnight = SearchHourAngle(Body.Sun, observer, 12, startAstroTime, 2).time
+  const midnight = SearchHourAngle(Body.Sun, observer, 12, culmination, 2).time
   const sunEquatorAtMidnight = Equator(Body.Sun, midnight, observer, true, true)
   const sunDeclinationAtMidnight = sunEquatorAtMidnight.dec
   const midnightSunAltitude = -(90 - Math.abs(- observer.latitude - sunDeclinationAtMidnight))
@@ -1377,6 +1377,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     moonset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     illuminationPercent,
     culmination.date,
+    midnight.date,
     `${culminationSunAltitude.toFixed(2)}°`,
     `${ashrSunAltitude.toFixed(2)}°`,
     `${midnightSunAltitude.toFixed(2)}°`,
