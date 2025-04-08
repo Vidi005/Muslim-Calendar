@@ -947,7 +947,7 @@ class App extends React.Component {
 
   onInputSunAltitudeChange (value) {
     this.setState({ inputSunAltitude: parseFloat(value) }, () => {
-      if (parseFloat(value) >= 4 && parseFloat(value) <= 8) {
+      if (parseFloat(value) >= 4 && parseFloat(value) <= 16) {
         if (isStorageExist(i18n.t('browser_warning'))) {
           localStorage.setItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY, JSON.stringify(this.state.inputSunAltitude))
         }
