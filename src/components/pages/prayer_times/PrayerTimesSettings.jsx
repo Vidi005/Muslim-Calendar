@@ -157,7 +157,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? 4.5 : 18}
             value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? state.inputSunAltitude : state.inputMinutes}
             min={state.selectedDhuhaMethod === 0 ? 4 : 10}
-            max={state.selectedDhuhaMethod === 0 ? 8 : 40}
+            max={state.selectedDhuhaMethod === 0 ? 16 : 40}
             onChange={event => state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? onInputSunAltitudeChange(event.target.value) : onInputMinutesChange(event.target.value)}
             required
           />
