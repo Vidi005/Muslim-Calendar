@@ -208,6 +208,15 @@
             "longitude_range": [95, 141]
         },
         {
+            "method": "Muhammadiyah",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
             "method": "UOIF",
             "sun_altitude": {
                 "fajr": 12,
