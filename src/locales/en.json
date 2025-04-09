@@ -244,6 +244,15 @@
             "longitude_range": [-5.1, 9.6]
         },
         {
+            "method": "Basque",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [42.6, 43.6],
+            "longitude_range": [-3, -1.2]
+        },
+        {
             "method": "Tunisia",
             "sun_altitude": {
                 "fajr": 18,
@@ -271,6 +280,15 @@
             },
             "latitude_range": [25, 39.8],
             "longitude_range": [44, 63.3]
+        },
+        {
+            "method": "Russia",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 15
+            },
+            "latitude_range": [41, 81.85],
+            "longitude_range": [-169, 169]
         },
         {
             "method": "Custom",
