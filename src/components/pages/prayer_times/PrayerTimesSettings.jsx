@@ -57,7 +57,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
                   defaultValue={16}
                   value={state.inputCustomFajrAngle}
                   min={9}
-                  max={23.5}
+                  max={24.5}
                   onChange={event => onInputCustomFajrAngleChange(event.target.value)}
                   required
                 />
@@ -73,7 +73,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
                   defaultValue={14}
                   value={state.inputCustomIshaAngle}
                   min={9}
-                  max={23.5}
+                  max={24.5}
                   onChange={event => onInputCustomIshaAngleChange(event.target.value)}
                   required
                 />
