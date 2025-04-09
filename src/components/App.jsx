@@ -882,7 +882,7 @@ class App extends React.Component {
       inputCustomFajrAngle: parseFloat(value),
       sunAltitude: { fajr: parseFloat(value), isha: this.state.inputCustomIshaAngle }
     }, () => {
-      if (parseFloat(value) >= 9 && parseFloat(value) <= 23.5) {
+      if (parseFloat(value) >= 9 && parseFloat(value) <= 24.5) {
         if (isStorageExist(i18n.t('browser_warning'))) {
           localStorage.setItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomFajrAngle))
         }
@@ -896,7 +896,7 @@ class App extends React.Component {
       inputCustomIshaAngle: parseFloat(value),
       sunAltitude: { fajr: this.state.inputCustomFajrAngle, isha: parseFloat(value) }
     }, () => {
-      if (parseFloat(value) >= 9 && parseFloat(value) <= 23.5) {
+      if (parseFloat(value) >= 9 && parseFloat(value) <= 24.5) {
         if (isStorageExist(i18n.t('browser_warning'))) {
           localStorage.setItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY, JSON.stringify(this.state.inputCustomIshaAngle))
         }
