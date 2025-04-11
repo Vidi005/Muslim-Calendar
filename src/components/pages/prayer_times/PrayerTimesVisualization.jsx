@@ -128,7 +128,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 </span>
             }
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
-            <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-6" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 2]})</b></span>
+            <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 2]})</b></span>
           </div>
           <p className="text-sm md:text-base xl:text-lg">{t('nadir')} (-90°)</p>
         </div>
