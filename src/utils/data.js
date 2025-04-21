@@ -82,6 +82,8 @@ const westernIndonesianCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
+  // King Cove
+  { latitude: 55.059398, longitude: -162.314625, elevation: 0 },
   // Portland
   { latitude: 45.5371, longitude: -122.65, elevation: 0 },
   // San Francisco
