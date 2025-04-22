@@ -130,7 +130,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, elevation)
+        sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, city.elevation)
         moonElongation = Elongation(Body.Moon, sunset)
         moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
@@ -157,7 +157,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = westernIndonesianCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
         moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
         moonElongation = Elongation(Body.Moon, sunset)
@@ -207,7 +207,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
       if (newMoon.date < sunset.date) {
         // Met the Ummul Qura criteria
         return newMoonDate.AddDays(1)
