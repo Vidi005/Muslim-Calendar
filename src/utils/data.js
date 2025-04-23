@@ -117,6 +117,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   let dateInNewMoon
   let westObserver
   let sunset
+  let moonset
   let moonEquator
   let moonHorizon
   if (criteria === 0) {
@@ -179,6 +180,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
       if (!sunset) {
         if (formula === 1) {
           if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
@@ -191,7 +193,19 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
-      if (newMoon.date < sunset.date) {
+      if (!moonset) {
+        if (formula === 1) {
+          if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
+          else observer = observerFromEarth(-45, longitude, elevation)
+        } else if (formula === 2) {
+          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+        } else {
+          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
+          else observer = observerFromEarth(-60, longitude, elevation)
+        }
+        moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
+      }
+      if (newMoon.date < sunset.date && moonset.date > sunset.date) {
         // Met the Wujudul Hilal criteria
         return newMoonDate.AddDays(1)
       } else {
@@ -208,7 +222,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
-      if (newMoon.date < sunset.date) {
+      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
+      if (newMoon.date < sunset.date && moonset.date > sunset.date) {
         // Met the Ummul Qura criteria
         return newMoonDate.AddDays(1)
       } else {
