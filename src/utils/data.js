@@ -71,49 +71,49 @@ const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 const anyMabimsCitiesCoordinates = [
   // Padang Besar, Malaysia
   { latitude: 6.66299, longitude: 100.31967, elevation: 70 },
-  // Bukit Kayu Hitam
+  // Bukit Kayu Hitam, Malaysia
   { latitude: 6.5, longitude: 100.417, elevation: 80 },
-  // Sabang
+  // Sabang, Indonesia
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
-  // Banda Aceh
+  // Banda Aceh, Indonesia
   { latitude: 5.54829, longitude: 95.32375, elevation: 1 },
-  // Lhokseumawe
+  // Lhokseumawe, Indonesia
   { latitude: 5.19167	, longitude: 97.135, elevation: 5 },
-  // Meulaboh
+  // Meulaboh, Indonesia
   { latitude: 4.14167, longitude: 96.125, elevation: 3 },
-  // Tapaktuan
+  // Tapaktuan, Indonesia
   { latitude: 3.25, longitude: 97.16667, elevation: 5 },
-  // Sibolga
+  // Sibolga, Indonesia
   { latitude: 1.746060, longitude: 98.769111, elevation: 5 },
-  // Pariaman
+  // Pariaman, Indonesia
   { latitude: -0.6264, longitude: 100.1178, elevation: 5 },
-  // Padang
+  // Padang, Indonesia
   { latitude: -0.95, longitude: 100.3531, elevation: 10 },
-  // Painan
+  // Painan, Indonesia
   { latitude: -1.35172, longitude: 100.57383, elevation: 3 },
-  // Bengkulu
+  // Bengkulu, Indonesia
   { latitude: -3.7956, longitude: 102.2592, elevation: 10 },
-  // Krui
+  // Krui, Indonesia
   { latitude: -5.19168, longitude: 103.9304, elevation: 3 },
-  // Bandar Lampung
+  // Bandar Lampung, Indonesia
   { latitude: -5.45, longitude: 105.26667, elevation: 5 },
-  // Pandeglang
+  // Pandeglang, Indonesia
   { latitude: -6.240263, longitude: 105.825405, elevation: 3 },
-  // Pelabuhanratu
+  // Pelabuhanratu, Indonesia
   { latitude: -6.91722, longitude: 106.32, elevation: 4 },
-  // Cilacap
+  // Cilacap, Indonesia
   { latitude: -7.71889	, longitude: 109.01583, elevation: 6 },
-  // Parangtritis
+  // Parangtritis, Indonesia
   { latitude: -8, longitude: 110.36667, elevation: 1 },
-  // Pacitan
+  // Pacitan, Indonesia
   { latitude: -8.23500, longitude: 111.20611, elevation: 36 },
-  // Jimbaran
+  // Jimbaran, Indonesia
   { latitude: -8.8, longitude: 115.16667, elevation: 1 },
-  // Kuta, Lombok
+  // Kuta, Lombok, Indonesia
   { latitude: -8.91, longitude: 116.239, elevation: 1 },
-  // Sumbawa Besar
+  // Sumbawa Besar, Indonesia
   { latitude: -8.485, longitude: 117.418, elevation: 1 },
-  // Kupang
+  // Kupang, Indonesia
   { latitude: -10.17667	, longitude: 123.58111, elevation: 1 }
 ]
 
