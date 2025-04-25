@@ -797,7 +797,11 @@ class App extends React.Component {
   }
 
   selectCriteria (value) {
-    this.setState({ selectedCriteria: parseInt(value), isMoonCrescentMapLoading: true }, () => {
+    this.setState({
+      selectedCriteria: parseInt(value),
+      isCalendarLoading: true,
+      isMoonCrescentMapLoading: true
+    }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
