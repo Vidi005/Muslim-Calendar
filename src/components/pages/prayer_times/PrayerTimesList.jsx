@@ -69,6 +69,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
               defaultValue={selectedGregorianMonth}
               value={selectedGregorianMonth}
               onChange={event => selectGregorianMonth(event.target.value)}
+              disabled={arePrayerTimesListLoading}
               required
             >
               {monthsInSetYear?.map((_, monthIndex) => <option key={monthIndex} value={monthIndex}>{new Date(formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(selectedLanguage || 'en', { month: 'long' })}</option>)}
@@ -83,6 +84,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
               defaultValue={selectedHijriMonth}
               value={selectedHijriMonth}
               onChange={event => selectHijriMonth(event.target.value)}
+              disabled={arePrayerTimesListLoading}
               required
             >
               {hijriStartDates?.map((item, monthIndex) => {
