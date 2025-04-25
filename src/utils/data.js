@@ -68,42 +68,100 @@ const getTimeZoneList = () => {
 
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
-const westernIndonesianCitiesCoordinates = [
+const anyMabimsCitiesCoordinates = [
+  // Padang Besar, Malaysia
+  { latitude: 6.66299, longitude: 100.31967, elevation: 70 },
+  // Bukit Kayu Hitam
+  { latitude: 6.5, longitude: 100.417, elevation: 80 },
   // Sabang
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
+  // Banda Aceh
+  { latitude: 5.54829, longitude: 95.32375, elevation: 1 },
+  // Lhokseumawe
+  { latitude: 5.19167	, longitude: 97.135, elevation: 5 },
+  // Meulaboh
+  { latitude: 4.14167, longitude: 96.125, elevation: 3 },
+  // Tapaktuan
+  { latitude: 3.25, longitude: 97.16667, elevation: 5 },
   // Sibolga
   { latitude: 1.746060, longitude: 98.769111, elevation: 5 },
+  // Pariaman
+  { latitude: -0.6264, longitude: 100.1178, elevation: 5 },
   // Padang
   { latitude: -0.95, longitude: 100.3531, elevation: 10 },
+  // Painan
+  { latitude: -1.35172, longitude: 100.57383, elevation: 3 },
   // Bengkulu
   { latitude: -3.7956, longitude: 102.2592, elevation: 10 },
+  // Krui
+  { latitude: -5.19168, longitude: 103.9304, elevation: 3 },
+  // Bandar Lampung
+  { latitude: -5.45, longitude: 105.26667, elevation: 5 },
   // Pandeglang
   { latitude: -6.240263, longitude: 105.825405, elevation: 3 },
+  // Pelabuhanratu
+  { latitude: -6.91722, longitude: 106.32, elevation: 4 },
+  // Cilacap
+  { latitude: -7.71889	, longitude: 109.01583, elevation: 6 },
+  // Parangtritis
+  { latitude: -8, longitude: 110.36667, elevation: 1 },
+  // Pacitan
+  { latitude: -8.23500, longitude: 111.20611, elevation: 36 },
+  // Jimbaran
+  { latitude: -8.8, longitude: 115.16667, elevation: 1 },
+  // Kuta, Lombok
+  { latitude: -8.91, longitude: 116.239, elevation: 1 },
+  // Sumbawa Besar
+  { latitude: -8.485, longitude: 117.418, elevation: 1 },
+  // Kupang
+  { latitude: -10.17667	, longitude: 123.58111, elevation: 1 }
 ]
 
 const anyAmericaCitiesCoordinates = [
+  // Sitka
+  { latitude: 57.0531, longitude: -135.3300, elevation: 0 },
   // King Cove
   { latitude: 55.059398, longitude: -162.314625, elevation: 0 },
+  // Vancouver
+  { latitude: 49.2827, longitude: -123.1207, elevation: 0 },
+  // Seattle
+  { latitude: 47.6062, longitude: -122.3321, elevation: 0 },
   // Portland
   { latitude: 45.5371, longitude: -122.65, elevation: 0 },
   // San Francisco
   { latitude: 37.7558, longitude: -122.4449, elevation: 0 },
+  // Los Angeles
+  { latitude: 34.0522, longitude: -118.2437, elevation: 0 },
   // San Diego
   { latitude: 32.7157, longitude: -117.1611, elevation: 0 },
   // Puerto Vallarta
   { latitude: 20.6767, longitude: -105.25, elevation: 0 },
+  // Manzanillo
+  { latitude: 19.1136, longitude: -104.3265, elevation: 0 },
+  // Puntarenas
+  { latitude: 9.976, longitude: -84.8383, elevation: 0 },
   // Mariato, Panama
   { latitude: 7.500532, longitude: -80.971786, elevation: 0 },
   // Manta
   { latitude: -0.95, longitude: -80.7162, elevation: 0 },
+  // Chimbote
+  { latitude: -9.074, longitude: -78.5933, elevation: 0 },
   // Lima
   { latitude: -12.0432, longitude: -77.0282, elevation: 0 },
+  // Arica
+  { latitude: -18.4783, longitude: -70.3126, elevation: 0 },
   // Antofagasta
   { latitude: -23.4433, longitude: -70.3997, elevation: 0 },
+  // Coquimbo
+  { latitude: -29.9536, longitude: -71.3434, elevation: 0 },
+  // Valparaíso
+  { latitude: -33.0472, longitude: -71.6127, elevation: 0 },
   // Talcahuano
   { latitude: -36.72375, longitude: -73.144618, elevation: 0 },
   // Puerto Montt
   { latitude: -41.4667, longitude: -72.9333, elevation: 0 },
+  // Punta Arenas
+  { latitude: -53.1638, longitude: -70.9171, elevation: 0 }
 ]
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
@@ -156,7 +214,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = westernIndonesianCitiesCoordinates.some(city => {
+      isMetCriteria = anyMabimsCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
