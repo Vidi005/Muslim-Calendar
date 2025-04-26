@@ -78,7 +78,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                           {day ? (
                                             <React.Fragment>
                                               <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
-                                              <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{day.hijri}</span>
+                                              <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
                                             </React.Fragment>
                                           ) : null}
                                         </td>
@@ -93,7 +93,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                             {day ? (
                                               <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
                                                 <span className={`${muslimEvent.eventId} block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${muslimEvent.eventId} block text-sky-500 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{day.hijri}</span>
+                                                <span className={`${muslimEvent.eventId} block text-sky-500 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
                                               </div>
                                             ) : null}
                                             {state.tooltipId === muslimEvent.eventId  && (
@@ -107,7 +107,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                             {day ? (
                                               <React.Fragment>
                                                 <span className={`${dayIndex === 0 ? "text-red-700" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${dayIndex === 0 ? "text-red-500" : "text-green-700"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-500"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{day.hijri}</span>
+                                                <span className={`${dayIndex === 0 ? "text-red-500" : "text-green-700"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-500"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
                                               </React.Fragment>
                                             ) : null}
                                           </td>
