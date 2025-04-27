@@ -6,6 +6,7 @@ import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext";
 import CustomNextArrow from "./CustomNextArrow";
 import CustomPrevArrow from "./CustomPrevArrow";
+import { getHijriDate } from "../../../utils/data";
 
 const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
   <HomePageConsumer>
@@ -46,15 +47,22 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 <React.Fragment>
                   <Slider {...settings} ref={sliderRef}>
                     {state.monthsInSetYear.map((days, monthIndex) => {
-                      const hijriMonth1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
-                      const hijriMonth2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: "islamic", month: 'numeric' }))
-                      const hijriYear1 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' }))
-                      const hijriYear2 = parseInt(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()).toLocaleString(state.selectedLanguage || 'en', { calendar: 'islamic', year: 'numeric' }))
+                      const hijriDate1 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1), state.monthsInSetYear)
+                      const hijriDate2 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()), state.monthsInSetYear)
                       return (
                         <React.Fragment key={monthIndex}>
                           <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { month: 'long', year: 'numeric' })}</h2>
                           <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
-                            <span className={`${hijriMonth1 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth1 - 1}`)} {hijriYear1} {t('hijri_abbreviation')}</span> - <span className={`${hijriMonth2 === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriMonth2 - 1}`)} {hijriYear2} {t('hijri_abbreviation')}</span>
+                            {hijriDate1.islamicMonth === hijriDate2.islamicMonth
+                              ? (
+                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {hijriDate1.islamicYear} {t('hijri_abbreviation')}</span>
+                                )
+                              : (
+                                  <React.Fragment>
+                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {hijriDate1.islamicYear} {t('hijri_abbreviation')}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {hijriDate2.islamicYear} {t('hijri_abbreviation')}</span>
+                                  </React.Fragment>
+                                )
+                            }
                           </h4>
                           <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                             <thead>
