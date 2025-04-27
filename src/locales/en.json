@@ -36,7 +36,7 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "MABIMS",
+            "criteria": "Neo MABIMS",
             "latitude_range": [-11, 7.4],
             "longitude_range": [95, 141]
         },
@@ -339,7 +339,7 @@
     "coordinates": "Coordinates :",
     "school": "School :",
     "source": "Source :",
-    "footnotes": ["This Prayer Schedule is calculated based on ", "It might be different several days with other criteria. Please consider to check the Hijri Calendar criteria based on your region."],
+    "footnotes": ["This Prayer Schedule is calculated based on ", "and it might be different several days with other criteria, so keep to follow the decision of your local authority in your region."],
     "download": "Download",
     "print": "Print",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",

@@ -1,11 +1,12 @@
 import React from "react"
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
+import { getHijriDate } from "../../../utils/data"
 
 const CurrentPrayerTimes = () => (
   <HomePageConsumer>
     {({ t, state }) => {
-      const hijriMonthNumber = parseInt(state.formattedDateTime.toLocaleString('en', { calendar: "islamic", month: 'numeric' }))
+      const hijriMonthNumber = getHijriDate(state.formattedDateTime, state.monthsInSetYear).islamicMonth
       const prayerNames = hijriMonthNumber === 9
         ? en.prayer_names.map((_, i) => t(`prayer_names.${i}`))
         : en.prayer_names.map((_, i) => t(`prayer_names.${i}`)).slice(1)

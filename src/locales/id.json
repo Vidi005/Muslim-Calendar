@@ -36,7 +36,7 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "MABIMS",
+            "criteria": "Neo MABIMS",
             "latitude_range": [-11, 7.4],
             "longitude_range": [95, 141]
         },
@@ -339,7 +339,7 @@
     "coordinates": "Koordinat :",
     "school": "Mahzab :",
     "source": "Sumber :",
-    "footnotes": ["Jadwal Sholat ini dihitung berdasarkan Kriteria ", "Jadwal ini mungkin berbeda beberapa hari dengan kriteria lain. Silahkan periksa kriteria Kalender Hijriah berdasarkan wilayah Anda."],
+    "footnotes": ["Jadwal ini dihitung berdasarkan Kriteria ", "dan mungkin terdapat perbedaan beberapa hari dengan kriteria lain sehingga tetap mengikuti keputusan dari otoritas setempat di wilayah Anda."],
     "download": "Unduh",
     "print": "Cetak",
     "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",

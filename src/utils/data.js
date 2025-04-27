@@ -359,6 +359,17 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   return { months, hijriEventDates, hijriStartDates }
 }
 
+const getHijriDate = (gregorianSetDate, months) => {
+  const gregorianDate = new Date(gregorianSetDate)
+  const islamicDate = new Date(gregorianDate)
+  const currentFirstMonthGregorianDay = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), 1).getDay()
+  const islamicDayNumber = months[gregorianDate.getMonth()]?.at(gregorianDate.getDate() + currentFirstMonthGregorianDay - 1)?.hijri || 0
+  islamicDate.setDate(islamicDate.getDate() + 15 - islamicDayNumber)
+  const islamicMonth = parseInt(islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" }))
+  const islamicYear = parseInt(islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" }))
+  return { islamicMonth, islamicYear }
+}
+
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
   const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
@@ -1955,4 +1966,4 @@ const coordinateScale = {
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
