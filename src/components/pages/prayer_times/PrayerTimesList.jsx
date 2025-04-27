@@ -184,13 +184,15 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                         </>
                     }
                   </table>
-                  <p className="flex items-center justify-between font-serif w-full">
+                  <p className="flex items-center justify-between font-serif w-full text-sm">
                     <span>
-                      {t('source')} <a className="text-blue-500 active:text-purple-500" href={location.origin} target="_blank" rel="noreferrer"><u>{location.origin}</u></a>
+                      <a className="text-blue-500 active:text-purple-500" href={location.origin} target="_blank" rel="noreferrer"><u>{location.origin}</u></a>
                     </span>
                     <span>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" })}</span>
                   </p>
-                  <p className="text-center text-sm leading-tight">{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)}. {t('footnotes.1')}</p>
+                  {monthType !== 0 &&
+                    <p className="text-center text-sm leading-tight">{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)}. {t('footnotes.1')}</p>
+                  }
                 </div>
                 <div className="prayer-times-list-container-download hidden">
                   <h2 style={{ lineHeight: monthType === 0 ? "1.25pt" : "1.5pt", textAlign: "center", fontFamily: "'Times New Roman', 'Serif'", fontSize: "16pt", color: "#14532d" }}>{schedule} {selectedMonth.replace(/-/gm, ' ')}</h2>
@@ -236,12 +238,14 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                   <table style={{ display: "table", tableLayout: "auto", verticalAlign: "middle", width: "100%" }}>
                     <tr>
                       <td style={{ border: "none" }}>
-                        <span style={{ fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "left" }}>{t('source')}</span> <a href={location.origin} target="_blank" rel="noreferrer" style={{ fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", color: "#3b82f6", textDecoration: "underline", textAlign: "left" }}><u>{location.origin}</u></a>
+                        <a href={location.origin} target="_blank" rel="noreferrer" style={{ fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", color: "#3b82f6", textDecoration: "underline", textAlign: "left" }}><u>{location.origin}</u></a>
                       </td>
                       <td style={{ border: "none", fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "right" }}>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" })}</td>
                     </tr>
                   </table>
-                  <p style={{ fontFamily: "'Helvetica', 'Arial'", fontSize: "8pt", textAlign: "center", lineHeight: "1.25pt" }}>{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)}. {t('footnotes.1')}</p>
+                  {monthType !== 0 &&
+                    <p style={{ fontFamily: "'Helvetica', 'Arial'", fontSize: "8pt", textAlign: "center", lineHeight: "1.25pt" }}>{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)}. {t('footnotes.1')}</p>
+                  }
                 </div>
               </>
             )}
