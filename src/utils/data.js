@@ -185,7 +185,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       // Search for New Moon backward
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -212,7 +212,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyMabimsCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -235,7 +235,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
@@ -276,7 +276,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${newMoon.date.getFullYear()}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
@@ -296,7 +296,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   const newMoonsFromLastYear = []
   const newMoonFromNextYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
-  const startGregorianDate = new Date(`${gregorianDate.getFullYear() + 1}-01-29T23:59:59`)
+  const startGregorianDate = new Date(`${addZeroPadForYear(gregorianDate.getFullYear() + 1)}-01-29T23:59:59`)
   let startDate = new AstroTime(startGregorianDate)
   let newMoonDate = gregorianFirstDate
   let currentMoonDate
@@ -1862,8 +1862,20 @@ const gridSearchLongitude = (astroDate, criteria, steps) => {
 
 const addZeroPad = value => (value >= 0 && value < 10) ? `0${value}` : value
 
+const addZeroPadForYear = value => {
+  if (Math.abs(value) < 10) {
+    return `000${value}`
+  } else if (Math.abs(value) < 100) {
+    return `00${value}`
+  } else if (Math.abs(value) < 1000) {
+    return `0${value}`
+  } else {
+    return value
+  }
+}
+
 const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
-  const startDate = new Date(`${ijtimaDate.getFullYear()}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
+  const startDate = new Date(`${addZeroPadForYear(ijtimaDate.getFullYear())}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
   const conjunctionDate = new Date(ijtimaDate.setDate(ijtimaDate.getDate() - 2))
   const conjunction = SearchMoonPhase(0, conjunctionDate, 5)
