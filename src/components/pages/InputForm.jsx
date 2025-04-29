@@ -31,6 +31,7 @@ const InputForm = () => (
                       type="date"
                       lang={selectedLanguage}
                       value={state.inputDate}
+                      min="1583-01-01"
                       className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredDate}
                       required
@@ -250,6 +251,7 @@ const InputForm = () => (
                       type="date"
                       lang={selectedLanguage}
                       value={state.inputDate}
+                      min="1583-01-01"
                       className="input-date ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       onChange={setDesiredDate}
                       required
