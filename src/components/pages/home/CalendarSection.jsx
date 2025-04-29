@@ -97,7 +97,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                       const isMuslimEvent = !!muslimEvent
                                       if (isMuslimEvent) {
                                         return (
-                                          <td className={`bg-sky-500/20 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex}>
+                                          <td className={`bg-sky-500/20 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex} title={t(`muslim_events.${muslimEvent.eventId}`)}>
                                             {day ? (
                                               <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
                                                 <span className={`${muslimEvent.eventId} block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
