@@ -77,8 +77,8 @@ const anyMabimsCitiesCoordinates = [
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
   // Banda Aceh, Indonesia
   { latitude: 5.54829, longitude: 95.32375, elevation: 1 },
-  // Lhokseumawe, Indonesia
-  { latitude: 5.19167	, longitude: 97.135, elevation: 5 },
+  // Lhoknga, Indonesia
+  { latitude: 5.47833	, longitude: 95.24417, elevation: 3 },
   // Meulaboh, Indonesia
   { latitude: 4.14167, longitude: 96.125, elevation: 3 },
   // Tapaktuan, Indonesia
