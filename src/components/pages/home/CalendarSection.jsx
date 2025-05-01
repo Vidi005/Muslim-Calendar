@@ -55,11 +55,11 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                           <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
                             {hijriDate1.islamicMonth === hijriDate2.islamicMonth
                               ? (
-                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {hijriDate1.islamicYear} {t('hijri_abbreviation')}</span>
+                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA').format(hijriDate1.islamicYear)}</span>
                                 )
                               : (
                                   <React.Fragment>
-                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {hijriDate1.islamicYear} {t('hijri_abbreviation')}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {hijriDate2.islamicYear} {t('hijri_abbreviation')}</span>
+                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA').format(hijriDate1.islamicYear)}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA').format(hijriDate2.islamicYear)}</span>
                                   </React.Fragment>
                                 )
                             }
