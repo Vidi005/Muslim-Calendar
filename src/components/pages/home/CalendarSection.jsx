@@ -52,14 +52,14 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                       return (
                         <React.Fragment key={monthIndex}>
                           <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { month: 'long', year: 'numeric' })}</h2>
-                          <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-500 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
+                          <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-600 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
                             {hijriDate1.islamicMonth === hijriDate2.islamicMonth
                               ? (
-                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span>
+                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span>
                                 )
                               : (
                                   <React.Fragment>
-                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-500 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate2.islamicYear)}</span>
+                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate2.islamicYear)}</span>
                                   </React.Fragment>
                                 )
                             }
@@ -69,9 +69,9 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                               <tr>
                                 {en.day_names.map((_day, index) => {
                                   if (innerWidth > 1024) {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`)}</th>;
+                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`)}</th>;
                                   } else {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-400 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3)}</th>;
+                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3)}</th>;
                                   }
                                 })}
                               </tr>
@@ -97,25 +97,25 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                                       const isMuslimEvent = !!muslimEvent
                                       if (isMuslimEvent) {
                                         return (
-                                          <td className={`bg-sky-500/20 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex} title={t(`muslim_events.${muslimEvent.eventId}`)}>
+                                          <td className={`bg-sky-500/25 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex} title={t(`muslim_events.${muslimEvent.eventId}`)}>
                                             {day ? (
                                               <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
-                                                <span className={`${muslimEvent.eventId} block text-sky-700 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${muslimEvent.eventId} block text-sky-500 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
+                                                <span className={`${muslimEvent.eventId} block text-sky-800 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
+                                                <span className={`${muslimEvent.eventId} block text-sky-600 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
                                               </div>
                                             ) : null}
                                             {state.tooltipId === muslimEvent.eventId  && (
-                                              <span ref={tooltipRef} className="absolute bg-sky-500/50 p-2 text-green-900 dark:text-white backdrop-blur-sm bg-opacity-25 rounded shadow-md dark:shadow-white/50 animate__animated animate__fadeIn animate__faster z-10">{t(`muslim_events.${state.tooltipId}`)}</span>
+                                              <span ref={tooltipRef} className="absolute bg-sky-400/50 dark:bg-sky-500/50 p-2 text-green-900 dark:text-white backdrop-blur-sm bg-opacity-25 rounded shadow-md dark:shadow-white/50 animate__animated animate__fadeIn animate__faster z-10">{t(`muslim_events.${state.tooltipId}`)}</span>
                                             )}
                                           </td>
                                         )
                                       } else {
                                         return (
-                                          <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/20 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/20 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
+                                          <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/25 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/25 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
                                             {day ? (
                                               <React.Fragment>
-                                                <span className={`${dayIndex === 0 ? "text-red-700" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${dayIndex === 0 ? "text-red-500" : "text-green-700"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-500"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
+                                                <span className={`${dayIndex === 0 ? "text-red-800" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
+                                                <span className={`${dayIndex === 0 ? "text-red-600" : "text-green-800"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-600"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
                                               </React.Fragment>
                                             ) : null}
                                           </td>
