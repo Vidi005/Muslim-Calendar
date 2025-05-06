@@ -101,7 +101,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             </Checkbox>
             <Label className={"p-1 cursor-pointer"}>{t('precise_to_seconds')}</Label>
           </Field>
-          {Math.abs(state.latitude) > 48 && (
+          {Math.abs(state.latitude) > 45 && (
             <span className="flex items-center">
               <label htmlFor="calculation_method">{t('calculation_method')}</label>
               <select
@@ -144,7 +144,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
             defaultValue={0}
             value={state.selectedDhuhaMethod}
-            onChange={event => selectDhuhaMethod(Math.abs(state.latitude) > 60 ? 1 : event.target.value)}
+            onChange={event => selectDhuhaMethod(Math.abs(state.latitude) > 45 ? 1 : event.target.value)}
             required
           >
             {en.dhuha_methods.map((type, index) => <option key={type} value={index}>{t(`dhuha_methods.${index}`)}</option>)}
@@ -154,11 +154,11 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             type="number"
             inputMode={state.selectDhuhaMethod === 0 ? 'decimal' : 'numeric'}
             className="w-10 md:w-12 ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-            defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? 4.5 : 18}
-            value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? state.inputSunAltitude : state.inputMinutes}
+            defaultValue={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 45 ? 4.5 : 18}
+            value={state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 45 ? state.inputSunAltitude : state.inputMinutes}
             min={state.selectedDhuhaMethod === 0 ? 4 : 10}
             max={state.selectedDhuhaMethod === 0 ? 16 : 40}
-            onChange={event => state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 60 ? onInputSunAltitudeChange(event.target.value) : onInputMinutesChange(event.target.value)}
+            onChange={event => state.selectedDhuhaMethod === 0 && Math.abs(state.latitude) <= 45 ? onInputSunAltitudeChange(event.target.value) : onInputMinutesChange(event.target.value)}
             required
           />
           <span>{state.selectedDhuhaMethod === 0 ? t('degrees') : t('minutes')}</span>
