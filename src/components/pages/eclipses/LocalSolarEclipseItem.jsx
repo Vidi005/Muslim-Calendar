@@ -19,14 +19,14 @@ const LocalSolarEclipseItem = ({ t, selectedLanguage, selectedTimeZone, localSol
     solarEclipseObscuration,
     partialBeginAltitude,
     partialBeginTime,
-    partialEndAltitude,
-    partialEndTime,
-    peakAltitude,
-    solarEclipsePeakTime,
     totalBeginAltitude,
     totalBeginTime,
+    peakAltitude,
+    solarEclipsePeakTime,
     totalEndAltitude,
-    totalEndTime
+    totalEndTime,
+    partialEndAltitude,
+    partialEndTime
   ]
   return (
     <div className="w-full bg-green-50 dark:bg-black p-2 md:px-4 text-base md:text-sm lg:text-base rounded-md md:rounded-lg shadow lg:shadow-md dark:shadow-white/50 overflow-hidden duration-200">

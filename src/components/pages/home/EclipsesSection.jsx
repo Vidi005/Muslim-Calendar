@@ -24,14 +24,14 @@ const EclipsesSection = () => (
         solarEclipseObscuration,
         partialBeginAltitude,
         partialBeginTime,
-        partialEndAltitude,
-        partialEndTime,
-        peakAltitude,
-        solarEclipsePeakTime,
         totalBeginAltitude,
         totalBeginTime,
+        peakAltitude,
+        solarEclipsePeakTime,
         totalEndAltitude,
-        totalEndTime
+        totalEndTime,
+        partialEndAltitude,
+        partialEndTime
       ]
       const lunarEclipseKind = state.lunarEclipseInfo?.kind?.charAt(0)?.toUpperCase() + state.lunarEclipseInfo?.kind?.slice(1)
       const lunarEclipseObscuration = `${state.lunarEclipseInfo?.obscuration?.toFixed(2) * 100}%`
