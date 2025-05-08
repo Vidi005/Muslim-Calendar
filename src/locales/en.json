@@ -96,7 +96,7 @@
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Time to", "Time", "has come"],
     "ashr_time": "Ashr Time :",
-    "mahzab": ["Shafii", "Hanafi"],
+    "mahzab": ["Jumhur", "Hanafi"],
     "convention": "Convention :",
     "conventions": [
         {
@@ -303,7 +303,7 @@
     "fajr_angle": "Fajr Angle :",
     "isha_angle": "Isha Angle :",
     "ihtiyath": "Ihtiyath :",
-    "ihtiyath_times": ["1 minute", "2 minutes", "3 minutes"],
+    "ihtiyath_times": ["0 minute", "1 minute", "2 minutes", "3 minutes"],
     "precise_to_seconds": "Precise to seconds",
     "restore_to_default": "Restore to Default",
     "calculation_method": "Higher Latitude Method :",

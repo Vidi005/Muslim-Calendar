@@ -96,7 +96,7 @@
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Menuju Waktu", "Waktu", "telah tiba"],
     "ashr_time": "Waktu Ashar :",
-    "mahzab": ["Shafii", "Hanafi"],
+    "mahzab": ["Jumhur", "Hanafi"],
     "convention": "Konvensi :",
     "conventions": [
         {
@@ -303,7 +303,7 @@
     "fajr_angle": "Sudut Shubuh :",
     "isha_angle": "Sudut Isya' :",
     "ihtiyath": "Ihtiyath :",
-    "ihtiyath_times": ["1 menit", "2 menit", "3 menit"],
+    "ihtiyath_times": ["0 menit","1 menit", "2 menit", "3 menit"],
     "precise_to_seconds": "Tepat hingga detik",
     "restore_to_default": "Ke Pengaturan Awal",
     "calculation_method": "Metode Lintang Tinggi :",
