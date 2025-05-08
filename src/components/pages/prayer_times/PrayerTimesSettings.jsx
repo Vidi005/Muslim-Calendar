@@ -90,7 +90,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               onChange={event => selectIhtiyath(event.target.value)}
               required
             >
-              {en.ihtiyath_times.map((type, index) => <option key={type} value={index + 1}>{t(`ihtiyath_times.${index}`)}</option>)}
+              {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
           <Field className={"flex items-center m-1 cursor-pointer"}>
