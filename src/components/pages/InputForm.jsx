@@ -120,6 +120,7 @@ const InputForm = () => (
                         value={state.latitude}
                         required
                       />
+                      &nbsp;°
                     </span>
                     <span className="flex items-center">
                       <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
@@ -132,6 +133,7 @@ const InputForm = () => (
                         value={state.longitude}
                         required
                       />
+                      &nbsp;°
                     </span>
                     <span className="flex items-center">
                       <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
@@ -327,6 +329,7 @@ const InputForm = () => (
                       onChange={onInputLatitudeChange}
                       required
                     />
+                    &nbsp;°
                   </span>
                   <span className="flex items-center text-sm">
                     <label htmlFor="longitude">{t('longitude')}&nbsp;</label>
@@ -339,6 +342,7 @@ const InputForm = () => (
                       onChange={onInputLongitudeChange}
                       required
                     />
+                    &nbsp;°
                   </span>
                   <span className="flex items-center text-sm">
                     <label htmlFor="elevation">{t('elevation')}&nbsp;</label>
