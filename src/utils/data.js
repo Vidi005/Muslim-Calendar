@@ -551,7 +551,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
   const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
-  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, false)
+  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
   const moonRightAscension = `${convertRAToHMS(moonEquatorJ2000.ra)}`
   const moonDeclination = `${moonEquatorJ2000.dec.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
@@ -1536,7 +1536,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonStatus = moonPhase <= 90 ? 'Waxing Crescent' : moonPhase <= 180 ? 'Waxing Gibbous' : moonPhase <= 270 ? 'Waning Gibbous' : 'Waning Crescent'
   const moonEquatorJ2000 = Equator(Body.Moon, astroDate, observer, false, true)
   const moonDeclinationJ2000 = `${moonEquatorJ2000.dec.toFixed(2)}°`
-  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, false)
+  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
   const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
