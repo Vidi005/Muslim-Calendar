@@ -70,13 +70,15 @@ class MainContainer extends React.Component {
       this.generateSunInfos()
     }
     if (this.props.parentState.inputDate === '' && this.props.parentState.inputTime === '') {
-      if (this.props.parentState.selectedIntervalUpdate === 3 && this.props.parentState.seconds % 60 === 0) {
+      if (this.props.parentState.selectedIntervalUpdate === 4 && this.props.parentState.seconds % 60 === 0) {
         this.generateSunInfos()
-      } else if (this.props.parentState.selectedIntervalUpdate === 2 && this.props.parentState.seconds % 30 === 0) {
+      } else if (this.props.parentState.selectedIntervalUpdate === 3 && this.props.parentState.seconds % 30 === 0) {
         this.generateSunInfos()     
-      } else if (this.props.parentState.selectedIntervalUpdate === 1 && this.props.parentState.seconds % 15 === 0) {
+      } else if (this.props.parentState.selectedIntervalUpdate === 2 && this.props.parentState.seconds % 15 === 0) {
         this.generateSunInfos()
-      } else if (this.props.parentState.selectedIntervalUpdate === 0 && this.props.parentState.seconds % 5 === 0) {
+      } else if (this.props.parentState.selectedIntervalUpdate === 1 && this.props.parentState.seconds % 5 === 0) {
+        this.generateSunInfos()
+      } else if (this.props.parentState.selectedIntervalUpdate === 0 && this.props.parentState.seconds % 1 === 0) {
         this.generateSunInfos()
       }
     }

@@ -54,7 +54,7 @@ class App extends React.Component {
       selectedCriteria: 0,
       nearestCity: '',
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      selectedIntervalUpdate: 1,
+      selectedIntervalUpdate: 2,
       selectedCalculationMethod: 0,
       selectedAshrTime: 0,
       selectedConvention: 0,
@@ -111,13 +111,15 @@ class App extends React.Component {
   componentDidUpdate(_prevProps, prevState) {
     document.body.classList.toggle('dark', this.state.isDarkMode)
     if (prevState.seconds !== this.state.seconds && this.state.inputDate === '' && this.state.inputTime === '') {
-      if (this.state.selectedIntervalUpdate === 3 && this.state.seconds % 60 === 0) {
+      if (this.state.selectedIntervalUpdate === 4 && this.state.seconds % 60 === 0) {
         this.formatDateTime()
-      } else if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 30 === 0) {
+      } else if (this.state.selectedIntervalUpdate === 3 && this.state.seconds % 30 === 0) {
         this.formatDateTime()     
-      } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 15 === 0) {
+      } else if (this.state.selectedIntervalUpdate === 2 && this.state.seconds % 15 === 0) {
         this.formatDateTime()
-      } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 5 === 0) {
+      } else if (this.state.selectedIntervalUpdate === 1 && this.state.seconds % 5 === 0) {
+        this.formatDateTime()
+      } else if (this.state.selectedIntervalUpdate === 0 && this.state.seconds % 1 === 0) {
         this.formatDateTime()
       }
     }
@@ -710,7 +712,7 @@ class App extends React.Component {
         }, () => {
           this.getCurrentLocation()
           this.selectTimeZone(this.state.selectedTimeZone)
-          this.selectIntervalUpdate(1)
+          this.selectIntervalUpdate(2)
           localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
           localStorage.removeItem(this.state.CRITERIA_STORAGE_KEY)
           localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
