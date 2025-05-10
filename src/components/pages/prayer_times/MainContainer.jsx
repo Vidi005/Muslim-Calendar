@@ -171,13 +171,13 @@ class MainContainer extends React.Component {
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
         const formattedPrayerTimes = prayerTime.map(time => {
           if (this.props.parentState.isPreciseToSeconds) {
-            return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
           } else {
             if (time.getSeconds() > 30) {
               time.setMinutes(time.getMinutes() + 1)
             }
             time.setSeconds(0)
-            return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
           }
         }).slice(1)
         return [formattedStartDate, ...formattedPrayerTimes]
@@ -202,24 +202,24 @@ class MainContainer extends React.Component {
         const formattedPrayerTimes = hijriMonth === 9
           ? prayerTime.map(time => {
             if (this.props.parentState.isPreciseToSeconds) {
-              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
               if (time.getSeconds() > 30) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
-              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             }
           })
           : prayerTime.map(time => {
             if (this.props.parentState.isPreciseToSeconds) {
-              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
               if (time.getSeconds() > 30) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
-              return time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             }
           }).slice(1)
         return [hijriDate, formattedGregorianDate, ...formattedPrayerTimes]
