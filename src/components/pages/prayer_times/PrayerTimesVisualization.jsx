@@ -12,12 +12,12 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
   const ashrPosition = ((90 - parseFloat(sunInfos[sunInfos.length - 3])) / 90) * 50
   const ishaPosition = isNaN(sunAltitude.isha) ? 0 :((90 - sunAltitude.isha) / 90) * 50
   const midnightPosition = ((90 - parseFloat(sunInfos[sunInfos.length - 2])) / 90) * 50
-  const isWaxing = parseFloat(sunInfos[10]) <= 180
-  const isCrescent = parseFloat(sunInfos[16]) <= 50
+  const isWaxing = parseFloat(sunInfos[11]) <= 180
+  const isCrescent = parseFloat(sunInfos[17]) <= 50
   const moonAzimuthPosition = parseFloat(sunInfos[3]) <= 180
-    ? (parseFloat(sunInfos[12]) / 180) * 100
-    : ((parseFloat(sunInfos[12]) - 180) / 180) * 100
-  const [yMoonPosition, xMoonPosition] = [((parseFloat(sunInfos[11]) + 90) / 180) * 100, moonAzimuthPosition]
+    ? (parseFloat(sunInfos[13]) / 180) * 100
+    : ((parseFloat(sunInfos[13]) - 180) / 180) * 100
+  const [yMoonPosition, xMoonPosition] = [((parseFloat(sunInfos[12]) + 90) / 180) * 100, moonAzimuthPosition]
   const ellipse1 = isCrescent
     ? `ellipse(${50 - parseFloat(sunInfos[sunInfos.length - 7])}% 50% at 0% 50%)`
     : `ellipse(0% 50% at 0% 50%)`
@@ -58,7 +58,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 </div>
               </div>
             </div>
-            <span className={`${parseFloat(sunInfos[12]) > 90 && parseFloat(sunInfos[12]) <= 180 || (parseFloat(sunInfos[12]) > 270 && parseFloat(sunInfos[12]) <= 360) ? "-translate-x-full" : "translate-x-1/4"} absolute translate-y-1/2 -ml-4 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 whitespace-nowrap duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')} ({parseFloat(sunInfos[12])}°, {parseFloat(sunInfos[11])}°)</span>
+            <span className={`${parseFloat(sunInfos[13]) > 90 && parseFloat(sunInfos[13]) <= 180 || (parseFloat(sunInfos[13]) > 270 && parseFloat(sunInfos[13]) <= 360) ? "-translate-x-full" : "translate-x-1/4"} absolute translate-y-1/2 -ml-4 text-xs md:text-sm xl:text-base text-center text-amber-500 dark:text-amber-200 whitespace-nowrap duration-300`} style={{ bottom: `${yMoonPosition}%`, left: `${xMoonPosition}%` }}>{t('objects.1')} ({parseFloat(sunInfos[13])}°, {parseFloat(sunInfos[12])}°)</span>
             <span className="absolute w-full h-1/2 bottom-0 bg-green-900/20 dark:bg-white/25"></span>
             <span className="civil-twilight absolute w-full px-1 md:px-2 bottom-[46.67%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? t('civil_twilight.1') : t('civil_twilight.0')} (-6°)</span>
             <span className="civil-twilight absolute bottom-[46.67%] border border-dotted border-green-600 dark:border-gray-300 w-full"></span>
@@ -72,7 +72,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 {t('prayer_names.4')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
               </b>
             </span>
-            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('sun_infos.8')} (+{sunInfos[sunInfos.length - 4]})</b></span>
+            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('sun_infos.9')} (+{sunInfos[sunInfos.length - 4]})</b></span>
             {(formattedDateTime <= sunInfos[sunInfos.length - 6] || formattedDateTime >= sunInfos[sunInfos.length - 5]) && dhuhaPosition > 0 && (
               <React.Fragment>
                 <span className="absolute -mt-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}>
@@ -128,7 +128,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
                 </span>
             }
             <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
-            <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.9')} ({sunInfos[sunInfos.length - 2]})</b></span>
+            <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.10')} ({sunInfos[sunInfos.length - 2]})</b></span>
           </div>
           <p className="text-sm md:text-base xl:text-lg">{t('nadir')} (-90°)</p>
         </div>
