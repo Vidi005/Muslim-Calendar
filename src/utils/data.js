@@ -643,28 +643,13 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     if (latitude > 60) setLatitude = 60
     else setLatitude = -60
     if (formula === 0) {
-      // Not Configured, maximum latitude ±60 degrees
-      fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
-      if (!fajr) {
-        // Preventing null values when the Fajr sun altitude never happens
-        fajr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, -sunAlt.fajr)
-      }
-      sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
-      if (!sunrise) {
-        // Preventing null values when the Sun never rises
-        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
-      }
+      // Not Configured, return --:-- if times aren't happened
+      fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr) || '--:--'
+      sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation) || '--:--'
       if (isNaN(sunAlt?.maghrib)) {
-        maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
-        if (!maghrib) {
-          // Preventing null values when the Sun never sets
-          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
-        }
+        maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation) || '--:--'
       } else {
-        maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
-        if (!maghrib) {
-          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
-        }
+        maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib) || '--:--'
       }
       correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
       isha = new Date(correctedMaghribTime)
@@ -684,18 +669,14 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
           correctedIshaTime = isha
         }
       } else {
-        isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha)
-        if (!isha) {
-          // Preventing null values when the Isha sun altitude never happens
-          isha = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.isha)
-        }
+        isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha) || '--:--'
         correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
       }
       const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
-      const cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(higherLat - sunDeclination)) + shadowFactor
+      const cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(latitude - sunDeclination)) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
+      ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude) || '--:--'
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     } else if (formula === 1) {
       // Follow ±45 degrees latitude
@@ -1069,19 +1050,13 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
     if (latitude > 60) setLatitude = 60
     else setLatitude = -60
     if (formula === 0) {
-      fajrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.fajr) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination)))
-      if (!fajrHourAngle) {
-        fajrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.fajr) - Math.sin(DEG2RAD * setLatitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * setLatitude) * Math.cos(DEG2RAD * sunDeclination)))
-      }
+      fajrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.fajr) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination))) || '--:--'
       fajrTime = transitTime - fajrHourAngle / 15
       const fajrHours = parseInt(fajrTime)
       const fajrMinutes = (fajrTime - fajrHours) * 60
       const fajrSeconds = (fajrMinutes - parseInt(fajrMinutes)) * 60
       fajr = parseDate(gregorianDate, fajrHours, fajrMinutes, fajrSeconds)
-      sunriseHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * sunriseAltitude) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination)))
-      if (!sunriseHourAngle) {
-        sunriseHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * sunriseAltitude) - Math.sin(DEG2RAD * setLatitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * setLatitude) * Math.cosDEG2RAD * sunDeclination))
-      }
+      sunriseHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * sunriseAltitude) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination))) || '--:--'
       sunriseTime = transitTime - sunriseHourAngle / 15
       const sunriseHours = parseInt(sunriseTime)
       const sunriseMinutes = (sunriseTime - sunriseHours) * 60
@@ -1090,20 +1065,11 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
       cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(latitude - sunDeclination)) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-      ashrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * ashrSunAltitude) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination)))
-      if (!ashrHourAngle) {
-        cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(setLatitude - sunDeclination)) + shadowFactor
-        const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
-        const ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-        ashrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * ashrSunAltitude) - Math.sin(DEG2RAD * setLatitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * setLatitude) * Math.cos(DEG2RAD * sunDeclination))) 
-      }
+      ashrHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * ashrSunAltitude) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination))) || '--:--'
       if (isNaN(sunAlt?.maghrib)) {
         maghribTime = transitTime + sunriseHourAngle / 15
       } else {
-        maghribHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.maghrib) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination)))
-        if (!maghribHourAngle) {
-          maghribHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.maghrib) - Math.sin(DEG2RAD * setLatitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * setLatitude) * Math.cos(DEG2RAD * sunDeclination)))
-        }
+        maghribHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.maghrib) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination))) || '--:--'
         maghribTime = transitTime + maghribHourAngle / 15
       }
       const maghribHours = parseInt(maghribTime)
@@ -1126,10 +1092,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
           correctedIshaTime = isha
         }
       } else {
-        ishaHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.isha) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination)))
-        if (!ishaHourAngle) {
-          ishaHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.isha) - Math.sin(DEG2RAD * setLatitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * setLatitude) * Math.cos(DEG2RAD * sunDeclination)))
-        }
+        ishaHourAngle = RAD2DEG * Math.acos((Math.sin(DEG2RAD * -sunAlt.isha) - Math.sin(DEG2RAD * latitude) * Math.sin(DEG2RAD * sunDeclination)) / (Math.cos(DEG2RAD * latitude) * Math.cos(DEG2RAD * sunDeclination))) || '--:--'
         ishaTime = transitTime + ishaHourAngle / 15
         const ishaHours = parseInt(ishaTime)
         const ishaMinutes = (ishaTime - ishaHours) * 60
@@ -1574,8 +1537,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
-  const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
+const calculateVisibilityYallop = (arcOfVision, w, lagTime, newMoon) => {
+  const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'F'
   let color = ''
   if (q > 0.216 && lagTime > 0) {
@@ -1603,8 +1566,8 @@ const calculateVisibilityYallop = (arcv, w, lagTime, newMoon) => {
   return { q, zone, color }
 }
 
-const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
-  const visibilityValue = arcv - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
+const calculateVisibilityOdeh = (arcOfVision, w, lagTime, newMoon) => {
+  const visibilityValue = arcOfVision - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
   let zone = 'D'
   let color = ''
   if (visibilityValue >= 5.65 && lagTime > 0) {
@@ -1626,8 +1589,8 @@ const calculateVisibilityOdeh = (arcv, w, lagTime, newMoon) => {
   return { visibilityValue, zone, color }
 }
 
-const calculateVisibilityQureshi = (arcv, w, lagTime, newMoon) => {
-  const s = (arcv - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
+const calculateVisibilityQureshi = (arcOfVision, w, lagTime, newMoon) => {
+  const s = (arcOfVision - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
   let zone = 'F'
   let color = ''
   if (s >= 0.15 && lagTime > 0) {
@@ -1668,8 +1631,8 @@ const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoon) => {
   return { isMeetCriteria, zone, color }
 }
 
-const calculateVisibilityShaukat = (arcv, areEqualsToValues, w, lagTime, newMoon) => {
-  const q = (arcv - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
+const calculateVisibilityShaukat = (arcOfVision, areEqualsToValues, w, lagTime, newMoon) => {
+  const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'F'
   let color = ''
   if (q >= 0.122 && lagTime > 0 && !areEqualsToValues) {
@@ -1744,7 +1707,7 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(DEG2RAD * moonHorizon.altitude) * Math.sin(DEG2RAD * lunarParallax / 60))
-  const arcl = DEG2RAD * moonElongationEvent
+  const arcOfLight = DEG2RAD * moonElongationEvent
   const geomoon = GeoVector(Body.Moon, bestTime, true)
   const geosun = GeoVector(Body.Sun, bestTime, true)
   const rot = Rotation_EQJ_EQD(bestTime)
@@ -1754,10 +1717,10 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const seq = EquatorFromVector(rotsun)
   const mhor = Horizon(bestTime, observer, meq.ra, meq.dec)
   const shor = Horizon(bestTime, observer, seq.ra, seq.dec)
-  const arcv = mhor.altitude - shor.altitude
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const arcOfVision = mhor.altitude - shor.altitude
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityYallop(arcv, wTopocentric, lagTime, newMoon)
+  return calculateVisibilityYallop(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
@@ -1777,20 +1740,20 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(DEG2RAD * moonHorizon.altitude) * Math.sin(DEG2RAD * lunarParallax / 60))
-  const arcl = DEG2RAD * moonElongationTopocentric
-  const daz = sunHorizon.azimuth - moonHorizon.azimuth
-  const cosARCV = Math.cos(arcl) / Math.cos(DEG2RAD * daz)
-  let arcv
+  const arcOfLight = DEG2RAD * moonElongationTopocentric
+  const deltaAzimuth = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcOfLight) / Math.cos(DEG2RAD * deltaAzimuth)
+  let arcOfVision
   if (-1 <= cosARCV <= 1) {
-    arcv = RAD2DEG * Math.acos(cosARCV)
+    arcOfVision = RAD2DEG * Math.acos(cosARCV)
   } else if (cosARCV < -1) {
-    arcv = RAD2DEG * Math.acos(-1)
+    arcOfVision = RAD2DEG * Math.acos(-1)
   } else {
-    arcv = RAD2DEG * Math.acos(1)
+    arcOfVision = RAD2DEG * Math.acos(1)
   }
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityOdeh(arcv, wTopocentric, lagTime, newMoon)
+  return calculateVisibilityOdeh(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
 const checkQureshi = (astroDate, latitude, longitude) => {
@@ -1810,20 +1773,20 @@ const checkQureshi = (astroDate, latitude, longitude) => {
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(DEG2RAD * moonHorizon.altitude) * Math.sin(DEG2RAD * lunarParallax / 60))
-  const arcl = DEG2RAD * moonElongationTopocentric
-  const daz = sunHorizon.azimuth - moonHorizon.azimuth
-  const cosARCV = Math.cos(arcl) / Math.cos(DEG2RAD * daz)
-  let arcv
+  const arcOfLight = DEG2RAD * moonElongationTopocentric
+  const deltaAzimuth = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcOfLight) / Math.cos(DEG2RAD * deltaAzimuth)
+  let arcOfVision
   if (-1 <= cosARCV <= 1) {
-    arcv = RAD2DEG * Math.acos(cosARCV)
+    arcOfVision = RAD2DEG * Math.acos(cosARCV)
   } else if (cosARCV < -1) {
-    arcv = RAD2DEG * Math.acos(-1)
+    arcOfVision = RAD2DEG * Math.acos(-1)
   } else {
-    arcv = RAD2DEG * Math.acos(1)
+    arcOfVision = RAD2DEG * Math.acos(1)
   }
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityQureshi(arcv, wTopocentric, lagTime, newMoon)
+  return calculateVisibilityQureshi(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
 const checkLAPAN = (astroDate, latitude, longitude) => {
@@ -1862,23 +1825,23 @@ const checkShaukat = (astroDate, latitude, longitude) => {
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(DEG2RAD * moonHorizon.altitude) * Math.sin(DEG2RAD * lunarParallax / 60))
-  const arcl = DEG2RAD * moonElongationTopocentric
-  const daz = sunHorizon.azimuth - moonHorizon.azimuth
-  const cosARCV = Math.cos(arcl) / Math.cos(DEG2RAD * daz)
-  let arcv
+  const arcOfLight = DEG2RAD * moonElongationTopocentric
+  const deltaAzimuth = sunHorizon.azimuth - moonHorizon.azimuth
+  const cosARCV = Math.cos(arcOfLight) / Math.cos(DEG2RAD * deltaAzimuth)
+  let arcOfVision
   if (-1 <= cosARCV <= 1) {
-    arcv = RAD2DEG * Math.acos(cosARCV)
+    arcOfVision = RAD2DEG * Math.acos(cosARCV)
   } else if (cosARCV < -1) {
-    arcv = RAD2DEG * Math.acos(-1)
+    arcOfVision = RAD2DEG * Math.acos(-1)
   } else {
-    arcv = RAD2DEG * Math.acos(1)
+    arcOfVision = RAD2DEG * Math.acos(1)
   }
-  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcl))
+  const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const moonElongationGeocentric = Elongation(Body.Moon, sunset).elongation
   let areEqualsToValues = false
   if (moonElongationGeocentric > 7.95 && moonElongationGeocentric < 8.05) areEqualsToValues = true
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityShaukat(arcv, areEqualsToValues, wTopocentric, lagTime, newMoon)
+  return calculateVisibilityShaukat(arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoon)
 }
 
 const checkTurkey = (astroDate, latitude, longitude) => {
