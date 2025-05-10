@@ -565,8 +565,14 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonElongation = `${elongation.toFixed(2)}°`
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
+  const firstQuarter = SearchMoonPhase(90, lastNewMoon, +30)
+  const fullMoon = SearchMoonPhase(180, lastNewMoon, +30)
+  const lastQuarter = SearchMoonPhase(270, lastNewMoon, +30)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
   const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const firstQuarterDateTime = `${firstQuarter.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${firstQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const fullMoonDateTime = `${fullMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${fullMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const lastQuarterDateTime = `${lastQuarter.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const hourAngle = HourAngle(Body.Moon, astroDate, observer)
@@ -593,6 +599,9 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     moonrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     moonset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     lastNewMoonDateTime,
+    firstQuarterDateTime,
+    fullMoonDateTime,
+    lastQuarterDateTime,
     nextNewMoonDateTime,
     `${sunAltitude.toFixed(2)}°`,
     `${sunAzimuth.toFixed(2)}°`,
@@ -1481,6 +1490,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
   const sunRightAscension = `${convertRAToHMS(sunEquator.ra)}`
   const sunDeclination = `${sunEquator.dec.toFixed(2)}°`
+  const distanceInKm = `${(sunEquator.dist * KM_PER_AU).toFixed(2)} km`
   const sunLatittude = SunPosition(astroDate).elat
   const sunLongitude = SunPosition(astroDate).elon
   const culmination = SearchHourAngle(Body.Sun, observer, 0, startAstroTime, 1).time
@@ -1517,6 +1527,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${sunAzimuth.toFixed(2)}°`,
     sunRightAscension,
     sunDeclination,
+    distanceInKm,
     `${sunLatittude}°`,
     `${sunLongitude.toFixed(2)}°`,
     `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,

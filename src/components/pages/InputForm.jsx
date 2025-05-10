@@ -169,7 +169,7 @@ const InputForm = () => (
                     : (
                       <span className="flex items-center">
                         <label>{t('interval_update')}&nbsp;</label>
-                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
+                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={2} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
                           {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
                         </select>
                       </span>
@@ -377,7 +377,7 @@ const InputForm = () => (
                     : (
                       <span className="flex items-center">
                         <label>{t('interval_update')}&nbsp;</label>
-                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={1} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
+                        <select className="bg-green-200 dark:bg-gray-200 p-1 rounded shadow-inner duration-200" defaultValue={2} value={state.selectedIntervalUpdate} onChange={event => selectIntervalUpdate(event.target.value)} required>
                           {en.intervals.map((item, index) => <option key={item} value={index}>{t(`intervals.${index}`)}</option>)}
                         </select>
                       </span>
