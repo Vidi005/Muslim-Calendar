@@ -308,7 +308,7 @@
     "ihtiyath_times": ["0 minute", "1 minute", "2 minutes", "3 minutes", "4 minutes", "5 minutes"],
     "precise_to_seconds": "Precise to seconds",
     "rounding": "Rounding :",
-    "rounded_methods": ["Nearest minute", "Discard seconds"],
+    "rounding_methods": ["Greatest", "Nearest minute", "Smallest"],
     "calculation_method": "Higher Latitude Method :",
     "formulas": ["Not Configured", "Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
     "restore_to_default": "Restore to Default",

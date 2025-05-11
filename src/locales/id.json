@@ -308,7 +308,7 @@
     "ihtiyath_times": ["0 menit","1 menit", "2 menit", "3 menit", "4 menit", "5 menit"],
     "precise_to_seconds": "Tepat hingga detik",
     "rounding": "Pembulatan :",
-    "rounded_methods": ["Menit terdekat", "Buang detik"],
+    "rounding_methods": ["Ke atas", "Menit terdekat", "Ke bawah"],
     "calculation_method": "Metode Lintang Tinggi :",
     "formulas": ["Tidak diatur","Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
     "restore_to_default": "Ke Pengaturan Awal",

@@ -177,7 +177,7 @@ class MainContainer extends React.Component {
           if (this.props.parentState.isPreciseToSeconds) {
             return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
           } else {
-            if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
+            if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
               time.setMinutes(time.getMinutes() + 1)
             }
             time.setSeconds(0)
@@ -208,7 +208,7 @@ class MainContainer extends React.Component {
             if (this.props.parentState.isPreciseToSeconds) {
               return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
-              if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
+              if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
@@ -219,7 +219,7 @@ class MainContainer extends React.Component {
             if (this.props.parentState.isPreciseToSeconds) {
               return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
-              if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
+              if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
@@ -285,7 +285,7 @@ class MainContainer extends React.Component {
         this.props.selectZawal(1)
         this.props.selectIhtiyath(2)
         this.props.onChangePrecision(false)
-        this.props.selectRoundingMethod(0)
+        this.props.selectRoundingMethod(1)
         if (Math.abs(this.props.parentState.latitude) <= 45) this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
