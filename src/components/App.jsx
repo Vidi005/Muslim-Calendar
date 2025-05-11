@@ -66,7 +66,7 @@ class App extends React.Component {
       selectedZawal: 1,
       selectedIhtiyath: 2,
       isPreciseToSeconds: false,
-      selectedRoundingMethod: 0,
+      selectedRoundingMethod: 1,
       selectedCorrections: Array(en.prayer_names.length).fill(0),
       selectedDhuhaMethod: 0,
       inputSunAltitude: 4.5,
@@ -1264,7 +1264,7 @@ class App extends React.Component {
       } else {
         en.prayer_names.map((_, i) => {
           prayerTimes.map(prayerTime => {
-            if (prayerTime[i].getSeconds() >= 30 && this.state.selectedRoundingMethod === 0) {
+            if ((prayerTime[i].getSeconds() >= 30 && this.state.selectedRoundingMethod === 1) || this.state.selectedRoundingMethod === 0) {
               prayerTime[i].setMinutes(prayerTime[i].getMinutes() + 1)
             }
             return prayerTime[i].setSeconds(0)
