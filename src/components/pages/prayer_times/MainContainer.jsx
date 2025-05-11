@@ -15,7 +15,9 @@ class MainContainer extends React.Component {
       INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
       INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
+      ZAWAL_STORAGE_KEY: "ZAWAL_STORAGE_KEY",
       SECONDS_PRECISION_STORAGE_KEY: "SECONDS_PRECISION_STORAGE_KEY",
+      ROUND_METHOD_STORAGE_KEY: "ROUND_METHOD_STORAGE_KEY",
       CORRECTIONS_STORAGE_KEY: "CORRECTIONS_STORAGE_KEY",
       DHUHA_METHOD_STORAGE_KEY: "DHUHA_METHOD_STORAGE_KEY",
       INPUT_SUN_ALTITUDE_STORAGE_KEY: "INPUT_SUN_ALTITUDE_STORAGE_KEY",
@@ -58,7 +60,7 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.inputCustomFajrAngle !== this.props.parentState.inputCustomFajrAngle || prevProps.parentState.inputCustomIshaAngle !== this.props.parentState.inputCustomIshaAngle || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds) {
+    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.inputCustomFajrAngle !== this.props.parentState.inputCustomFajrAngle || prevProps.parentState.inputCustomIshaAngle !== this.props.parentState.inputCustomIshaAngle || prevProps.parentState.selectedZawal !== this.props.parentState.selectedZawal || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds || prevProps.parentState.selectedRoundingMethod !== this.props.parentState.selectedRoundingMethod) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
@@ -175,7 +177,7 @@ class MainContainer extends React.Component {
           if (this.props.parentState.isPreciseToSeconds) {
             return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
           } else {
-            if (time.getSeconds() > 30) {
+            if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
               time.setMinutes(time.getMinutes() + 1)
             }
             time.setSeconds(0)
@@ -206,7 +208,7 @@ class MainContainer extends React.Component {
             if (this.props.parentState.isPreciseToSeconds) {
               return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
-              if (time.getSeconds() > 30) {
+              if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
@@ -217,7 +219,7 @@ class MainContainer extends React.Component {
             if (this.props.parentState.isPreciseToSeconds) {
               return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
             } else {
-              if (time.getSeconds() > 30) {
+              if (time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
@@ -280,9 +282,11 @@ class MainContainer extends React.Component {
         this.props.onInputCustomFajrAngleChange(16)
         this.props.onInputCustomIshaAngleChange(14)
         this.props.getCurrentConvention()
+        this.props.selectZawal(1)
         this.props.selectIhtiyath(2)
         this.props.onChangePrecision(false)
-        this.props.selectDhuhaMethod(0)
+        this.props.selectRoundingMethod(0)
+        if (Math.abs(this.props.parentState.latitude) <= 45) this.props.selectDhuhaMethod(0)
         this.props.onInputSunAltitudeChange(4.5)
         this.props.onInputMinutesChange(18)
         this.props.selectFormula(1)
@@ -322,8 +326,10 @@ class MainContainer extends React.Component {
                   selectConvention={this.props.selectConvention}
                   onInputCustomFajrAngleChange={this.props.onInputCustomFajrAngleChange}
                   onInputCustomIshaAngleChange={this.props.onInputCustomIshaAngleChange}
+                  selectZawal={this.props.selectZawal}
                   selectIhtiyath={this.props.selectIhtiyath}
                   onChangePrecision={this.props.onChangePrecision}
+                  selectRoundingMethod={this.props.selectRoundingMethod}
                   selectCorrections={this.props.selectCorrections}
                   selectDhuhaMethod={this.props.selectDhuhaMethod}
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
@@ -348,8 +354,10 @@ class MainContainer extends React.Component {
                   selectConvention={this.props.selectConvention}
                   onInputCustomFajrAngleChange={this.props.onInputCustomFajrAngleChange}
                   onInputCustomIshaAngleChange={this.props.onInputCustomIshaAngleChange}
+                  selectZawal={this.props.selectZawal}
                   selectIhtiyath={this.props.selectIhtiyath}
                   onChangePrecision={this.props.onChangePrecision}
+                  selectRoundingMethod={this.props.selectRoundingMethod}
                   selectCorrections={this.props.selectCorrections}
                   selectDhuhaMethod={this.props.selectDhuhaMethod}
                   onInputSunAltitudeChange={this.props.onInputSunAltitudeChange}
