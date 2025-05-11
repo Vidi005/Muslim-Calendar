@@ -619,7 +619,7 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(astroDate.date)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -660,7 +660,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       } else {
         maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib) || '--:--'
       }
-      correctedMaghribTime = addTime(maghrib.date, ihtiyath, corrections[6])
+      correctedMaghribTime = addTime(maghrib?.date, ihtiyath, corrections[6])
       isha = new Date(correctedMaghribTime)
       correctedIshaTime = isha
       if (isNaN(sunAlt.isha)) {
@@ -679,14 +679,14 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         }
       } else {
         isha = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.isha) || '--:--'
-        correctedIshaTime = addTime(isha.date, ihtiyath, corrections[7])
+        correctedIshaTime = addTime(isha?.date, ihtiyath, corrections[7])
       }
       const sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
       const cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(latitude - sunDeclination)) + shadowFactor
       const tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
       const ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude) || '--:--'
-      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+      correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     } else if (formula === 1) {
       // Follow ±45 degrees latitude
       let higherLat = latitude
@@ -813,7 +813,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
       }
-      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+      correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     } else if (formula === 4) {
       // One-seventh of the night
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
@@ -865,7 +865,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
       }
-      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+      correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     } else {
       // Angle-based method
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
@@ -917,7 +917,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
         ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
       }
-      correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
+      correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     }
   } else {
     fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
@@ -965,9 +965,8 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
   const imsakTime = addTime(correctedFajrTime, -10, 0)
   const correctedSunrise = addTime(sunrise.date, -ihtiyath, 0)
   const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
-  const dhuhr = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
-  const dhuhrDescendCorrection = 1
-  const correctedDhuhrTime = addTime(dhuhr.date, ihtiyath + dhuhrDescendCorrection, corrections[4])
+  const istiwa = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
+  const correctedDhuhrTime = addTime(istiwa.date, ihtiyath + zawal, corrections[4])
   correctedAshrTime = correctedAshrTime
   correctedMaghribTime = correctedMaghribTime
   correctedIshaTime = correctedIshaTime
@@ -995,7 +994,7 @@ const getQiblaDirection = (latitude, longitude) => {
   return ((360 + qiblaDirection) % 360).toFixed(2)
 }
 
-const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -1432,11 +1431,10 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
       correctedIshaTime = addTime(isha, ihtiyath, corrections[7])        
     }
   }
-  const dhuhrDescendCorrection = 1
-  const dhuhrHours = parseInt(transitTime)
-  const dhuhrMinutes = (transitTime - dhuhrHours) * 60
-  const dhuhrSeconds = (dhuhrMinutes - parseInt(dhuhrMinutes)) * 60
-  const dhuhrDate = parseDate(gregorianDate, dhuhrHours, dhuhrMinutes + dhuhrDescendCorrection, dhuhrSeconds)
+  const istiwaHours = parseInt(transitTime)
+  const istiwaMinutes = (transitTime - istiwaHours) * 60
+  const istiwaSeconds = (istiwaMinutes - parseInt(istiwaMinutes)) * 60
+  const dhuhrDate = parseDate(gregorianDate, istiwaHours, istiwaMinutes + zawal, istiwaSeconds)
   ashrTime = transitTime + ashrHourAngle / 15
   const ashrHours = parseInt(ashrTime)
   const ashrMinutes = (ashrTime - ashrHours) * 60
@@ -1461,16 +1459,16 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }

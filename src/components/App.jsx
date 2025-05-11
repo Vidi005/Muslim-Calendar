@@ -30,8 +30,10 @@ class App extends React.Component {
       CONVENTION_STORAGE_KEY: 'CONVENTION_STORAGE_KEY',
       INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
       INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
+      ZAWAL_STORAGE_KEY: 'ZAWAL_STORAGE_KEY',
       IHTIYATH_STORAGE_KEY: 'IHTIYATH_STORAGE_KEY',
       SECONDS_PRECISION_STORAGE_KEY: 'SECONDS_PRECISION_STORAGE_KEY',
+      ROUND_METHOD_STORAGE_KEY: 'ROUND_METHOD_STORAGE_KEY',
       CORRECTIONS_STORAGE_KEY: 'CORRECTIONS_STORAGE_KEY',
       DHUHA_METHOD_STORAGE_KEY: 'DHUHA_METHOD_STORAGE_KEY',
       INPUT_SUN_ALTITUDE_STORAGE_KEY: 'INPUT_SUN_ALTITUDE_STORAGE_KEY',
@@ -61,8 +63,10 @@ class App extends React.Component {
       inputCustomFajrAngle: 16,
       inputCustomIshaAngle: 14,
       sunAltitude: en.conventions[0].sun_altitude,
+      selectedZawal: 1,
       selectedIhtiyath: 2,
       isPreciseToSeconds: false,
+      selectedRoundingMethod: 0,
       selectedCorrections: Array(en.prayer_names.length).fill(0),
       selectedDhuhaMethod: 0,
       inputSunAltitude: 4.5,
@@ -168,8 +172,10 @@ class App extends React.Component {
       this.checkSavedCalculationMethod()
       this.checkSavedAshrTime()
       this.checkSavedConvention()
+      this.checkSavedZawal()
       this.checkSavedIhtiyath()
       this.checkSavedSecondsPrecision()
+      this.checkSavedRoundingMethod()
       this.checkSavedCorrections()
       this.checkSavedDhuhaMethod()
       this.checkSavedInputtedSunAltitude()
@@ -357,6 +363,19 @@ class App extends React.Component {
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
+
+  checkSavedZawal () {
+    const getSavedZawalFromLocal = localStorage.getItem(this.state.ZAWAL_STORAGE_KEY)
+    try {
+      const parsedSavedZawal = JSON.parse(getSavedZawalFromLocal)
+      if (parsedSavedZawal !== null) {
+        this.setState({ selectedZawal: parseInt(parsedSavedZawal) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.ZAWAL_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
   
   checkSavedIhtiyath () {
     const getSavedIhtiyathFromLocal = localStorage.getItem(this.state.IHTIYATH_STORAGE_KEY)
@@ -368,7 +387,7 @@ class App extends React.Component {
     } catch (error) {
       localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
-    }    
+    }
   }
 
   checkSavedSecondsPrecision () {
@@ -380,6 +399,19 @@ class App extends React.Component {
       }
     } catch (error) {
       localStorage.removeItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkSavedRoundingMethod () {
+    const getSavedRoundingMethodFromLocal = localStorage.getItem(this.state.ROUND_METHOD_STORAGE_KEY)
+    try {
+      const parsedSavedRoundingMethod = JSON.parse(getSavedRoundingMethodFromLocal)
+      if (parsedSavedRoundingMethod !== null) {
+        this.setState({ selectedRoundingMethod: parseInt(parsedSavedRoundingMethod) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.ROUND_METHOD_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -607,6 +639,7 @@ class App extends React.Component {
   }
 
   generateNearestCity = worldCities => {
+    if (Math.abs(this.state.latitude) > 45) this.selectDhuhaMethod(1)
     this.setState({ isGettingCoordinates: false, isGeocoding: true, inputLocation: '', selectedLocation: {} })
     let nearestCityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     nearestCityWorker.postMessage({
@@ -750,7 +783,7 @@ class App extends React.Component {
   onInputLatitudeChange (event) {
     if (Math.abs(event.target.value) > 90) return
     this.setState({ latitude: parseFloat(event.target.value) }, () => {
-      if (Math.abs(this.state.latitude) > 60) this.selectDhuhaMethod(1)
+      if (Math.abs(this.state.latitude) > 45) this.selectDhuhaMethod(1)
     })
   }
 
@@ -911,6 +944,15 @@ class App extends React.Component {
     })
   }
 
+  selectZawal (value) {
+    this.setState({ selectedZawal: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.ZAWAL_STORAGE_KEY, JSON.stringify(this.state.selectedZawal))
+      }
+      this.create3DaysOfPrayerTimes()
+    })
+  }
+
   selectIhtiyath (value) {
     this.setState({ selectedIhtiyath: parseInt(value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
@@ -924,6 +966,15 @@ class App extends React.Component {
     this.setState({ isPreciseToSeconds: value }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.SECONDS_PRECISION_STORAGE_KEY, JSON.stringify(this.state.isPreciseToSeconds))
+      }
+      this.create3DaysOfPrayerTimes()
+    })
+  }
+
+  selectRoundingMethod (value) {
+    this.setState({ selectedRoundingMethod: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.ROUND_METHOD_STORAGE_KEY, JSON.stringify(this.state.selectedRoundingMethod))
       }
       this.create3DaysOfPrayerTimes()
     })
@@ -1174,6 +1225,7 @@ class App extends React.Component {
         calculationMethod: this.state.selectedCalculationMethod,
         ashrTime: this.state.selectedAshrTime,
         sunAltitude: this.state.sunAltitude,
+        zawal: this.state.selectedZawal,
         ihtiyath: this.state.selectedIhtiyath,
         formula: this.state.selectedFormula,
         corrections: this.state.selectedCorrections,
@@ -1212,7 +1264,7 @@ class App extends React.Component {
       } else {
         en.prayer_names.map((_, i) => {
           prayerTimes.map(prayerTime => {
-            if (prayerTime[i].getSeconds() > 30) {
+            if (prayerTime[i].getSeconds() >= 30 && this.state.selectedRoundingMethod === 0) {
               prayerTime[i].setMinutes(prayerTime[i].getMinutes() + 1)
             }
             return prayerTime[i].setSeconds(0)
@@ -1481,8 +1533,10 @@ class App extends React.Component {
                 selectConvention={this.selectConvention.bind(this)}
                 onInputCustomFajrAngleChange={this.onInputCustomFajrAngleChange.bind(this)}
                 onInputCustomIshaAngleChange={this.onInputCustomIshaAngleChange.bind(this)}
+                selectZawal={this.selectZawal.bind(this)}
                 selectIhtiyath={this.selectIhtiyath.bind(this)}
                 onChangePrecision={this.onChangePrecision.bind(this)}
+                selectRoundingMethod={this.selectRoundingMethod.bind(this)}
                 selectCorrections={this.selectCorrections.bind(this)}
                 selectDhuhaMethod={this.selectDhuhaMethod.bind(this)}
                 onInputSunAltitudeChange={this.onInputSunAltitudeChange.bind(this)}
