@@ -118,12 +118,12 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               <label htmlFor="rounding">{t('rounding')}</label>
               <select
                 className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-                defaultValue={0}
+                defaultValue={1}
                 value={state.selectedRoundingMethod}
                 onChange={event => selectRoundingMethod(event.target.value)}
                 required
               >
-                {en.rounded_methods.map((type, index) => <option key={type} value={index}>{t(`rounded_methods.${index}`)}</option>)}
+                {en.rounding_methods.map((type, index) => <option key={type} value={index}>{t(`rounding_methods.${index}`)}</option>)}
               </select>
             </span>
           )}
