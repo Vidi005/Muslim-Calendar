@@ -139,10 +139,10 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               </select>
             </span>
           )}
-          <div className="flex flex-wrap items-center gap-2 whitespace-nowrap">
+          <div className="flex flex-wrap items-center gap-1 whitespace-nowrap">
             <label htmlFor="dhuha_method">{t('dhuha_method')}</label>
             <select
-              className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+              className="p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
               defaultValue={0}
               value={state.selectedDhuhaMethod}
               onChange={event => selectDhuhaMethod(Math.abs(state.latitude) > 45 ? 1 : event.target.value)}
