@@ -2,6 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
+import FooterContainer from "../Footer"
 
 const EclipsesPage = ({ t, selectedLanguage, isSidebarExpanded, selectedTimeZone, formattedDateTime, monthsInSetYear, latitude, longitude, elevation, inputDate, inputTime, generateLocalSolarEclipseInfo, generateLunarEclipseInfo }) => (
   <div className="eclipses-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
@@ -25,6 +26,7 @@ const EclipsesPage = ({ t, selectedLanguage, isSidebarExpanded, selectedTimeZone
       generateLocalSolarEclipseInfo={generateLocalSolarEclipseInfo}
       generateLunarEclipseInfo={generateLunarEclipseInfo}
     />
+    {innerWidth > 1024 && <FooterContainer/>}
   </div>
 )
 

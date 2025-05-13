@@ -2,6 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import MainContainer from "./MainContainer"
 import HeaderContainer from "../Header"
+import FooterContainer from "../Footer"
 
 const AboutPage = ({ t, isSidebarExpanded }) => (
   <div className="about-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
@@ -10,6 +11,7 @@ const AboutPage = ({ t, isSidebarExpanded }) => (
     </Helmet>
     <HeaderContainer/>
     <MainContainer t={t} isSidebarExpanded={isSidebarExpanded}/>
+    {innerWidth > 1024 && <FooterContainer/>}
   </div>
 )
 

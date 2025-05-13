@@ -2,6 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
+import FooterContainer from "../Footer"
 
 const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedTimeZone, formattedDateTime, hijriStartDates, selectedMoonVisibilityCriteria, selectedCoordinateSteps, generateMoonCrescentVisibility }) => (
   <div className="moon-crescent-map-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
@@ -20,6 +21,7 @@ const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedT
       selectedCoordinateSteps={selectedCoordinateSteps}
       generateMoonCrescentVisibility={generateMoonCrescentVisibility}
     />
+    {innerWidth > 1024 && <FooterContainer/>}
   </div>
 )
 
