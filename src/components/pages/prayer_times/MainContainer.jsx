@@ -267,8 +267,8 @@ class MainContainer extends React.Component {
 
   resetSettings () {
     Swal.fire({
-      title: this.props.t('reset_settings_alert.0'),
-      text: this.props.t('reset_settings_alert.1'),
+      title: this.props.t('reset_prayer_times_settings_alert.0'),
+      text: this.props.t('reset_prayer_times_settings_alert.1'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.props.t('yes'),
