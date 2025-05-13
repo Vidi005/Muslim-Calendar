@@ -2,6 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
+import FooterContainer from "../Footer"
 
 const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
   <div className="home-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
@@ -21,6 +22,7 @@ const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, toolt
       goToCurrentMonth={goToCurrentMonth}
       jumpToClickedMonth={jumpToClickedMonth}
     />
+    {innerWidth > 1024 && <FooterContainer/>}
   </div>
 )
 
