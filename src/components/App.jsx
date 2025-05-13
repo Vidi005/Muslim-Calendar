@@ -722,8 +722,8 @@ class App extends React.Component {
 
   resetSettings () {
     Swal.fire({
-      title: i18n.t('reset_settings_alert.0'),
-      text: i18n.t('reset_settings_alert.1'),
+      title: i18n.t('reset_app_settings_alert.0'),
+      text: i18n.t('reset_app_settings_alert.1'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: i18n.t('yes'),

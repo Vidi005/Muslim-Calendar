@@ -6,9 +6,9 @@ import LunarEclipses from "./LunarEclipses"
 import FooterContainer from "../Footer"
 
 const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarEclipseListLoading, areGlobalSolarEclipseListLoading, areLunarEclipseListLoading, localSolarEclipseList, globalSolarEclipseList, lunarEclipseList }) => (
-  <article className="eclipses-page-container grow duration-200 overflow-y-auto">
+  <article className="eclipses-page-container flex flex-col grow duration-200 overflow-y-auto">
     <InputForm />
-    <div className="flex flex-wrap md:items-stretch">
+    <div className="flex flex-wrap md:items-stretch grow md:flex-none">
       <LocalSolarEclipses
         t={t}
         selectedLanguage={selectedLanguage}
