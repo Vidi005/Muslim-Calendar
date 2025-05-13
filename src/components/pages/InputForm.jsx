@@ -115,7 +115,7 @@ const InputForm = () => (
                         lang={selectedLanguage}
                         type="number"
                         inputMode="decimal"
-                        className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 shadow-inner rounded duration-200"
+                        className="input-latitude w-24 p-0.5 bg-green-200 dark:bg-gray-200 shadow-inner rounded duration-200"
                         onChange={onInputLatitudeChange}
                         value={state.latitude}
                         required
@@ -128,7 +128,7 @@ const InputForm = () => (
                         lang={selectedLanguage}
                         type="number"
                         inputMode="decimal"
-                        className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                        className="input-longitude w-24 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputLongitudeChange}
                         value={state.longitude}
                         required
@@ -141,7 +141,7 @@ const InputForm = () => (
                         lang={selectedLanguage}
                         type="number"
                         inputMode="decimal"
-                        className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                        className="input-elevation w-16 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                         onChange={onInputAltitudeChange}
                         value={state.elevation}
                         required
@@ -324,7 +324,7 @@ const InputForm = () => (
                       lang={selectedLanguage}
                       type="number"
                       inputMode="decimal"
-                      className="input-latitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      className="input-latitude w-24 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.latitude}
                       onChange={onInputLatitudeChange}
                       required
@@ -337,7 +337,7 @@ const InputForm = () => (
                       lang={selectedLanguage}
                       type="number"
                       inputMode="decimal"
-                      className="input-longitude w-24 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      className="input-longitude w-24 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.longitude}
                       onChange={onInputLongitudeChange}
                       required
@@ -350,7 +350,7 @@ const InputForm = () => (
                       lang={selectedLanguage}
                       type="number"
                       inputMode="decimal"
-                      className="input-elevation w-16 ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      className="input-elevation w-16 p-0.5 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       value={state.elevation}
                       onChange={onInputAltitudeChange}
                       required
