@@ -232,7 +232,7 @@ const InputForm = () => (
                   <td colSpan={3}>{t("current_time")}&nbsp;<span className="font-sans text-xs">{state.currentDate.time}</span></td>
                 </tr>
               </table>
-              <article className="grid grid-flow-row items-center gap-2 border-t border-t-green-900 dark:border-t-white duration-200">
+              <article className="grid grid-flow-row items-center gap-2 max-h-[60vh] border-t border-t-green-900 dark:border-t-white duration-200 overflow-y-auto">
                 <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>

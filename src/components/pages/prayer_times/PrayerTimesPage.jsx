@@ -2,6 +2,7 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
+import FooterContainer from "../Footer"
 
 const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
@@ -29,6 +30,7 @@ const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTi
       selectFormula={selectFormula}
       generatePrayerTimes={generatePrayerTimes}
     />
+    {innerWidth > 1024 && <FooterContainer/>}
   </div>
 )
 

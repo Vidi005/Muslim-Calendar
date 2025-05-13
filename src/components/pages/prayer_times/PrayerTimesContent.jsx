@@ -5,6 +5,7 @@ import CurrentPrayerTimes from "./CurrentPrayerTimes"
 import PrayerTimesVisualization from "./PrayerTimesVisualization"
 import QiblaDirection from "./QiblaDirection"
 import PrayerTimesList from "./PrayerTimesList"
+import FooterContainer from "../Footer"
 
 const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, selectAshrTime, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings, changeMonthType, selectGregorianMonth, selectHijriMonth, downloadFile }) => (
   <article className="prayer-times-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
@@ -70,6 +71,7 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
         downloadFile={downloadFile}
       />
     </div>
+    {innerWidth <= 1024 && <FooterContainer/>}
   </article>
 )
 

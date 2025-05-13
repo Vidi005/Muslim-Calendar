@@ -3,6 +3,7 @@ import InputForm from "../InputForm"
 import GlobalSolarEclipses from "./GlobalSolarEclipses"
 import LocalSolarEclipses from "./LocalSolarEclipses"
 import LunarEclipses from "./LunarEclipses"
+import FooterContainer from "../Footer"
 
 const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarEclipseListLoading, areGlobalSolarEclipseListLoading, areLunarEclipseListLoading, localSolarEclipseList, globalSolarEclipseList, lunarEclipseList }) => (
   <article className="eclipses-page-container grow duration-200 overflow-y-auto">
@@ -30,6 +31,7 @@ const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarE
         lunarEclipseList={lunarEclipseList}
       />
     </div>
+    {innerWidth <= 1024 && <FooterContainer/>}
   </article>
 )
 

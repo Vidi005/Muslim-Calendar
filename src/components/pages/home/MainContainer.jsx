@@ -14,7 +14,7 @@ class MainContainer extends React.Component {
       <main className="home-page h-0 flex-auto flex-nowrap bg-green-100 dark:bg-gray-800 duration-200">
         {innerWidth > 1024
           ? (
-              <div className="home-container flex flex-nowrap w-full h-full">
+              <div className="home-container flex flex-nowrap w-full h-full pb-10">
                 <Sidebar
                   t={this.props.t}
                   isSidebarExpanded={this.props.isSidebarExpanded}
