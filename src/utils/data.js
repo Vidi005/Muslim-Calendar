@@ -387,9 +387,9 @@ const getCitiesByName = (cityData, query) => cityData.filter(data => data.city.t
 
 const getCitiesDistance = (lat1, lon1, lat2, lon2) => {
   const earthRadius = 6371.0087714
-  const dLat = (lat2 - lat1) * DEG2RAD
-  const dLon = (lon2 - lon1) * DEG2RAD
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * DEG2RAD) * Math.cos(lat2 * DEG2RAD) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+  const deltaLat = (lat2 - lat1) * DEG2RAD
+  const deltaLon = (lon2 - lon1) * DEG2RAD
+  const a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1 * DEG2RAD) * Math.cos(lat2 * DEG2RAD) * Math.pow(Math.sin(deltaLon / 2), 2)
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   return earthRadius * c
 }
@@ -993,6 +993,8 @@ const getQiblaDirection = (latitude, longitude) => {
   const qiblaDirection = RAD2DEG * qiblaAngle
   return ((360 + qiblaDirection) % 360).toFixed(2)
 }
+
+const getQiblaDistance = (latitude, longitude) => getCitiesDistance(latitude, longitude, kaabaCoordinates.latitude, kaabaCoordinates.longitude).toFixed(2)
 
 const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
@@ -2053,4 +2055,4 @@ const coordinateScale = {
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
