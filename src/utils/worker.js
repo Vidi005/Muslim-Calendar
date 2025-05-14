@@ -1,6 +1,6 @@
-import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getSunInfos } from "./data"
+import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v3.6' // Update the version when deploying new builds
+const CACHE_NAME = 'app-cache-v3.7' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -59,6 +59,9 @@ self.onmessage = event => {
   } else if (type === 'createQiblaDirection') {
     const result = getQiblaDirection(latitude, longitude)
     self.postMessage({ type: 'createQiblaDirection', result })
+  } else if (type === 'createQiblaDistance') {
+    const result = getQiblaDistance(latitude, longitude)
+    self.postMessage({ type: 'createQiblaDistance', result })
   } else if (type === 'createPrayerTimes') {
     const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
