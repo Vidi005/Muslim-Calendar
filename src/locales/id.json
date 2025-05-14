@@ -322,7 +322,7 @@
     "degrees": "derajat",
     "qibla_direction": "Arah Kiblat",
     "qibla_directions": ["Arah Kiblat ", " dari Utara"],
-    "qibla_distance": "Jarak ke Kiblat ",
+    "qibla_distance": "Jarak ke Ka'bah ",
     "qibla": "Kiblat",
     "visualization": "Visualisasi",
     "zenith": "Zenit",

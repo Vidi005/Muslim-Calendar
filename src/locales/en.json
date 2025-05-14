@@ -322,7 +322,7 @@
     "degrees": "degrees",
     "qibla_direction": "Qibla Direction",
     "qibla_directions": ["Qibla direction is ", " from North"],
-    "qibla_distance": "Distance to Qibla is ",
+    "qibla_distance": "Distance to Kaaba is ",
     "qibla": "Qibla",
     "visualization": "Visualization",
     "zenith": "Zenith",
