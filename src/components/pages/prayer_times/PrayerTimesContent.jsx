@@ -29,7 +29,7 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
     />
     <div className="flex flex-wrap md:items-stretch">
       <CurrentPrayerTimes/>
-      <QiblaDirection t={t} heading={state.heading} qiblaDirection={state.qiblaDirection}/>
+      <QiblaDirection t={t} heading={state.heading} qiblaDirection={state.qiblaDirection} qiblaDistance={state.qiblaDistance}/>
       <PrayerTimesVisualization
         t={t}
         selectedLanguage={parentState.selectedLanguage}

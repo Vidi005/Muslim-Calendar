@@ -1,6 +1,6 @@
 import React from "react"
 
-const QiblaDirection = ({ t, heading, qiblaDirection }) => (
+const QiblaDirection = ({ t, heading, qiblaDirection, qiblaDistance }) => (
   <section className="flex-1 w-full md:w-1/2 p-2 md:px-4 2xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInRight">
     <h2 className="text-center text-green-900 dark:text-white duration-200 whitespace-nowrap">{t('qibla_direction')}</h2>
     <div className="qibla-container grid justify-center w-full p-4 overflow-hidden">
@@ -13,6 +13,7 @@ const QiblaDirection = ({ t, heading, qiblaDirection }) => (
       </div>
     </div>
     <p className="text-base sm:text-lg md:text-xl text-center">{t('qibla_directions.0')}{qiblaDirection}°{t('qibla_directions.1')}</p>
+    <p className="text-base sm:text-lg md:text-xl text-center">{t('qibla_distance')}{qiblaDistance} km</p>
   </section>
 )
 

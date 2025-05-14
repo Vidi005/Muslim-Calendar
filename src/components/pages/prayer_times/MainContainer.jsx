@@ -25,6 +25,7 @@ class MainContainer extends React.Component {
       FORMULA_STORAGE_KEY: "FORMULA_STORAGE_KEY",
       heading: null,
       qiblaDirection: 0,
+      qiblaDistance: 0,
       transitTime: 0,
       areSunInfosLoading: true,
       sunInfos: [],
@@ -53,6 +54,7 @@ class MainContainer extends React.Component {
     }
     this.generateSunInfos()
     this.generateQiblaDirection()
+    this.generateQiblaDistance()
     if (this.props.parentState.monthsInSetYear?.length > 0) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
@@ -67,6 +69,7 @@ class MainContainer extends React.Component {
     if (prevProps.parentState.latitude !== this.props.parentState.latitude || prevProps.parentState.longitude !== this.props.parentState.longitude) {
       this.generateSunInfos()
       this.generateQiblaDirection()
+      this.generateQiblaDistance()
     }
     if (prevProps.parentState.inputDate !== this.props.parentState.inputDate || prevProps.parentState.inputTime !== this.props.parentState.inputTime) {
       this.generateSunInfos()
@@ -115,6 +118,27 @@ class MainContainer extends React.Component {
     qiblaDirectionWorker.onerror = _error => {
       qiblaDirectionWorker.terminate()
       qiblaDirectionWorker = null
+    }
+  }
+
+  generateQiblaDistance = () => {
+    let qiblaDistanceWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
+    qiblaDistanceWorker.postMessage({
+      type: 'createQiblaDistance',
+      latitude: this.props.parentState.latitude,
+      longitude: this.props.parentState.longitude
+    })
+    qiblaDistanceWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createQiblaDistance') {
+        this.setState({ qiblaDistance: workerEvent.data.result }, () => {
+          qiblaDistanceWorker.terminate()
+          qiblaDistanceWorker = null
+        })
+      }
+    }
+    qiblaDistanceWorker.onerror = _error => {
+      qiblaDistanceWorker.terminate()
+      qiblaDistanceWorker = null
     }
   }
 
