@@ -52,7 +52,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             >
               {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
-            <label htmlFor="coordinate-steps" className="mx-1">{t('degrees')}</label>
+            <label htmlFor="coordinate-steps">{t('degrees')}</label>
           </span>
           <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
             selectCoordinateSteps(3)
