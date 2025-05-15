@@ -272,7 +272,7 @@ const InputForm = () => (
                   </span>
                 </div>
                 <form className="flex flex-wrap items-center justify-center gap-2" onSubmit={e => e.preventDefault()}>
-                  <Combobox as={"text"} className={"flex items-center gap-1 text-sm"} value={state.selectedLocation} onChange={setSelectedLocation}>
+                  <Combobox as={"text"} className={"flex items-center text-sm"} value={state.selectedLocation} onChange={setSelectedLocation}>
                     <label>{t('location')}&nbsp;</label>
                     <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
                       <ComboboxInput
