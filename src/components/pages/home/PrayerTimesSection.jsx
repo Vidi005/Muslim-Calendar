@@ -17,7 +17,7 @@ const PrayerTimesSection = () => (
           {
             state.inputDate !== '' && state.inputTime !== ''
               ? state.formattedDateTime instanceof Date
-                ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' })}</h5>
+                ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad')}</h5>
                 : null
               : <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{state.nextPrayerInfo}</h5>
           }

@@ -83,7 +83,7 @@ class App extends React.Component {
       formattedIslamicYear: 0,
       hijriStartDates: [],
       moonCrescentVisibility: {},
-      selectedMoonVisibilityCriteria: 1,
+      selectedMoonVisibilityCriteria: 3,
       selectedCoordinateSteps: 3,
       localSolarEclipseInfo: {},
       lunarEclipseInfo: {},
