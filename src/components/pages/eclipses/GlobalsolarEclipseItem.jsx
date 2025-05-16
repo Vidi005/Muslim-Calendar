@@ -18,7 +18,7 @@ const GlobalSolarEclipseItem = ({ t, selectedLanguage, selectedTimeZone, globalS
   ]
   return (
     <div className="w-full bg-green-50 dark:bg-black p-2 md:px-4 text-base md:text-sm lg:text-base rounded-md md:rounded-lg shadow lg:shadow-md dark:shadow-white/50 overflow-hidden duration-200">
-      <h4 className="mb-1 text-center text-base md:text-sm lg:text-base text-green-900 dark:text-white font-bold">{`${globalSolarEclipse?.peak?.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad')}`}</h4>
+      <h4 className="mb-1 text-center text-base md:text-sm lg:text-base text-green-900 dark:text-white font-bold">{`${globalSolarEclipse?.peak?.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}`}</h4>
       <table className="table-auto">
         {en.global_solar_eclipse_infos.slice(0, -1).map((_, index) => (
           <tr className="align-top text-black dark:text-gray-100" key={index}>

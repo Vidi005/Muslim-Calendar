@@ -136,7 +136,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
           <h3 className="m-0 md:m-2">{t('sun_info')}</h3>
           {inputDate !== '' && inputTime !== ''
             ? formattedDateTime instanceof Date
-              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleDateString(selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad')}</h5>
+              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleDateString(selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</h5>
               : null
             : null}
           <table className="table-auto mx-auto text-justify text-base md:text-sm lg:text-base">
