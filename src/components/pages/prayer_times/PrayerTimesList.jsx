@@ -188,7 +188,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                     <span>
                       <a className="text-blue-500 active:text-purple-500" href={location.origin} target="_blank" rel="noreferrer"><u>{location.origin}</u></a>
                     </span>
-                    <span>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" })}</span>
+                    <span>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad')}</span>
                   </p>
                   {monthType !== 0 &&
                     <p className="text-center text-sm leading-tight">{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)}. {t('footnotes.1')}</p>
@@ -240,7 +240,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                       <td style={{ border: "none" }}>
                         <a href={location.origin} target="_blank" rel="noreferrer" style={{ fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", color: "#3b82f6", textDecoration: "underline", textAlign: "left" }}><u>{location.origin}</u></a>
                       </td>
-                      <td style={{ border: "none", fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "right" }}>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" })}</td>
+                      <td style={{ border: "none", fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "right" }}>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad')}</td>
                     </tr>
                   </table>
                   {monthType !== 0 &&
