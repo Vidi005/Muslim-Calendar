@@ -372,7 +372,7 @@ const getHijriDate = (gregorianSetDate, months) => {
 
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
-  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" }).replace(/Minggu/g, 'Ahad')
+  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')
   const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }).replace(/\./g, ':')
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
@@ -1551,7 +1551,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
 const calculateVisibilityDanjon = (isMeetCriteria, lagTime, newMoon) => {
   let zone = 'B'
   let color = ''
-  if (isMeetCriteria && lagTime > 0) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
   } else if (newMoon) {
@@ -1568,10 +1568,10 @@ const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, lagTime, newMoon) =
   const sq = topocentricAlt + arcOfLight / 3
   let zone = 'C'
   let color = ''
-  if (sq > 11 && lagTime > 0) {
+  if (sq > 11 && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (sq > 9 && lagTime > 0) {
+  } else if (sq > 9 && lagTime > 0 && !newMoon) {
     zone = 'B'
     color = '#FFE53C'
   } else if (newMoon) {
@@ -1588,19 +1588,19 @@ const calculateVisibilityYallop = (arcOfVision, w, lagTime, newMoon) => {
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'F'
   let color = ''
-  if (q > 0.216 && lagTime > 0) {
+  if (q > 0.216 && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (q > -0.014 && lagTime > 0) {
+  } else if (q > -0.014 && lagTime > 0 && !newMoon) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (q > -0.160 && lagTime > 0) {
+  } else if (q > -0.160 && lagTime > 0 && !newMoon) {
     zone = 'C'
     color = '#FF783C'
-  } else if (q > -0.232 && lagTime > 0) {
+  } else if (q > -0.232 && lagTime > 0 && !newMoon) {
     zone = 'D'
     color = '#FF0000'
-  } else if (q > -0.293 && lagTime > 0) {
+  } else if (q > -0.293 && lagTime > 0 && !newMoon) {
     zone = 'E'
     color = '#B50757'
   } else if (newMoon) {
@@ -1617,13 +1617,13 @@ const calculateVisibilityOdeh = (arcOfVision, w, lagTime, newMoon) => {
   const visibilityValue = arcOfVision - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
   let zone = 'D'
   let color = ''
-  if (visibilityValue >= 5.65 && lagTime > 0) {
+  if (visibilityValue >= 5.65 && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (visibilityValue >= 2.0 && lagTime > 0) {
+  } else if (visibilityValue >= 2.0 && lagTime > 0 && !newMoon) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (visibilityValue >= -0.96 && lagTime > 0) {
+  } else if (visibilityValue >= -0.96 && lagTime > 0 && !newMoon) {
     zone = 'C'
     color = '#FF783C'
   } else if (newMoon) {
@@ -1640,16 +1640,16 @@ const calculateVisibilityQureshi = (arcOfVision, w, lagTime, newMoon) => {
   const s = (arcOfVision - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
   let zone = 'F'
   let color = ''
-  if (s >= 0.15 && lagTime > 0) {
+  if (s >= 0.15 && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (s >= 0.05 && lagTime > 0) {
+  } else if (s >= 0.05 && lagTime > 0 && !newMoon) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (s >= -0.06 && lagTime > 0) {
+  } else if (s >= -0.06 && lagTime > 0 && !newMoon) {
     zone = 'C'
     color = '#FF783C'
-  } else if (s >= -0.16 && lagTime > 0) {
+  } else if (s >= -0.16 && lagTime > 0 && !newMoon) {
     zone = 'D'
     color = '#FF0000'
   } else if (newMoon) {
@@ -1665,7 +1665,7 @@ const calculateVisibilityQureshi = (arcOfVision, w, lagTime, newMoon) => {
 const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoon) => {
   let zone = 'B'
   let color = ''
-  if (isMeetCriteria && lagTime > 0) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
   } else if (newMoon) {
@@ -1682,19 +1682,19 @@ const calculateVisibilityShaukat = (arcOfVision, areEqualsToValues, w, lagTime, 
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'F'
   let color = ''
-  if (q >= 0.122 && lagTime > 0 && !areEqualsToValues) {
+  if (q >= 0.122 && lagTime > 0 && !newMoon && !areEqualsToValues) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (q >= -0.15 && lagTime > 0 && !areEqualsToValues) {
+  } else if (q >= -0.15 && lagTime > 0 && !newMoon && !areEqualsToValues) {
     zone = 'B'
     color = '#9EFF00'
-  } else if (q >= -0.32 && lagTime > 0 && !areEqualsToValues) {
+  } else if (q >= -0.32 && lagTime > 0 && !newMoon && !areEqualsToValues) {
     zone = 'C'
     color = '#FF783C'
-  } else if (q >= -0.59 && lagTime > 0 && !areEqualsToValues) {
+  } else if (q >= -0.59 && lagTime > 0 && !newMoon && !areEqualsToValues) {
     zone = 'D'
     color = '#FF0000'
-  } else if (q >= -0.59 && lagTime > 0 && areEqualsToValues && lagTime > 0) {
+  } else if (q >= -0.59 && lagTime > 0 && !newMoon && areEqualsToValues) {
     zone = 'E'
     color = '#FAFF00'
   } else if (newMoon) {
@@ -1710,7 +1710,7 @@ const calculateVisibilityShaukat = (arcOfVision, areEqualsToValues, w, lagTime, 
 const calculateVisibilityTurkey = (isMeetCriteria, lagTime, newMoon) => {
   let zone = 'B'
   let color = ''
-  if (isMeetCriteria && lagTime > 0) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
   } else if (newMoon) {
@@ -1726,7 +1726,7 @@ const calculateVisibilityTurkey = (isMeetCriteria, lagTime, newMoon) => {
 const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoon) => {
   let zone = 'B'
   let color = ''
-  if (isMeetCriteria && lagTime > 0) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
   } else if (newMoon) {

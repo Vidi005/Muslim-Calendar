@@ -29,6 +29,7 @@
     "longitude": "Longitude :",
     "elevation": "Elevation :",
     "apply": "Apply",
+    "hijri_calendar_reference": "Reference :",
     "hijri_date_criteria": "Criteria :",
     "date_criteria": [
         {
