@@ -76,6 +76,7 @@
     "conjunction": "Conjunction :",
     "error": "Error",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "abbreviated_day_names": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qa'dah", "Dhu'l-Hijjah"],
     "hijri_date_info": "* This Hijri Date calculation may differ by a few days. So, keep to follow the decisions of Muslim Agencies/Organizations in your region.",
     "muslim_holidays": "Muslim Holidays in ",
@@ -350,11 +351,29 @@
     "islamic_month": "Month :",
     "islamic_year": "Year :",
     "hijri_abbreviation": "AH",
-    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "Turkey, 2016", "MABIMS, 2021"],
+    "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "Turkey, 2016", "MABIMS, 2021"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Ijtima' day - 1", "Ijtima' day", "Ijtima' day + 1"],
     "moon_visibility_zones": [
+        [
+            {
+                "visibility": "Can be seen (Elongation ≥ 7°)",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Moon over the horizon, not visible",
+                "color": ""
+            },
+            {
+                "visibility": "Moon has set",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Moon before conjunction",
+                "color": "#000000"
+            }
+        ],
         [
             {
                 "visibility": "Easily visible by naked eye",
@@ -375,6 +394,28 @@
             {
                 "visibility": "Difficult to be seen even with optical aid",
                 "color": "#B50757"
+            },
+            {
+                "visibility": "Moon over the horizon, not visible",
+                "color": ""
+            },
+            {
+                "visibility": "Moon has set",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Moon before conjunction",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Crescent easily visible",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Need optical aid",
+                "color": "#9EFF00"
             },
             {
                 "visibility": "Moon over the horizon, not visible",
@@ -638,7 +679,7 @@
         },
         {
             "name": "LAPAN Moon Crescent Visibility Criterion",
-            "url": "https://tdjamaluddin.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+            "url": "https://tdjamaluddin.wordpress.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
         },
         {
             "name": "Shaukat Moon Crescent Visibility Criterion",

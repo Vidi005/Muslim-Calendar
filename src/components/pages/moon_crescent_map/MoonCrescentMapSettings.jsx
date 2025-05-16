@@ -56,7 +56,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
           </span>
           <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
             selectCoordinateSteps(3)
-            selectMoonVisibilityCriteria(1)
+            selectMoonVisibilityCriteria(3)
             restoreToDefault()
           }} disabled={areMoonVisibilityCriteriaMapsLoading}>
             <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Restore to Default" />

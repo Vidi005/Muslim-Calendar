@@ -75,7 +75,8 @@
     "moon_crescent_maps_loading": "Memuat Peta Visibilitas Hilal...",
     "conjunction": "Konjungsi :",
     "error": "Kesalahan",
-    "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+    "day_names": ["Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+    "abbreviated_day_names": ["Ahd", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
     "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
     "hijri_date_info": "* Perhitungan Tanggal Hijriah ini mungkin terdapat perbedaan/selisih beberapa hari. Sehingga tetap mengikuti keputusan dari Lembaga/Organisasi Islam setempat.",
     "muslim_holidays": "Hari besar Islam di Tahun ",
@@ -350,11 +351,29 @@
     "islamic_month": "Bulan :",
     "islamic_year": "Tahun :",
     "hijri_abbreviation": "H",
-    "visibility_criteria": ["Yallop, 1997", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT/Turki, 2016", "MABIMS, 2021"],
+    "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT/Turki, 2016", "MABIMS, 2021"],
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],
     "moon_visibility_zones": [
+        [
+            {
+                "visibility": "Bisa terlihat (Elongasi ≥ 7°)",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
         [
             {
                 "visibility": "Mudah dilihat dengan mata",
@@ -375,6 +394,28 @@
             {
                 "visibility": "Hanya terlihat dengan teleskop",
                 "color": "#B50757"
+            },
+            {
+                "visibility": "Bulan di atas ufuk, tidak kasat mata",
+                "color": ""
+            },
+            {
+                "visibility": "Bulan sudah tenggelam",
+                "color": "#808080"
+            },
+            {
+                "visibility": "Bulan belum ijtima'",
+                "color": "#000000"
+            }
+        ],
+        [
+            {
+                "visibility": "Bulan sabit mudah terlihat",
+                "color": "#00FF3E"
+            },
+            {
+                "visibility": "Perlu bantuan alat optik",
+                "color": "#9EFF00"
             },
             {
                 "visibility": "Bulan di atas ufuk, tidak kasat mata",
@@ -637,7 +678,7 @@
         },
         {
             "name": "Kriteria Visibilitas Bulan Sabit LAPAN",
-            "url": "https://tdjamaluddin.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+            "url": "https://tdjamaluddin.wordpress.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
         },
         {
             "name": "Kriteria Visibilitas Bulan Sabit Shaukat",

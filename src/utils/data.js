@@ -372,7 +372,7 @@ const getHijriDate = (gregorianSetDate, months) => {
 
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
-  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" }).replace(/Minggu/g, 'Ahad')
   const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }).replace(/\./g, ':')
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
@@ -1548,6 +1548,42 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
+const calculateVisibilityDanjon = (isMeetCriteria, lagTime, newMoon) => {
+  let zone = 'B'
+  let color = ''
+  if (isMeetCriteria && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (newMoon) {
+    zone = 'D'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'C'
+    color = '#808080'
+  }
+  return { isMeetCriteria, zone, color }
+}
+
+const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, lagTime, newMoon) => {
+  const sq = topocentricAlt + arcOfLight / 3
+  let zone = 'C'
+  let color = ''
+  if (sq > 11 && lagTime > 0) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (sq > 9 && lagTime > 0) {
+    zone = 'B'
+    color = '#FFE53C'
+  } else if (newMoon) {
+    zone = 'E'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'D'
+    color = '#808080'
+  }
+  return { sq, zone, color }
+}
+
 const calculateVisibilityYallop = (arcOfVision, w, lagTime, newMoon) => {
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let zone = 'F'
@@ -1703,6 +1739,24 @@ const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoon) => {
   return { isMeetCriteria, zone, color }
 }
 
+const checkDanjon = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+  const arcOfLight = AngleBetween(sunEquator.vec, moonEquator.vec)
+  let isMeetCriteria = false
+  if (arcOfLight >= 7) isMeetCriteria = true
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilityDanjon(isMeetCriteria, lagTime, newMoon)
+}
+
 const checkYallop = (astroDate, latitude, longitude) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
@@ -1732,6 +1786,23 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoon = SearchMoonPhase(0, bestTime, 1)
   return calculateVisibilityYallop(arcOfVision, wTopocentric, lagTime, newMoon)
+}
+
+const checkSAAO = (astroDate, latitude, longitude) => {
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  let bestTime = sunset
+  const lagTime = moonset.ut - sunset.ut
+  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+  const moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  return calculateVisibilitySAAO(moonHorizon.altitude, moonElongation, lagTime, newMoon)
 }
 
 const checkOdeh = (astroDate, latitude, longitude) => {
@@ -1894,16 +1965,20 @@ const checkMABIMS = (astroDate, latitude, longitude) => {
 const createZones = (criteria, astroDate, lat, lng, steps) => {
   let result
   if (criteria === 0) {
-    result = checkYallop(astroDate, lat, lng, steps)
+    result = checkDanjon(astroDate, lat, lng, steps)
   } else if (criteria === 1) {
-    result = checkOdeh(astroDate, lat, lng, steps)
+    result = checkYallop(astroDate, lat, lng, steps)
   } else if (criteria === 2) {
-    result = checkQureshi(astroDate, lat, lng, steps)
+    result = checkSAAO(astroDate, lat, lng, steps)
   } else if (criteria === 3) {
-    result = checkLAPAN(astroDate, lat, lng, steps)
+    result = checkOdeh(astroDate, lat, lng, steps)
   } else if (criteria === 4) {
-    result = checkShaukat(astroDate, lat, lng, steps)
+    result = checkQureshi(astroDate, lat, lng, steps)
   } else if (criteria === 5) {
+    result = checkLAPAN(astroDate, lat, lng, steps)
+  } else if (criteria === 6) {
+    result = checkShaukat(astroDate, lat, lng, steps)
+  } else if (criteria === 7) {
     result = checkTurkey(astroDate, lat, lng, steps)
   } else {
     result = checkMABIMS(astroDate, lat, lng, steps)
