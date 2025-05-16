@@ -195,7 +195,7 @@ class MainContainer extends React.Component {
     const prayerTimesPromises = []
     for (let day = 1; day <= daysInMonth; day++) {
       const startDate = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
-      const formattedStartDate = startDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      const formattedStartDate = startDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad')
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
         const formattedPrayerTimes = prayerTime.map(time => {
           if (this.props.parentState.isPreciseToSeconds) {
@@ -225,7 +225,7 @@ class MainContainer extends React.Component {
       const gregorianDate = new Date(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
       gregorianDate.setDate(gregorianDate.getDate() + (day - 1))
       const hijriDate = `${day} ${this.props.t(`islamic_months.${hijriMonth - 1}`)} ${hijriYear} ${this.props.t('hijri_abbreviation')}`
-      const formattedGregorianDate = gregorianDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      const formattedGregorianDate = gregorianDate.toLocaleString(this.props.parentState.selectedLanguage || 'en', { weekday: hijriMonth === 9 ? 'short' : 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Min/g, 'Ahd')
       const prayerTimeList = this.props.generatePrayerTimes(gregorianDate).then(prayerTime => {
         const formattedPrayerTimes = hijriMonth === 9
           ? prayerTime.map(time => {
