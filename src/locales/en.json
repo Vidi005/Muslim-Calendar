@@ -77,7 +77,6 @@
     "conjunction": "Conjunction :",
     "error": "Error",
     "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-    "abbreviated_day_names": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qa'dah", "Dhu'l-Hijjah"],
     "hijri_date_info": "* This Hijri Date calculation may differ by a few days. So, keep to follow the decisions of Muslim Agencies/Organizations in your region.",
     "muslim_holidays": "Muslim Holidays in ",
@@ -99,7 +98,7 @@
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Time to", "Time", "has come"],
     "ashr_time": "Ashr Time :",
-    "mahzab": ["Jumhur", "Hanafi"],
+    "mazhab": ["Jumhur", "Hanafi"],
     "convention": "Convention :",
     "conventions": [
         {
@@ -345,7 +344,7 @@
     "select_month": "Select Month :",
     "coordinates": "Coordinates :",
     "school": "School :",
-    "footnotes": ["This Prayer Schedule is calculated based on ", "and it might be different several days with other criteria, so keep to follow the decision of your local authority in your region."],
+    "footnotes": ["This Prayer Schedule is calculated approach of ", "and it might be different several days with other criteria, so keep to follow the decision of your local authority in your region."],
     "download": "Download",
     "print": "Print",
     "moon_crescent_map_config": "Moon Crescent Map Configuration :",

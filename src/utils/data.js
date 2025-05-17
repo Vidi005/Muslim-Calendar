@@ -619,7 +619,7 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(astroDate.date)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -644,7 +644,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
   let correctedIshaTime = isha
   let shadowFactor = 1
   // For Shafii, Maliki, and Hanbali school (Standard)
-  if (mahzab === 0) shadowFactor = 1
+  if (mazhab === 0) shadowFactor = 1
   // For Hanafi school
   else shadowFactor = 2
   if (Math.abs(latitude) > 45) {
@@ -996,7 +996,7 @@ const getQiblaDirection = (latitude, longitude) => {
 
 const getQiblaDistance = (latitude, longitude) => getCitiesDistance(latitude, longitude, kaabaCoordinates.latitude, kaabaCoordinates.longitude).toFixed(2)
 
-const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -1029,7 +1029,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   let correctedMaghribTime = maghrib
   let correctedIshaTime = isha
   let shadowFactor = 1
-  if (mahzab === 0) shadowFactor = 1
+  if (mazhab === 0) shadowFactor = 1
   else shadowFactor = 2
   let year = gregorianDate.getFullYear()
   let month = gregorianDate.getMonth() + 1
@@ -1461,23 +1461,23 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mahzab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }
 
-const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, mahzab, lang) => {
+const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, mazhab, lang) => {
   let shadowFactor = 1
-  if (mahzab === 0) shadowFactor = 1
+  if (mazhab === 0) shadowFactor = 1
   else shadowFactor = 2
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
