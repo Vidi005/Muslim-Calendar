@@ -20,7 +20,7 @@ const CurrentPrayerTimes = () => (
                 : null
               : <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{state.nextPrayerInfo}</h5>
           }
-          <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('convention')} {t(`conventions.${state.selectedConvention}.method`)}, {t('ashr_time')} {t(`mahzab.${state.selectedAshrTime}`)}</h5>
+          <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('convention')} {t(`conventions.${state.selectedConvention}.method`)}, {t('ashr_time')} {t(`mazhab.${state.selectedAshrTime}`)}</h5>
           {state.arePrayerTimesLoading
             ? (
               <div className="flex items-center justify-center space-x-2 p-2 md:p-4">
