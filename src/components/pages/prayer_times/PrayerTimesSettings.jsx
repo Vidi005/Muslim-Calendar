@@ -31,7 +31,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               onChange={event => selectAshrTime(event.target.value)}
               required
             >
-              {en.mahzab.map((type, index) => <option key={type} value={index}>{t(`mahzab.${index}`)}</option>)}
+              {en.mazhab.map((type, index) => <option key={type} value={index}>{t(`mazhab.${index}`)}</option>)}
             </select>
           </span>
           <span className="flex items-center">
