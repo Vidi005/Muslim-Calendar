@@ -362,7 +362,7 @@
                 "color": "#00FF3E"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -396,7 +396,7 @@
                 "color": "#B50757"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -418,7 +418,7 @@
                 "color": "#9EFF00"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -444,7 +444,7 @@
                 "color": "#FF783C"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -474,7 +474,7 @@
                 "color": "#FF0000"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -492,7 +492,7 @@
                 "color": "#00FF3E"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -526,7 +526,7 @@
                 "color": "#FAFF00"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -544,7 +544,11 @@
                 "color": "#00FF3E"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Sunset at midnight UTC",
+                "color": "#0303FC"
+            },
+            {
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {
@@ -562,7 +566,7 @@
                 "color": "#00FF3E"
             },
             {
-                "visibility": "Moon over the horizon, not visible",
+                "visibility": "Moon over the horizon, not visible (Unshaded)",
                 "color": ""
             },
             {

@@ -1707,17 +1707,20 @@ const calculateVisibilityShaukat = (arcOfVision, areEqualsToValues, w, lagTime, 
   return { q, zone, color }
 }
 
-const calculateVisibilityTurkey = (isMeetCriteria, lagTime, newMoon) => {
-  let zone = 'B'
+const calculateVisibilityTurkey = (isMeetCriteria, areEqualsToValues, lagTime, newMoon) => {
+  let zone = 'C'
   let color = ''
-  if (isMeetCriteria && lagTime > 0 && !newMoon) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon && !areEqualsToValues) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (newMoon) {
-    zone = 'D'
+  } else if (areEqualsToValues) {
+    zone = 'B'
+    color = '#0303FC'
+  } else if (newMoon && !areEqualsToValues) {
+    zone = 'E'
     color = '#000000'
-  } else if (lagTime < 0) {
-    zone = 'C'
+  } else if (lagTime < 0 && !areEqualsToValues) {
+    zone = 'D'
     color = '#808080'
   }
   return { isMeetCriteria, zone, color }
@@ -1938,10 +1941,12 @@ const checkTurkey = (astroDate, latitude, longitude) => {
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
   const moonElongation = Elongation(Body.Moon, sunset).elongation
+  let areEqualsToValues = false
   let isMeetCriteria = false
+  if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < 7) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 53)) areEqualsToValues = true
   if (moonElongation >= 8 && moonHorizon.altitude >= 5) isMeetCriteria = true
   const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityTurkey(isMeetCriteria, lagTime, newMoon)
+  return calculateVisibilityTurkey(isMeetCriteria, areEqualsToValues, lagTime, newMoon)
 }
 
 const checkMABIMS = (astroDate, latitude, longitude) => {
@@ -2004,9 +2009,7 @@ const gridSearchLongitude = (astroDate, criteria, steps) => {
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
       const result = createZones(criteria, astroDate, lat, lng, steps)
-      if (result?.zone?.length > 0) {
-        results.push(result)
-      }
+      if (result?.zone?.length > 0) results.push(result)
     }
   }
   return results
