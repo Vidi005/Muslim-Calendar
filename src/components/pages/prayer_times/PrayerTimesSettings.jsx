@@ -9,7 +9,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
     {({ t, state }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200 animate__animated animate__fadeInUp">
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('prayer_times_config')}</h4>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center md:justify-between gap-2">
           <span className="flex items-center">
             <label htmlFor="calculation">{t('calculation')}</label>
             <select
@@ -170,7 +170,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
           </button>
         </div>
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('time_correction')}</h4>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center md:justify-between gap-2">
           {en.prayer_names.map((name, index) => (
             (index !== 0 && index !== 2 && index !== 3) && (
               <span key={name} className="flex items-center">
