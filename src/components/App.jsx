@@ -872,7 +872,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.CRITERIA_STORAGE_KEY, JSON.stringify(this.state.selectedCriteria))
       }
-      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
     })
   }
 
@@ -1085,16 +1085,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.ELONGATION_TYPE_STORAGE_KEY, JSON.stringify(this.state.selectedElongationType))
       }
-      this.getMoonCrescentVisibility()
-    })
-  }
-
-  onChangePrecision (value) {
-    this.setState({ isPreciseToSeconds: value }, () => {
-      if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.SECONDS_PRECISION_STORAGE_KEY, JSON.stringify(this.state.isPreciseToSeconds))
-      }
-      this.create3DaysOfPrayerTimes()
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
     })
   }
 
@@ -1104,7 +1095,7 @@ class App extends React.Component {
         localStorage.setItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY
           , JSON.stringify(this.state.isUseNormalRefraction))
       }
-      this.getMoonCrescentVisibility()
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
     })
   }
 
