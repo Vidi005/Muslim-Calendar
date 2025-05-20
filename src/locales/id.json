@@ -93,7 +93,7 @@
         "9-12-event": "Hari Arafah",
         "10-12-event": "Idul Adha"
     },
-    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
     "calculation": "Penghitungan :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Menuju Waktu", "Waktu", "telah tiba"],
@@ -352,6 +352,8 @@
     "islamic_year": "Tahun :",
     "hijri_abbreviation": "H",
     "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT/Turki, 2016", "MABIMS, 2021"],
+    "elongation_type": ["Geosentris", "Toposentris"],
+    "refraction": "Koreksi Refraksi",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],

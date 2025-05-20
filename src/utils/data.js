@@ -166,7 +166,7 @@ const anyAmericaCitiesCoordinates = [
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
-const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, formula) => {
+const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, elongationType, correctedRefraction, formula) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let date = startDate
   let newMoonDate
@@ -176,6 +176,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   let westObserver
   let sunset
   let moonset
+  let sunEquator
   let moonEquator
   let moonHorizon
   if (criteria === 0) {
@@ -190,9 +191,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, city.elevation)
-        moonElongation = Elongation(Body.Moon, sunset)
+        sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
         moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
-        moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, 'normal')
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
+        moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
         return moonElongation.elongation >= 8 && moonHorizon.altitude >= 5
       })
       if (newMoon.date.getUTCHours() < 12) {
@@ -217,9 +219,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
       isMetCriteria = anyMabimsCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
+        sunEquator = Equator(Body.Sun, sunset, observer, true, true)
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-        moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, 'normal')
-        moonElongation = Elongation(Body.Moon, sunset)
+        moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
         return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
       })
       if (isMetCriteria) {
@@ -292,7 +295,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, f
   }
 }
 
-const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, formula, lang) => {
+const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, elongationType, correctedRefraction, formula, lang) => {
   const newMoonsFromLastYear = []
   const newMoonFromNextYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
@@ -304,7 +307,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
     // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
-    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, formula).date
+    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, elongationType, correctedRefraction, formula).date
     if (newMoonDate instanceof Date) {
       if (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
         newMoonsFromLastYear.push(newMoonDate)
@@ -550,10 +553,10 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
-  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
-  const moonRightAscension = `${convertRAToHMS(moonEquatorOfDate.ra)}`
-  const moonDeclination = `${moonEquatorOfDate.dec.toFixed(2)}°`
-  const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
+  const moonEquator = Equator(Body.Moon, astroDate, observer, true, true)
+  const moonRightAscension = `${convertRAToHMS(moonEquator.ra)}`
+  const moonDeclination = `${moonEquator.dec.toFixed(2)}°`
+  const moonHorizon = Horizon(astroDate, observer, moonEquator.ra, moonEquator.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°${moonHorizon.altitude < 0 ? ' (Not Visible)' : ''}`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
@@ -561,8 +564,9 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonEcliptic = EclipticGeoMoon(astroDate)
   const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
   const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
-  const elongation = AngleFromSun(Body.Moon, astroDate)
-  const moonElongation = `${elongation.toFixed(2)}°`
+  const moonElongationGeocentric = `${AngleFromSun(Body.Moon, astroDate).toFixed(2)}°`
+  const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
+  const moonElongationTopocentric = `${AngleBetween(sunEquator.vec, moonEquator.vec).toFixed(2)}°`
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const firstQuarter = SearchMoonPhase(90, lastNewMoon, +30)
@@ -574,11 +578,10 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const fullMoonDateTime = `${fullMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${fullMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const lastQuarterDateTime = `${lastQuarter.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const hourAngle = HourAngle(Body.Moon, astroDate, observer)
   const parallacticAngle = RAD2DEG * Math.atan2(
     Math.sin(hourAngle * HOUR2RAD),
-    Math.tan(DEG2RAD * latitude) * Math.cos(DEG2RAD * moonEquatorOfDate.dec) - Math.sin(DEG2RAD * moonEquatorOfDate.dec) * Math.cos(hourAngle * HOUR2RAD)
+    Math.tan(DEG2RAD * latitude) * Math.cos(DEG2RAD * moonEquator.dec) - Math.sin(DEG2RAD * moonEquator.dec) * Math.cos(hourAngle * HOUR2RAD)
   )
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
@@ -595,7 +598,8 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
     distanceInKm,
     moonLatitude,
     moonLongitude,
-    moonElongation,
+    moonElongationGeocentric,
+    moonElongationTopocentric,
     moonrise?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     moonset?.date?.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "short", timeZone: timeZone }).replace(/\./, ':') || '--:--',
     lastNewMoonDateTime,
@@ -1506,9 +1510,9 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const midnightSunAltitude = -(90 - Math.abs(- observer.latitude - sunDeclinationAtMidnight))
   const moonPhase = MoonPhase(astroDate).toFixed(2)
   const moonStatus = moonPhase <= 90 ? 'Waxing Crescent' : moonPhase <= 180 ? 'Waxing Gibbous' : moonPhase <= 270 ? 'Waning Gibbous' : 'Waning Crescent'
-  const moonEquatorOfDate = Equator(Body.Moon, astroDate, observer, true, true)
-  const moonDeclination = `${moonEquatorOfDate.dec.toFixed(2)}°`
-  const moonHorizon = Horizon(astroDate, observer, moonEquatorOfDate.ra, moonEquatorOfDate.dec, 'normal')
+  const moonEquator = Equator(Body.Moon, astroDate, observer, true, true)
+  const moonDeclination = `${moonEquator.dec.toFixed(2)}°`
+  const moonHorizon = Horizon(astroDate, observer, moonEquator.ra, moonEquator.dec, 'normal')
   const moonAltitude = `${moonHorizon.altitude.toFixed(2)}°`
   const moonAzimuth = `${moonHorizon.azimuth.toFixed(2)}°`
   const moonrise = SearchRiseSet(Body.Moon, observer, +1, startAstroTime, 1, elevation)
@@ -1518,7 +1522,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const hourAngle = HourAngle(Body.Moon, astroDate, observer)
   const parallacticAngle = RAD2DEG * Math.atan2(
     Math.sin(hourAngle * HOUR2RAD),
-    Math.tan(DEG2RAD * latitude) * Math.cos(DEG2RAD * moonEquatorOfDate.dec) - Math.sin(DEG2RAD * moonEquatorOfDate.dec) * Math.cos(hourAngle * HOUR2RAD)
+    Math.tan(DEG2RAD * latitude) * Math.cos(DEG2RAD * moonEquator.dec) - Math.sin(DEG2RAD * moonEquator.dec) * Math.cos(hourAngle * HOUR2RAD)
   )
   return [
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
@@ -1742,25 +1746,23 @@ const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoon) => {
   return { isMeetCriteria, zone, color }
 }
 
-const checkDanjon = (astroDate, latitude, longitude) => {
+const checkDanjon = (astroDate, latitude, longitude, elongationType) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
-  const arcOfLight = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
-  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  const newMoon = SearchMoonPhase(0, sunset, 1)
   return calculateVisibilityDanjon(isMeetCriteria, lagTime, newMoon)
 }
 
-const checkYallop = (astroDate, latitude, longitude) => {
+const checkYallop = (astroDate, latitude, longitude, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1770,12 +1772,12 @@ const checkYallop = (astroDate, latitude, longitude) => {
   const lagTime = moonset.ut - sunset.ut
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
-  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
-  const moonElongationEvent = Elongation(Body.Moon, bestTime).elongation
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+  const moonElongationGeocentric = Elongation(Body.Moon, bestTime).elongation
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
   const semiDiameterTopocentric = semiDiameter * (1 + Math.sin(DEG2RAD * moonHorizon.altitude) * Math.sin(DEG2RAD * lunarParallax / 60))
-  const arcOfLight = DEG2RAD * moonElongationEvent
+  const arcOfLight = DEG2RAD * moonElongationGeocentric
   const geomoon = GeoVector(Body.Moon, bestTime, true)
   const geosun = GeoVector(Body.Sun, bestTime, true)
   const rot = Rotation_EQJ_EQD(bestTime)
@@ -1791,24 +1793,22 @@ const checkYallop = (astroDate, latitude, longitude) => {
   return calculateVisibilityYallop(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
-const checkSAAO = (astroDate, latitude, longitude) => {
+const checkSAAO = (astroDate, latitude, longitude, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
-  const moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
-  const newMoon = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilitySAAO(moonHorizon.altitude, moonElongation, lagTime, newMoon)
+  const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const newMoon = SearchMoonPhase(0, sunset, 1)
+  return calculateVisibilitySAAO(moonHorizon.altitude, moonElongationTopocentric, lagTime, newMoon)
 }
 
-const checkOdeh = (astroDate, latitude, longitude) => {
+const checkOdeh = (astroDate, latitude, longitude, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1818,9 +1818,9 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   const lagTime = moonset.ut - sunset.ut
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
-  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
-  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, correctedRefraction)
   const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
@@ -1841,7 +1841,7 @@ const checkOdeh = (astroDate, latitude, longitude) => {
   return calculateVisibilityOdeh(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
-const checkQureshi = (astroDate, latitude, longitude) => {
+const checkQureshi = (astroDate, latitude, longitude, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1851,9 +1851,9 @@ const checkQureshi = (astroDate, latitude, longitude) => {
   const lagTime = moonset.ut - sunset.ut
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
-  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, 'normal')
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
-  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, correctedRefraction)
   const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
@@ -1874,26 +1874,24 @@ const checkQureshi = (astroDate, latitude, longitude) => {
   return calculateVisibilityQureshi(arcOfVision, wTopocentric, lagTime, newMoon)
 }
 
-const checkLAPAN = (astroDate, latitude, longitude) => {
+const checkLAPAN = (astroDate, latitude, longitude, elongationType, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
-  const moonElongation = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (moonElongation > 6.4 && moonHorizon.altitude > 4) isMeetCriteria = true
-  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  const newMoon = SearchMoonPhase(0, sunset, 1)
   return calculateVisibilityLAPAN(isMeetCriteria, lagTime, newMoon)
 }
 
-const checkShaukat = (astroDate, latitude, longitude) => {
+const checkShaukat = (astroDate, latitude, longitude, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1903,9 +1901,9 @@ const checkShaukat = (astroDate, latitude, longitude) => {
   const lagTime = moonset.ut - sunset.ut
   if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
-  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
-  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, "normal")
+  const sunHorizon = Horizon(bestTime, observer, sunEquator.ra, sunEquator.dec, correctedRefraction)
   const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
   const semiDiameter = Libration(bestTime).diam_deg * 60 / 2
   const lunarParallax = semiDiameter / 0.27245
@@ -1929,64 +1927,62 @@ const checkShaukat = (astroDate, latitude, longitude) => {
   return calculateVisibilityShaukat(arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoon)
 }
 
-const checkTurkey = (astroDate, latitude, longitude) => {
+const checkTurkey = (astroDate, latitude, longitude, elongationType, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
-  const moonElongation = Elongation(Body.Moon, sunset).elongation
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+  const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let areEqualsToValues = false
   let isMeetCriteria = false
   if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < 7) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 53)) areEqualsToValues = true
   if (moonElongation >= 8 && moonHorizon.altitude >= 5) isMeetCriteria = true
-  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  const newMoon = SearchMoonPhase(0, sunset, 1)
   return calculateVisibilityTurkey(isMeetCriteria, areEqualsToValues, lagTime, newMoon)
 }
 
-const checkMABIMS = (astroDate, latitude, longitude) => {
+const checkMABIMS = (astroDate, latitude, longitude, elongationType, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, "normal")
-  const moonElongation = Elongation(Body.Moon, sunset).elongation
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+  const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) isMeetCriteria = true
-  const newMoon = SearchMoonPhase(0, bestTime, 1)
+  const newMoon = SearchMoonPhase(0, sunset, 1)
   return calculateVisibilityMABIMS(isMeetCriteria, lagTime, newMoon)
 }
 
-const createZones = (criteria, astroDate, lat, lng, steps) => {
+const createZones = (criteria, elongationType, correctedRefraction, astroDate, lat, lng, steps) => {
   let result
   if (criteria === 0) {
-    result = checkDanjon(astroDate, lat, lng, steps)
+    result = checkDanjon(astroDate, lat, lng, elongationType)
   } else if (criteria === 1) {
-    result = checkYallop(astroDate, lat, lng, steps)
+    result = checkYallop(astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 2) {
-    result = checkSAAO(astroDate, lat, lng, steps)
+    result = checkSAAO(astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 3) {
-    result = checkOdeh(astroDate, lat, lng, steps)
+    result = checkOdeh(astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 4) {
-    result = checkQureshi(astroDate, lat, lng, steps)
+    result = checkQureshi(astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 5) {
-    result = checkLAPAN(astroDate, lat, lng, steps)
+    result = checkLAPAN(astroDate, lat, lng, elongationType, correctedRefraction)
   } else if (criteria === 6) {
-    result = checkShaukat(astroDate, lat, lng, steps)
+    result = checkShaukat(astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 7) {
-    result = checkTurkey(astroDate, lat, lng, steps)
+    result = checkTurkey(astroDate, lat, lng, elongationType, correctedRefraction)
   } else {
-    result = checkMABIMS(astroDate, lat, lng, steps)
+    result = checkMABIMS(astroDate, lat, lng, elongationType, correctedRefraction)
   }
   const width = steps * 100 / 360
   const height = steps * 100 / 180
@@ -2004,11 +2000,11 @@ const createZones = (criteria, astroDate, lat, lng, steps) => {
   }
 }
 
-const gridSearchLongitude = (astroDate, criteria, steps) => {
+const gridSearchLongitude = (astroDate, criteria, elongationType, correctedRefraction, steps) => {
   let results = []
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
-      const result = createZones(criteria, astroDate, lat, lng, steps)
+      const result = createZones(criteria, elongationType, correctedRefraction, astroDate, lat, lng, steps)
       if (result?.zone?.length > 0) results.push(result)
     }
   }
@@ -2029,13 +2025,13 @@ const addZeroPadForYear = value => {
   }
 }
 
-const getMoonCrescentVisibility = (ijtimaDate, criteria, steps) => {
+const getMoonCrescentVisibility = (ijtimaDate, criteria, elongationType, correctedRefraction, steps) => {
   const startDate = new Date(`${addZeroPadForYear(ijtimaDate.getFullYear())}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
   const conjunctionDate = new Date(ijtimaDate.setDate(ijtimaDate.getDate() - 2))
   const conjunction = SearchMoonPhase(0, conjunctionDate, 5)
   return {
-    zoneCoordinates: gridSearchLongitude(astroDate, criteria, steps),
+    zoneCoordinates: gridSearchLongitude(astroDate, criteria, elongationType, correctedRefraction, steps),
     conjunction: conjunction?.date
   }
 }

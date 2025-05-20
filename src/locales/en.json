@@ -93,7 +93,7 @@
         "9-12-event": "Arafah Day",
         "10-12-event": "Ied Al-Adha"
     },
-    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
+    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
     "calculation": "Calculation :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Time to", "Time", "has come"],
@@ -352,6 +352,8 @@
     "islamic_year": "Year :",
     "hijri_abbreviation": "AH",
     "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "Turkey, 2016", "MABIMS, 2021"],
+    "elongation_type": ["Geocentric", "Topocentric"],
+    "refraction": "Refracted Correction",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Ijtima' day - 1", "Ijtima' day", "Ijtima' day + 1"],

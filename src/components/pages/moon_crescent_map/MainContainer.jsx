@@ -8,6 +8,8 @@ class MainContainer extends React.Component {
     super(props)
     this.state = {
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: "MOON_VISIBILITY_CRITERIA_STORAGE_KEY",
+      ELONGATION_TYPE_STORAGE_KEY: 'ELONGATION_TYPE_STORAGE_KEY',
+      CORRECTED_REFRACTION_STORAGE_KEY: 'CORRECTED_REFRACTION_STORAGE_KEY',
       COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
       areMoonVisibilityCriteriaMapsLoading: true,
       moonCrescentVisibilities: [],
@@ -23,7 +25,7 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.monthInSetyear !== this.props.monthInSetyear || prevProps.hijriStartDates !== this.props.hijriStartDates || prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
+    if (prevProps.monthInSetyear !== this.props.monthInSetyear || prevProps.hijriStartDates !== this.props.hijriStartDates || prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedElongationType !== this.props.selectedElongationType || prevProps.isUseNormalRefraction !== this.props.isUseNormalRefraction || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
       this.setState({
         areMoonVisibilityCriteriaMapsLoading: true,
         selectedHijriMonth: this.getHijriMonthFromProps(this.props)
@@ -67,6 +69,8 @@ class MainContainer extends React.Component {
     }, () => {
       this.createMoonCrescentVisibilities()
       localStorage.removeItem(this.state.MOON_VISIBILITY_CRITERIA_STORAGE_KEY)
+      localStorage.removeItem(this.state.ELONGATION_TYPE_STORAGE_KEY)
+      localStorage.removeItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY)
       localStorage.removeItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
     })
   }
