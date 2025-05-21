@@ -18,7 +18,7 @@ const MoonCrescentMapSection = () => (
           )
           : (
             <React.Fragment>
-              <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('hijri_date_criteria')} {t(`visibility_criteria.${state.selectedMoonVisibilityCriteria}`)}</h5>
+              <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('islamic_month')} {t(`islamic_months.${state.formattedIslamicMonth - 1}`)} {parseInt(state.formattedIslamicYear)} {t('hijri_abbreviation')}, {t('hijri_date_criteria')} {t(`moon_visibility_criteria.${state.selectedMoonVisibilityCriteria}.name`)}</h5>
               <h5 className="mb-1 text-center text-green-700 dark:text-gray-200 duration-200">{t('conjunction')} {state.moonCrescentVisibility.conjunction?.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: state.selectedTimeZone }).replace(/\./g, ':')}</h5>
               <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
                 <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
@@ -48,10 +48,10 @@ const MoonCrescentMapSection = () => (
                 ))}
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 items-stretch w-full p-1 md:p-1.5 gap-1 md:gap-2">
-                {en.moon_visibility_zones[state.selectedMoonVisibilityCriteria].map((zone, index) => (
+                {en.moon_visibility_criteria[state.selectedMoonVisibilityCriteria].zones.map((zone, index) => (
                   <div key={index} className="flex flex-nowrap items-baseline space-x-1 md:space-x-1.5 text-xs 2xl:text-sm">
                     <span className="flex-none border border-black dark:border-white w-2 h-2 md:w-3 md:h-3" style={{ backgroundColor: zone.color }}></span>
-                    <span className="text-black dark:text-white">{t(`moon_visibility_zones.${state.selectedMoonVisibilityCriteria}.${index}.visibility`)}</span>
+                    <span className="text-black dark:text-white">{t(`moon_visibility_criteria.${state.selectedMoonVisibilityCriteria}.zones.${index}.visibility`)}</span>
                   </div>
                 ))}
               </div>

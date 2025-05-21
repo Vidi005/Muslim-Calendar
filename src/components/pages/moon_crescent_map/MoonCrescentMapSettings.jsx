@@ -38,24 +38,40 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
               required
               disabled={areMoonVisibilityCriteriaMapsLoading}
             >
-              {en.visibility_criteria.map((type, index) => <option key={type} value={index}>{t(`visibility_criteria.${index}`)}</option>)}
+              {en.moon_visibility_criteria.map((obj, index) => <option key={obj.name} value={index}>{t(`moon_visibility_criteria.${index}.name`)}</option>)}
             </select>
           </span>
-          {(state.selectedMoonVisibilityCriteria === 0 || state.selectedMoonVisibilityCriteria === 5 || state.selectedMoonVisibilityCriteria === 7 || state.selectedMoonVisibilityCriteria === 8) && (
-            <span className="flex items-center">
-              <label htmlFor="elongation-type">{t('moon_infos.10').split(' ')[0]} :</label>
-              <select
-                className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-                defaultValue={0}
-                value={state.selectedElongationType}
-                onChange={event => selectElongationType(event.target.value)}
-                required
-                disabled={areMoonVisibilityCriteriaMapsLoading}
-              >
-                {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
-              </select>
-            </span>
-          )}
+          {
+          (state.selectedMoonVisibilityCriteria === 0 || state.selectedMoonVisibilityCriteria === 5 || state.selectedMoonVisibilityCriteria === 7 || state.selectedMoonVisibilityCriteria === 8)
+            ? (
+                <span className="flex items-center">
+                  <label htmlFor="elongation-type">{t('moon_infos.10').split(' ')[0]} :</label>
+                  <select
+                    className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                    defaultValue={0}
+                    value={state.selectedElongationType}
+                    onChange={event => selectElongationType(event.target.value)}
+                    required
+                    disabled={areMoonVisibilityCriteriaMapsLoading}
+                  >
+                    {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
+                  </select>
+                </span>
+              )
+            : (
+                <span className="flex items-center">
+                  <label htmlFor="elongation-type">{t('moon_infos.10').split(' ')[0]} :</label>
+                  <select
+                    className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                    defaultValue={1}
+                    value={1}
+                    disabled
+                  >
+                    {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
+                  </select>
+                </span>
+              )
+          }
           <Field className={"flex items-center mx-1 cursor-pointer"}>
             <Checkbox checked={state.isUseNormalRefraction} onChange={onChangeRefractionState} disabled={areMoonVisibilityCriteriaMapsLoading} className={"group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200"}>
               <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
