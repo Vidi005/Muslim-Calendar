@@ -4,7 +4,7 @@ import en from "../../../locales/en.json"
 
 const MoonCrescentVisibilityMap = ({ index, t, selectedLanguage, selectedMoonVisibilityCriteria, ijtimaDate, visibility }) => (
   <div className="moon-crescent-map flex flex-col items-center w-full px-3 md:px-5 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
-    <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t(`ijtima_days.${index}`))} ({ijtimaDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')})</h4>
+    <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t(`ijtima_days.${index}`))} ({ijtimaDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}) {t(`moon_visibility_criteria.${selectedMoonVisibilityCriteria}.observation_time`)}</h4>
     <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
       <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
       <span className="absolute w-full h-1/6 top-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
@@ -33,10 +33,10 @@ const MoonCrescentVisibilityMap = ({ index, t, selectedLanguage, selectedMoonVis
       ))}
     </div>
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 items-stretch w-full p-1 md:p-2 gap-1 md:gap-2">
-      {en.moon_visibility_zones[selectedMoonVisibilityCriteria]?.map((zone, index) => (
+      {en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.map((zone, index) => (
         <div key={index} className="flex flex-nowrap items-baseline space-x-1 md:space-x-1.5 text-xs md:text-sm xl:text-base">
           <span className="flex-none border border-black dark:border-white w-2 h-2 md:w-3 md:h-3 xl:w-4 xl:h-4" style={{ backgroundColor: zone.color }}></span>
-          <span className="text-black dark:text-white">{t(`moon_visibility_zones.${selectedMoonVisibilityCriteria}.${index}.visibility`)}</span>
+          <span className="text-black dark:text-white">{t(`moon_visibility_criteria.${selectedMoonVisibilityCriteria}.zones.${index}.visibility`)}</span>
         </div>
       ))}
     </div>
