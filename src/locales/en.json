@@ -38,12 +38,27 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "Neo MABIMS",
+            "criteria": "Neo MABIMS (Mathla': All MABIMS Region)",
             "latitude_range": [-11, 7.4],
             "longitude_range": [95, 141]
         },
         {
-            "criteria": "Wujudul Hilal (Local)",
+            "criteria": "Neo MABIMS (Mathla': Indonesia)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Neo MABIMS (Markaz: Local)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Yogyakarta)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Local)",
             "latitude_range": [-11, 6],
             "longitude_range": [95, 141]
         },
@@ -351,236 +366,271 @@
     "islamic_month": "Month :",
     "islamic_year": "Year :",
     "hijri_abbreviation": "AH",
-    "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "Turkey, 2016", "MABIMS, 2021"],
+    "moon_visibility_criteria": [
+        {
+            "name": "Danjon, 1936",
+            "zones": [
+                {
+                    "visibility": "Can be seen (Elongation ≥ 7°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
+        },
+        {
+            "name": "Yallop, 1997",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible under perfect conditions",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Difficult to be seen even with optical aid",
+                    "color": "#B50757"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Best Time"
+        },
+        {
+            "name": "SAAO, 2001",
+            "zones": [
+                {
+                    "visibility": "Crescent easily visible",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Need optical aid",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Best Time"
+        },
+        {
+            "name": "Odeh, 2006",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "May need optical aid",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Only visible using optical aid",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Best Time"
+        },
+        {
+            "name": "Qureshi & Khan, 2010",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible if perfect conditions",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Best Time"
+        },
+        {
+            "name": "LAPAN, 2010",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (Altitude > 4° & Elongation > 6.4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
+        },
+        {
+            "name": "Shaukat, 2011",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible if perfect conditions",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Elongation = 8° & Moon Altitude = 5°",
+                    "color": "#FAFF00"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Best Time"
+        },
+        {
+            "name": "Turkey, 2016",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (Altitude ≥ 5° & Elongation ≥ 8°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Sunset at midnight UTC",
+                    "color": "#0303FC"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
+        },
+        {
+            "name": "MABIMS, 2021",
+            "zones": [
+                {
+                    "visibility": "Can be seen (Altitude ≥ 3° & Elongation ≥ 6.4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
+        }
+    ],
     "elongation_type": ["Geocentric", "Topocentric"],
     "refraction": "Refracted Correction",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Ijtima' day - 1", "Ijtima' day", "Ijtima' day + 1"],
-    "moon_visibility_zones": [
-        [
-            {
-                "visibility": "Can be seen (Elongation ≥ 7°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Easily visible by naked eye",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Visible under perfect conditions",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "May need optical aid",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Only visible using optical aid",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Difficult to be seen even with optical aid",
-                "color": "#B50757"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Crescent easily visible",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Need optical aid",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Easily visible by naked eye",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "May need optical aid",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Only visible using optical aid",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Easily visible by naked eye",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Visible if perfect conditions",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "May need optical aid",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Only visible using optical aid",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Can be seen by eye (Altitude > 4° & Elongation > 6.4°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Easily visible by naked eye",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Visible if perfect conditions",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "May need optical aid",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Only visible using optical aid",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Elongation = 8° & Moon Altitude = 5°",
-                "color": "#FAFF00"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Can be seen by eye (Altitude ≥ 5° & Elongation ≥ 8°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Sunset at midnight UTC",
-                "color": "#0303FC"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Can be seen (Altitude ≥ 3° & Elongation ≥ 6.4°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Moon over the horizon, not visible (Unshaded)",
-                "color": ""
-            },
-            {
-                "visibility": "Moon has set",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Moon before conjunction",
-                "color": "#000000"
-            }
-        ]
-    ],
     "eclipses": "Eclipses",
     "global_solar_eclipse": "Global Solar Eclipse",
     "global_solar_eclipses_loading": "Loading Global Solar Eclipses...",

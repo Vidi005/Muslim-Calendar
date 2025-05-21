@@ -38,12 +38,27 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "Neo MABIMS",
+            "criteria": "Neo MABIMS (Mathla': Semua Wilayah MABIMS)",
             "latitude_range": [-11, 7.4],
             "longitude_range": [95, 141]
         },
         {
-            "criteria": "Wujudul Hilal (Lokal)",
+            "criteria": "Neo MABIMS (Mathla': Indonesia)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Neo MABIMS (Markaz: Lokal)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Yogyakarta)",
+            "latitude_range": [-11, 6],
+            "longitude_range": [95, 141]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Lokal)",
             "latitude_range": [-11, 6],
             "longitude_range": [95, 141]
         },
@@ -351,236 +366,271 @@
     "islamic_month": "Bulan :",
     "islamic_year": "Tahun :",
     "hijri_abbreviation": "H",
-    "visibility_criteria": ["Danjon, 1936", "Yallop, 1997", "SAAO, 2001", "Odeh, 2006", "Qureshi & Khan, 2010", "LAPAN, 2010", "Shaukat, 2011", "KHGT/Turki, 2016", "MABIMS, 2021"],
+    "moon_visibility_criteria": [
+        {
+            "name": "Danjon, 1936",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat (Elongasi ≥ 7°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "saat Matahari Terbenam"
+        },
+        {
+            "name": "Yallop, 1997",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Perlu bantuan alat optik",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan teleskop",
+                    "color": "#B50757"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "pada Waktu Pengamatan Terbaik"
+        },
+        {
+            "name": "SAAO, 2001",
+            "zones": [
+                {
+                    "visibility": "Bulan sabit mudah terlihat",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Perlu bantuan alat optik",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "pada Waktu Pengamatan Terbaik"
+        },
+        {
+            "name": "Odeh, 2006",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "pada Waktu Pengamatan Terbaik"
+        },
+        {
+            "name": "Qureshi & Khan, 2010",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat oleh mata",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "pada Waktu Pengamatan Terbaik"
+        },
+        {
+            "name": "LAPAN, 2010",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat mata (Ketinggian > 4° & Elongasi > 6,4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "saat Matahari Terbenam"
+        },
+        {
+            "name": "Shaukat, 2011",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Elongasi = 8° & Ketinggian Bulan = 5°",
+                    "color": "#FAFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "pada Waktu Pengamatan Terbaik"
+        },
+        {
+            "name": "KHGT/Turki, 2016",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat mata (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Matahari terbenam pada pukul 00:00 UTC",
+                    "color": "#0303FC"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "saat Matahari Terbenam"
+        },
+        {
+            "name": "MABIMS, 2021",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat (Ketinggian ≥ 3° & Elongasi ≥ 6,4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "saat Matahari Terbenam"
+        }
+    ],
     "elongation_type": ["Geosentris", "Toposentris"],
     "refraction": "Koreksi Refraksi",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],
-    "moon_visibility_zones": [
-        [
-            {
-                "visibility": "Bisa terlihat (Elongasi ≥ 7°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Mudah dilihat dengan mata",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Terlihat jika cuaca cerah",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Mungkin perlu bantuan alat optik",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Perlu bantuan alat optik",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Hanya terlihat dengan teleskop",
-                "color": "#B50757"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Bulan sabit mudah terlihat",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Perlu bantuan alat optik",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Mudah dilihat dengan mata",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Mungkin perlu bantuan alat optik",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Hanya terlihat dengan alat optik",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Mudah dilihat oleh mata",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Terlihat jika cuaca cerah",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Mungkin perlu bantuan alat optik",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Hanya terlihat dengan alat optik",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Bisa terlihat mata (Ketinggian > 4° & Elongasi > 6,4°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Mudah dilihat dengan mata",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Terlihat jika cuaca cerah",
-                "color": "#9EFF00"
-            },
-            {
-                "visibility": "Mungkin perlu bantuan alat optik",
-                "color": "#FF783C"
-            },
-            {
-                "visibility": "Hanya terlihat dengan alat optik",
-                "color": "#FF0000"
-            },
-            {
-                "visibility": "Elongasi = 8° & Ketinggian Bulan = 5°",
-                "color": "#FAFF00"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Bisa terlihat mata (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Matahari terbenam pada pukul 00:00 UTC",
-                "color": "#0303FC"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ],
-        [
-            {
-                "visibility": "Bisa terlihat (Ketinggian ≥ 3° & Elongasi ≥ 6,4°)",
-                "color": "#00FF3E"
-            },
-            {
-                "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                "color": ""
-            },
-            {
-                "visibility": "Bulan sudah tenggelam",
-                "color": "#808080"
-            },
-            {
-                "visibility": "Bulan belum ijtima'",
-                "color": "#000000"
-            }
-        ]
-    ],
     "eclipses": "Gerhana",
     "global_solar_eclipse": "Gerhana Matahari Global",
     "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",

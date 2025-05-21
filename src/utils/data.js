@@ -209,7 +209,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       }
     }
   } else if (criteria === 1) {
-    // MABIMS
+    // MABIMS (Mathla': Brunei, Indonesia, Malaysia, Singapore)
     let isMetCriteria = false
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
@@ -234,7 +234,73 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       }
     }
   } else if (criteria === 2) {
-    // Wujudul Hilal
+    // MABIMS (Mathla': Indonesia)
+    let isMetCriteria = false
+    while (true) {
+      newMoon = SearchMoonPhase(0, date, -30)
+      date = new AstroTime(newMoon.date)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      newMoonDate = new AstroTime(dateInNewMoon)
+      isMetCriteria = anyMabimsCitiesCoordinates.slice(2).some(city => {
+        observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
+        sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+        moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+        moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
+        return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
+      })
+      if (isMetCriteria) {
+        // Met the MABIMS criteria
+        return newMoonDate.AddDays(1)
+      } else {
+        // Didn't meet the MABIMS criteria
+        return newMoonDate.AddDays(2)
+      }
+    }
+  } else if (criteria === 3) {
+    // MABIMS (Markqz: Local)
+    let isMetCriteria = false
+    while (true) {
+      newMoon = SearchMoonPhase(0, date, -30)
+      date = new AstroTime(newMoon.date)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      newMoonDate = new AstroTime(dateInNewMoon)
+      observer = observerFromEarth(latitude, longitude, elevation)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+      moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+      moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+      moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
+      if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
+        // Met the MABIMS criteria
+        return newMoonDate.AddDays(1)
+      } else {
+        // Didn't meet the MABIMS criteria
+        return newMoonDate.AddDays(2)
+      }
+    }
+  } else if (criteria === 4) {
+    // Wujudul Hilal (Markaz: Yogyakarta)
+    do {
+      newMoon = SearchMoonPhase(0, date, -30)
+      date = new AstroTime(newMoon.date)
+      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      newMoonDate = new AstroTime(dateInNewMoon)
+      // Yogyakarta Coordinates
+      observer = observerFromEarth(-7.797224, 110.368797, 105)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, 105)
+      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, 105)
+      if (newMoon.date < sunset.date && moonset.date > sunset.date) {
+        // Met the Wujudul Hilal criteria
+        return newMoonDate.AddDays(1)
+      } else {
+        // Didn't meet the Wujudul Hilal criteria
+        return newMoonDate.AddDays(2)
+      }
+    } while (true)
+  } else if (criteria === 5) {
+    // Wujudul Hilal (Markaz: Local)
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
