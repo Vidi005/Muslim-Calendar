@@ -8,7 +8,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
     {({ t, state, selectMoonVisibilityCriteria, selectElongationType, onChangeRefractionState, selectCoordinateSteps }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('moon_crescent_map_config')}</h4>
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-center md:justify-between gap-2">
           <span className="flex items-center justify-center">
             <label htmlFor="islamic_month">{t('islamic_month')}</label>
             <select
