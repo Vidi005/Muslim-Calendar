@@ -38,7 +38,7 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "Neo MABIMS (Mathla': All MABIMS Region)",
+            "criteria": "Neo MABIMS (Mathla': All MABIMS Regions)",
             "latitude_range": [-11, 7.4],
             "longitude_range": [95, 141]
         },
@@ -108,7 +108,7 @@
         "9-12-event": "Arafah Day",
         "10-12-event": "Ied Al-Adha"
     },
-    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
+    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude (Geo)", "Altitude (Topo)", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
     "calculation": "Calculation :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Time to", "Time", "has come"],
@@ -627,6 +627,7 @@
         }
     ],
     "elongation_type": ["Geocentric", "Topocentric"],
+    "altitude_type": ["Geocentric", "Topocentric"],
     "refraction": "Refracted Correction",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],

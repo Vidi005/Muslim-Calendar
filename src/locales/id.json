@@ -108,7 +108,7 @@
         "9-12-event": "Hari Arafah",
         "10-12-event": "Idul Adha"
     },
-    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian Geosentris", "Ketinggian Toposentris", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
     "calculation": "Penghitungan :",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Menuju Waktu", "Waktu", "telah tiba"],
@@ -627,6 +627,7 @@
         }
     ],
     "elongation_type": ["Geosentris", "Toposentris"],
+    "altitude_type": ["Geosentris", "Toposentris"],
     "refraction": "Koreksi Refraksi",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
