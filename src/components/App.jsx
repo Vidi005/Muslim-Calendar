@@ -41,6 +41,7 @@ class App extends React.Component {
       FORMULA_STORAGE_KEY: 'FORMULA_STORAGE_KEY',
       MOON_VISIBILITY_CRITERIA_STORAGE_KEY: 'MOON_VISIBILITY_CRITERIA_STORAGE_KEY',
       ELONGATION_TYPE_STORAGE_KEY: 'ELONGATION_TYPE_STORAGE_KEY',
+      ALTITUDE_TYPE_STORAGE_KEY: 'ALTITUDE_TYPE_STORAGE_KEY',
       CORRECTED_REFRACTION_STORAGE_KEY: 'CORRECTED_REFRACTION_STORAGE_KEY',
       COORDINATE_STEPS_STORAGE_KEY: 'COORDINATE_STEPS_STORAGE_KEY',
       selectedLanguage: 'en',
@@ -87,6 +88,7 @@ class App extends React.Component {
       moonCrescentVisibility: {},
       selectedMoonVisibilityCriteria: 3,
       selectedElongationType: 0,
+      selectedAltitudeType: 1,
       selectedCoordinateSteps: 3,
       localSolarEclipseInfo: {},
       lunarEclipseInfo: {},
@@ -136,7 +138,7 @@ class App extends React.Component {
         this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
       }
     }
-    if ((prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria || prevState.selectedElongationType !== this.state.selectedElongationType || prevState.isUseNormalRefraction !== this.state.isUseNormalRefraction) && this.state.monthsInSetYear.length > 0) {
+    if ((prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria || prevState.selectedElongationType !== this.state.selectedElongationType || prevState.selectedAltitudeType !== this.state.selectedAltitudeType || prevState.isUseNormalRefraction !== this.state.isUseNormalRefraction) && this.state.monthsInSetYear.length > 0) {
       this.getMoonCrescentVisibility()
       this.getEclipseInfos()
     }
@@ -187,6 +189,7 @@ class App extends React.Component {
       this.checkSavedFormula()
       this.checkSavedMoonVisibilityCriteria()
       this.checkSavedElongationType()
+      this.checkSavedAltitudeType()
       this.checkCorrectedRefractionState()
       this.checkSavedCoordinateSteps()
     }
@@ -509,6 +512,19 @@ class App extends React.Component {
       }
     } catch (error) {
       localStorage.removeItem(this.state.ELONGATION_TYPE_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkSavedAltitudeType () {
+    const getSavedAltitudeTypeFromLocal = localStorage.getItem(this.state.ALTITUDE_TYPE_STORAGE_KEY)
+    try {
+      const parsedSavedAltitudeType = JSON.parse(getSavedAltitudeTypeFromLocal)
+      if (parsedSavedAltitudeType !== null) {
+        this.setState({ selectedAltitudeType: parseInt(parsedSavedAltitudeType) })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.ALTITUDE_TYPE_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -1089,6 +1105,15 @@ class App extends React.Component {
     })
   }
 
+  selectAltitudeType (value) {
+    this.setState({ selectedAltitudeType: parseInt(value) }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.ALTITUDE_TYPE_STORAGE_KEY, JSON.stringify(this.state.selectedAltitudeType))
+      }
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
+    })
+  }
+
   onChangeRefractionState (value) {
     this.setState({ isUseNormalRefraction: value }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
@@ -1119,6 +1144,7 @@ class App extends React.Component {
         elevation: this.state.elevation,
         criteria: this.state.selectedCriteria,
         elongationType: this.state.selectedElongationType,
+        altitudeType: this.state.selectedAltitudeType,
         correctedRefraction: this.state.isUseNormalRefraction ? 'normal' : false,
         formula: this.state.selectedFormula,
         lang: this.state.selectedLanguage
@@ -1380,6 +1406,7 @@ class App extends React.Component {
       ijtimaDate: ijtimaDate,
       moonVisibilityCriteria: this.state.selectedMoonVisibilityCriteria,
       elongationType: this.state.selectedElongationType,
+      altitudeType: this.state.selectedAltitudeType,
       correctedRefraction: this.state.isUseNormalRefraction ? 'normal' : false,
       steps: this.state.selectedCoordinateSteps
     })
@@ -1626,6 +1653,7 @@ class App extends React.Component {
               applyLocationCoordinates: this.applyLocationCoordinates.bind(this),
               selectMoonVisibilityCriteria: this.selectMoonVisibilityCriteria.bind(this),
               selectElongationType: this.selectElongationType.bind(this),
+              selectAltitudeType: this.selectAltitudeType.bind(this),
               onChangeRefractionState: this.onChangeRefractionState.bind(this),
               selectCoordinateSteps: this.selectCoordinateSteps.bind(this)
             }}>
@@ -1638,6 +1666,7 @@ class App extends React.Component {
                 hijriStartDates={this.state.hijriStartDates}
                 selectedMoonVisibilityCriteria={this.state.selectedMoonVisibilityCriteria}
                 selectedElongationType={this.state.selectedElongationType}
+                selectedAltitudeType={this.state.selectedAltitudeType}
                 isUseNormalRefraction={this.state.isUseNormalRefraction}
                 selectedCoordinateSteps={this.state.selectedCoordinateSteps}
                 generateMoonCrescentVisibility={this.generateMoonCrescentVisibility.bind(this)}
