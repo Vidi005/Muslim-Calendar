@@ -5,7 +5,7 @@ import { Checkbox, Field, Label } from "@headlessui/react"
 
 const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoonVisibilityCriteriaMapsLoading, restoreToDefault }) => (
   <HomePageConsumer>
-    {({ t, state, selectMoonVisibilityCriteria, selectElongationType, onChangeRefractionState, selectCoordinateSteps }) => (
+    {({ t, state, selectMoonVisibilityCriteria, selectElongationType, selectAltitudeType, onChangeRefractionState, selectCoordinateSteps }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('moon_crescent_map_config')}</h4>
         <div className="flex flex-wrap items-center justify-center md:justify-between gap-2">
@@ -44,32 +44,60 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
           {
           (state.selectedMoonVisibilityCriteria === 0 || state.selectedMoonVisibilityCriteria === 5 || state.selectedMoonVisibilityCriteria === 7 || state.selectedMoonVisibilityCriteria === 8)
             ? (
-                <span className="flex items-center">
-                  <label htmlFor="elongation-type">{t('moon_infos.10').split(' ')[0]} :</label>
-                  <select
-                    className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-                    defaultValue={0}
-                    value={state.selectedElongationType}
-                    onChange={event => selectElongationType(event.target.value)}
-                    required
-                    disabled={areMoonVisibilityCriteriaMapsLoading}
-                  >
-                    {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
-                  </select>
-                </span>
+                <>
+                  <span className="flex items-center">
+                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
+                    <select
+                      className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      defaultValue={0}
+                      value={state.selectedElongationType}
+                      onChange={event => selectElongationType(event.target.value)}
+                      required
+                      disabled={areMoonVisibilityCriteriaMapsLoading}
+                    >
+                      {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
+                    </select>
+                  </span>
+                  <span className="flex items-center">
+                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]} :</label>
+                    <select
+                      className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      defaultValue={1}
+                      value={state.selectedAltitudeType}
+                      onChange={event => selectAltitudeType(event.target.value)}
+                      required
+                      disabled={areMoonVisibilityCriteriaMapsLoading}
+                    >
+                      {en.altitude_type.map((type, index) => <option key={type} value={index}>{t(`altitude_type.${index}`)}</option>)}
+                    </select>
+                  </span>
+                </>
               )
             : (
-                <span className="flex items-center">
-                  <label htmlFor="elongation-type">{t('moon_infos.10').split(' ')[0]} :</label>
-                  <select
-                    className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
-                    defaultValue={1}
-                    value={1}
-                    disabled
-                  >
-                    {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
-                  </select>
-                </span>
+                <>
+                  <span className="flex items-center">
+                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
+                    <select
+                      className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      defaultValue={1}
+                      value={1}
+                      disabled
+                    >
+                      {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
+                    </select>
+                  </span>
+                  <span className="flex items-center">
+                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]} :</label>
+                    <select
+                      className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                      defaultValue={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}
+                      value={state.selectedMoonVisibilityCriteria === 0 ? 0 : 1}
+                      disabled
+                    >
+                      {en.altitude_type.map((type, index) => <option key={type} value={index}>{t(`altitude_type.${index}`)}</option>)}
+                    </select>
+                  </span>
+                </>
               )
           }
           <Field className={"flex items-center mx-1 cursor-pointer"}>
@@ -97,6 +125,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
           <button className="flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow" onClick={() => {
             onChangeRefractionState(true)
             selectElongationType(0)
+            selectAltitudeType(1)
             selectCoordinateSteps(3)
             selectMoonVisibilityCriteria(3)
             restoreToDefault()
