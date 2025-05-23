@@ -182,12 +182,12 @@ class MainContainer extends React.Component {
     })
   }
 
-  selectGregorianMonth (montIndex) {
-    this.setState({ selectedGregorianMonth: parseInt(montIndex) }, () => this.createPrayerTimeInGregorianMonth())
+  selectGregorianMonth (monthIndex) {
+    this.setState({ selectedGregorianMonth: parseInt(monthIndex) }, () => this.createPrayerTimeInGregorianMonth())
   }
 
-  selectHijriMonth (montIndex) {
-    this.setState({ selectedHijriMonth: parseInt(montIndex) }, () => this.createPrayerTimeInHijriMonth())
+  selectHijriMonth (monthIndex) {
+    this.setState({ selectedHijriMonth: parseInt(monthIndex) }, () => this.createPrayerTimeInHijriMonth())
   }
 
   createPrayerTimeInGregorianMonth () {

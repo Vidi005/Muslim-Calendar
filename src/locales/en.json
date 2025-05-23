@@ -589,6 +589,10 @@
                     "color": "#0303FC"
                 },
                 {
+                    "visibility": "Sunset at Fajr in New Zealand",
+                    "color": "#FC5203"
+                },
+                {
                     "visibility": "Moon over the horizon, not visible (Unshaded)",
                     "color": ""
                 },
