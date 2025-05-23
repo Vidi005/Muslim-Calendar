@@ -193,8 +193,10 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
         if (altitudeType === 0) {
+          // Geocentric Moon Equatorial Coordinates
           moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
         } else {
+          // Topocentric Moon Equatorial Coordinates
           moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
         }
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
