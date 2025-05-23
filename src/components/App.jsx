@@ -140,7 +140,6 @@ class App extends React.Component {
     }
     if ((prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria || prevState.selectedElongationType !== this.state.selectedElongationType || prevState.selectedAltitudeType !== this.state.selectedAltitudeType || prevState.isUseNormalRefraction !== this.state.isUseNormalRefraction) && this.state.monthsInSetYear.length > 0) {
       this.getMoonCrescentVisibility()
-      this.getEclipseInfos()
     }
   }
 
@@ -605,7 +604,7 @@ class App extends React.Component {
     i18n.changeLanguage(lang)
     this.setState({ selectedLanguage: lang }, () => {
       this.saveLanguageData(lang)
-      this.formatDateTime().then(() => this.generateCalendar()).then(() => this.getEclipseInfos())
+      this.generateCalendar().then(() => this.getEclipseInfos())
     })
   }
 
@@ -1101,7 +1100,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.ELONGATION_TYPE_STORAGE_KEY, JSON.stringify(this.state.selectedElongationType))
       }
-      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
+      this.generateCalendar().then(() => this.getMoonCrescentVisibility())
     })
   }
 
@@ -1110,7 +1109,7 @@ class App extends React.Component {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.ALTITUDE_TYPE_STORAGE_KEY, JSON.stringify(this.state.selectedAltitudeType))
       }
-      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
+      this.generateCalendar().then(() => this.getMoonCrescentVisibility())
     })
   }
 
@@ -1120,7 +1119,7 @@ class App extends React.Component {
         localStorage.setItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY
           , JSON.stringify(this.state.isUseNormalRefraction))
       }
-      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
+      this.generateCalendar().then(() => this.getMoonCrescentVisibility())
     })
   }
 
