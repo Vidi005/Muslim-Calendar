@@ -26,20 +26,22 @@ class MainContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.monthInSetyear !== this.props.monthInSetyear || prevProps.hijriStartDates !== this.props.hijriStartDates || prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedElongationType !== this.props.selectedElongationType || prevProps.selectedAltitudeType !== this.props.selectedAltitudeType || prevProps.isUseNormalRefraction !== this.props.isUseNormalRefraction || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
+    if (prevProps.monthInSetyear !== this.props.monthInSetyear || prevProps.hijriStartDates !== this.props.hijriStartDates) {
       this.setState({
         areMoonVisibilityCriteriaMapsLoading: true,
         selectedHijriMonth: this.getHijriMonthFromProps(this.props)
       }, () => {
         this.createMoonCrescentVisibilities()
       })
+    } else if (prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedElongationType !== this.props.selectedElongationType || prevProps.selectedAltitudeType !== this.props.selectedAltitudeType || prevProps.isUseNormalRefraction !== this.props.isUseNormalRefraction || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
+      this.setState({ areMoonVisibilityCriteriaMapsLoading: true }, () => this.createMoonCrescentVisibilities())
     }
   }
 
-  selectHijriMonth (montIndex) {
+  selectHijriMonth (monthIndex) {
     this.setState({
       areMoonVisibilityCriteriaMapsLoading: true,
-      selectedHijriMonth: parseInt(montIndex)
+      selectedHijriMonth: parseInt(monthIndex)
     }, () => this.createMoonCrescentVisibilities())
   }
 
