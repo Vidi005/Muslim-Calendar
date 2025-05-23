@@ -91,7 +91,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}
-                      value={state.selectedMoonVisibilityCriteria === 0 ? 0 : 1}
+                      value={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}
                       disabled
                     >
                       {en.altitude_type.map((type, index) => <option key={type} value={index}>{t(`altitude_type.${index}`)}</option>)}
