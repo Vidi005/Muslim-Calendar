@@ -39,33 +39,33 @@
         },
         {
             "criteria": "Neo MABIMS (Mathla': Semua Wilayah MABIMS)",
-            "latitude_range": [-11, 7.4],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 7.4],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
             "criteria": "Neo MABIMS (Mathla': Indonesia)",
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
             "criteria": "Neo MABIMS (Markaz: Lokal)",
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
             "criteria": "Wujudul Hilal (Markaz: Yogyakarta)",
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
             "criteria": "Wujudul Hilal (Markaz: Lokal)",
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
             "criteria": "Ummul Qura",
-            "latitude_range": [16, 32],
-            "longitude_range": [34, 56]
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
         }
     ],
     "timezone": "Zona Waktu :",
