@@ -76,13 +76,12 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             : (
                 <>
                   <span className="flex items-center">
-                    <label htmlFor="elongation-type" hidden={state.selectedMoonVisibilityCriteria === 6}>{t('moon_infos.11').split(' ')[0]} :</label>
+                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={1}
                       value={1}
                       disabled
-                      hidden={state.selectedMoonVisibilityCriteria === 6}
                     >
                       {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
                     </select>
