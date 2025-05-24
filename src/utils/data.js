@@ -1987,7 +1987,7 @@ const checkLAPAN = (astroDate, latitude, longitude, elongationType, altitudeType
   return calculateVisibilityLAPAN(isMeetCriteria, lagTime, newMoon)
 }
 
-const checkShaukat = (astroDate, latitude, longitude, correctedRefraction) => {
+const checkShaukat = (astroDate, latitude, longitude, correctedRefraction, steps) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -2018,12 +2018,12 @@ const checkShaukat = (astroDate, latitude, longitude, correctedRefraction) => {
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const moonElongationGeocentric = Elongation(Body.Moon, sunset).elongation
   let areEqualsToValues = false
-  if (moonElongationGeocentric > 7.95 && moonElongationGeocentric < 8.05) areEqualsToValues = true
+  if (moonElongationGeocentric > 8 - steps * 2 / 100 && moonElongationGeocentric < 8 + steps * 2 / 100) areEqualsToValues = true
   const newMoon = SearchMoonPhase(0, bestTime, 1)
   return calculateVisibilityShaukat(arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoon)
 }
 
-const checkTurkey = (astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
+const checkTurkey = (astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction, steps) => {
   let moonEquator
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
@@ -2045,8 +2045,8 @@ const checkTurkey = (astroDate, latitude, longitude, elongationType, altitudeTyp
   let isSunsetAtMidnight = false
   let isFajrAtSunset = false
   if (moonElongation >= 8 && moonHorizon.altitude >= 5) isMeetCriteria = true
-  if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < 7) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 53)) isSunsetAtMidnight = true
-  if (Math.abs(fajrAtWellington.date - sunset.date) / 1000 <= 400) isFajrAtSunset = true
+  if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < steps * 3) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 60 - steps * 3)) isSunsetAtMidnight = true
+  if (Math.abs(fajrAtWellington.date - sunset.date) / 1000 <= steps * 150) isFajrAtSunset = true
   const newMoon = SearchMoonPhase(0, sunset, 1)
   return calculateVisibilityTurkey(isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoon)
 }
@@ -2088,9 +2088,9 @@ const createZones = (criteria, elongationType, altitudeType, correctedRefraction
   } else if (criteria === 5) {
     result = checkLAPAN(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   } else if (criteria === 6) {
-    result = checkShaukat(astroDate, lat, lng, correctedRefraction)
+    result = checkShaukat(astroDate, lat, lng, correctedRefraction, steps)
   } else if (criteria === 7) {
-    result = checkTurkey(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
+    result = checkTurkey(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction, steps)
   } else {
     result = checkMABIMS(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   }
