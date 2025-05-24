@@ -53,7 +53,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
                 <input
                   type="number"
                   inputMode="decimal"
-                  className="w-10 md:w-12 m-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+                  className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                   defaultValue={16}
                   value={state.inputCustomFajrAngle}
                   min={9}
@@ -105,7 +105,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
-          <Field className={"flex items-center mx-1 cursor-pointer"}>
+          <Field className={"flex items-center cursor-pointer"}>
             <Checkbox checked={state.isPreciseToSeconds} onChange={onChangePrecision} className={"group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200"}>
               <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
                 <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
