@@ -359,7 +359,7 @@
     "select_month": "Pilih Bulan :",
     "coordinates": "Koordinat :",
     "school": "Mazhab :",
-    "footnotes": ["Jadwal ini dihitung dengan pendekatan Kriteria ", "dan mungkin terdapat perbedaan beberapa hari dengan kriteria lain sehingga tetap mengikuti keputusan dari otoritas setempat di wilayah Anda."],
+    "footnotes": ["Jadwal ini dihitung dengan pendekatan Kriteria ", "dan mungkin terdapat selisih hari dengan kriteria lain sehingga tetap mengikuti keputusan dari otoritas setempat di wilayah Anda."],
     "download": "Unduh",
     "print": "Cetak",
     "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal :",

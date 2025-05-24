@@ -61,7 +61,6 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
         elevation={parentState.elevation}
         selectedConvention={parentState.selectedConvention}
         selectedAshrTime={parentState.selectedAshrTime}
-        selectedIhtiyath={parentState.selectedIhtiyath}
         selectedTimeZone={parentState.selectedTimeZone}
         changeMonthType={changeMonthType}
         selectGregorianMonth={selectGregorianMonth}
