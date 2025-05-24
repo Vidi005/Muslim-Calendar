@@ -117,7 +117,7 @@
     "convention": "Convention :",
     "conventions": [
         {
-            "method": "MWL",
+            "method": "MWL (Fajr: 18°, Isha: 17°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 17
@@ -126,25 +126,25 @@
             "longitude_range": [-180, 180]
         },
         {
-            "method": "ISNA",
+            "method": "ISNA (Fajr: 15°, Isha: 15°)",
             "sun_altitude": {
                 "fajr": 15,
                 "isha": 15
             },
-            "latitude_range": [7, 83],
-            "longitude_range": [-168, -52]
+            "latitude_range": [7.2167, 83.1114],
+            "longitude_range": [-168.0842, -52.6239]
         },
         {
-            "method": "Umm Al-Qura",
+            "method": "Umm Al-Qura (Fajr: 18.5°, Isha: 90 mins/120 mins)",
             "sun_altitude": {
                 "fajr": 18.5,
                 "isha": ["90 mins", "120 mins"]
             },
-            "latitude_range": [16, 32],
-            "longitude_range": [34, 56]
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
         },
         {
-            "method": "Gulf",
+            "method": "Gulf (Fajr: 19.5°, Isha: 90 mins)",
             "sun_altitude": {
                 "fajr": 19.5,
                 "isha": "90 mins"
@@ -153,162 +153,162 @@
             "longitude_range": [46.5, 60]
         },
         {
-            "method": "Algerian",
+            "method": "Algerian (Fajr: 18°, Isha: 17°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 17
             },
-            "latitude_range": [19, 37],
-            "longitude_range": [-8.7, 11.9]
+            "latitude_range": [18.9667, 37.0833],
+            "longitude_range": [-8.6667, 12]
         },
         {
-            "method": "Karachi",
+            "method": "Karachi (Fajr: 18°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 18
             },
-            "latitude_range": [6.7, 38.5],
-            "longitude_range": [60.5, 97.4]
+            "latitude_range": [6.7528, 38.3667],
+            "longitude_range": [60.5, 97.4167]
         },
         {
-            "method": "Diyanet",
+            "method": "Diyanet (Fajr: 18°, Isha: 17°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 17
             },
-            "latitude_range": [36, 42],
-            "longitude_range": [26, 45]
+            "latitude_range": [35.81278, 42.10583],
+            "longitude_range": [25.66556, 44.81778]
         },
         {
-            "method": "Egypt",
+            "method": "Egypt (Fajr: 19.5°, Isha: 17.5°)",
             "sun_altitude": {
                 "fajr": 19.5,
                 "isha": 17.5
             },
-            "latitude_range": [-34.8, 37.5],
-            "longitude_range": [-17.5, 51.3]
+            "latitude_range": [-34.85, 37.5333],
+            "longitude_range": [-17.5333, 51.4644]
         },
         {
-            "method": "EgyptBis",
+            "method": "EgyptBis (Fajr: 20°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 20,
                 "isha": 18
             },
-            "latitude_range": [22, 31.7],
-            "longitude_range": [24.7, 36.9]
+            "latitude_range": [22, 31.6],
+            "longitude_range": [24.6667, 36.9]
         },
         {
-            "method": "MUIS",
+            "method": "MUIS (Fajr: 20°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 20,
                 "isha": 18
             },
-            "latitude_range": [1.1, 1.3],
-            "longitude_range": [103.6, 104]
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
         },
         {
-            "method": "JAKIM",
+            "method": "JAKIM (Fajr: 18°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 18
             },
-            "latitude_range": [0.85, 7.4],
-            "longitude_range": [99.6, 119.3]
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
         },
         {
-            "method": "Kemenag",
+            "method": "Kemenag (Fajr: 20°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 20,
                 "isha": 18
             },
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
-            "method": "Muhammadiyah",
+            "method": "Muhammadiyah (Fajr: 18°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 18
             },
-            "latitude_range": [-11, 6],
-            "longitude_range": [95, 141]
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
         },
         {
-            "method": "UOIF",
+            "method": "UOIF (Fajr: 12°, Isha: 12°)",
             "sun_altitude": {
                 "fajr": 12,
                 "isha": 12
             },
-            "latitude_range": [41.3, 51.1],
-            "longitude_range": [-5.1, 9.6]
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
         },
         {
-            "method": "France15",
+            "method": "France15 (Fajr: 15°, Isha: 15°)",
             "sun_altitude": {
                 "fajr": 15,
                 "isha": 15
             },
-            "latitude_range": [41.3, 51.1],
-            "longitude_range": [-5.1, 9.6]
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
         },
         {
-            "method": "France18",
+            "method": "France18 (Fajr: 18°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 18
             },
-            "latitude_range": [41.3, 51.1],
-            "longitude_range": [-5.1, 9.6]
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
         },
         {
-            "method": "Basque",
+            "method": "Basque (Fajr: 15°, Isha: 15°)",
             "sun_altitude": {
                 "fajr": 15,
                 "isha": 15
             },
-            "latitude_range": [42.6, 43.6],
-            "longitude_range": [-3, -1.2]
+            "latitude_range": [42.5, 43.4833],
+            "longitude_range": [-2.7526, -1.4833]
         },
         {
-            "method": "Tunisia",
+            "method": "Tunisia (Fajr: 18°, Isha: 18°)",
             "sun_altitude": {
                 "fajr": 18,
                 "isha": 18
             },
-            "latitude_range": [30.2, 37.5],
-            "longitude_range": [7.5, 11.6]
+            "latitude_range": [30, 37.52694],
+            "longitude_range": [7, 12]
         },
         {
-            "method": "Jafari",
+            "method": "Jafari (Fajr: 16°, Isha: 14°, Maghrib: 4°)",
             "sun_altitude": {
                 "fajr": 16,
                 "isha": 14,
                 "maghrib": 4
             },
-            "latitude_range": [12, 39.8],
-            "longitude_range": [35.1, 63.3]
+            "latitude_range": [12, 41.9],
+            "longitude_range": [35, 63]
         },
         {
-            "method": "Tehran",
+            "method": "Tehran (Fajr: 17.7°, Isha: 14°, Maghrib: 4.5°)",
             "sun_altitude": {
                 "fajr": 17.7,
                 "isha": 14,
                 "maghrib": 4.5
             },
-            "latitude_range": [25, 39.8],
-            "longitude_range": [44, 63.3]
+            "latitude_range": [25.06694, 39.74861],
+            "longitude_range": [44.05056, 63.24861]
         },
         {
-            "method": "Russia",
+            "method": "Russia (Fajr: 16°, Isha: 15°)",
             "sun_altitude": {
                 "fajr": 16,
                 "isha": 15
             },
-            "latitude_range": [41, 81.85],
-            "longitude_range": [-169, 169]
+            "latitude_range": [41.22056, 81.84306],
+            "longitude_range": [30, 180]
         },
         {
-            "method": "Custom",
+            "method": "Custom Angle",
             "sun_altitude": {
                 "fajr": 16,
                 "isha": 14
@@ -589,7 +589,7 @@
                     "color": "#0303FC"
                 },
                 {
-                    "visibility": "Sunset at Fajr (Sun Altitude: -18°) in New Zealand",
+                    "visibility": "Sunset at Fajr (Sun altitude: -18°) in New Zealand",
                     "color": "#FC5203"
                 },
                 {
