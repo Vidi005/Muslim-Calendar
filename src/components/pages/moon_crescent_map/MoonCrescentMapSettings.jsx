@@ -76,12 +76,13 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             : (
                 <>
                   <span className="flex items-center">
-                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
+                    <label htmlFor="elongation-type" hidden={state.selectedMoonVisibilityCriteria === 6}>{t('moon_infos.11').split(' ')[0]} :</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={1}
                       value={1}
                       disabled
+                      hidden={state.selectedMoonVisibilityCriteria === 6}
                     >
                       {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
                     </select>
@@ -100,7 +101,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                 </>
               )
           }
-          <Field className={"flex items-center mx-1 cursor-pointer"}>
+          <Field className={"flex items-center cursor-pointer"}>
             <Checkbox checked={state.isUseNormalRefraction} onChange={onChangeRefractionState} disabled={areMoonVisibilityCriteriaMapsLoading} className={"group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200"}>
               <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
                 <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
