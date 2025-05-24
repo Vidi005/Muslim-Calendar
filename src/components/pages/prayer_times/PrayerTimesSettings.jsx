@@ -37,7 +37,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
           <span className="flex items-center">
             <label htmlFor="convention">{t('convention')}</label>
             <select
-              className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+              className="w-36 ml-1 p-1 bg-green-200 dark:bg-gray-200 overflow-ellipsis rounded shadow-inner duration-200"
               defaultValue={0}
               value={state.selectedConvention}
               onChange={event => selectConvention(event.target.value)}
