@@ -559,7 +559,7 @@
                     "color": "#FF0000"
                 },
                 {
-                    "visibility": "Elongasi = 8° & Ketinggian Bulan = 5°",
+                    "visibility": "Elongasi Geosentris = 8° & Ketinggian Bulan = 5° saat Matahari Terbenam",
                     "color": "#FAFF00"
                 },
                 {
@@ -589,7 +589,7 @@
                     "color": "#0303FC"
                 },
                 {
-                    "visibility": "Matahari terbenam saat Fajar di Selandia Baru",
+                    "visibility": "Matahari terbenam saat Fajar (Ketinggian Matahari: -18°) di Selandia Baru",
                     "color": "#FC5203"
                 },
                 {

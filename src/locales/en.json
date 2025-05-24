@@ -559,7 +559,7 @@
                     "color": "#FF0000"
                 },
                 {
-                    "visibility": "Elongation = 8° & Moon Altitude = 5°",
+                    "visibility": "Geocentric Elongation = 8° & Moon Altitude = 5° at Sunset",
                     "color": "#FAFF00"
                 },
                 {
@@ -589,7 +589,7 @@
                     "color": "#0303FC"
                 },
                 {
-                    "visibility": "Sunset at Fajr in New Zealand",
+                    "visibility": "Sunset at Fajr (Sun Altitude: -18°) in New Zealand",
                     "color": "#FC5203"
                 },
                 {
