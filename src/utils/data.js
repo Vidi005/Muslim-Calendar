@@ -2173,10 +2173,10 @@ const addZeroPadForYear = value => {
   }
 }
 
-const getMoonCrescentVisibility = (ijtimaDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
-  const startDate = new Date(`${addZeroPadForYear(ijtimaDate.getFullYear())}-${addZeroPad(ijtimaDate.getMonth() + 1)}-${addZeroPad(ijtimaDate.getDate())}T00:00:00Z`)
+const getMoonCrescentVisibility = (observationDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
+  const startDate = new Date(`${addZeroPadForYear(observationDate.getFullYear())}-${addZeroPad(observationDate.getMonth() + 1)}-${addZeroPad(observationDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
-  const conjunctionDate = new Date(ijtimaDate.setDate(ijtimaDate.getDate() - 2))
+  const conjunctionDate = new Date(observationDate.setDate(observationDate.getDate() - 2))
   const conjunction = SearchMoonPhase(0, conjunctionDate, 5)
   return {
     zoneCoordinates: gridSearchLongitude(astroDate, criteria, elongationType, altitudeType, correctedRefraction, steps),

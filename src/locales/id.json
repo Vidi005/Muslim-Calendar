@@ -89,7 +89,7 @@
     "moon_crescent_map_loading": "Memuat Peta Visibilitas Hilal...",
     "moon_crescent_map": "Peta Visibilitas Hilal",
     "moon_crescent_maps_loading": "Memuat Peta Visibilitas Hilal...",
-    "conjunction": "Konjungsi :",
+    "conjunction": "Ijtima :",
     "error": "Kesalahan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
     "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
@@ -417,7 +417,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "pada Waktu Pengamatan Terbaik"
+            "observation_time": "saat Waktu Terbaik"
         },
         {
             "name": "SAAO, 2001",
@@ -443,7 +443,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "pada Waktu Pengamatan Terbaik"
+            "observation_time": "saat Waktu Terbaik"
         },
         {
             "name": "Odeh, 2006",
@@ -473,7 +473,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "pada Waktu Pengamatan Terbaik"
+            "observation_time": "saat Waktu Terbaik"
         },
         {
             "name": "Qureshi & Khan, 2010",
@@ -507,7 +507,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "pada Waktu Pengamatan Terbaik"
+            "observation_time": "saat Waktu Terbaik"
         },
         {
             "name": "LAPAN, 2010",
@@ -567,7 +567,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "pada Waktu Pengamatan Terbaik"
+            "observation_time": "saat Waktu Terbaik"
         },
         {
             "name": "KHGT/Turki, 2016",
@@ -645,7 +645,7 @@
                     "color": "#000000"
                 }
             ],
-            "observation_time": "at Sunset"
+            "observation_time": "saat Matahari Terbenam"
         }
     ],
     "elongation_type": ["Geosentris", "Toposentris"],
@@ -653,7 +653,7 @@
     "refraction": "Koreksi Refraksi",
     "sampling": "Sampling :",
     "coordinate_steps": [1, 2, 3, 4, 5],
-    "ijtima_days": ["Hari Ijtima' - 1", "Hari Ijtima'", "Hari Ijtima' + 1"],
+    "observation_date": "Pengamatan :",
     "eclipses": "Gerhana",
     "global_solar_eclipse": "Gerhana Matahari Global",
     "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",
