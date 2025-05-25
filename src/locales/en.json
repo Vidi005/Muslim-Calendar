@@ -368,23 +368,15 @@
     "hijri_abbreviation": "AH",
     "moon_visibility_criteria": [
         {
-            "name": "Danjon, 1936",
+            "name": "Danjon Limit, 1936",
             "zones": [
                 {
-                    "visibility": "Can be seen (Elongation ≥ 7°)",
+                    "visibility": "Meet Danjon Limit Criterion (Elongation ≥ 7°)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Moon over the horizon, not visible (Unshaded)",
-                    "color": ""
-                },
-                {
-                    "visibility": "Moon has set",
-                    "color": "#808080"
-                },
-                {
-                    "visibility": "Moon before conjunction",
-                    "color": "#000000"
+                    "visibility": "Hasn't met Danjon Limit Criterion",
+                    "color": "#820101"
                 }
             ],
             "observation_time": "at Sunset"
@@ -613,6 +605,32 @@
                 {
                     "visibility": "Can be seen (Altitude ≥ 3° & Elongation ≥ 6.4°)",
                     "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
+        },
+        {
+            "name": "LFNU, 2022",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (QRNU: Altitude ≥ 3° & Elongation ≥ 9.9°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Maybe seen (IRNU: Altitude ≥ 3° & Elongation ≥ 6.4°)",
+                    "color": "#FFFF00"
                 },
                 {
                     "visibility": "Moon over the horizon, not visible (Unshaded)",

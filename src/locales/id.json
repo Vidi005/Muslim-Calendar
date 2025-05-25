@@ -368,23 +368,15 @@
     "hijri_abbreviation": "H",
     "moon_visibility_criteria": [
         {
-            "name": "Danjon, 1936",
+            "name": "Limit Danjon, 1936",
             "zones": [
                 {
-                    "visibility": "Bisa terlihat (Elongasi ≥ 7°)",
+                    "visibility": "Memenuhi kriteria Limit Danjon (Elongasi ≥ 7°)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
-                    "color": ""
-                },
-                {
-                    "visibility": "Bulan sudah tenggelam",
-                    "color": "#808080"
-                },
-                {
-                    "visibility": "Bulan belum ijtima'",
-                    "color": "#000000"
+                    "visibility": "Belum memenuhi kriteria Limit Danjon",
+                    "color": "#820101"
                 }
             ],
             "observation_time": "saat Matahari Terbenam"
@@ -628,6 +620,32 @@
                 }
             ],
             "observation_time": "saat Matahari Terbenam"
+        },
+        {
+            "name": "LFNU, 2022",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat kasat mata (QRNU: Ketinggian ≥ 3° & Elongasi ≥ 9.9°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Mungkin terlihat (IRNU: Ketinggian ≥ 3° & Elongasi ≥ 6.4°)",
+                    "color": "#FFFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ],
+            "observation_time": "at Sunset"
         }
     ],
     "elongation_type": ["Geosentris", "Toposentris"],

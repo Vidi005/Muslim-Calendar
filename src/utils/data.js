@@ -1640,18 +1640,12 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityDanjon = (isMeetCriteria, lagTime, newMoon) => {
+const calculateVisibilityDanjon = (isMeetCriteria, newMoon) => {
   let zone = 'B'
-  let color = ''
-  if (isMeetCriteria && lagTime > 0 && !newMoon) {
+  let color = '#820101'
+  if (isMeetCriteria && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
-  } else if (newMoon) {
-    zone = 'D'
-    color = '#000000'
-  } else if (lagTime < 0) {
-    zone = 'C'
-    color = '#808080'
   }
   return { isMeetCriteria, zone, color }
 }
@@ -1837,20 +1831,38 @@ const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoon) => {
   return { isMeetCriteria, zone, color }
 }
 
+const calculateVisibilityLFNU = (isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoon) => {
+  let zone = 'C'
+  let color = ''
+  if (isMeetQRNUCriteria && lagTime > 0 && !newMoon) {
+    zone = 'A'
+    color = '#00FF3E'
+  } else if (isMeetIRNUCriteria && lagTime > 0 && !newMoon) {
+    zone = 'B'
+    color = '#FFFF00'
+  } else if (newMoon) {
+    zone = 'E'
+    color = '#000000'
+  } else if (lagTime < 0) {
+    zone = 'D'
+    color = '#808080'
+  }
+  return { isMeetQRNUCriteria, isMeetIRNUCriteria, zone, color }
+}
+
 const checkDanjon = (astroDate, latitude, longitude, elongationType) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
   const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
   if (!sunset || !moonset) return {}
-  const lagTime = moonset.ut - sunset.ut
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
   const newMoon = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityDanjon(isMeetCriteria, lagTime, newMoon)
+  return calculateVisibilityDanjon(isMeetCriteria, newMoon)
 }
 
 const checkYallop = (astroDate, latitude, longitude, correctedRefraction) => {
@@ -2073,6 +2085,30 @@ const checkMABIMS = (astroDate, latitude, longitude, elongationType, altitudeTyp
   return calculateVisibilityMABIMS(isMeetCriteria, lagTime, newMoon)
 }
 
+const checkLFNU = (astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
+  let moonEquator
+  const observer = observerFromEarth(latitude, longitude, 0)
+  const correctedDate = astroDate.AddDays(-longitude / 360)
+  const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  const lagTime = moonset.ut - sunset.ut
+  if (altitudeType === 0) {
+    moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
+  } else {
+    moonEquator = Equator(Body.Moon, sunset, observer, true, true)
+  }
+  const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
+  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
+  const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  let isMeetQRNUCriteria = false
+  let isMeetIRNUCriteria = false
+  if (moonElongation >= 9.9 && moonHorizon.altitude >= 3) isMeetQRNUCriteria = true
+  if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) isMeetIRNUCriteria = true
+  const newMoon = SearchMoonPhase(0, sunset, 1)
+  return calculateVisibilityLFNU(isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoon)
+}
+
 const createZones = (criteria, elongationType, altitudeType, correctedRefraction, astroDate, lat, lng, steps) => {
   let result
   if (criteria === 0) {
@@ -2091,8 +2127,10 @@ const createZones = (criteria, elongationType, altitudeType, correctedRefraction
     result = checkShaukat(astroDate, lat, lng, correctedRefraction, steps)
   } else if (criteria === 7) {
     result = checkTurkey(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction, steps)
-  } else {
+  } else if (criteria === 8) {
     result = checkMABIMS(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
+  } else {
+    result = checkLFNU(astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   }
   const width = steps * 100 / 360
   const height = steps * 100 / 180
