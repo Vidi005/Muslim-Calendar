@@ -135,7 +135,7 @@
             "longitude_range": [-168.0842, -52.6239]
         },
         {
-            "method": "Ummul Qura (Subuh: 18.5°, Isya': 90 mnt/120 mnt)",
+            "method": "Ummul Qura (Subuh: 18,5°, Isya': 90 mnt/120 mnt)",
             "sun_altitude": {
                 "fajr": 18.5,
                 "isha": ["90 mins", "120 mins"]
@@ -144,7 +144,7 @@
             "longitude_range": [34.2, 56]
         },
         {
-            "method": "Gulf (Subuh: 19.5°, Isya': 90 mnt)",
+            "method": "Gulf (Subuh: 19,5°, Isya': 90 mnt)",
             "sun_altitude": {
                 "fajr": 19.5,
                 "isha": "90 mins"
@@ -180,7 +180,7 @@
             "longitude_range": [25.66556, 44.81778]
         },
         {
-            "method": "Mesir (Subuh: 19.5°, Isya': 17.5°)",
+            "method": "Mesir (Subuh: 19,5°, Isya': 17,5°)",
             "sun_altitude": {
                 "fajr": 19.5,
                 "isha": 17.5
@@ -289,7 +289,7 @@
             "longitude_range": [35, 63]
         },
         {
-            "method": "Tehran (Subuh: 17.7°, Isya': 14°, Maghrib: 4.5°)",
+            "method": "Tehran (Subuh: 17,7°, Isya': 14°, Maghrib: 4,5°)",
             "sun_altitude": {
                 "fajr": 17.7,
                 "isha": 14,
