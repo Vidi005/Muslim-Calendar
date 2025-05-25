@@ -1,6 +1,6 @@
 import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v4.6' // Update the version when deploying new builds
+const CACHE_NAME = 'app-cache-v4.7' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -37,7 +37,7 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.onmessage = event => {
-  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, zawal, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, ijtimaDate, moonVisibilityCriteria, elongationType, altitudeType, correctedRefraction, steps, globalSolarEclipseDate, localSolarEclipseDate, lunarEclipseDate } = event.data
+  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, zawal, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, observationDate, moonVisibilityCriteria, elongationType, altitudeType, correctedRefraction, steps, globalSolarEclipseDate, localSolarEclipseDate, lunarEclipseDate } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
@@ -69,7 +69,7 @@ self.onmessage = event => {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
     self.postMessage({ type: 'createSunInfos', result })
   } else if (type === 'createMoonCrescentVisibility') {
-    const result = getMoonCrescentVisibility(ijtimaDate, moonVisibilityCriteria, elongationType, altitudeType, correctedRefraction, steps)
+    const result = getMoonCrescentVisibility(observationDate, moonVisibilityCriteria, elongationType, altitudeType, correctedRefraction, steps)
     self.postMessage({ type: 'createMoonCrescentVisibility', result })
   } else if (type === 'createGlobalSolarEclipse') {
     const result = getGlobalSolarEclipse(globalSolarEclipseDate)

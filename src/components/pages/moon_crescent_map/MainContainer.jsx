@@ -14,7 +14,7 @@ class MainContainer extends React.Component {
       COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
       areMoonVisibilityCriteriaMapsLoading: true,
       moonCrescentVisibilities: [],
-      ijtimaDates: [],
+      observationDates: [],
       selectedHijriMonth: this.getHijriMonthFromProps(props)
     }
   }
@@ -48,19 +48,19 @@ class MainContainer extends React.Component {
   createMoonCrescentVisibilities () {
     const theDayBeforeIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
     theDayBeforeIjtima.setDate(theDayBeforeIjtima.getDate() + 27)
-    const ijtimaDay = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    const observationDay = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
     const theDayAfterIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
-    ijtimaDay.setDate(ijtimaDay.getDate() + 28)
+    observationDay.setDate(observationDay.getDate() + 28)
     theDayAfterIjtima.setDate(theDayAfterIjtima.getDate() + 29)
     Promise.all([
       this.props.generateMoonCrescentVisibility(theDayBeforeIjtima),
-      this.props.generateMoonCrescentVisibility(ijtimaDay),
+      this.props.generateMoonCrescentVisibility(observationDay),
       this.props.generateMoonCrescentVisibility(theDayAfterIjtima)
     ]).then(moonCrescentVisibilities => {
       this.setState({
         areMoonVisibilityCriteriaMapsLoading: false,
         moonCrescentVisibilities: moonCrescentVisibilities,
-        ijtimaDates: [theDayBeforeIjtima, ijtimaDay, theDayAfterIjtima]
+        observationDates: [theDayBeforeIjtima, observationDay, theDayAfterIjtima]
       })
     })
   }
