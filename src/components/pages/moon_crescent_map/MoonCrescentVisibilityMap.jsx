@@ -32,7 +32,7 @@ const MoonCrescentVisibilityMap = ({ index, t, selectedLanguage, selectedMoonVis
         }}></span>
       ))}
     </div>
-    <div className={`grid w-full p-1 md:p-2 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones.length > 2 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5" : "grid-cols-2"}`}>
+    <div className={`grid w-full p-1 md:p-2 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.length > 2 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5" : "grid-cols-2"}`}>
       {en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.map((zone, index) => (
         <div key={index} className="flex flex-nowrap items-baseline space-x-1 md:space-x-1.5 text-xs md:text-sm xl:text-base">
           <span className="flex-none border border-black dark:border-white w-2 h-2 md:w-3 md:h-3 xl:w-4 xl:h-4" style={{ backgroundColor: zone.color }}></span>
