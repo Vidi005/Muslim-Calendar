@@ -37,7 +37,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
           <span className="flex items-center">
             <label htmlFor="convention">{t('convention')}</label>
             <select
-              className="w-36 ml-1 p-1 bg-green-200 dark:bg-gray-200 overflow-ellipsis rounded shadow-inner duration-200"
+              className="w-40 ml-1 p-1 bg-green-200 dark:bg-gray-200 overflow-ellipsis rounded shadow-inner duration-200"
               defaultValue={0}
               value={state.selectedConvention}
               onChange={event => selectConvention(event.target.value)}
@@ -51,6 +51,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               <span className="flex items-center">
                 <label className="whitespace-nowrap" htmlFor="fajr-angle">{t('fajr_angle')}</label>
                 <input
+                  lang={state.selectedLanguage}
                   type="number"
                   inputMode="decimal"
                   className="w-10 md:w-12 mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
