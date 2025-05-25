@@ -625,11 +625,11 @@
             "name": "LFNU, 2022",
             "zones": [
                 {
-                    "visibility": "Bisa terlihat kasat mata (QRNU: Ketinggian ≥ 3° & Elongasi ≥ 9.9°)",
+                    "visibility": "Bisa terlihat kasat mata (QRNU: Ketinggian ≥ 3° & Elongasi ≥ 9,9°)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Mungkin terlihat (IRNU: Ketinggian ≥ 3° & Elongasi ≥ 6.4°)",
+                    "visibility": "Mungkin terlihat (IRNU: Ketinggian ≥ 3° & Elongasi ≥ 6,4°)",
                     "color": "#FFFF00"
                 },
                 {
