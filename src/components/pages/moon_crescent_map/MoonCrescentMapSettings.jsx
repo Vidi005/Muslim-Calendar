@@ -42,7 +42,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             </select>
           </span>
           {
-          (state.selectedMoonVisibilityCriteria === 0 || state.selectedMoonVisibilityCriteria === 5 || state.selectedMoonVisibilityCriteria === 7 || state.selectedMoonVisibilityCriteria === 8)
+          (state.selectedMoonVisibilityCriteria === 0 || state.selectedMoonVisibilityCriteria === 5 || state.selectedMoonVisibilityCriteria === 7 || state.selectedMoonVisibilityCriteria === 8 || state.selectedMoonVisibilityCriteria === 9)
             ? (
                 <>
                   <span className="flex items-center">
