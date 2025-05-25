@@ -28,11 +28,10 @@ const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, 
             {state.moonCrescentVisibilities?.map((visibility, index) => (
               <MoonCrescentVisibilityMap
                 key={index}
-                index={index}
                 t={t}
                 selectedLanguage={selectedLanguage}
                 selectedMoonVisibilityCriteria={selectedMoonVisibilityCriteria}
-                ijtimaDate={state.ijtimaDates[index]}
+                observationDate={state.observationDates[index]}
                 visibility={visibility.zoneCoordinates}
               />
             ))}
