@@ -1389,7 +1389,7 @@ class App extends React.Component {
         const hoursLeft = addZeroPad(Math.floor(timesRemaining / 3600000))
         const minutesLeft = addZeroPad(Math.floor((timesRemaining % 3600000) / 60000))
         const secondsLeft = addZeroPad(Math.floor((timesRemaining % 60000) / 1000))
-        const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName}: ${hoursLeft}:${minutesLeft}:${secondsLeft}`
+        const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName} : ${hoursLeft}:${minutesLeft}:${secondsLeft}`
         if (hoursLeft === '00' && minutesLeft === '00' && secondsLeft === '00') {
           alert(`${i18n.t('prayer_info.1')} ${nextPrayerName} ${i18n.t('prayer_info.2')}!`)
         }
@@ -1398,11 +1398,11 @@ class App extends React.Component {
     }
   }
 
-  generateMoonCrescentVisibility = ijtimaDate => new Promise((resolve, reject) => {
+  generateMoonCrescentVisibility = observationDate => new Promise((resolve, reject) => {
     let moonCrescentVisibilityWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
     moonCrescentVisibilityWorker.postMessage({
       type: 'createMoonCrescentVisibility',
-      ijtimaDate: ijtimaDate,
+      observationDate: observationDate,
       moonVisibilityCriteria: this.state.selectedMoonVisibilityCriteria,
       elongationType: this.state.selectedElongationType,
       altitudeType: this.state.selectedAltitudeType,
@@ -1425,13 +1425,13 @@ class App extends React.Component {
   })
 
   getMoonCrescentVisibility = () => {
-    const ijtimaDate = new Date(this.state.formattedDateTime)
+    const observationDate = new Date(this.state.formattedDateTime)
     const islamicDate = new Date(this.state.formattedDateTime)
     const currentFirstMonthGregorianDay = new Date(this.state.formattedDateTime.getFullYear(), this.state.formattedDateTime.getMonth(), 1).getDay()
     const islamicDayNumber = this.state.monthsInSetYear[this.state.formattedDateTime.getMonth()][this.state.formattedDateTime.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
-    ijtimaDate.setDate(ijtimaDate.getDate() + 29 - islamicDayNumber)
+    observationDate.setDate(observationDate.getDate() + 29 - islamicDayNumber)
     islamicDate.setDate(islamicDate.getDate() + 45 - islamicDayNumber)
-    this.generateMoonCrescentVisibility(ijtimaDate).then(result => {
+    this.generateMoonCrescentVisibility(observationDate).then(result => {
       if (Object.keys(result).length > 0) {
         this.setState({ moonCrescentVisibility: result })
       }
