@@ -46,7 +46,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             ? (
                 <>
                   <span className="flex items-center">
-                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
+                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={0}
@@ -59,7 +59,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                     </select>
                   </span>
                   <span className="flex items-center">
-                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]} :</label>
+                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={1}
@@ -76,7 +76,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             : (
                 <>
                   <span className="flex items-center">
-                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]} :</label>
+                    <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={1}
@@ -87,7 +87,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                     </select>
                   </span>
                   <span className="flex items-center">
-                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]} :</label>
+                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}

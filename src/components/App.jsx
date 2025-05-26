@@ -1389,7 +1389,7 @@ class App extends React.Component {
         const hoursLeft = addZeroPad(Math.floor(timesRemaining / 3600000))
         const minutesLeft = addZeroPad(Math.floor((timesRemaining % 3600000) / 60000))
         const secondsLeft = addZeroPad(Math.floor((timesRemaining % 60000) / 1000))
-        const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName} : ${hoursLeft}:${minutesLeft}:${secondsLeft}`
+        const nextPrayerInfo = `${i18n.t('prayer_info.0')} ${nextPrayerName}: ${hoursLeft}:${minutesLeft}:${secondsLeft}`
         if (hoursLeft === '00' && minutesLeft === '00' && secondsLeft === '00') {
           alert(`${i18n.t('prayer_info.1')} ${nextPrayerName} ${i18n.t('prayer_info.2')}!`)
         }
