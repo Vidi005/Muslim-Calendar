@@ -348,8 +348,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 66) observer = observerFromEarth(66, longitude, elevation)
-          else observer = observerFromEarth(-66, longitude, elevation)
+          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
+          else observer = observerFromEarth(-60, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
@@ -360,8 +360,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 61) observer = observerFromEarth(61, longitude, elevation)
-          else observer = observerFromEarth(-61, longitude, elevation)
+          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
+          else observer = observerFromEarth(-60, longitude, elevation)
         }
         moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
       }
@@ -1869,8 +1869,7 @@ const checkDanjon = (astroDate, latitude, longitude, elongationType) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
-  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
-  if (!sunset || !moonset) return {}
+  if (!sunset) return {}
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
@@ -2166,7 +2165,7 @@ const createZones = (criteria, elongationType, altitudeType, correctedRefraction
 const gridSearchLongitude = (astroDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
   let results = []
   for (let lng = -180; lng < 180; lng += steps) {
-    for (let lat = 66; lat >= -66; lat -= steps) {
+    for (let lat = 60; lat >= -60; lat -= steps) {
       const result = createZones(criteria, elongationType, altitudeType, correctedRefraction, astroDate, lat, lng, steps)
       if (result?.zone?.length > 0) results.push(result)
     }
