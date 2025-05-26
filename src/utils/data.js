@@ -118,8 +118,6 @@ const anyMabimsCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
-  // Wales
-  { latitude: 65.6098727, longitude: -168.0918768, elevation: 0 },
   // Tununak
   { latitude: 60.5787826, longitude: -165.2694053, elevation: 0 },
   // Sitka
@@ -292,8 +290,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 66) observer = observerFromEarth(66, longitude, elevation)
-          else observer = observerFromEarth(-66, longitude, elevation)
+          if (latitude > 63) observer = observerFromEarth(63, longitude, elevation)
+          else observer = observerFromEarth(-63, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
