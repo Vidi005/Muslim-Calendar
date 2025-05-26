@@ -175,7 +175,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
           {en.prayer_names.map((name, index) => (
             (index !== 0 && index !== 2 && index !== 3) && (
               <span key={name} className="flex items-center">
-                <label htmlFor="prayer-name">{t(`prayer_names.${index}`) + ' :'}</label>
+                <label htmlFor="prayer-name">{t(`prayer_names.${index}`) + ':'}</label>
                 <select
                   className="mx-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                   defaultValue={0}

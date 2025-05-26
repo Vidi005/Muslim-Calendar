@@ -118,6 +118,10 @@ const anyMabimsCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
+  // Wales
+  { latitude: 65.6098727, longitude: -168.0918768, elevation: 0 },
+  // Tununak
+  { latitude: 60.5787826, longitude: -165.2694053, elevation: 0 },
   // Sitka
   { latitude: 57.0531, longitude: -135.3300, elevation: 0 },
   // King Cove
@@ -273,8 +277,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       }
     }
   } else if (criteria === 3) {
-    // MABIMS (Markqz: Local)
-    let isMetCriteria = false
+    // MABIMS (Markaz: Local)
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
@@ -282,6 +285,18 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(latitude, longitude, elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      if (!sunset) {
+        if (formula === 1) {
+          if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
+          else observer = observerFromEarth(-45, longitude, elevation)
+        } else if (formula === 2) {
+          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+        } else {
+          if (latitude > 66) observer = observerFromEarth(66, longitude, elevation)
+          else observer = observerFromEarth(-66, longitude, elevation)
+        }
+        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      }
       sunEquator = Equator(Body.Sun, sunset, observer, true, true)
       if (altitudeType === 0) {
         moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
@@ -333,8 +348,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
-          else observer = observerFromEarth(-60, longitude, elevation)
+          if (latitude > 66) observer = observerFromEarth(66, longitude, elevation)
+          else observer = observerFromEarth(-66, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
@@ -345,8 +360,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
-          else observer = observerFromEarth(-60, longitude, elevation)
+          if (latitude > 61) observer = observerFromEarth(61, longitude, elevation)
+          else observer = observerFromEarth(-61, longitude, elevation)
         }
         moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
       }
@@ -2151,7 +2166,7 @@ const createZones = (criteria, elongationType, altitudeType, correctedRefraction
 const gridSearchLongitude = (astroDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
   let results = []
   for (let lng = -180; lng < 180; lng += steps) {
-    for (let lat = 60; lat >= -60; lat -= steps) {
+    for (let lat = 66; lat >= -66; lat -= steps) {
       const result = createZones(criteria, elongationType, altitudeType, correctedRefraction, astroDate, lat, lng, steps)
       if (result?.zone?.length > 0) results.push(result)
     }
