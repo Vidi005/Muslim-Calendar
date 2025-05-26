@@ -149,7 +149,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 )
               : (
                 <table className="table-auto text-sky-700 dark:text-sky-200 animate__animated animate__fadeInLeft">
-                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()} :</u></h3></th>
+                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()}:</u></h3></th>
                   <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
                     {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
                       <tr key={index}>
