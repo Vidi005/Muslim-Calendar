@@ -22,13 +22,12 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibility
         </>
       ))}
       {visibility.map((marker, index) => (
-        <span key={index} className="absolute opacity-50" style={{
+        <span key={index} className="absolute opacity-50 -translate-y-1/2" style={{
           width: `${marker.width}%`,
           height: `${marker.height}%`,
           backgroundColor: marker.color,
           top: `${marker.yPos}%`,
-          left: `${marker.xPos}%`,
-          transform: "translate(-50%, -50%)"
+          left: `${marker.xPos}%`
         }}></span>
       ))}
     </div>
