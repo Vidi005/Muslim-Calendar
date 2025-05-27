@@ -27,6 +27,10 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
   return (
     <section className="w-full p-2 md:p-4 2xl:p-8 text-center text-green-900 dark:text-white duration-200 animate__animated animate__fadeInUp">
       <h2>{t('visualization')}</h2>
+      {inputDate !== '' && inputTime !=='' && formattedDateTime instanceof Date
+        ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_visualization')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
+        : null
+      }
       <div className="flex flex-wrap justify-center w-full">
         <div className="w-full md:w-1/2">
         <p className="text-sm md:text-base xl:text-lg">{t('zenith')} (+90°)</p>
@@ -134,11 +138,10 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
         </div>
         <div className="w-full md:w-1/2 px-2">
           <h3 className="m-0 md:m-2">{t('sun_info')}</h3>
-          {inputDate !== '' && inputTime !== ''
-            ? formattedDateTime instanceof Date
-              ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleDateString(selectedLanguage || 'en', { weekday: "long", day: 'numeric', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</h5>
-              : null
-            : null}
+          {inputDate !== '' && inputTime !=='' && formattedDateTime instanceof Date
+            ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
+            : null
+          }
           <table className="table-auto mx-auto text-justify text-base md:text-sm lg:text-base">
             {en.sun_infos.map((_, index) => (
               <tr key={index} className="align-top">
