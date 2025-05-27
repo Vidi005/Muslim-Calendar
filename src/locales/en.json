@@ -341,6 +341,7 @@
     "qibla_distance": "Distance to Kaaba is ",
     "qibla": "Qibla",
     "visualization": "Visualization",
+    "set_visualization": "Visualization at:",
     "zenith": "Zenith",
     "nadir": "Nadir",
     "civil_twilight": ["Civil Dawn", "Civil Dusk"],

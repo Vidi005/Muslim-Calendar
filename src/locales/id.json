@@ -341,6 +341,7 @@
     "qibla_distance": "Jarak ke Ka'bah ",
     "qibla": "Kiblat",
     "visualization": "Visualisasi",
+    "set_visualization": "Visualisasi pada:",
     "zenith": "Zenit",
     "nadir": "Nadir",
     "civil_twilight": ["Fajar Sipil", "Senja Sipil"],
