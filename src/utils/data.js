@@ -99,10 +99,10 @@ const anyMabimsCitiesCoordinates = [
   { latitude: -5.45, longitude: 105.26667, elevation: 5 },
   // Pandeglang, Indonesia
   { latitude: -6.240263, longitude: 105.825405, elevation: 3 },
-  // Pelabuhanratu, Indonesia
+  // Pelabuhan Ratu, Indonesia
   { latitude: -6.91722, longitude: 106.32, elevation: 4 },
   // Cilacap, Indonesia
-  { latitude: -7.71889	, longitude: 109.01583, elevation: 6 },
+  { latitude: -7.71889, longitude: 109.01583, elevation: 6 },
   // Parangtritis, Indonesia
   { latitude: -8, longitude: 110.36667, elevation: 1 },
   // Pacitan, Indonesia
@@ -114,7 +114,7 @@ const anyMabimsCitiesCoordinates = [
   // Sumbawa Besar, Indonesia
   { latitude: -8.485, longitude: 117.418, elevation: 1 },
   // Kupang, Indonesia
-  { latitude: -10.17667	, longitude: 123.58111, elevation: 1 }
+  { latitude: -10.17667, longitude: 123.58111, elevation: 1 }
 ]
 
 const anyAmericaCitiesCoordinates = [
@@ -1653,10 +1653,10 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityDanjon = (isMeetCriteria, newMoon) => {
+const calculateVisibilityDanjon = (isMeetCriteria, lagTime, newMoon) => {
   let zone = 'B'
   let color = '#820101'
-  if (isMeetCriteria && !newMoon) {
+  if (isMeetCriteria && lagTime > 0 && !newMoon) {
     zone = 'A'
     color = '#00FF3E'
   }
@@ -1821,7 +1821,7 @@ const calculateVisibilityTurkey = (isMeetCriteria, isSunsetAtMidnight, isFajrAtS
   }else if (newMoon && !isSunsetAtMidnight && !isFajrAtSunset) {
     zone = 'F'
     color = '#000000'
-  } else if (lagTime < 0 && !isSunsetAtMidnight && isFajrAtSunset) {
+  } else if (lagTime < 0 && !isSunsetAtMidnight && !isFajrAtSunset) {
     zone = 'E'
     color = '#808080'
   }
@@ -1867,14 +1867,16 @@ const checkDanjon = (astroDate, latitude, longitude, elongationType) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
-  if (!sunset) return {}
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  const lagTime = moonset.ut - sunset.ut
   const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
   const newMoon = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityDanjon(isMeetCriteria, newMoon)
+  return calculateVisibilityDanjon(isMeetCriteria, lagTime, newMoon)
 }
 
 const checkYallop = (astroDate, latitude, longitude, correctedRefraction) => {
