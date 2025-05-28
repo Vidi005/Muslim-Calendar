@@ -59,7 +59,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                     </select>
                   </span>
                   <span className="flex items-center">
-                    <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]}:</label>
+                    <label htmlFor="altitude-type" hidden={state.selectedMoonVisibilityCriteria === 0}>{t('moon_infos.5').split(' ')[0]}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
                       defaultValue={1}
@@ -67,6 +67,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                       onChange={event => selectAltitudeType(event.target.value)}
                       required
                       disabled={areMoonVisibilityCriteriaMapsLoading}
+                      hidden={state.selectedMoonVisibilityCriteria === 0}
                     >
                       {en.altitude_type.map((type, index) => <option key={type} value={index}>{t(`altitude_type.${index}`)}</option>)}
                     </select>
