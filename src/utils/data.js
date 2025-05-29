@@ -290,8 +290,8 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
         } else {
-          if (latitude > 63) observer = observerFromEarth(63, longitude, elevation)
-          else observer = observerFromEarth(-63, longitude, elevation)
+          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
+          else observer = observerFromEarth(-60, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       }
