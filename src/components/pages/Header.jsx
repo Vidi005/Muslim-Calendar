@@ -15,7 +15,7 @@ const HeaderContainer = () => (
               )
             : <img className="h-8 p-0.5 object-contain object-center" src={`${import.meta.env.BASE_URL}images/mc-icon.png`} alt="App Icon" />
           }
-          <h3 className="grow px-1 sm:px-2 text-base sm:text-lg md:text-xl font-serif text-white whitespace-nowrap">{t('app_name')}</h3>
+          <h3 className="grow px-1 sm:px-1.5 md:px-2 text-base sm:text-lg md:text-xl font-serif text-white whitespace-nowrap">{t('app_name')}</h3>
         </section>
         <section className="w-fit flex items-center pl-1">
           <a href="https://github.com/Vidi005/muslim-calendar" title="Repository" target="_blank" rel="noreferrer noopener">

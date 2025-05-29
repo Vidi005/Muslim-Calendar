@@ -68,7 +68,7 @@ const getTimeZoneList = () => {
 
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
-const anyMabimsCitiesCoordinates = [
+const anyMABIMSCitiesCoordinates = [
   // Padang Besar, Malaysia
   { latitude: 6.66299, longitude: 100.31967, elevation: 70 },
   // Bukit Kayu Hitam, Malaysia
@@ -118,8 +118,8 @@ const anyMabimsCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
-  // Tununak
-  { latitude: 60.5787826, longitude: -165.2694053, elevation: 0 },
+  // Platinum
+  { latitude: 59.010952, longitude: -161.824012, elevation: 0 },
   // Sitka
   { latitude: 57.0531, longitude: -135.3300, elevation: 0 },
   // King Cove
@@ -224,7 +224,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = anyMabimsCitiesCoordinates.some(city => {
+      isMetCriteria = anyMABIMSCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, observer, true, true)
@@ -253,7 +253,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = anyMabimsCitiesCoordinates.slice(2).some(city => {
+      isMetCriteria = anyMABIMSCitiesCoordinates.slice(2).some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, observer, true, true)
