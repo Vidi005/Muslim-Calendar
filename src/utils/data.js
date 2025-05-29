@@ -283,9 +283,9 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(latitude, longitude, elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      if (!sunset) {
+      if (Math.abs(latitude) > 48) {
         if (formula === 1) {
-          if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
+          if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
           else observer = observerFromEarth(-45, longitude, elevation)
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
@@ -339,9 +339,9 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
-      if (!sunset) {
+      if (Math.abs(latitude) > 48) {
         if (formula === 1) {
-          if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
+          if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
           else observer = observerFromEarth(-45, longitude, elevation)
         } else if (formula === 2) {
           observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
@@ -350,17 +350,6 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
           else observer = observerFromEarth(-60, longitude, elevation)
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      }
-      if (!moonset) {
-        if (formula === 1) {
-          if (latitude > 48) observer = observerFromEarth(45, longitude, elevation)
-          else observer = observerFromEarth(-45, longitude, elevation)
-        } else if (formula === 2) {
-          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
-        } else {
-          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
-          else observer = observerFromEarth(-60, longitude, elevation)
-        }
         moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
       }
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
