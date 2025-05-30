@@ -48,7 +48,7 @@ const InputForm = () => (
                       required
                     />
                   </span>
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
+                  <button className={`flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow ${state.isGettingCoordinates ? "cursor-not-allowed" : ""}`} onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
                     <img className={`${state.isGettingCoordinates ? "animate__animated animate__flash animate__infinite" : ""}`} src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{state.isGettingCoordinates ? t('locating') : t('current_location')}</span>
                   </button>
@@ -66,7 +66,7 @@ const InputForm = () => (
                     <label>{t('location')}&nbsp;</label>
                     <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
                       <ComboboxInput
-                        className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
+                        className={`ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200 ${state.isGeocoding ? "cursor-not-allowed" : ""}`}
                         onChange={event => onInputLocationChange(event.target.value)}
                         displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
                         placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
@@ -154,7 +154,7 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="flex items-center">
                     <label>{t('hijri_calendar_reference')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 w-48 p-1 rounded shadow-inner overflow-ellipsis duration-200" defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
+                    <select className={`bg-green-200 dark:bg-gray-200 w-48 p-1 rounded shadow-inner overflow-ellipsis duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
                       {en.date_criteria.map((item, index) => <option key={item.criteria} value={index}>{t(`date_criteria.${index}.criteria`)}</option>)}
                     </select>
                   </span>
@@ -235,7 +235,7 @@ const InputForm = () => (
               <article className="grid grid-flow-row items-center gap-2 max-h-[60vh] border-t border-t-green-900 dark:border-t-white duration-200 overflow-y-auto">
                 <h5 className="font-serif text-sm whitespace-nowrap">{t('app_config')}</h5>
                 <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button className="flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow" onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
+                  <button className={`flex items-center p-1 bg-green-700 hover:bg-green-500 hover:dark:bg-green-400 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-md duration-200 shadow ${state.isGettingCoordinates ? "cursor-not-allowed" : ""}`} onClick={getCurrentLocation} disabled={state.isGettingCoordinates}>
                     <img className={`${state.isGettingCoordinates ? "animate__animated animate__flash animate__infinite" : ""}`} src={`${import.meta.env.BASE_URL}images/my-location-icon.svg`} alt="Current Location" />
                     <span className="ml-1 text-white text-sm whitespace-nowrap">{state.isGettingCoordinates ? t('locating') : t('current_location')}</span>
                   </button>
@@ -276,7 +276,7 @@ const InputForm = () => (
                     <label>{t('location')}&nbsp;</label>
                     <div className="relative flex items-center bg-green-200 dark:bg-gray-200 rounded duration-200">
                       <ComboboxInput
-                        className={"ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200"}
+                        className={`ml-1 p-0.5 bg-green-200 dark:bg-gray-200 rounded duration-200 ${state.isGeocoding ? "cursor-not-allowed" : ""}`}
                         onChange={event => onInputLocationChange(event.target.value)}
                         displayValue={location => location?.city ? `${location.city}, ${location.admin_name}, ${location.country}` : ''}
                         placeholder={state.isGeocoding ? t('geocoding') : t('search_location')}
@@ -362,7 +362,7 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
                   <span className="flex items-center">
                     <label>{t('hijri_calendar_reference')}&nbsp;</label>
-                    <select className="bg-green-200 dark:bg-gray-200 w-40 p-1 rounded shadow-inner overflow-ellipsis duration-200" defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
+                    <select className={`bg-green-200 dark:bg-gray-200 w-40 p-1 rounded shadow-inner overflow-ellipsis duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={0} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
                       {en.date_criteria.map((item, index) => <option key={item.criteria} value={index}>{t(`date_criteria.${index}.criteria`)}</option>)}
                     </select>
                   </span>

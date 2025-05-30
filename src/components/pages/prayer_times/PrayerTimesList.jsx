@@ -65,7 +65,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
           <span className="flex items-center justify-center m-2">
             <label className="text-green-900 dark:text-white duration-200">{t('select_month')}</label>
             <select
-              className="ml-1 p-1 border border-green-900 dark:border-none bg-green-200/50 dark:bg-gray-200 rounded shadow-inner duration-200"
+              className={`ml-1 p-1 border border-green-900 dark:border-none bg-green-200/50 dark:bg-gray-200 rounded shadow-inner duration-200 ${arePrayerTimesListLoading ? "cursor-not-allowed" : ""}`}
               defaultValue={selectedGregorianMonth}
               value={selectedGregorianMonth}
               onChange={event => selectGregorianMonth(event.target.value)}
@@ -80,7 +80,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
           <span className="flex items-center justify-center m-2">
             <label className="text-green-900 dark:text-white duration-200">{t('select_month')}</label>
             <select
-              className="ml-1 p-1 border border-green-900 dark:border-none bg-green-200/50 dark:bg-gray-200 rounded shadow-inner duration-200"
+              className={`ml-1 p-1 border border-green-900 dark:border-none bg-green-200/50 dark:bg-gray-200 rounded shadow-inner duration-200 ${arePrayerTimesListLoading ? "cursor-not-allowed" : ""}`}
               defaultValue={selectedHijriMonth}
               value={selectedHijriMonth}
               onChange={event => selectHijriMonth(event.target.value)}

@@ -4,7 +4,7 @@ import MoonCrescentMapSettings from "./MoonCrescentMapSettings"
 import MoonCrescentVisibilityMap from "./MoonCrescentVisibilityMap"
 import FooterContainer from "../Footer"
 
-const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, selectHijriMonth, selectedMoonVisibilityCriteria, restoreToDefault }) => (
+const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, selectHijriMonth, selectedMoonVisibilityCriteria, selectedObservationTime, restoreToDefault }) => (
   <article className="prayer-times-content flex flex-col grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <MoonCrescentMapSettings
@@ -32,6 +32,7 @@ const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, 
                 selectedLanguage={selectedLanguage}
                 selectedMoonVisibilityCriteria={selectedMoonVisibilityCriteria}
                 observationDate={state.observationDates[index]}
+                selectedObservationTime={selectedObservationTime}
                 visibility={visibility.zoneCoordinates}
               />
             ))}
