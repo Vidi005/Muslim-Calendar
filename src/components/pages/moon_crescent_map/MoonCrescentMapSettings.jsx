@@ -108,12 +108,12 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                     <label htmlFor="observation-time">{t('observation_time')}:</label>
                     <select
                       className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200 cursor-not-allowed"
-                      defaultValue={state.selectedMoonVisibilityCriteria === 2 ? 1 : 0}
-                      value={state.selectedMoonVisibilityCriteria === 2 ? 1 : 0}
+                      defaultValue={0}
+                      value={0}
                       required
                       disabled
                     >
-                      {en.observation_times.map((type, index) => <option key={type} value={index}>{t(`observation_times.${state.selectedMoonVisibilityCriteria === 2 ? 1 : 0}`)}</option>)}
+                      {en.observation_times.map((type, index) => <option key={type} value={index}>{t(`observation_times.${0}`)}</option>)}
                     </select>
                   </span>
                 )
@@ -133,13 +133,13 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                   </span>
                 )
           }
-          <Field className={`flex items-center ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>
-            <Checkbox checked={state.isUseNormalRefraction} onChange={onChangeRefractionState} disabled={areMoonVisibilityCriteriaMapsLoading} className={"group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200"}>
+          <Field className={`flex items-center ${state.selectedMoonVisibilityCriteria === 0 ? "hidden" : ""}`}>
+            <Checkbox checked={state.isUseNormalRefraction} onChange={onChangeRefractionState} disabled={areMoonVisibilityCriteriaMapsLoading} className={`group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200 ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>
               <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
                 <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Checkbox>
-            <Label className={"p-1 cursor-pointer"}>{t('refraction')}</Label>
+            <Label className={`p-1 ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`} aria-disabled={areMoonVisibilityCriteriaMapsLoading}>{t('refraction')}</Label>
           </Field>
           <span className="flex items-center">
             <label htmlFor="coordinate-steps">{t('sampling')}</label>
