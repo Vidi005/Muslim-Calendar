@@ -7,7 +7,7 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibility
     {
       (selectedMoonVisibilityCriteria === 2 || selectedMoonVisibilityCriteria === 5 || selectedMoonVisibilityCriteria === 7 || selectedMoonVisibilityCriteria === 8 || selectedMoonVisibilityCriteria === 9)
         ? (
-            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${selectedMoonVisibilityCriteria === 2 ? 1 : 0}`)}</h4>
+            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${0}`)}</h4>
           )
         : (
             <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${selectedObservationTime}`)}</h4>
