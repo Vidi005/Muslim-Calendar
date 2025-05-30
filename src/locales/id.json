@@ -379,8 +379,7 @@
                     "visibility": "Belum memenuhi kriteria Limit Danjon",
                     "color": "#820101"
                 }
-            ],
-            "observation_time": "saat Matahari Terbenam"
+            ]
         },
         {
             "name": "Yallop, 1997",
@@ -417,8 +416,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Waktu Terbaik"
+            ]
         },
         {
             "name": "SAAO, 2001",
@@ -443,8 +441,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Waktu Terbaik"
+            ]
         },
         {
             "name": "Odeh, 2006",
@@ -473,8 +470,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Waktu Terbaik"
+            ]
         },
         {
             "name": "Qureshi & Khan, 2010",
@@ -507,8 +503,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Waktu Terbaik"
+            ]
         },
         {
             "name": "LAPAN, 2010",
@@ -529,8 +524,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Matahari Terbenam"
+            ]
         },
         {
             "name": "Shaukat, 2011",
@@ -552,7 +546,7 @@
                     "color": "#FF0000"
                 },
                 {
-                    "visibility": "Elongasi geosentris = 8° & ketinggian Bulan = 5° saat Matahari terbenam",
+                    "visibility": "Elongasi geosentris = 8° & ketinggian Bulan = 5°",
                     "color": "#FAFF00"
                 },
                 {
@@ -567,8 +561,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Waktu Terbaik"
+            ]
         },
         {
             "name": "KHGT/Turki, 2016",
@@ -597,8 +590,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Matahari Terbenam"
+            ]
         },
         {
             "name": "MABIMS, 2021",
@@ -619,8 +611,7 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Matahari Terbenam"
+            ]
         },
         {
             "name": "LFNU, 2022",
@@ -645,12 +636,13 @@
                     "visibility": "Bulan belum ijtima'",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "saat Matahari Terbenam"
+            ]
         }
     ],
     "elongation_type": ["Geosentris", "Toposentris"],
     "altitude_type": ["Geosentris", "Toposentris"],
+    "observation_time": "Waktu Pengamatan:",
+    "observation_times": ["saat Matahari Terbenam", "pada Waktu Terbaik"],
     "refraction": "Koreksi Refraksi",
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],

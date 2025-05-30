@@ -379,8 +379,7 @@
                     "visibility": "Hasn't met Danjon Limit Criterion",
                     "color": "#820101"
                 }
-            ],
-            "observation_time": "at Sunset"
+            ]
         },
         {
             "name": "Yallop, 1997",
@@ -417,8 +416,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Best Time"
+            ]
         },
         {
             "name": "SAAO, 2001",
@@ -443,8 +441,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Best Time"
+            ]
         },
         {
             "name": "Odeh, 2006",
@@ -473,8 +470,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Best Time"
+            ]
         },
         {
             "name": "Qureshi & Khan, 2010",
@@ -507,8 +503,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Best Time"
+            ]
         },
         {
             "name": "LAPAN, 2010",
@@ -529,8 +524,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Sunset"
+            ]
         },
         {
             "name": "Shaukat, 2011",
@@ -552,7 +546,7 @@
                     "color": "#FF0000"
                 },
                 {
-                    "visibility": "Geocentric elongation = 8° & Moon altitude = 5° at Sunset",
+                    "visibility": "Geocentric elongation = 8° & Moon altitude = 5°",
                     "color": "#FAFF00"
                 },
                 {
@@ -567,8 +561,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Best Time"
+            ]
         },
         {
             "name": "Turkey, 2016",
@@ -597,8 +590,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Sunset"
+            ]
         },
         {
             "name": "MABIMS, 2021",
@@ -619,8 +611,7 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Sunset"
+            ]
         },
         {
             "name": "LFNU, 2022",
@@ -645,12 +636,13 @@
                     "visibility": "Moon before conjunction",
                     "color": "#000000"
                 }
-            ],
-            "observation_time": "at Sunset"
+            ]
         }
     ],
     "elongation_type": ["Geocentric", "Topocentric"],
     "altitude_type": ["Geocentric", "Topocentric"],
+    "observation_time": "Observation Time",
+    "observation_times": ["at Sunset", "at Best Time"],
     "refraction": "Refracted Correction",
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],

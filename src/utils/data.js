@@ -202,6 +202,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
           moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
         }
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
+        // Elongation Type = 0 for Geocentric, 1 for Topocentric
         moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
         return moonElongation.elongation >= 8 && moonHorizon.altitude >= 5
       })
@@ -1852,20 +1853,25 @@ const calculateVisibilityLFNU = (isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime
   return { isMeetQRNUCriteria, isMeetIRNUCriteria, zone, color }
 }
 
-const checkDanjon = (conjunction, astroDate, latitude, longitude, elongationType) => {
+const checkDanjon = (conjunction, astroDate, latitude, longitude, elongationType, observationTime) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
-  if (!sunset) return {}
-  const moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-  const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
-  const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonset = SearchRiseSet(Body.Moon, observer, -1, correctedDate, 1, 0)
+  if (!sunset || !moonset) return {}
+  const lagTime = moonset.ut - sunset.ut
+  let bestTime = sunset
+  // Observation Time = 0: at Sunset, Observation Time = 1: at Best Time
+  if (lagTime >= 0 && observationTime === 1) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
+  const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
+  const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, bestTime).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
-  return calculateVisibilityDanjon(isMeetCriteria, sunset, conjunction)
+  return calculateVisibilityDanjon(isMeetCriteria, bestTime, conjunction)
 }
 
-const checkYallop = (conjunction, astroDate, latitude, longitude, correctedRefraction) => {
+const checkYallop = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1873,7 +1879,7 @@ const checkYallop = (conjunction, astroDate, latitude, longitude, correctedRefra
   if (!sunset || !moonset) return {}
   let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0 && observationTime === 1) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const moonElongationGeocentric = Elongation(Body.Moon, bestTime).elongation
@@ -1911,7 +1917,7 @@ const checkSAAO = (conjunction, astroDate, latitude, longitude, correctedRefract
   return calculateVisibilitySAAO(moonHorizon.altitude, moonElongationTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
-const checkOdeh = (conjunction, astroDate, latitude, longitude, correctedRefraction) => {
+const checkOdeh = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1919,7 +1925,7 @@ const checkOdeh = (conjunction, astroDate, latitude, longitude, correctedRefract
   if (!sunset || !moonset) return {}
   let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0 && observationTime === 1) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
@@ -1944,7 +1950,7 @@ const checkOdeh = (conjunction, astroDate, latitude, longitude, correctedRefract
   return calculateVisibilityOdeh(arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
-const checkQureshi = (conjunction, astroDate, latitude, longitude, correctedRefraction) => {
+const checkQureshi = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -1952,7 +1958,7 @@ const checkQureshi = (conjunction, astroDate, latitude, longitude, correctedRefr
   if (!sunset || !moonset) return {}
   let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0 && observationTime === 1) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
@@ -1999,7 +2005,7 @@ const checkLAPAN = (conjunction, astroDate, latitude, longitude, elongationType,
   return calculateVisibilityLAPAN(isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
-const checkShaukat = (conjunction, astroDate, latitude, longitude, correctedRefraction, steps) => {
+const checkShaukat = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction, steps) => {
   const observer = observerFromEarth(latitude, longitude, 0)
   const correctedDate = astroDate.AddDays(-longitude / 360)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, correctedDate, 1, 0)
@@ -2007,7 +2013,7 @@ const checkShaukat = (conjunction, astroDate, latitude, longitude, correctedRefr
   if (!sunset || !moonset) return {}
   let bestTime = sunset
   const lagTime = moonset.ut - sunset.ut
-  if (lagTime >= 0) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
+  if (lagTime >= 0 && observationTime === 1) bestTime = MakeTime(sunset.ut + lagTime * 4/9)
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const moonHorizon = Horizon(bestTime, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
@@ -2028,7 +2034,7 @@ const checkShaukat = (conjunction, astroDate, latitude, longitude, correctedRefr
     arcOfVision = RAD2DEG * Math.acos(1)
   }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
-  const moonElongationGeocentric = Elongation(Body.Moon, sunset).elongation
+  const moonElongationGeocentric = Elongation(Body.Moon, bestTime).elongation
   let areEqualsToValues = false
   if (moonElongationGeocentric > 8 - steps * 2 / 100 && moonElongationGeocentric < 8 + steps * 2 / 100) areEqualsToValues = true
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
@@ -2109,22 +2115,22 @@ const checkLFNU = (conjunction, astroDate, latitude, longitude, elongationType, 
   return calculateVisibilityLFNU(isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
-const createZones = (criteria, elongationType, altitudeType, correctedRefraction, conjunction, astroDate, lat, lng, steps) => {
+const createZones = (criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps) => {
   let result
   if (criteria === 0) {
-    result = checkDanjon(conjunction, astroDate, lat, lng, elongationType)
+    result = checkDanjon(conjunction, astroDate, lat, lng, elongationType, observationTime)
   } else if (criteria === 1) {
-    result = checkYallop(conjunction, astroDate, lat, lng, correctedRefraction)
+    result = checkYallop(conjunction, astroDate, lat, lng, observationTime, correctedRefraction)
   } else if (criteria === 2) {
     result = checkSAAO(conjunction, astroDate, lat, lng, correctedRefraction)
   } else if (criteria === 3) {
-    result = checkOdeh(conjunction, astroDate, lat, lng, correctedRefraction)
+    result = checkOdeh(conjunction, astroDate, lat, lng, observationTime, correctedRefraction)
   } else if (criteria === 4) {
-    result = checkQureshi(conjunction, astroDate, lat, lng, correctedRefraction)
+    result = checkQureshi(conjunction, astroDate, lat, lng, observationTime, correctedRefraction)
   } else if (criteria === 5) {
     result = checkLAPAN(conjunction, astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   } else if (criteria === 6) {
-    result = checkShaukat(conjunction, astroDate, lat, lng, correctedRefraction, steps)
+    result = checkShaukat(conjunction, astroDate, lat, lng, observationTime, correctedRefraction, steps)
   } else if (criteria === 7) {
     result = checkTurkey(conjunction, astroDate, lat, lng, elongationType, altitudeType, correctedRefraction, steps)
   } else if (criteria === 8) {
@@ -2148,11 +2154,11 @@ const createZones = (criteria, elongationType, altitudeType, correctedRefraction
   }
 }
 
-const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
+const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
   let results = []
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
-      const result = createZones(criteria, elongationType, altitudeType, correctedRefraction, conjunction, astroDate, lat, lng, steps)
+      const result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
       if (result?.zone?.length > 0) results.push(result)
     }
   }
@@ -2173,13 +2179,13 @@ const addZeroPadForYear = value => {
   }
 }
 
-const getMoonCrescentVisibility = (observationDate, criteria, elongationType, altitudeType, correctedRefraction, steps) => {
+const getMoonCrescentVisibility = (observationDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
   const startDate = new Date(`${addZeroPadForYear(observationDate.getFullYear())}-${addZeroPad(observationDate.getMonth() + 1)}-${addZeroPad(observationDate.getDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
   const conjunctionDate = new Date(observationDate.setDate(observationDate.getDate() - 2))
   const conjunction = SearchMoonPhase(0, conjunctionDate, 5)
   return {
-    zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, correctedRefraction, steps),
+    zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps),
     conjunction: conjunction?.date
   }
 }
