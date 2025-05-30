@@ -532,14 +532,14 @@ class App extends React.Component {
   }
 
   checkSavedObservationTime () {
-    const getSavedObservationTimeFromLocal = localStorage.getItem(this.state.ALTITUDE_TYPE_STORAGE_KEY)
+    const getSavedObservationTimeFromLocal = localStorage.getItem(this.state.OBSERVATION_TIME_STORAGE_KEY)
     try {
       const parsedSavedObservationTime = JSON.parse(getSavedObservationTimeFromLocal)
       if (parsedSavedObservationTime !== null) {
         this.setState({ selectedObservationTime: parseInt(parsedSavedObservationTime) })
       }
     } catch (error) {
-      localStorage.removeItem(this.state.ALTITUDE_TYPE_STORAGE_KEY)
+      localStorage.removeItem(this.state.OBSERVATION_TIME_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
