@@ -1,6 +1,6 @@
 import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v5.2' // Update the version when deploying new builds
+const CACHE_NAME = 'app-cache-v5.3' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -48,7 +48,7 @@ self.onmessage = event => {
     const result = getNearestCity(cityData, latitude, longitude)
     self.postMessage({ type: 'createHaversineDistance', result })
   } else if (type === 'createCalendarData') {
-    const result = getCalendarData(gregorianDate, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang)
+    const result = getCalendarData(gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang)
     self.postMessage({ type: 'createCalendarData', result })
   } else if (type === 'createIncludedElement') {
     const result = getElementContent(innerHTML)
