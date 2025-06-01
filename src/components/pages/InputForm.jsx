@@ -90,7 +90,7 @@ const InputForm = () => (
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
                         afterLeave={() => onInputLocationChange('')}
                       >
-                        <ComboboxOptions className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <ComboboxOptions className={"fixed mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_location_found')}</span>
                             : (
@@ -304,7 +304,7 @@ const InputForm = () => (
                         leaveTo="opacity-0 scale-95 -translate-y-1/4"
                         afterLeave={() => onInputLocationChange('')}
                       >
-                        <ComboboxOptions className={"absolute mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
+                        <ComboboxOptions className={"fixed mt-1 p-1 max-h-48 max-w-[50vw] bg-green-200/50 dark:bg-gray-200/50 whitespace-nowrap overflow-ellipsis backdrop-blur-sm rounded shadow dark:shadow-white/50 translate-y-full overflow-y-auto z-10 duration-200"}>
                           {state.suggestedLocations.length === 0 && state.inputLocation.length > 0 && !state.isSearching
                             ? <span className="p-1">{t('no_location_found')}</span>
                             : (
