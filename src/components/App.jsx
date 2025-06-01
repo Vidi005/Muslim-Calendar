@@ -908,11 +908,15 @@ class App extends React.Component {
   }
 
   selectTimeZone (value) {
-    this.setState({ selectedTimeZone: value }, () => {
+    this.setState({
+      selectedTimeZone: value,
+      isCalendarLoading: true,
+      isMoonCrescentMapLoading: true
+    }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
         localStorage.setItem(this.state.TIMEZONE_STORAGE_KEY, JSON.stringify(this.state.selectedTimeZone))
       }
-      this.formatDateTime().then(() => this.generateCalendar())
+      this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility()))
     })
   }
 
@@ -1163,6 +1167,7 @@ class App extends React.Component {
       calendarDataWorker.postMessage({
         type: 'createCalendarData',
         gregorianDate: gregorianDate,
+        timeZone: this.state.selectedTimeZone,
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         elevation: this.state.elevation,
