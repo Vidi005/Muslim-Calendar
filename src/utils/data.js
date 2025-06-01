@@ -210,8 +210,8 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
         }
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
         // Elongation Type = 0 for Geocentric, 1 for Topocentric
-        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return moonElongation.elongation >= 8 && moonHorizon.altitude >= 5
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+        return moonElongation >= 8 && moonHorizon.altitude >= 5
       })
       if (newMoon.date.getUTCHours() < 12) {
         // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
@@ -242,8 +242,8 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
           moonEquator = Equator(Body.Moon, sunset, observer, true, true)
         }
         moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
-        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+        return moonElongation >= 6.4 && moonHorizon.altitude >= 3
       })
       if (isMetCriteria) {
         // Met the MABIMS criteria
@@ -271,8 +271,8 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
           moonEquator = Equator(Body.Moon, sunset, observer, true, true)
         }
         moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
-        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3
+        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+        return moonElongation >= 6.4 && moonHorizon.altitude >= 3
       })
       if (isMetCriteria) {
         // Met the MABIMS criteria
@@ -310,8 +310,8 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
         moonEquator = Equator(Body.Moon, sunset, observer, true, true)
       }
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
-      moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset) : AngleBetween(sunEquator.vec, moonEquator.vec)
-      if (moonElongation.elongation >= 6.4 && moonHorizon.altitude >= 3) {
+      moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+      if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) {
         // Met the MABIMS criteria
         return newMoonDate.AddDays(1)
       } else {
