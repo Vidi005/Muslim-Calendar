@@ -168,7 +168,14 @@ const anyAmericaCitiesCoordinates = [
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
-const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
+const getIsoDateStrBasedTimeZone = (localDate, timeZone) => localDate.toLocaleDateString('en-CA', {
+  timeZone,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
+const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let date = startDate
   let newMoonDate
@@ -188,7 +195,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
       // Search for New Moon backward
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -223,7 +230,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyMABIMSCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -252,7 +259,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyMABIMSCitiesCoordinates.slice(2).some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -280,7 +287,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     while (true) {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(latitude, longitude, elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
@@ -317,7 +324,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       // Yogyakarta Coordinates
       observer = observerFromEarth(-7.797224, 110.368797, 105)
@@ -336,7 +343,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
       moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
@@ -366,7 +373,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
     do {
       newMoon = SearchMoonPhase(0, date, -30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${addZeroPadForYear(newMoon.date.getFullYear())}-${addZeroPad(newMoon.date.getMonth() + 1)}-${addZeroPad(newMoon.date.getDate())}T00:00:00Z`)
+      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
       sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
@@ -382,7 +389,7 @@ const calculateNewMoon = (startDate, latitude, longitude, elevation, criteria, e
   }
 }
 
-const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang) => {
+const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang) => {
   const newMoonsFromLastYear = []
   const newMoonFromNextYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
@@ -394,7 +401,7 @@ const getCalendarData = (gregorianDate, latitude, longitude, elevation, criteria
   let currentYearDaysOffset = 0
   while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
     // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
-    newMoonDate = calculateNewMoon(startDate, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula).date
+    newMoonDate = calculateNewMoon(startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula).date
     if (newMoonDate instanceof Date) {
       if (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
         newMoonsFromLastYear.push(newMoonDate)
