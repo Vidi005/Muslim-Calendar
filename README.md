@@ -4,6 +4,7 @@ Muslim Calendar is a web app which used to give information related of Islamic C
 #### This Project is still in WIP (Work In Progress...) and might still produces any unexpected result.
 #### Currently some features Might Not Supported for:
 - Prayer Times in Higher Latitudes
+- New Moon Observation Date must be Set Based on It's Location Time Zone (for preventing any invalid Hijri Date which could be exceeded to 31 days or only 28 days in some months)
 - Hijri Dates in Western Region
 - Input Date before October 15, 1582 or in Julian Calendar Era (only support for Gregorian Calendar)
 
