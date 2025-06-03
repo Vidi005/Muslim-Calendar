@@ -175,9 +175,10 @@ const getIsoDateStrBasedTimeZone = (localDate, timeZone) => localDate.toLocaleDa
   day: '2-digit',
 })
 
-const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
+const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
   let date = startDate
+  let diffDays
   let newMoonDate
   let newMoon
   let moonElongation
@@ -192,8 +193,8 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
     // Global Hijri Calendar/KHGT
     let isMetCriteria = false
     while (true) {
-      // Search for New Moon backward
-      newMoon = SearchMoonPhase(0, date, -30)
+      // Search for New Moon forward
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -228,7 +229,7 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
     // MABIMS (Mathla': Brunei, Indonesia, Malaysia, Singapore)
     let isMetCriteria = false
     while (true) {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -257,7 +258,7 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
     // MABIMS (Mathla': Indonesia)
     let isMetCriteria = false
     while (true) {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -285,7 +286,7 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
   } else if (criteria === 3) {
     // MABIMS (Markaz: Local)
     while (true) {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -312,17 +313,33 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
       moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
       moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
       if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) {
-        // Met the MABIMS criteria
-        return newMoonDate.AddDays(1)
+        diffDays = Math.abs(newMoonDate.AddDays(1).date - prevNewMoonDate) / 86400000
+        if (diffDays > 30) {
+          // Preventing exceeded 31 days for Hijri days on several months in higher latitude
+          return newMoonDate
+        } else if (diffDays < 29) {
+          // Preventing less than 29 days for Hijri days on several months in higher latitude
+          return newMoonDate.AddDays(2)
+        } else {
+          // Met the MABIMS criteria
+          return newMoonDate.AddDays(1)
+        }
       } else {
-        // Didn't meet the MABIMS criteria
-        return newMoonDate.AddDays(2)
+        diffDays = Math.abs(newMoonDate.AddDays(2).date - prevNewMoonDate) / 86400000
+        if (diffDays > 30) {
+          return newMoonDate.AddDays(1)
+        } else if (diffDays < 29) {
+          return newMoonDate.AddDays(3)
+        } else {
+          // Didn't meet the MABIMS criteria
+          return newMoonDate.AddDays(2)
+        }
       }
     }
   } else if (criteria === 4) {
     // Wujudul Hilal (Markaz: Yogyakarta)
     do {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -341,7 +358,7 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
   } else if (criteria === 5) {
     // Wujudul Hilal (Markaz: Local)
     do {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -361,17 +378,31 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
         moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
       }
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
-        // Met the Wujudul Hilal criteria
-        return newMoonDate.AddDays(1)
+        diffDays = Math.abs(newMoonDate.AddDays(1).date - prevNewMoonDate) / 86400000
+        if (diffDays > 30) {
+          return newMoonDate
+        } else if (diffDays < 29) {
+          return newMoonDate.AddDays(2)
+        } else {
+          // Met the Wujudul Hilal criteria
+          return newMoonDate.AddDays(1)
+        }
       } else {
-        // Didn't meet the Wujudul Hilal criteria
-        return newMoonDate.AddDays(2)
+        diffDays = Math.abs(newMoonDate.AddDays(2).date - prevNewMoonDate) / 86400000
+        if (diffDays > 30) {
+          return newMoonDate.AddDays(1)
+        } else if (diffDays < 29) {
+          return newMoonDate.AddDays(3)
+        } else {
+          // Didn't meet the Wujudul Hilal criteria
+          return newMoonDate.AddDays(2)
+        }
       }
     } while (true)
   } else {
     // Ummul Qura
     do {
-      newMoon = SearchMoonPhase(0, date, -30)
+      newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
@@ -390,27 +421,31 @@ const calculateNewMoon = (startDate, timeZone, latitude, longitude, elevation, c
 }
 
 const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang) => {
-  const newMoonsFromLastYear = []
-  const newMoonFromNextYear = []
+  const newMoonsInLastYear = []
+  const newMoonsFromCurrentYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
-  const startGregorianDate = new Date(`${addZeroPadForYear(gregorianDate.getFullYear() + 1)}-01-29T23:59:59`)
-  let startDate = new AstroTime(startGregorianDate)
+  const startGregorianDateFromLastYear = new Date(gregorianDate.getFullYear() - 1, 0, 1)
+  let startDate = new AstroTime(startGregorianDateFromLastYear)
   let newMoonDate = gregorianFirstDate
   let currentMoonDate
   let nextMoonDate
   let currentYearDaysOffset = 0
-  while (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
-    // Search New Moon decremental from last gregorian day in current/configured year until first gregorian day or last gregorian day in the previous year
-    newMoonDate = calculateNewMoon(startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula).date
+  while (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
+    // Search New Moon incremental from first gregorian day from the previous of current/configured year until the last gregorian day in current/configured year
+    newMoonDate = calculateNewMoon(newMoonDate, startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula).date
     if (newMoonDate instanceof Date) {
-      if (newMoonDate.getFullYear() <= gregorianFirstDate.getFullYear()) {
-        newMoonsFromLastYear.push(newMoonDate)
+      if (newMoonDate.getFullYear() < gregorianFirstDate.getFullYear()) {
+        newMoonsInLastYear.push(newMoonDate)
       }
-      newMoonFromNextYear.push(newMoonDate)
+      if (newMoonDate.getFullYear() >= gregorianFirstDate.getFullYear()) {
+        newMoonsFromCurrentYear.push(newMoonDate)
+      }
       startDate = new AstroTime(newMoonDate)
-      startDate = startDate.AddDays(-29)
+      startDate = startDate.AddDays(27)
     }
   }
+  const filteredNewMoons = [newMoonsInLastYear[newMoonsInLastYear.length - 1], ...newMoonsFromCurrentYear]
+  const newMoonsFromLastYear = filteredNewMoons.filter(moonDate => moonDate.getFullYear() <= gregorianDate.getFullYear())
   const months = Array.from({ length: 12 }).map((_, monthIndex) => {
     // Create month array for gregorian calendar and fill Hijri calendar days default/offset values with zero pad
     const firstDayOfMonth = new Date(gregorianDate.getFullYear(), monthIndex, 1).getDay()
@@ -421,7 +456,7 @@ const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation
     }
     return daysArray
   })
-  newMoonsFromLastYear.reverse().forEach(moonDate => {
+  newMoonsFromLastYear.forEach(moonDate => {
     let hijriDayCounter = 1
     let nextMoonIndex = 0
     months.forEach((month, monthIdx) => {
@@ -452,7 +487,7 @@ const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation
     }
   })
   const hijriEventDates = getHijriEventDates(gregorianDate, newMoonsFromLastYear, months, lang)
-  const hijriStartDates = getHijriStartDates(newMoonFromNextYear.reverse(), lang)
+  const hijriStartDates = getHijriStartDates(filteredNewMoons, lang)
   return { months, hijriEventDates, hijriStartDates }
 }
 
