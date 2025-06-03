@@ -193,14 +193,14 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     // Global Hijri Calendar/KHGT
     let isMetCriteria = false
     while (true) {
-      // Search for New Moon forward
+      // Searching for New Moon forward
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate, 1, city.elevation)
+        sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
         if (altitudeType === 0) {
           // Geocentric Moon Equatorial Coordinates
