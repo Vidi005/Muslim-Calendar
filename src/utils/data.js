@@ -424,6 +424,7 @@ const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation
   const newMoonsInLastYear = []
   const newMoonsFromCurrentYear = []
   const gregorianFirstDate = new Date(gregorianDate.getFullYear(), 0, 1)
+  // Add spare one year before to align offset hijri date at the first/previous new moon calculation
   const startGregorianDateFromLastYear = new Date(gregorianDate.getFullYear() - 1, 0, 1)
   let startDate = new AstroTime(startGregorianDateFromLastYear)
   let newMoonDate = gregorianFirstDate
