@@ -168,12 +168,15 @@ const anyAmericaCitiesCoordinates = [
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
 
-const getIsoDateStrBasedTimeZone = (localDate, timeZone) => localDate.toLocaleDateString('en-CA', {
-  timeZone,
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-})
+const getIsoDateStrBasedTimeZone = (localDate, timeZone) => {
+  const formattedDate = localDate.toLocaleDateString('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+  return `${addZeroPadForYear(formattedDate.split('-')[0])}-${formattedDate.split('-')[1]}-${formattedDate.split('-')[2]}`
+}
 
 const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
   let observer = observerFromEarth(latitude, longitude, elevation)
