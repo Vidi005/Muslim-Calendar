@@ -29,7 +29,7 @@
     "longitude": "Bujur:",
     "elevation": "Ketinggian:",
     "apply": "Terapkan",
-    "hijri_calendar_reference": "Pendekatan:",
+    "hijri_calendar_reference": "Estimasi Tanggal Hijriah:",
     "hijri_date_criteria": "Kriteria:",
     "date_criteria": [
         {
@@ -38,13 +38,28 @@
             "longitude_range": [-180, 180]
         },
         {
-            "criteria": "Neo MABIMS (Mathla': Semua Wilayah MABIMS)",
-            "latitude_range": [-11.0075, 7.4],
-            "longitude_range": [94.9728, 141.0194]
+            "criteria": "Neo MABIMS (Mathla': Singapura)",
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Brunei)",
+            "latitude_range": [4, 5.066667],
+            "longitude_range": [114.083333, 115.416667]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Malaysia)",
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
         },
         {
             "criteria": "Neo MABIMS (Mathla': Indonesia)",
             "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Semua Wilayah MABIMS)",
+            "latitude_range": [-11.0075, 7.4],
             "longitude_range": [94.9728, 141.0194]
         },
         {
@@ -385,23 +400,23 @@
             "name": "Yallop, 1997",
             "zones": [
                 {
-                    "visibility": "Mudah dilihat dengan mata",
+                    "visibility": "Mudah dilihat dengan mata (q > 0,216)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Terlihat jika cuaca cerah",
+                    "visibility": "Terlihat jika cuaca cerah (0,216 ≥ q > -0,014)",
                     "color": "#9EFF00"
                 },
                 {
-                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "visibility": "Mungkin perlu bantuan alat optik (-0,014 ≥ q > -0,16)",
                     "color": "#FF783C"
                 },
                 {
-                    "visibility": "Perlu bantuan alat optik",
+                    "visibility": "Perlu bantuan alat optik (-0,16 ≥ q > -0,232)",
                     "color": "#FF0000"
                 },
                 {
-                    "visibility": "Hanya terlihat dengan teleskop",
+                    "visibility": "Hanya terlihat dengan teleskop (-0,232 ≥ q > -0,293)",
                     "color": "#B50757"
                 },
                 {
@@ -422,11 +437,11 @@
             "name": "SAAO, 2001",
             "zones": [
                 {
-                    "visibility": "Bulan sabit mudah terlihat",
+                    "visibility": "Bulan sabit mudah terlihat (sq > 11)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Perlu bantuan alat optik",
+                    "visibility": "Perlu bantuan alat optik (11 ≥ sq > 9)",
                     "color": "#9EFF00"
                 },
                 {
@@ -447,15 +462,15 @@
             "name": "Odeh, 2006",
             "zones": [
                 {
-                    "visibility": "Mudah dilihat dengan mata",
+                    "visibility": "Mudah dilihat dengan mata (V ≥ 5,65)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "visibility": "Mungkin perlu bantuan alat optik (2 ≤ V < 5,65)",
                     "color": "#9EFF00"
                 },
                 {
-                    "visibility": "Hanya terlihat dengan alat optik",
+                    "visibility": "Hanya terlihat dengan alat optik (-0,96 ≤ V < 2)",
                     "color": "#FF783C"
                 },
                 {
@@ -476,19 +491,19 @@
             "name": "Qureshi & Khan, 2010",
             "zones": [
                 {
-                    "visibility": "Mudah dilihat oleh mata",
+                    "visibility": "Mudah dilihat oleh mata (s > 0,15)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Terlihat jika cuaca cerah",
+                    "visibility": "Terlihat jika cuaca cerah (0,05 < s ≤ 0,15)",
                     "color": "#9EFF00"
                 },
                 {
-                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "visibility": "Mungkin perlu bantuan alat optik (-0,06 < s ≤ 0,05)",
                     "color": "#FF783C"
                 },
                 {
-                    "visibility": "Hanya terlihat dengan alat optik",
+                    "visibility": "Hanya terlihat dengan alat optik (-0,16 < s ≤ -0,06)",
                     "color": "#FF0000"
                 },
                 {
@@ -530,19 +545,19 @@
             "name": "Shaukat, 2011",
             "zones": [
                 {
-                    "visibility": "Mudah dilihat dengan mata",
+                    "visibility": "Mudah dilihat dengan mata (q >= 0,122)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Terlihat jika cuaca cerah",
+                    "visibility": "Terlihat jika cuaca cerah (0,122 > q ≥ -0,15)",
                     "color": "#9EFF00"
                 },
                 {
-                    "visibility": "Mungkin perlu bantuan alat optik",
+                    "visibility": "Mungkin perlu bantuan alat optik(-0,15 > q ≥ -0,32)",
                     "color": "#FF783C"
                 },
                 {
-                    "visibility": "Hanya terlihat dengan alat optik",
+                    "visibility": "Hanya terlihat dengan alat optik (-0,32 > q ≥ -0,59)",
                     "color": "#FF0000"
                 },
                 {

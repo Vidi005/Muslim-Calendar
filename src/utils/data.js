@@ -69,10 +69,28 @@ const getTimeZoneList = () => {
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60
 
 const anyMABIMSCitiesCoordinates = [
+  // Tuas, Singapore
+  { latitude: 1.225467, longitude: 103.606061, elevation: 1 },
+  // Buloh Island, Singapore
+  { latitude: 1.45044, longitude: 103.721647, elevation: 1 },
+  // Kuala Belait, Brunei
+  { latitude: 4.586509, longitude: 114.079195, elevation: 1 },
+  // Serasa, Brunei
+  { latitude: 5.045423, longitude: 115.057739, elevation: 1 },
+  // Teraja, Brunei
+  { latitude: 4.284362, longitude: 114.418717, elevation: 205 },
   // Padang Besar, Malaysia
   { latitude: 6.66299, longitude: 100.31967, elevation: 70 },
-  // Bukit Kayu Hitam, Malaysia
-  { latitude: 6.5, longitude: 100.417, elevation: 80 },
+  // Perlis, Malaysia
+  { latitude: 6.418958, longitude: 100.122036, elevation: 1 },
+  // Teluk Bahang, Malaysia
+  { latitude: 5.457475, longitude: 100.212129, elevation: 1 },
+  // Perak, Malaysia
+  { latitude: 4.212197, longitude: 100.612135, elevation: 1 },
+  // Selangor, Malaysia
+  { latitude: 2.884638, longitude: 101.28393, elevation: 1 },
+  // Kukup, Malaysia
+  { latitude: 1.324582, longitude: 103.441568, elevation: 1 },
   // Sabang, Indonesia
   { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
   // Banda Aceh, Indonesia
@@ -228,15 +246,32 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         return newMoonDate.AddDays(2)
       }
     }
-  } else if (criteria === 1) {
-    // MABIMS (Mathla': Brunei, Indonesia, Malaysia, Singapore)
+  } else if (criteria === 1 || criteria === 2 || criteria === 3 || criteria === 4 || criteria === 5) {
+    // Neo MABIMS:
+    let slicedMABIMSCitiesCoordinates = []
+    if (criteria === 1) {
+      // Mathla': Singapore
+      slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(0, 2)
+    } else if (criteria === 2) {
+      // Mathla': Brunei
+      slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(2, 5)
+    } else if (criteria === 3) {
+      // Mathla': Malaysia
+      slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(5, 11)
+    } else if (criteria === 4) {
+      // Mathla': Indonesia
+      slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(11)
+    } else {
+      // Mathla': Brunei, Indonesia, Malaysia, Singapore
+      slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(5)
+    }
     let isMetCriteria = false
     while (true) {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = anyMABIMSCitiesCoordinates.some(city => {
+      isMetCriteria = slicedMABIMSCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, observer, true, true)
@@ -257,36 +292,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         return newMoonDate.AddDays(2)
       }
     }
-  } else if (criteria === 2) {
-    // MABIMS (Mathla': Indonesia)
-    let isMetCriteria = false
-    while (true) {
-      newMoon = SearchMoonPhase(0, date, 30)
-      date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
-      newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = anyMABIMSCitiesCoordinates.slice(2).some(city => {
-        observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
-        sunEquator = Equator(Body.Sun, sunset, observer, true, true)
-        if (altitudeType === 0) {
-          moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
-        } else {
-          moonEquator = Equator(Body.Moon, sunset, observer, true, true)
-        }
-        moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
-        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return moonElongation >= 6.4 && moonHorizon.altitude >= 3
-      })
-      if (isMetCriteria) {
-        // Met the MABIMS criteria
-        return newMoonDate.AddDays(1)
-      } else {
-        // Didn't meet the MABIMS criteria
-        return newMoonDate.AddDays(2)
-      }
-    }
-  } else if (criteria === 3) {
+  } else if (criteria === 6) {
     // MABIMS (Markaz: Local)
     while (true) {
       newMoon = SearchMoonPhase(0, date, 30)
@@ -339,7 +345,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         }
       }
     }
-  } else if (criteria === 4) {
+  } else if (criteria === 7) {
     // Wujudul Hilal (Markaz: Yogyakarta)
     do {
       newMoon = SearchMoonPhase(0, date, 30)
@@ -358,7 +364,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         return newMoonDate.AddDays(2)
       }
     } while (true)
-  } else if (criteria === 5) {
+  } else if (criteria === 8) {
     // Wujudul Hilal (Markaz: Local)
     do {
       newMoon = SearchMoonPhase(0, date, 30)
@@ -682,7 +688,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
   const startAstroTime = new AstroTime(startDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
-  const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} days`
+  const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} ${lang === 'id' ? 'hari' : 'days'}`
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
@@ -691,7 +697,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonRightAscension = `${convertRAToHMS(moonEquatorTopocentric.ra)}`
   const moonDeclination = `${moonEquatorTopocentric.dec.toFixed(2)}°`
   const moonHorizonTopocentric = Horizon(astroDate, observer, moonEquatorTopocentric.ra, moonEquatorTopocentric.dec, 'normal')
-  const moonAltitudeTopocentric = `${moonHorizonTopocentric.altitude.toFixed(2)}°${moonHorizonTopocentric.altitude < 0 ? ' (Not Visible)' : ''}`
+  const moonAltitudeTopocentric = `${moonHorizonTopocentric.altitude.toFixed(2)}°${moonHorizonTopocentric.altitude < 0 ? ` ${lang === 'id' ?  '(Tidak Terlihat)' : '(Not Visible)'}` : ''}`
   const moonHorizonGeocentric = Horizon(astroDate, observer, moonEquatorGeocentric.ra, moonEquatorGeocentric.dec, 'normal')
   const moonAltitudeGeocentric = `${moonHorizonGeocentric.altitude.toFixed(2)}°`
   const moonAzimuthTopocentric = `${moonHorizonTopocentric.azimuth.toFixed(2)}°`
