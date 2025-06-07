@@ -80,8 +80,8 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                       <label htmlFor="elongation-type">{t('moon_infos.11').split(' ')[0]}:</label>
                       <select
                         className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200 cursor-not-allowed"
-                        defaultValue={state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
-                        value={state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
+                        defaultValue={state.selectedMoonVisibilityCriteria === 1 || state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
+                        value={state.selectedMoonVisibilityCriteria === 1 || state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
                         disabled
                       >
                         {en.elongation_type.map((type, index) => <option key={type} value={index}>{t(`elongation_type.${index}`)}</option>)}
@@ -91,8 +91,8 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                       <label htmlFor="altitude-type">{t('moon_infos.5').split(' ')[0]}:</label>
                       <select
                         className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200 cursor-not-allowed"
-                        defaultValue={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}
-                        value={state.selectedMoonVisibilityCriteria === 1 ? 0 : 1}
+                        defaultValue={state.selectedMoonVisibilityCriteria === 1 || state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
+                        value={state.selectedMoonVisibilityCriteria === 1 || state.selectedMoonVisibilityCriteria === 6 ? 0 : 1}
                         disabled
                       >
                         {en.altitude_type.map((type, index) => <option key={type} value={index}>{t(`altitude_type.${index}`)}</option>)}
