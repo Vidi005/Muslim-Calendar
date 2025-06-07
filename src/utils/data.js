@@ -102,7 +102,7 @@ const anyMABIMSCitiesCoordinates = [
   // Tapaktuan, Indonesia
   { latitude: 3.25, longitude: 97.16667, elevation: 5 },
   // Sibolga, Indonesia
-  { latitude: 1.746060, longitude: 98.769111, elevation: 5 },
+  { latitude: 1.74606, longitude: 98.769111, elevation: 5 },
   // Pariaman, Indonesia
   { latitude: -0.6264, longitude: 100.1178, elevation: 5 },
   // Padang, Indonesia
@@ -124,7 +124,7 @@ const anyMABIMSCitiesCoordinates = [
   // Parangtritis, Indonesia
   { latitude: -8, longitude: 110.36667, elevation: 1 },
   // Pacitan, Indonesia
-  { latitude: -8.23500, longitude: 111.20611, elevation: 36 },
+  { latitude: -8.235, longitude: 111.20611, elevation: 36 },
   // Jimbaran, Indonesia
   { latitude: -8.8, longitude: 115.16667, elevation: 1 },
   // Kuta, Lombok, Indonesia
@@ -139,7 +139,7 @@ const anyAmericaCitiesCoordinates = [
   // Platinum
   { latitude: 59.010952, longitude: -161.824012, elevation: 0 },
   // Sitka
-  { latitude: 57.0531, longitude: -135.3300, elevation: 0 },
+  { latitude: 57.0531, longitude: -135.33, elevation: 0 },
   // King Cove
   { latitude: 55.059398, longitude: -162.314625, elevation: 0 },
   // Vancouver

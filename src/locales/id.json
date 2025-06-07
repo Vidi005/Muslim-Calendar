@@ -545,19 +545,19 @@
             "name": "Shaukat, 2011",
             "zones": [
                 {
-                    "visibility": "Mudah dilihat dengan mata (q >= 0,122)",
+                    "visibility": "Mudah dilihat dengan mata (q >= 0,27)",
                     "color": "#00FF3E"
                 },
                 {
-                    "visibility": "Terlihat jika cuaca cerah (0,122 > q ≥ -0,15)",
+                    "visibility": "Terlihat jika cuaca cerah (0,27 > q ≥ -0,024)",
                     "color": "#9EFF00"
                 },
                 {
-                    "visibility": "Mungkin perlu bantuan alat optik(-0,15 > q ≥ -0,32)",
+                    "visibility": "Mungkin perlu bantuan alat optik(-0,024 > q ≥ -0,212)",
                     "color": "#FF783C"
                 },
                 {
-                    "visibility": "Hanya terlihat dengan alat optik (-0,32 > q ≥ -0,59)",
+                    "visibility": "Hanya terlihat dengan alat optik (-0,212 > q ≥ -0,48)",
                     "color": "#FF0000"
                 },
                 {
