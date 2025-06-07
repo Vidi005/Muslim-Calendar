@@ -688,7 +688,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
   const startAstroTime = new AstroTime(startDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
-  const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} ${lang === 'id' ? 'hari' : 'days'}`
+  const moonAges = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} ${lang === 'id' ? 'hari' : 'days'}`
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const phaseAngle = MoonPhase(astroDate).toFixed(2)
   const illuminationPercent = `${(moonIllumination.phase_fraction * 100).toFixed(2)}%`
@@ -730,7 +730,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, startAstroTime, 1, elevation)
   return [
-    moonAge,
+    moonAges,
     illuminationPercent,
     `${phaseAngle}°`,
     moonRightAscension,
@@ -1695,214 +1695,169 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   ]
 }
 
-const calculateVisibilityDanjon = (isMeetCriteria, sunset, conjunction) => {
-  let zone = 'B'
+const calculateVisibilityDanjon = (arcOfLight, moonAges, isMeetCriteria, sunset, conjunction) => {
+  let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(2)}°\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = '#820101'
   if (isMeetCriteria && sunset.date > conjunction.date) {
-    zone = 'A'
     color = '#00FF3E'
   }
-  return { isMeetCriteria, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityYallop = (arcOfVision, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilityYallop = (arcOfVision, moonElongationGeocentric, moonAlt, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
-  let zone = 'F'
+  let tooltip = moonElongationGeocentric ? `Elongation: ${moonElongationGeocentric.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nq: ${isNaN(q) ? '-' : q.toFixed(2)}` : ''
   let color = ''
   if (q > 0.216 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (q > -0.014 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'B'
     color = '#9EFF00'
   } else if (q > -0.160 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'C'
     color = '#FF783C'
   } else if (q > -0.232 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'D'
     color = '#FF0000'
   } else if (q > -0.293 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'E'
     color = '#B50757'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'H'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'G'
     color = '#808080'
   }
-  return { q, zone, color }
+  return { tooltip, color }
 }
 
 const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const sq = topocentricAlt + arcOfLight / 3
-  let zone = 'C'
+  let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(2)}°\nAltitude: ${topocentricAlt?.toFixed(2)}°\nsq: ${isNaN(sq) ? '-' : sq.toFixed(2)}` : ''
   let color = ''
   if (sq > 11 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (sq > 9 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'B'
     color = '#FFE53C'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'E'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'D'
     color = '#808080'
   }
-  return { sq, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityOdeh = (arcOfVision, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilityOdeh = (moonElongation, moonAlt, arcOfVision, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const visibilityValue = arcOfVision - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
-  let zone = 'D'
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nV: ${isNaN(visibilityValue) ? '-' : visibilityValue.toFixed(2)}` : ''
   let color = ''
   if (visibilityValue >= 5.65 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (visibilityValue >= 2.0 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'B'
     color = '#9EFF00'
   } else if (visibilityValue >= -0.96 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'C'
     color = '#FF783C'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'F'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'E'
     color = '#808080'
   }
-  return { visibilityValue, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityQureshi = (arcOfVision, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilityQureshi = (moonElongation, moonAlt, arcOfVision, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const s = (arcOfVision - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
-  let zone = 'F'
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\ns: ${isNaN(s) ? '-' : s.toFixed(2)}` : ''
   let color = ''
   if (s >= 0.15 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (s >= 0.05 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'B'
     color = '#9EFF00'
   } else if (s >= -0.06 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'C'
     color = '#FF783C'
   } else if (s >= -0.16 && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'D'
     color = '#FF0000'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'H'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'G'
     color = '#808080'
   }
-  return { s, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityLAPAN = (isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
-  let zone = 'B'
+const calculateVisibilityLAPAN = (moonElongation, moonAlt, moonAges, isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = ''
   if (isMeetCriteria && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'D'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'C'
     color = '#808080'
   }
-  return { isMeetCriteria, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityShaukat = (arcOfVision, areEqualsToValues, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilityShaukat = (moonElongation, moonAlt, arcOfVision, areEqualsToValues, w, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
-  let zone = 'F'
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nq: ${isNaN(q) ? '-' : q.toFixed(2)}` : ''
   let color = ''
   if (q >= 0.27 && sunset.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (q >= -0.024 && sunset.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
-    zone = 'B'
     color = '#9EFF00'
   } else if (q >= -0.212 && sunset.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
-    zone = 'C'
     color = '#FF783C'
   } else if (q >= -0.48 && sunset.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
-    zone = 'D'
     color = '#FF0000'
   } else if (q >= -0.48 && sunset.date > conjunction.date && !newMoonForEachCoords && areEqualsToValues) {
-    zone = 'E'
     color = '#FAFF00'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'H'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'G'
     color = '#808080'
   }
-  return { q, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityTurkey = (isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction) => {
-  let zone = 'D'
+const calculateVisibilityTurkey = (moonElongation, moonAlt, moonAges, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = ''
   if (isMeetCriteria && sunset.date > conjunction.date && !newMoonForEachCoords && !isSunsetAtMidnight && !isFajrAtSunset) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (isSunsetAtMidnight) {
-    zone = 'B'
     color = '#0303FC'
   } else if (isFajrAtSunset) {
-    zone = 'C'
     color = '#FC5203'
   }else if ((newMoonForEachCoords || sunset.date < conjunction.date) && !isSunsetAtMidnight && !isFajrAtSunset) {
-    zone = 'F'
     color = '#000000'
   } else if (lagTime < 0 && !isSunsetAtMidnight && !isFajrAtSunset) {
-    zone = 'E'
     color = '#808080'
   }
-  return { isMeetCriteria, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityMABIMS = (isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
-  let zone = 'B'
+const calculateVisibilityMABIMS = (moonElongation, moonAlt, moonAges, isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = ''
   if (isMeetCriteria && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'D'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'C'
     color = '#808080'
   }
-  return { isMeetCriteria, zone, color }
+  return { tooltip, color }
 }
 
-const calculateVisibilityLFNU = (isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
-  let zone = 'C'
+const calculateVisibilityLFNU = (moonElongation, moonAlt, moonAges, isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+  let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(2)}°\nAltitude: ${moonAlt?.toFixed(2)}°\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = ''
   if (isMeetQRNUCriteria && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'A'
     color = '#00FF3E'
   } else if (isMeetIRNUCriteria && sunset.date > conjunction.date && !newMoonForEachCoords) {
-    zone = 'B'
     color = '#FFFF00'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
-    zone = 'E'
     color = '#000000'
   } else if (lagTime < 0) {
-    zone = 'D'
     color = '#808080'
   }
-  return { isMeetQRNUCriteria, isMeetIRNUCriteria, zone, color }
+  return { tooltip, color }
 }
 
 const checkDanjon = (conjunction, astroDate, latitude, longitude, elongationType, observationTime) => {
@@ -1918,9 +1873,10 @@ const checkDanjon = (conjunction, astroDate, latitude, longitude, elongationType
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
   const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, bestTime).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(2)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
-  return calculateVisibilityDanjon(isMeetCriteria, bestTime, conjunction)
+  return calculateVisibilityDanjon(arcOfLight, moonAges, isMeetCriteria, bestTime, conjunction)
 }
 
 const checkYallop = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
@@ -1951,7 +1907,7 @@ const checkYallop = (conjunction, astroDate, latitude, longitude, observationTim
   const arcOfVision = mhor.altitude - shor.altitude
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityYallop(arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityYallop(arcOfVision, moonElongationGeocentric, mhor.altitude, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkSAAO = (conjunction, astroDate, latitude, longitude, correctedRefraction) => {
@@ -1999,7 +1955,7 @@ const checkOdeh = (conjunction, astroDate, latitude, longitude, observationTime,
   }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityOdeh(arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityOdeh(moonElongationTopocentric, moonHorizon.altitude, arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkQureshi = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
@@ -2032,7 +1988,7 @@ const checkQureshi = (conjunction, astroDate, latitude, longitude, observationTi
   }
   const wTopocentric = semiDiameterTopocentric * (1 - Math.cos(arcOfLight))
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityQureshi(arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityQureshi(moonElongationTopocentric, moonHorizon.altitude, arcOfVision, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkLAPAN = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
@@ -2051,10 +2007,11 @@ const checkLAPAN = (conjunction, astroDate, latitude, longitude, elongationType,
   }
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(2)
   let isMeetCriteria = false
   if (moonElongation > 6.4 && moonHorizon.altitude > 4) isMeetCriteria = true
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityLAPAN(isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityLAPAN(moonElongation, moonHorizon.altitude, moonAges, isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkShaukat = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction, steps) => {
@@ -2089,7 +2046,7 @@ const checkShaukat = (conjunction, astroDate, latitude, longitude, observationTi
   let areEqualsToValues = false
   if (moonElongationGeocentric > 8 - steps * 2 / 100 && moonElongationGeocentric < 8 + steps * 2 / 100) areEqualsToValues = true
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityShaukat(arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityShaukat(moonElongationGeocentric, moonHorizon.altitude, arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkTurkey = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction, steps) => {
@@ -2108,6 +2065,7 @@ const checkTurkey = (conjunction, astroDate, latitude, longitude, elongationType
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(2)
   const observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
   const fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, correctedDate, 2, -18)
   let isMeetCriteria = false
@@ -2117,7 +2075,7 @@ const checkTurkey = (conjunction, astroDate, latitude, longitude, elongationType
   if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < steps * 3) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 60 - steps * 3)) isSunsetAtMidnight = true
   if (Math.abs(fajrAtWellington.date - sunset.date) / 1000 <= steps * 150) isFajrAtSunset = true
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityTurkey(isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityTurkey(moonElongation, moonHorizon.altitude, moonAges, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkMABIMS = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
@@ -2136,10 +2094,11 @@ const checkMABIMS = (conjunction, astroDate, latitude, longitude, elongationType
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(2)
   let isMeetCriteria = false
   if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) isMeetCriteria = true
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityMABIMS(isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityMABIMS(moonElongation, moonHorizon.altitude, moonAges, isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkLFNU = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
@@ -2158,12 +2117,13 @@ const checkLFNU = (conjunction, astroDate, latitude, longitude, elongationType, 
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(2)
   let isMeetQRNUCriteria = false
   let isMeetIRNUCriteria = false
   if (moonElongation >= 9.9 && moonHorizon.altitude >= 3) isMeetQRNUCriteria = true
   if (moonElongation >= 6.4 && moonHorizon.altitude >= 3) isMeetIRNUCriteria = true
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityLFNU(isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityLFNU(moonElongation, moonHorizon.altitude, moonAges, isMeetQRNUCriteria, isMeetIRNUCriteria, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const createZones = (criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps) => {
@@ -2193,13 +2153,13 @@ const createZones = (criteria, elongationType, altitudeType, observationTime, co
   const height = steps * 100 / 180
   const xPosition = 100 * (180 + lng) / 360
   const yPosition = 100 * (90 - lat) / 180
-  if (result?.zone?.length > 0) {
+  if (result?.tooltip?.length > 0) {
     return {
       width,
       height,
       yPos: yPosition,
       xPos: xPosition,
-      zone: result.zone,
+      tooltip: result.tooltip,
       color: result.color
     }
   }
@@ -2210,7 +2170,7 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
       const result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
-      if (result?.zone?.length > 0) results.push(result)
+      if (result?.tooltip?.length > 0) results.push(result)
     }
   }
   return results
