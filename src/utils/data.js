@@ -1726,9 +1726,9 @@ const calculateVisibilityYallop = (arcOfVision, moonElongationGeocentric, moonAl
   return { tooltip, color }
 }
 
-const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, moonAges, lagTime, newMoonForEachCoords, sunset, conjunction) => {
   const sq = topocentricAlt + arcOfLight / 3
-  let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(5)}°\nAltitude: ${topocentricAlt?.toFixed(5)}°\nsq: ${isNaN(sq) ? '-' : sq.toFixed(5)}` : ''
+  let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(5)}°\nAltitude: ${topocentricAlt?.toFixed(5)}°\nsq: ${isNaN(sq) ? '-' : sq.toFixed(5)}\nMoon Ages: ${isNaN(moonAges) ? '-' : moonAges} days` : ''
   let color = ''
   if (sq > 11 && sunset.date > conjunction.date && !newMoonForEachCoords) {
     color = '#00FF3E'
@@ -1873,7 +1873,7 @@ const checkDanjon = (conjunction, astroDate, latitude, longitude, elongationType
   const moonEquator = Equator(Body.Moon, bestTime, observer, true, true)
   const sunEquator = Equator(Body.Sun, bestTime, observer, true, true)
   const arcOfLight = elongationType === 0 ? Elongation(Body.Moon, bestTime).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(5)
+  const moonAges = (bestTime.ut - SearchMoonPhase(0, bestTime, -30).ut).toFixed(5)
   let isMeetCriteria = false
   if (arcOfLight >= 7) isMeetCriteria = true
   return calculateVisibilityDanjon(arcOfLight, moonAges, isMeetCriteria, bestTime, conjunction)
@@ -1921,8 +1921,9 @@ const checkSAAO = (conjunction, astroDate, latitude, longitude, correctedRefract
   const moonHorizon = Horizon(sunset, observer, moonEquator.ra, moonEquator.dec, correctedRefraction)
   const sunEquator = Equator(Body.Sun, sunset, observer, true, true)
   const moonElongationTopocentric = AngleBetween(sunEquator.vec, moonEquator.vec)
+  const moonAges = (sunset.ut - SearchMoonPhase(0, sunset, -30).ut).toFixed(5)
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilitySAAO(moonHorizon.altitude, moonElongationTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilitySAAO(moonHorizon.altitude, moonElongationTopocentric, moonAges, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkOdeh = (conjunction, astroDate, latitude, longitude, observationTime, correctedRefraction) => {
