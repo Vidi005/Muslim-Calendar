@@ -2047,7 +2047,9 @@ const checkShaukat = (conjunction, astroDate, latitude, longitude, observationTi
   let areEqualsToValues = false
   if (moonElongationGeocentric > 8 - steps * 2 / 100 && moonElongationGeocentric < 8 + steps * 2 / 100) areEqualsToValues = true
   const newMoonForEachCoords = SearchMoonPhase(0, bestTime, 1)
-  return calculateVisibilityShaukat(moonElongationGeocentric, moonHorizon.altitude, arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
+  const moonEquatorGeocentric = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(bestTime), GeoVector(Body.Moon, bestTime, true)))
+  const moonHorizonGeocentric = Horizon(bestTime, observer, moonEquatorGeocentric.ra, moonEquatorGeocentric.dec, correctedRefraction)
+  return calculateVisibilityShaukat(moonElongationGeocentric, moonHorizonGeocentric.altitude, arcOfVision, areEqualsToValues, wTopocentric, lagTime, newMoonForEachCoords, sunset, conjunction)
 }
 
 const checkTurkey = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction, steps) => {
