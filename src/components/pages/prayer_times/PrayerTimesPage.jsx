@@ -30,7 +30,7 @@ const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTi
       selectFormula={selectFormula}
       generatePrayerTimes={generatePrayerTimes}
     />
-    {innerWidth > 1024 && <FooterContainer/>}
+    {innerWidth >= 1280 && <FooterContainer/>}
   </div>
 )
 

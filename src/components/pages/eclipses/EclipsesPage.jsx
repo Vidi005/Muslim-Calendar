@@ -26,7 +26,7 @@ const EclipsesPage = ({ t, selectedLanguage, isSidebarExpanded, selectedTimeZone
       generateLocalSolarEclipseInfo={generateLocalSolarEclipseInfo}
       generateLunarEclipseInfo={generateLunarEclipseInfo}
     />
-    {innerWidth > 1024 && <FooterContainer/>}
+    {innerWidth >= 1280 && <FooterContainer/>}
   </div>
 )
 

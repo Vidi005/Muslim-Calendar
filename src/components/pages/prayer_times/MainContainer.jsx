@@ -334,7 +334,7 @@ class MainContainer extends React.Component {
   render() {
     return (
       <main className="prayer-times-page h-0 flex-auto flex-nowrap bg-green-100 dark:bg-gray-800 duration-200">
-        {innerWidth > 1024
+        {innerWidth >= 1280
           ? (
               <div className="prayer-times-container flex flex-nowrap w-full h-full pb-10">
                 <Sidebar

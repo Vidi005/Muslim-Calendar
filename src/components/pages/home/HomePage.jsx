@@ -22,7 +22,7 @@ const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, toolt
       goToCurrentMonth={goToCurrentMonth}
       jumpToClickedMonth={jumpToClickedMonth}
     />
-    {innerWidth > 1024 && <FooterContainer/>}
+    {innerWidth >= 1280 && <FooterContainer/>}
   </div>
 )
 

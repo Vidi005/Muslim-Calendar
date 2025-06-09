@@ -23,7 +23,7 @@ const HomeContent = ({ sliderRef, calendarContainerRef, tooltipRef, showTooltip,
       <MoonCrescentMapSection />
     </div>
     <EclipsesSection />
-    {innerWidth <= 1024 && <FooterContainer/>}
+    {innerWidth < 1280 && <FooterContainer/>}
   </article>
 )
 

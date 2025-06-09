@@ -68,7 +68,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                             <thead>
                               <tr>
                                 {en.day_names.map((_day, index) => {
-                                  if (innerWidth > 1024) {
+                                  if (innerWidth >= 1280) {
                                     return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).replace(/Minggu/g, 'Ahad')}</th>;
                                   } else {
                                     return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3).replace(/Min/g, 'Ahd')}</th>
@@ -149,11 +149,11 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 )
               : (
                 <table className="table-auto text-sky-700 dark:text-sky-200 animate__animated animate__fadeInLeft">
-                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-base text-justify sm:text-lg md:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()}:</u></h3></th>
-                  <tbody className="list-disc text-sm sm:text-base md:text-lg align-top">
+                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-sm text-justify sm:text-base md:text-lg lg:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()}:</u></h3></th>
+                  <tbody className="list-disc text-sm md:text-base lg:text-lg align-top">
                     {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
                       <tr key={index}>
-                        <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { month: 'long', day: '2-digit' })}</td>
+                        <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { month: 'long', day: 'numeric' })}</td>
                         <td>&nbsp;:&nbsp;</td>
                         <td>
                           <span>{t(`muslim_events.${event.eventId}`)} </span>
