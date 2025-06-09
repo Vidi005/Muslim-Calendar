@@ -1456,11 +1456,14 @@ class App extends React.Component {
   })
 
   getMoonCrescentVisibility = () => {
-    const observationDate = new Date(this.state.formattedDateTime)
+    let observationDate = new Date(this.state.formattedDateTime)
     const islamicDate = new Date(this.state.formattedDateTime)
     const currentFirstMonthGregorianDay = new Date(this.state.formattedDateTime.getFullYear(), this.state.formattedDateTime.getMonth(), 1).getDay()
     const islamicDayNumber = this.state.monthsInSetYear[this.state.formattedDateTime.getMonth()][this.state.formattedDateTime.getDate() + currentFirstMonthGregorianDay - 1]?.hijri
+    // Pointing to day 29 of Hijri Date for each criteria
     observationDate.setDate(observationDate.getDate() + 29 - islamicDayNumber)
+    // Pointing to day of Ijtima'
+    // observationDate = getConjunctionDate(observationDate).date
     islamicDate.setDate(islamicDate.getDate() + 45 - islamicDayNumber)
     this.generateMoonCrescentVisibility(observationDate).then(result => {
       if (Object.keys(result).length > 0) {
