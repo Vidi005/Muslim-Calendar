@@ -123,7 +123,7 @@
         "9-12-event": "Hari Arafah",
         "10-12-event": "Idul Adha"
     },
-    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian Geosentris", "Ketinggian Toposentris", "Azimut", "Jarak ke Bulan", "Lintang", "Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian Geosentris", "Ketinggian Toposentris", "Azimut", "Jarak ke Bulan", "Librasi Lintang", "Librasi Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
     "calculation": "Penghitungan:",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Menuju Waktu", "Waktu", "telah tiba"],
@@ -366,7 +366,7 @@
     "sun_info": "Informasi Matahari",
     "set_sun_info": "Informasi Matahari pada:",
     "objects": ["Matahari", "Bulan"],
-    "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Right Ascension", "Deklinasi", "Jarak Matahari", "Lintang", "Bujur", "Kulminasi", "Tengah Malam", "Fase Bulan", "Ketinggian Bulan", "Azimut Bulan", "Deklinasi Bulan", "Bulan Terbit", "Bulan Terbenam"],
+    "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Right Ascension", "Deklinasi", "Jarak Matahari", "Lintang Ekliptika", "Bujur Ekliptika", "Kulminasi", "Tengah Malam", "Fase Bulan", "Ketinggian Bulan", "Azimut Bulan", "Deklinasi Bulan", "Bulan Terbit", "Bulan Terbenam"],
     "at": "pukul",
     "prayer_schedule": "Jadwal Sholat",
     "imsakiyah_schedule": "Jadwal Imsakiyah",

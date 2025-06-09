@@ -703,9 +703,9 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonAzimuthTopocentric = `${moonHorizonTopocentric.azimuth.toFixed(2)}°`
   const geoDistanceAU = moonIllumination.geo_dist
   const distanceInKm = `${(geoDistanceAU * KM_PER_AU).toFixed(2)} km`
-  const moonEcliptic = EclipticGeoMoon(astroDate)
-  const moonLatitude = `${moonEcliptic.lat.toFixed(2)}°`
-  const moonLongitude = `${moonEcliptic.lon.toFixed(2)}°`
+  const moonLibration = Libration(astroDate)
+  const moonLatitude = `${moonLibration.elat.toFixed(2)}°`
+  const moonLongitude = `${moonLibration.elon.toFixed(2)}°`
   const moonElongationGeocentric = `${AngleFromSun(Body.Moon, astroDate).toFixed(2)}°`
   const sunEquator = Equator(Body.Sun, astroDate, observer, true, true)
   const moonElongationTopocentric = `${AngleBetween(sunEquator.vec, moonEquatorTopocentric.vec).toFixed(2)}°`
@@ -1638,8 +1638,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const sunRightAscension = `${convertRAToHMS(sunEquator.ra)}`
   const sunDeclination = `${sunEquator.dec.toFixed(2)}°`
   const distanceInKm = `${(sunEquator.dist * KM_PER_AU).toFixed(2)} km`
-  const sunLatittude = SunPosition(astroDate).elat
-  const sunLongitude = SunPosition(astroDate).elon
+  const sunEclipticLatitude = SunPosition(astroDate).elat
+  const sunEclipticLongitude = SunPosition(astroDate).elon
   const culmination = SearchHourAngle(Body.Sun, observer, 0, startAstroTime, 1).time
   const sunEquatorAtCulmination = Equator(Body.Sun, culmination, observer, true, true)
   const sunDeclinationAtCulmination = sunEquatorAtCulmination.dec
@@ -1675,8 +1675,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     sunRightAscension,
     sunDeclination,
     distanceInKm,
-    `${sunLatittude}°`,
-    `${sunLongitude.toFixed(2)}°`,
+    `${sunEclipticLatitude}°`,
+    `${sunEclipticLongitude.toFixed(2)}°`,
     `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${midnight.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${moonPhase}° (${moonStatus})`,

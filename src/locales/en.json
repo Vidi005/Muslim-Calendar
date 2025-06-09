@@ -123,7 +123,7 @@
         "9-12-event": "Arafah Day",
         "10-12-event": "Ied Al-Adha"
     },
-    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude (Geo)", "Altitude (Topo)", "Azimuth", "Distance to Moon", "Latitude", "Longitude", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
+    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude (Geo)", "Altitude (Topo)", "Azimuth", "Distance to Moon", "Latitude Libration", "Longitude Libration", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
     "calculation": "Calculation:",
     "calculations": ["Astronomy-Engine", "Manual"],
     "prayer_info": ["Time to", "Time", "has come"],
@@ -366,7 +366,7 @@
     "sun_info": "Sun Information",
     "set_sun_info": "Sun Info at:",
     "objects": ["Sun", "Moon"],
-    "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Sun Distance", "Latitude", "Longitude", "Culmination", "Midnight", "Moon Phase", "Moon Altitude", "Moon Azimuth", "Moon Declination", "Moonrise", "Moonset"],
+    "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Sun Distance", "Ecliptic Latitude", "Ecliptic Longitude", "Culmination", "Midnight", "Moon Phase", "Moon Altitude", "Moon Azimuth", "Moon Declination", "Moonrise", "Moonset"],
     "at": "at",
     "prayer_schedule": "Prayer Schedule",
     "imsakiyah_schedule": "Imsakiyah Schedule",
