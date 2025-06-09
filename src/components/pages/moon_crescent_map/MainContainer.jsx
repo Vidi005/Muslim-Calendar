@@ -47,21 +47,30 @@ class MainContainer extends React.Component {
   }
 
   createMoonCrescentVisibilities () {
-    const theDayBeforeIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
-    theDayBeforeIjtima.setDate(theDayBeforeIjtima.getDate() + 27)
+    // Viewing from Ijtima' day -1, Ijtima' day, and Ijtima' day +1
+    // const hijriDayOf28 = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    // hijriDayOf28.setDate(hijriDayOf28.getDate() + 27)
+    // const ijtimaDate = getConjunctionDate(hijriDayOf28)
+    // const theDayBefore = new Date(ijtimaDate.date)
+    // theDayBefore.setDate(theDayBefore.getDate() - 1)
+    // const theDayAfter = new Date(ijtimaDate.date)
+    // theDayAfter.setDate(theDayAfter.getDate() + 1)
+    // Viewing from day 28, 29, 30 of the previous Hijri Month or day 1 of the next Hijri Month
+    const theDayBefore = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    theDayBefore.setDate(theDayBefore.getDate() + 27)
     const observationDay = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
-    const theDayAfterIjtima = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
+    const theDayAfter = new Date(this.props.hijriStartDates[this.state.selectedHijriMonth - 1]?.gregorianDate)
     observationDay.setDate(observationDay.getDate() + 28)
-    theDayAfterIjtima.setDate(theDayAfterIjtima.getDate() + 29)
+    theDayAfter.setDate(theDayAfter.getDate() + 29)
     Promise.all([
-      this.props.generateMoonCrescentVisibility(theDayBeforeIjtima),
+      this.props.generateMoonCrescentVisibility(theDayBefore),
       this.props.generateMoonCrescentVisibility(observationDay),
-      this.props.generateMoonCrescentVisibility(theDayAfterIjtima)
+      this.props.generateMoonCrescentVisibility(theDayAfter)
     ]).then(moonCrescentVisibilities => {
       this.setState({
         areMoonVisibilityCriteriaMapsLoading: false,
         moonCrescentVisibilities: moonCrescentVisibilities,
-        observationDates: [theDayBeforeIjtima, observationDay, theDayAfterIjtima]
+        observationDates: [theDayBefore, observationDay, theDayAfter]
       })
     })
   }
