@@ -25,7 +25,7 @@ const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedT
       selectedCoordinateSteps={selectedCoordinateSteps}
       generateMoonCrescentVisibility={generateMoonCrescentVisibility}
     />
-    {innerWidth > 1024 && <FooterContainer/>}
+    {innerWidth >= 1280 && <FooterContainer/>}
   </div>
 )
 

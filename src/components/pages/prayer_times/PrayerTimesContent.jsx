@@ -70,7 +70,7 @@ const PrayerTimesContent = ({ t, parentState, state, selectCalculationMethod, se
         downloadFile={downloadFile}
       />
     </div>
-    {innerWidth <= 1024 && <FooterContainer/>}
+    {innerWidth < 1280 && <FooterContainer/>}
   </article>
 )
 

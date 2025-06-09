@@ -31,7 +31,7 @@ const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarE
         lunarEclipseList={lunarEclipseList}
       />
     </div>
-    {innerWidth <= 1024 && <FooterContainer/>}
+    {innerWidth < 1280 && <FooterContainer/>}
   </article>
 )
 
