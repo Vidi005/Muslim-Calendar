@@ -7,7 +7,7 @@ const HeaderContainer = () => (
     {({ t, toggleSidebar, changeLanguage, setDisplayMode, state }) => (
       <header className="app-header sticky top-0 flex flex-nowrap items-center justify-between bg-green-600 dark:bg-green-700 w-full p-1 shadow-xl z-20">
         <section className="header-title grow flex items-center">
-          {innerWidth > 1024
+          {innerWidth >= 1280
             ? (
                 <button className="p-1 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" onClick={toggleSidebar}>
                   <img className="h-8 object-contain drop-shadow-md px-1" src={`${import.meta.env.BASE_URL}images/sidebar-icon.svg`}/>

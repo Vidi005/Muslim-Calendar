@@ -11,7 +11,7 @@ const AboutPage = ({ t, isSidebarExpanded }) => (
     </Helmet>
     <HeaderContainer/>
     <MainContainer t={t} isSidebarExpanded={isSidebarExpanded}/>
-    {innerWidth > 1024 && <FooterContainer/>}
+    {innerWidth >= 1280 && <FooterContainer/>}
   </div>
 )
 

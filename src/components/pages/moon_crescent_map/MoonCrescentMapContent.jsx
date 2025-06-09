@@ -40,7 +40,7 @@ const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, 
           )
       }
     </div>
-    {innerWidth <= 1024 && <FooterContainer/>}
+    {innerWidth < 1280 && <FooterContainer/>}
   </article>
 )
 
