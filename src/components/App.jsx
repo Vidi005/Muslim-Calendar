@@ -1433,6 +1433,7 @@ class App extends React.Component {
     moonCrescentVisibilityWorker.postMessage({
       type: 'createMoonCrescentVisibility',
       observationDate: observationDate,
+      timeZone: this.state.selectedTimeZone,
       moonVisibilityCriteria: this.state.selectedMoonVisibilityCriteria,
       elongationType: this.state.selectedElongationType,
       altitudeType: this.state.selectedAltitudeType,
