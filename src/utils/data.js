@@ -685,7 +685,7 @@ const convertRAToHMS = raDecimalHours => {
 const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
-  const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
+  const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T00:00:00`)
   const startAstroTime = new AstroTime(startDate)
   const lastNewMoon = SearchMoonPhase(0, astroDate, -30)
   const moonAge = `${(astroDate.ut - lastNewMoon.ut).toFixed(2)} ${lang === 'id' ? 'hari' : 'days'}`
@@ -1608,16 +1608,17 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
-  const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate())
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
+    const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T00:00:00`)
     const astroDate = new AstroTime(startDate)
     // Calculate Using Astronomy-Engine Library
     calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
+    const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T12:00:00`)
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(startDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }
@@ -1628,7 +1629,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   else shadowFactor = 2
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
-  const startDate = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 0, 0, 0)
+  const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T00:00:00`)
   const startAstroTime = new AstroTime(startDate)
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
   const sunset = SearchRiseSet(Body.Sun, observer, -1, startAstroTime, 1, elevation)
