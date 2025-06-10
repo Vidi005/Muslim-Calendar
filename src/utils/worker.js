@@ -1,6 +1,6 @@
 import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v5.9' // Update the version when deploying new builds
+const CACHE_NAME = 'app-cache-v5.10' // Update the version when deploying new builds
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -63,7 +63,7 @@ self.onmessage = event => {
     const result = getQiblaDistance(latitude, longitude)
     self.postMessage({ type: 'createQiblaDistance', result })
   } else if (type === 'createPrayerTimes') {
-    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, ashrTime, sunAltitude, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
   } else if (type === 'createSunInfos') {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
