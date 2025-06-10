@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, EclipticGeoMoon, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
