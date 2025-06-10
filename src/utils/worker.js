@@ -69,7 +69,7 @@ self.onmessage = event => {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)
     self.postMessage({ type: 'createSunInfos', result })
   } else if (type === 'createMoonCrescentVisibility') {
-    const result = getMoonCrescentVisibility(observationDate, moonVisibilityCriteria, elongationType, altitudeType, observationTime, correctedRefraction, steps)
+    const result = getMoonCrescentVisibility(observationDate, timeZone, moonVisibilityCriteria, elongationType, altitudeType, observationTime, correctedRefraction, steps)
     self.postMessage({ type: 'createMoonCrescentVisibility', result })
   } else if (type === 'createGlobalSolarEclipse') {
     const result = getGlobalSolarEclipse(globalSolarEclipseDate)

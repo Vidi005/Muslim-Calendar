@@ -2202,16 +2202,17 @@ const getConjunctionDate = observationDate => {
   return SearchMoonPhase(0, dateBeforeConjunction, 5)
 }
 
-const getMoonCrescentVisibility = (observationDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
+const getMoonCrescentVisibility = (observationDate, timeZone, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
   // Start from local time
-  const startDate = new Date(`${addZeroPadForYear(observationDate.getFullYear())}-${addZeroPad(observationDate.getMonth() + 1)}-${addZeroPad(observationDate.getDate())}T00:00:00Z`)
+  const startDate = new Date(`${getIsoDateStrBasedTimeZone(observationDate, timeZone)}T00:00:00Z`)
   // Start from UTC time
   // const startDate = new Date(`${addZeroPadForYear(observationDate.getUTCFullYear())}-${addZeroPad(observationDate.getUTCMonth() + 1)}-${addZeroPad(observationDate.getUTCDate())}T00:00:00Z`)
   const astroDate = MakeTime(startDate)
   const conjunction = getConjunctionDate(observationDate)
   return {
     zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps),
-    conjunction: conjunction?.date
+    conjunction: conjunction?.date,
+    observationDate: startDate
   }
 }
 
