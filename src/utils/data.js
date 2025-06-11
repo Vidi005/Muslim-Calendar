@@ -200,9 +200,11 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
   let observer = observerFromEarth(latitude, longitude, elevation)
   let date = startDate
   let diffDays
+  let localizedNewMoonDate
   let newMoonDate
   let newMoon
   let moonElongation
+  let localizedDateInNewMoon
   let dateInNewMoon
   let westObserver
   let sunset
@@ -217,11 +219,13 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       // Searching for New Moon forward
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, westObserver, -1, newMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
+        sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
         if (altitudeType === 0) {
           // Geocentric Moon Equatorial Coordinates
@@ -269,11 +273,13 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     while (true) {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = slicedMABIMSCitiesCoordinates.some(city => {
         observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, city.elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, observer, true, true)
         if (altitudeType === 0) {
           moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
@@ -297,10 +303,12 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     while (true) {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(latitude, longitude, elevation)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
       if (Math.abs(latitude) > 48) {
         if (formula === 1) {
           if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
@@ -311,7 +319,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
           else observer = observerFromEarth(-60, longitude, elevation)
         }
-        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
       }
       sunEquator = Equator(Body.Sun, sunset, observer, true, true)
       if (altitudeType === 0) {
@@ -350,12 +358,14 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     do {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       // Yogyakarta Coordinates
       observer = observerFromEarth(-7.797224, 110.368797, 105)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, 105)
-      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, 105)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, 105)
+      moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, 105)
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
         // Met the Wujudul Hilal criteria
         return newMoonDate.AddDays(1)
@@ -369,10 +379,12 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     do {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
+      moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, elevation)
       if (Math.abs(latitude) > 48) {
         if (formula === 1) {
           if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
@@ -383,8 +395,8 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
           else observer = observerFromEarth(-60, longitude, elevation)
         }
-        sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, elevation)
-        moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, elevation)
+        sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
+        moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, elevation)
       }
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
         diffDays = Math.abs(newMoonDate.AddDays(1).date - prevNewMoonDate) / 86400000
@@ -413,11 +425,13 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     do {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
-      dateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
+      localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
+      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
-      sunset = SearchRiseSet(Body.Sun, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
-      moonset = SearchRiseSet(Body.Moon, observer, -1, newMoonDate, 1, kaabaCoordinates.elevation)
+      sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, kaabaCoordinates.elevation)
+      moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, kaabaCoordinates.elevation)
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
         // Met the Ummul Qura criteria
         return newMoonDate.AddDays(1)
@@ -1608,17 +1622,16 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, timeZone, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
-    const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T00:00:00`)
-    const astroDate = new AstroTime(startDate)
+    const astroDate = new AstroTime(gregorianDate)
     // Calculate Using Astronomy-Engine Library
     calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
-    const startDate = new Date(`${getIsoDateStrBasedTimeZone(gregorianDate, timeZone)}T12:00:00`)
+    const midDayDateTime = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 12, 0, 0)
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(startDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(midDayDateTime, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }
@@ -2310,4 +2323,4 @@ const coordinateScale = {
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getIsoDateStrBasedTimeZone, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
