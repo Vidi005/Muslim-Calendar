@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { addZeroPad, isStorageExist } from "../utils/data"
+import { addZeroPad, getIsoDateStrBasedTimeZone, isStorageExist } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -1329,7 +1329,6 @@ class App extends React.Component {
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         elevation: this.state.elevation,
-        timeZone: this.state.selectedTimeZone,
         calculationMethod: this.state.selectedCalculationMethod,
         ashrTime: this.state.selectedAshrTime,
         sunAltitude: this.state.sunAltitude,
@@ -1358,13 +1357,14 @@ class App extends React.Component {
   }
 
   create3DaysOfPrayerTimes = () => {
-    const theDayBefore = new Date(this.state.formattedDateTime)
+    const theDayBefore = new Date(`${getIsoDateStrBasedTimeZone(this.state.formattedDateTime, this.state.selectedTimeZone)}T00:00:00`)
     theDayBefore.setDate(theDayBefore.getDate() - 1)
-    const theDayAfter = new Date(this.state.formattedDateTime)
+    const currentLocalizedDate = new Date(`${getIsoDateStrBasedTimeZone(this.state.formattedDateTime, this.state.selectedTimeZone)}T00:00:00`)
+    const theDayAfter = new Date(`${getIsoDateStrBasedTimeZone(this.state.formattedDateTime, this.state.selectedTimeZone)}T00:00:00`)
     theDayAfter.setDate(theDayAfter.getDate() + 1)
     Promise.all([
       this.generatePrayerTimes(theDayBefore),
-      this.generatePrayerTimes(this.state.formattedDateTime),
+      this.generatePrayerTimes(currentLocalizedDate),
       this.generatePrayerTimes(theDayAfter)
     ]).then(prayerTimes => {
       if (this.state.isPreciseToSeconds) {
