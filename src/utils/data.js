@@ -206,22 +206,25 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
   let moonElongation
   let localizedDateInNewMoon
   let dateInNewMoon
-  let westObserver
   let sunset
   let moonset
   let sunEquator
   let moonEquator
   let moonHorizon
+  let isMetCriteria = false
   if (criteria === 0) {
     // Global Hijri Calendar/KHGT
-    let isMetCriteria = false
+    let westObserver
+    let observerFromNewZealand
+    let fajrAtWellington
+    let isConjunctionBeforeFajr = false
     while (true) {
       // Searching for New Moon forward
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
       localizedDateInNewMoon = new Date(`${getIsoDateStrBasedTimeZone(newMoon.date, timeZone)}T00:00:00Z`)
       localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
-      dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
+      dateInNewMoon = new Date(newMoon.date.getUTCFullYear(), newMoon.date.getUTCMonth(), newMoon.date.getUTCDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
@@ -239,11 +242,14 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
         return moonElongation >= 8 && moonHorizon.altitude >= 5
       })
+      observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
+      fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
+      isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
       if (newMoon.date.getUTCHours() < 12) {
         // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
         return newMoonDate.AddDays(1)
-      } else if (isMetCriteria) {
-        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC)
+      } else if (isMetCriteria && isConjunctionBeforeFajr) {
+        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC and Conjunction before Fajr in New Zealand)
         return newMoonDate.AddDays(1)
       } else {
         // Didn't meet the Global Hijri Calendar criteria
@@ -269,7 +275,6 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       // Mathla': Brunei, Indonesia, Malaysia, Singapore
       slicedMABIMSCitiesCoordinates = anyMABIMSCitiesCoordinates.slice(5)
     }
-    let isMetCriteria = false
     while (true) {
       newMoon = SearchMoonPhase(0, date, 30)
       date = new AstroTime(newMoon.date)
