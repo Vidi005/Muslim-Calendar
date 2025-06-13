@@ -249,7 +249,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
         return newMoonDate.AddDays(1)
       } else if (isMetCriteria && isConjunctionBeforeFajr) {
-        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC and Conjunction before Fajr in New Zealand)
+        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC in America continents plains and Conjunction before Fajr in New Zealand)
         return newMoonDate.AddDays(1)
       } else {
         // Didn't meet the Global Hijri Calendar criteria
@@ -2222,16 +2222,14 @@ const getConjunctionDate = observationDate => {
 }
 
 const getMoonCrescentVisibility = (observationDate, timeZone, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
-  // Start from local time
   const startDate = new Date(`${getIsoDateStrBasedTimeZone(observationDate, timeZone)}T00:00:00Z`)
-  // Start from UTC time
-  // const startDate = new Date(`${addZeroPadForYear(observationDate.getUTCFullYear())}-${addZeroPad(observationDate.getUTCMonth() + 1)}-${addZeroPad(observationDate.getUTCDate())}T00:00:00Z`)
+  const observationStartDate = new Date(`${addZeroPadForYear(observationDate.getFullYear())}-${addZeroPad(observationDate.getMonth() + 1)}-${addZeroPad(observationDate.getDate())}T00:00:00`)
   const astroDate = MakeTime(startDate)
   const conjunction = getConjunctionDate(observationDate)
   return {
     zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps),
     conjunction: conjunction?.date,
-    observationDate: startDate
+    observationDate: observationStartDate
   }
 }
 
