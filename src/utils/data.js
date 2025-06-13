@@ -240,7 +240,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
         // Elongation Type = 0 for Geocentric, 1 for Topocentric
         moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return moonElongation >= 8 && moonHorizon.altitude >= 5
+        return (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() <= newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5)
       })
       observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
       fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
@@ -249,7 +249,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
         return newMoonDate.AddDays(1)
       } else if (isMetCriteria && isConjunctionBeforeFajr) {
-        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC in America continents plains and Conjunction before Fajr in New Zealand)
+        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC in America continents plains and Conjunction before Fajr in New Zealand on Ijtima' Day)
         return newMoonDate.AddDays(1)
       } else {
         // Didn't meet the Global Hijri Calendar criteria
