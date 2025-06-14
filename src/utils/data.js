@@ -2192,11 +2192,12 @@ const createZones = (criteria, elongationType, altitudeType, observationTime, co
 }
 
 const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
-  let results = []
+  const results = []
   for (let lng = -180; lng < 180; lng += steps) {
     for (let lat = 60; lat >= -60; lat -= steps) {
-      const result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
+      let result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
       if (result?.tooltip?.length > 0) results.push(result)
+      result = null
     }
   }
   return results
