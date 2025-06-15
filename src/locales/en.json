@@ -1,0 +1,785 @@
+{
+    "app_name": "Muslim Calendar",
+    "app_desc": "Welcome to Muslim Calendar. Display Islamic Calendar Information.",
+    "pages": ["Home", "Prayer Times", "Moon Crescent Map", "Eclipses", "About"],
+    "hide_toolbar": "Hide Toolbar",
+    "show_toolbar": "Show Toolbar",
+    "current_date": "Current System Date:",
+    "gregorian_date": "Gregorian Date",
+    "hijri_date": "Hijri Date",
+    "current_time": "Current Time:",
+    "app_config": "Application Configuration:",
+    "local_date": "Local Date:",
+    "local_time": "Local Time:",
+    "no_location_found": "No Location Found",
+    "current_location": "Current Location",
+    "locating": "Locating...",
+    "restore_datetime": "Restore Datetime",
+    "reset_settings": "Reset Settings",
+    "reset_app_settings_alert": ["Are you sure you want to reset app settings?", "All configuration will be reset to default."],
+    "reset_prayer_times_settings_alert": ["Are you sure you want to reset Prayer Times settings?", "All settings will be reset to default."],
+    "ok": "OK",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "location": "Location:",
+    "geocoding": "Geocoding...",
+    "search_location": "Search Location...",
+    "latitude": "Latitude:",
+    "longitude": "Longitude:",
+    "elevation": "Elevation:",
+    "apply": "Apply",
+    "hijri_calendar_reference": "Hijri Date Reference:",
+    "hijri_date_criteria": "Criteria:",
+    "date_criteria": [
+        {
+            "criteria": "Global Hijri Calendar",
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Singapore)",
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Brunei Darussalam)",
+            "latitude_range": [4, 5.066667],
+            "longitude_range": [114.083333, 115.416667]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Malaysia)",
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Indonesia)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': All MABIMS Regions)",
+            "latitude_range": [-11.0075, 7.4],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Neo MABIMS (Markaz: Local)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Yogyakarta)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Local)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Umm Al-Qura",
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
+        }
+    ],
+    "timezone": "Time Zone:",
+    "interval_update": "Updates:",
+    "intervals": ["1 second", "5 seconds", "15 seconds", "30 seconds", "1 minute"],
+    "current_month": "Go to Current Date",
+    "set_month": "Go to Set Date",
+    "set_moon_info": "Moon Info at:",
+    "set_prayer_times": "Prayer Times at:",
+    "error_alert": "Error",
+    "error_solution": "Please reload the page",
+    "calendar_loading": "Calendar is being loaded...",
+    "event_list_loading": "Muslim Holiday List are being loaded...",
+    "calendar": "Calendar",
+    "loading": "Loading...",
+    "moon_info": "Moon Info",
+    "prayer_times_loading": "Prayer Times are being loaded...",
+    "prayer_times": "Prayer Times",
+    "prayer_times_headers": ["Time", "Yesterday", "Today", "Tomorrow", "Hijri Date", "Gregorian Date"],
+    "more": "More...",
+    "moon_crescent_map_loading": "Moon Crescent Map is being loaded...",
+    "moon_crescent_map": "Moon Crescent Map",
+    "moon_crescent_maps_loading": "Moon Crescent Maps are being loaded...",
+    "conjunction": "Ijtima'",
+    "error": "Error",
+    "day_names": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "islamic_months": ["Muharram", "Safar", "Rabi' I", "Rabi' II", "Jumada I", "Jumada II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu'l-Qa'dah", "Dhu'l-Hijjah"],
+    "hijri_date_info": "* This Hijri Date calculation may differ by a few days. So, keep to follow the decisions of Muslim Agencies/Organizations in your region.",
+    "muslim_holidays": "Muslim Holidays in ",
+    "muslim_events": {
+        "1-1-event": "1 Muharram",
+        "9-1-event": "Tasu'a",
+        "10-1-event": "Ashura",
+        "12-3-event": "Maulid Nabi Muhammad",
+        "27-7-event": "Lailat Al Miraj",
+        "15-8-event": "Nisfu Sha'ban",
+        "1-9-event": "Ramadan Start",
+        "17-9-event": "Nuzulul Quran",
+        "1-10-event": "Ied Al-Fitr",
+        "9-12-event": "Arafah Day",
+        "10-12-event": "Ied Al-Adha"
+    },
+    "moon_infos": ["Moon Age", "Illumination", "Phase Angle", "Right Ascension", "Declination", "Altitude (Geo)", "Altitude (Topo)", "Azimuth", "Distance to Moon", "Latitude Libration", "Longitude Libration", "Elongation (Geo)", "Elongation (Topo)", "Moonrise", "Moonset", "Last Conjunction", "First Quarter", "Full Moon", "Last Quarter", "Next Conjunction", "Sun Altitude", "Sun Azimuth", "Sunrise", "Sunset"],
+    "calculation": "Calculation:",
+    "calculations": ["Astronomy-Engine", "Manual"],
+    "prayer_info": ["Time to", "Time", "has come"],
+    "ashr_time": "Ashr Time:",
+    "mazhab": ["Jumhur", "Hanafi"],
+    "convention": "Convention:",
+    "conventions": [
+        {
+            "method": "MWL (Fajr: 18°, Isha: 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        },
+        {
+            "method": "ISNA (Fajr: 15°, Isha: 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [7.2167, 83.1114],
+            "longitude_range": [-168.0842, -52.6239]
+        },
+        {
+            "method": "Umm Al-Qura (Fajr: 18.5°, Isha: 90 mins/120 mins)",
+            "sun_altitude": {
+                "fajr": 18.5,
+                "isha": ["90 mins", "120 mins"]
+            },
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
+        },
+        {
+            "method": "Gulf (Fajr: 19.5°, Isha: 90 mins)",
+            "sun_altitude": {
+                "fajr": 19.5,
+                "isha": "90 mins"
+            },
+            "latitude_range": [16, 30.1],
+            "longitude_range": [46.5, 60]
+        },
+        {
+            "method": "Algerian (Fajr: 18°, Isha: 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [18.9667, 37.0833],
+            "longitude_range": [-8.6667, 12]
+        },
+        {
+            "method": "Karachi (Fajr: 18°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [6.7528, 38.3667],
+            "longitude_range": [60.5, 97.4167]
+        },
+        {
+            "method": "Diyanet (Fajr: 18°, Isha: 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [35.81278, 42.10583],
+            "longitude_range": [25.66556, 44.81778]
+        },
+        {
+            "method": "Egypt (Fajr: 19.5°, Isha: 17.5°)",
+            "sun_altitude": {
+                "fajr": 19.5,
+                "isha": 17.5
+            },
+            "latitude_range": [-34.85, 37.5333],
+            "longitude_range": [-17.5333, 51.4644]
+        },
+        {
+            "method": "EgyptBis (Fajr: 20°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [22, 31.6],
+            "longitude_range": [24.6667, 36.9]
+        },
+        {
+            "method": "MUIS (Fajr: 20°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
+        },
+        {
+            "method": "JAKIM (Fajr: 18°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
+        },
+        {
+            "method": "Kemenag (Fajr: 20°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "method": "Muhammadiyah (Fajr: 18°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "method": "UOIF (Fajr: 12°, Isha: 12°)",
+            "sun_altitude": {
+                "fajr": 12,
+                "isha": 12
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "France15 (Fajr: 15°, Isha: 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "France18 (Fajr: 18°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "Basque (Fajr: 15°, Isha: 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [42.5, 43.4833],
+            "longitude_range": [-2.7526, -1.4833]
+        },
+        {
+            "method": "Tunisia (Fajr: 18°, Isha: 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [30, 37.52694],
+            "longitude_range": [7, 12]
+        },
+        {
+            "method": "Jafari (Fajr: 16°, Isha: 14°, Maghrib: 4°)",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14,
+                "maghrib": 4
+            },
+            "latitude_range": [12, 41.9],
+            "longitude_range": [35, 63]
+        },
+        {
+            "method": "Tehran (Fajr: 17.7°, Isha: 14°, Maghrib: 4.5°)",
+            "sun_altitude": {
+                "fajr": 17.7,
+                "isha": 14,
+                "maghrib": 4.5
+            },
+            "latitude_range": [25.06694, 39.74861],
+            "longitude_range": [44.05056, 63.24861]
+        },
+        {
+            "method": "Russia (Fajr: 16°, Isha: 15°)",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 15
+            },
+            "latitude_range": [41.22056, 81.84306],
+            "longitude_range": [30, 180]
+        },
+        {
+            "method": "Custom Angle",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        }
+    ],
+    "fajr_angle": "Fajr Angle:",
+    "isha_angle": "Isha Angle:",
+    "zawal": "Zawal:",
+    "zawal_times": ["+0 minute", "+1 minute", "+2 minutes", "+3 minutes", "+4 minutes", "+5 minutes"],
+    "ihtiyath": "Ihtiyath:",
+    "ihtiyath_times": ["0 minute", "1 minute", "2 minutes", "3 minutes", "4 minutes", "5 minutes"],
+    "precise_to_seconds": "Precise to seconds",
+    "rounding": "Rounding:",
+    "rounding_methods": ["Greatest", "Nearest minute", "Smallest"],
+    "calculation_method": "Higher Latitude Method:",
+    "formulas": ["Not Configured", "Follow ±45 degrees latitude", "Follow Mecca coordinates", "Middle of the night", "One-seventh of the night", "Angle-based method"],
+    "restore_to_default": "Restore to Default",
+    "prayer_times_config": "Prayer Times Settings:",
+    "dhuha_method": "Dhuha Method:",
+    "dhuha_methods": ["Sun Altitude Based", "After Sunrise"],
+    "time_correction": "Times Correction:",
+    "prayer_names": ["Imsak", "Fajr", "Sunrise", "Dhuha", "Dhuhr", "Asr", "Maghrib", "Isha'a"],
+    "minutes": "mins",
+    "degrees": "degrees",
+    "qibla_direction": "Qibla Direction",
+    "qibla_directions": ["Qibla direction is ", " from North"],
+    "qibla_distance": "Distance to Kaaba is ",
+    "qibla": "Qibla",
+    "visualization": "Visualization",
+    "set_visualization": "Visualization at:",
+    "zenith": "Zenith",
+    "nadir": "Nadir",
+    "civil_twilight": ["Civil Dawn", "Civil Dusk"],
+    "nautical_twilight": ["Nautical Dawn", "Nautical Dusk"],
+    "astronomical_twilight": ["Astronomical Dawn", "Astronomical Dusk"],
+    "horizons": ["East Horizon", "West Horizon"],
+    "sun_info": "Sun Information",
+    "set_sun_info": "Sun Info at:",
+    "objects": ["Sun", "Moon"],
+    "sun_infos": ["Sunrise", "Sunset", "Altitude", "Azimuth", "Right Ascension", "Declination", "Sun Distance", "Ecliptic Latitude", "Ecliptic Longitude", "Culmination", "Midnight", "Moon Phase", "Moon Altitude", "Moon Azimuth", "Moon Declination", "Moonrise", "Moonset"],
+    "at": "at",
+    "prayer_schedule": "Prayer Schedule",
+    "imsakiyah_schedule": "Imsakiyah Schedule",
+    "month_type": "Select Month Type:",
+    "month_types": ["Gregorian", "Hijri"],
+    "select_month": "Select Month:",
+    "coordinates": "Coordinates:",
+    "school": "School:",
+    "footnotes": ["This Prayer Schedule is calculated approach of ", "and it might be different several days with other criteria, so keep to follow the decision of your local authority in your region."],
+    "download": "Download",
+    "print": "Print",
+    "moon_crescent_map_config": "Moon Crescent Map Configuration:",
+    "islamic_month": "Month:",
+    "islamic_year": "Year:",
+    "hijri_abbreviation": "AH",
+    "moon_visibility_criteria": [
+        {
+            "name": "Danjon Limit, 1936",
+            "zones": [
+                {
+                    "visibility": "Meet Danjon Limit Criterion (Elongation ≥ 7°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Hasn't met Danjon Limit Criterion",
+                    "color": "#820101"
+                }
+            ]
+        },
+        {
+            "name": "Yallop, 1997",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye (q > 0.216)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible under perfect conditions (0.216 ≥ q > -0.014)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid (-0.014 ≥ q > -0.16)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid (-0.16 ≥ q > -0.232)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Difficult to be seen even with optical aid (-0.232 ≥ q > -0.293)",
+                    "color": "#B50757"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "SAAO, 2001",
+            "zones": [
+                {
+                    "visibility": "Crescent easily visible (sq > 11)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Need optical aid (11 ≥ sq > 9)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Odeh, 2006",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye (V ≥ 5.65)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "May need optical aid (2 ≤ V < 5.65)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Only visible using optical aid (-0.96 ≤ V < 2)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Qureshi & Khan, 2010",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye (s > 0.15)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible if perfect conditions (0.05 < s ≤ 0.15)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid (-0.06 < s ≤ 0.05)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid (-0.16 < s ≤ -0.06)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "LAPAN, 2010",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (Altitude > 4° & Elongation > 6.4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Shaukat, 2011",
+            "zones": [
+                {
+                    "visibility": "Easily visible by naked eye (q >= 0.27)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Visible if perfect conditions (0.27 > q ≥ -0.024)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "May need optical aid (-0.024 > q ≥ -0.212)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Only visible using optical aid (-0.212 > q ≥ -0.48)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Elongation = 8° & Moon altitude = 5°",
+                    "color": "#FAFF00"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Turkey, 2016",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (Altitude ≥ 5° & Elongation ≥ 8°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Sunset at midnight UTC",
+                    "color": "#0303FC"
+                },
+                {
+                    "visibility": "Sunset at Fajr (Sun altitude: -18°) in New Zealand",
+                    "color": "#FC5203"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "MABIMS, 2021",
+            "zones": [
+                {
+                    "visibility": "Can be seen (Altitude ≥ 3° & Elongation ≥ 6.4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "LFNU, 2022",
+            "zones": [
+                {
+                    "visibility": "Can be seen by eye (QRNU: Altitude ≥ 3° & Elongation ≥ 9.9°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Maybe seen (IRNU: Altitude ≥ 3° & Elongation ≥ 6.4°)",
+                    "color": "#FFFF00"
+                },
+                {
+                    "visibility": "Moon over the horizon, not visible (Unshaded)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Moon has set",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Moon before conjunction",
+                    "color": "#000000"
+                }
+            ]
+        }
+    ],
+    "elongation_type": ["Geocentric", "Topocentric"],
+    "altitude_type": ["Geocentric", "Topocentric"],
+    "observation_time": "Observation Time",
+    "observation_times": ["at Sunset", "at Best Time"],
+    "refraction": "Refracted Correction",
+    "sampling": "Sampling:",
+    "coordinate_steps": [1, 2, 3, 4, 5],
+    "observation_date": "Observation:",
+    "eclipses": "Eclipses",
+    "global_solar_eclipse": "Global Solar Eclipse",
+    "global_solar_eclipses_loading": "Loading Global Solar Eclipses...",
+    "local_solar_eclipse": "Local Solar Eclipse",
+    "local_solar_eclipses_loading": "Loading Local Solar Eclipses...",
+    "lunar_eclipse": "Lunar Eclipse",
+    "lunar_eclipses_loading": "Loading Lunar Eclipses...",
+    "global_solar_eclipse_infos": ["Solar Eclipse Kind", "Distance", "Latitude", "Longitude", "Obscuration", "Peak Time", "Unknown"],
+    "local_solar_eclipse_infos": [
+        "Solar Eclipse Kind",
+        "Obscuration",
+        "Partial Begin Altitude",
+        "Partial Begin Time",
+        "Total Begin Altitude",
+        "Total Begin Time",
+        "Peak Altitude",
+        "Peak Time",
+        "Total End Altitude",
+        "Total End Time",
+        "Partial End Altitude",
+        "Partial End Time",
+        "Not Available"
+    ],
+    "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Penumbral Begin Time", "Partial Begin Time", "Total Begin Time", "Peak Time", "Total End Time", "Partial End Time", "Penumbral End Time", "Penumbral Phase Duration", "Partial Phase Duration", "Total Phase Duration", "Not Available"],
+    "eclipse_locations": ["Eclipse Location", "Unknown"],
+    "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
+    "time_suffixes": ["hours", "minutes", "seconds"],
+    "version": "Updated on June 2025",
+    "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
+    "resources": "Resources",
+    "resource_items": [
+        {
+            "name": "World Cities Database",
+            "url": "https://simplemaps.com/data/world-cities"
+        },
+        {
+            "name": "Grey Moon Illustration",
+            "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
+        },
+        {
+            "name": "Base World Map",
+            "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
+        }
+    ],
+    "references": "References",
+    "reference_items": [
+        {
+            "name": "Astronomy Engine",
+            "url": "https://github.com/cosinekitty/astronomy"
+        },
+        {
+            "name": "Imkanu Rukyah",
+            "url": "https://journal.syamilahpublishing.com/index.php/fatawa/article/view/164/71"
+        },
+        {
+            "name": "Global Hijri Calendar",
+            "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Eclipses Time & Date",
+            "url": "https://www.timeanddate.com/eclipse/"
+        },
+        {
+            "name": "Wujudul Hilal Calculation",
+            "url": "https://muhammadiyah.or.id/2022/02/hisab-hakiki-wujudul-hilal-apa-dan-bagaimana/"
+        },
+        {
+            "name": "Islamic Hijri Calendar Resources",
+            "url": "https://www.al-habib.info/islamic-calendar/"
+        },
+        {
+            "name": "Moon Info",
+            "url": "https://github.com/faisalr/faisalr.github.io"
+        },
+        {
+            "name": "Calculating Prayer Times",
+            "url": "https://radhifadlillah.com/blog/2020-09-06-calculating-prayer-times/"
+        },
+        {
+            "name": "Ephemeris Hisab Rukyat 2024",
+            "url": "https://simbi.kemenag.go.id/eliterasi/portal-web/buku-digital/ephemeris-hisab-rukyat-2024"
+        },
+        {
+            "name": "Celestial Body Mechanics",
+            "url": "https://simpan.ugm.ac.id/s/GcxKuyZWn8Rshnn#pdfviewer"
+        },
+        {
+            "name": "Prayer Times Calculation",
+            "url": "http://praytimes.org/calculation"
+        },
+        {
+            "name": "Crescent Moon Visibility Map",
+            "url": "https://www.al-habib.info/islamic-calendar/hilalmap-crescent-moon-visibility-map.htm"
+        },
+        {
+            "name": "Odeh Moon Crescent Visibility Criterion",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_odeh_2006.pdf"
+        },
+        {
+            "name": "Yallop Moon Crescent Visibility Criterion",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_yallop_1997.pdf"
+        },
+        {
+            "name": "LAPAN Moon Crescent Visibility Criterion",
+            "url": "https://tdjamaluddin.wordpress.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+        },
+        {
+            "name": "Shaukat Moon Crescent Visibility Criterion",
+            "url": "https://www.moonsighting.com/visibility.html"
+        },
+        {
+            "name": "Designing New Moon Visibility Criterion",
+            "url": "https://www.researchgate.net/publication/324561120_Themes_in_Designing_The_New_Moon_Visibility_Criterion"
+        },
+        {
+            "name": "Crescent Moon Visibility",
+            "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
+        }
+    ],
+    "demo_info": "Demo version, might contains any unexpected errors"
+}
