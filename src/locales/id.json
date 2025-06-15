@@ -1,0 +1,784 @@
+{
+    "app_name": "Muslim Calendar",
+    "app_desc": "Selamat Datang ke Muslim Calendar. Tampilkan Informasi Kalender Islam.",
+    "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
+    "hide_toolbar": "Sembunyikan Bilah Alat",
+    "show_toolbar": "Tampilkan Bilah Alat",
+    "current_date": "Hari Ini (Sistem):",
+    "gregorian_date": "Tanggal Masehi",
+    "hijri_date": "Tanggal Hijriah",
+    "current_time": "Waktu Sekarang:",
+    "app_config": "Konfigurasi Aplikasi:",
+    "local_date": "Tanggal:",
+    "local_time": "Waktu (Lokal):",
+    "no_location_found": "Lokasi Tidak Ditemukan",
+    "current_location": "Lokasi Saat Ini",
+    "locating": "Mendapatkan Lokasi...",
+    "restore_datetime": "Kembalikan Waktu",
+    "reset_settings": "Reset Pengaturan",
+    "reset_app_settings_alert": ["Apakah Anda yakin ingin mereset pengaturan aplikasi?", "Semua konfigurasi akan dikembalikan ke pengaturan awal."],
+    "reset_prayer_times_settings_alert": ["Apakah Anda yakin ingin mereset pengaturan Waktu Sholat?", "Semua pengaturan akan dikembalikan ke pengaturan awal."],
+    "ok": "OK",
+    "cancel": "Batal",
+    "yes": "Ya",
+    "no": "Tidak",
+    "location": "Lokasi Terdekat:",
+    "geocoding": "Menentukan lokasi...",
+    "search_location": "Cari Lokasi...",
+    "latitude": "Lintang:",
+    "longitude": "Bujur:",
+    "elevation": "Ketinggian:",
+    "apply": "Terapkan",
+    "hijri_calendar_reference": "Estimasi Tanggal Hijriah:",
+    "hijri_date_criteria": "Kriteria:",
+    "date_criteria": [
+        {
+            "criteria": "KHGT/Turki",
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Singapura)",
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Brunei Darussalam)",
+            "latitude_range": [4, 5.066667],
+            "longitude_range": [114.083333, 115.416667]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Malaysia)",
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Indonesia)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Neo MABIMS (Mathla': Semua Wilayah MABIMS)",
+            "latitude_range": [-11.0075, 7.4],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Neo MABIMS (Markaz: Lokal)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Yogyakarta)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Wujudul Hilal (Markaz: Lokal)",
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "criteria": "Ummul Qura",
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
+        }
+    ],
+    "timezone": "Zona Waktu:",
+    "interval_update": "Pembaruan:",
+    "intervals": ["1 detik", "5 detik", "15 detik", "30 detik", "1 menit"],
+    "current_month": "Ke Tanggal Saat Ini",
+    "set_month": "Ke Tanggal yang Ditentukan",
+    "set_moon_info": "Informasi Bulan pada:",
+    "set_prayer_times": "Waktu Sholat pada:",
+    "error_alert": "Kesalahan",
+    "error_solution": "Silakan muat ulang halaman",
+    "calendar_loading": "Memuat Kalender...",
+    "event_list_loading": "Memuat Daftar Hari Besar Islam...",
+    "calendar": "Kalender",
+    "loading": "Memuat...",
+    "moon_info": "Informasi Bulan",
+    "prayer_times_loading": "Memuat Waktu Sholat...",
+    "prayer_times": "Waktu Sholat",
+    "prayer_times_headers": ["Waktu", "Kemarin", "Hari Ini", "Besok", "Tanggal Hijriah", "Tanggal Masehi"],
+    "more": "Selengkapnya",
+    "moon_crescent_map_loading": "Memuat Peta Visibilitas Hilal...",
+    "moon_crescent_map": "Peta Visibilitas Hilal",
+    "moon_crescent_maps_loading": "Memuat Peta Visibilitas Hilal...",
+    "conjunction": "Ijtima'",
+    "error": "Kesalahan",
+    "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
+    "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
+    "hijri_date_info": "* Perhitungan Tanggal Hijriah ini mungkin terdapat perbedaan/selisih beberapa hari. Sehingga tetap mengikuti keputusan dari Lembaga/Organisasi Islam setempat.",
+    "muslim_holidays": "Hari besar Islam di Tahun ",
+    "muslim_events": {
+        "1-1-event": "1 Muharram",
+        "9-1-event": "Tasu'a",
+        "10-1-event": "Asyura",
+        "12-3-event": "Maulid Nabi Muhammad",
+        "27-7-event": "Isra Mi'raj",
+        "15-8-event": "Nisfu Sya'ban",
+        "1-9-event": "Awal Ramadhan",
+        "17-9-event": "Nuzulul Qur'an",
+        "1-10-event": "Idul Fitri",
+        "9-12-event": "Hari Arafah",
+        "10-12-event": "Idul Adha"
+    },
+    "moon_infos": ["Umur Bulan", "Iluminasi", "Sudut Fase", "Right Ascension", "Deklinasi", "Ketinggian Geosentris", "Ketinggian Toposentris", "Azimut", "Jarak ke Bulan", "Librasi Lintang", "Librasi Bujur", "Elongasi Geosentris", "Elongasi Toposentris", "Bulan Terbit", "Bulan Terbenam", "Konjungsi Sebelumnya", "Kuarter Pertama", "Bulan Purnama", "Kuarter Terakhir", "Konjungsi Berikutnya", "Ketinggian Matahari", "Azimut Matahari", "Matahari Terbit", "Matahari Terbenam"],
+    "calculation": "Penghitungan:",
+    "calculations": ["Astronomy-Engine", "Manual"],
+    "prayer_info": ["Menuju Waktu", "Waktu", "telah tiba"],
+    "ashr_time": "Waktu Ashar:",
+    "mazhab": ["Jumhur", "Hanafi"],
+    "convention": "Konvensi:",
+    "conventions": [
+        {
+            "method": "MWL (Subuh: 18°, Isya': 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        },
+        {
+            "method": "ISNA (Subuh: 15°, Isya': 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [7.2167, 83.1114],
+            "longitude_range": [-168.0842, -52.6239]
+        },
+        {
+            "method": "Ummul Qura (Subuh: 18,5°, Isya': 90 mnt/120 mnt)",
+            "sun_altitude": {
+                "fajr": 18.5,
+                "isha": ["90 mins", "120 mins"]
+            },
+            "latitude_range": [16, 32.5],
+            "longitude_range": [34.2, 56]
+        },
+        {
+            "method": "Gulf (Subuh: 19,5°, Isya': 90 mnt)",
+            "sun_altitude": {
+                "fajr": 19.5,
+                "isha": "90 mins"
+            },
+            "latitude_range": [16, 30.1],
+            "longitude_range": [46.5, 60]
+        },
+        {
+            "method": "Aljazair (Subuh: 18°, Isya': 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [18.9667, 37.0833],
+            "longitude_range": [-8.6667, 12]
+        },
+        {
+            "method": "Karachi (Subuh: 18°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [6.7528, 38.3667],
+            "longitude_range": [60.5, 97.4167]
+        },
+        {
+            "method": "Diyanet (Subuh: 18°, Isya': 17°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 17
+            },
+            "latitude_range": [35.81278, 42.10583],
+            "longitude_range": [25.66556, 44.81778]
+        },
+        {
+            "method": "Mesir (Subuh: 19,5°, Isya': 17,5°)",
+            "sun_altitude": {
+                "fajr": 19.5,
+                "isha": 17.5
+            },
+            "latitude_range": [-34.85, 37.5333],
+            "longitude_range": [-17.5333, 51.4644]
+        },
+        {
+            "method": "EgyptBis (Subuh: 20°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [22, 31.6],
+            "longitude_range": [24.6667, 36.9]
+        },
+        {
+            "method": "MUIS (Subuh: 20°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [1.22, 1.47],
+            "longitude_range": [103.6, 104.05]
+        },
+        {
+            "method": "JAKIM (Subuh: 18°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [0.8528, 7.3794],
+            "longitude_range": [98.93, 119.2667]
+        },
+        {
+            "method": "Kemenag (Subuh: 20°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 20,
+                "isha": 18
+            },
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "method": "Muhammadiyah (Subuh: 18°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [-11.0075, 6.075],
+            "longitude_range": [94.9728, 141.0194]
+        },
+        {
+            "method": "UOIF (Subuh: 12°, Isya': 12°)",
+            "sun_altitude": {
+                "fajr": 12,
+                "isha": 12
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "France15 (Subuh: 15°, Isya': 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "France18 (Subuh: 18°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [42.3333, 51.0833],
+            "longitude_range": [-4.7833, 8.2167]
+        },
+        {
+            "method": "Basque (Subuh: 15°, Isya': 15°)",
+            "sun_altitude": {
+                "fajr": 15,
+                "isha": 15
+            },
+            "latitude_range": [42.5, 43.4833],
+            "longitude_range": [-2.7526, -1.4833]
+        },
+        {
+            "method": "Tunisia (Subuh: 18°, Isya': 18°)",
+            "sun_altitude": {
+                "fajr": 18,
+                "isha": 18
+            },
+            "latitude_range": [30, 37.52694],
+            "longitude_range": [7, 12]
+        },
+        {
+            "method": "Jafari (Subuh: 16°, Isya': 14°, Maghrib: 4°)",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14,
+                "maghrib": 4
+            },
+            "latitude_range": [12, 41.9],
+            "longitude_range": [35, 63]
+        },
+        {
+            "method": "Tehran (Subuh: 17,7°, Isya': 14°, Maghrib: 4,5°)",
+            "sun_altitude": {
+                "fajr": 17.7,
+                "isha": 14,
+                "maghrib": 4.5
+            },
+            "latitude_range": [25.06694, 39.74861],
+            "longitude_range": [44.05056, 63.24861]
+        },
+        {
+            "method": "Rusia (Subuh: 16°, Isya': 15°)",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 15
+            },
+            "latitude_range": [41.22056, 81.84306],
+            "longitude_range": [30, 180]
+        },
+        {
+            "method": "Sudut Kustom",
+            "sun_altitude": {
+                "fajr": 16,
+                "isha": 14
+            },
+            "latitude_range": [-90, 90],
+            "longitude_range": [-180, 180]
+        }
+    ],
+    "fajr_angle": "Sudut Subuh:",
+    "isha_angle": "Sudut Isya':",
+    "zawal": "Zawal:",
+    "zawal_times": ["+0 menit", "+1 menit", "+2 menit", "+3 menit", "+4 menit", "+5 menit"],
+    "ihtiyath": "Ihtiyath:",
+    "ihtiyath_times": ["0 menit","1 menit", "2 menit", "3 menit", "4 menit", "5 menit"],
+    "precise_to_seconds": "Tepat hingga detik",
+    "rounding": "Pembulatan:",
+    "rounding_methods": ["Ke atas", "Menit terdekat", "Ke bawah"],
+    "calculation_method": "Metode Lintang Tinggi:",
+    "formulas": ["Tidak diatur","Mengikuti lintang ±45 derajat", "Mengikuti koordinat Mekkah", "Tengah malam", "Sepertujuh malam", "Metode berbasis sudut"],
+    "restore_to_default": "Ke Pengaturan Awal",
+    "prayer_times_config": "Pengaturan Waktu Sholat:",
+    "dhuha_method": "Perhitungan Dhuha:",
+    "dhuha_methods": ["Tinggi Matahari", "Setelah Terbit"],
+    "time_correction": "Koreksi Waktu:",
+    "prayer_names": ["Imsak", "Subuh", "Terbit", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya'"],
+    "minutes": "menit",
+    "degrees": "derajat",
+    "qibla_direction": "Arah Kiblat",
+    "qibla_directions": ["Arah Kiblat ", " dari Utara"],
+    "qibla_distance": "Jarak ke Ka'bah ",
+    "qibla": "Kiblat",
+    "visualization": "Visualisasi",
+    "set_visualization": "Visualisasi pada:",
+    "zenith": "Zenit",
+    "nadir": "Nadir",
+    "civil_twilight": ["Fajar Sipil", "Senja Sipil"],
+    "nautical_twilight": ["Fajar Nautikal", "Senja Nautikal"],
+    "astronomical_twilight": ["Fajar Astronomikal", "Senja Astronomikal"],
+    "horizons": ["Ufuk Timur", "Ufuk Barat"],
+    "sun_info": "Informasi Matahari",
+    "set_sun_info": "Informasi Matahari pada:",
+    "objects": ["Matahari", "Bulan"],
+    "sun_infos": ["Terbit", "Terbenam", "Ketinggian", "Azimut", "Right Ascension", "Deklinasi", "Jarak Matahari", "Lintang Ekliptika", "Bujur Ekliptika", "Kulminasi", "Tengah Malam", "Fase Bulan", "Ketinggian Bulan", "Azimut Bulan", "Deklinasi Bulan", "Bulan Terbit", "Bulan Terbenam"],
+    "at": "pukul",
+    "prayer_schedule": "Jadwal Sholat",
+    "imsakiyah_schedule": "Jadwal Imsakiyah",
+    "month_type": "Pilih Jenis Bulan:",
+    "month_types": ["Masehi", "Hijriah"],
+    "select_month": "Pilih Bulan:",
+    "coordinates": "Koordinat:",
+    "school": "Mazhab:",
+    "footnotes": ["Jadwal ini dihitung dengan pendekatan Kriteria ", "dan mungkin terdapat selisih hari dengan kriteria lain sehingga tetap mengikuti keputusan dari otoritas setempat di wilayah Anda."],
+    "download": "Unduh",
+    "print": "Cetak",
+    "moon_crescent_map_config": "Pengaturan Peta Visibilitas Hilal:",
+    "islamic_month": "Bulan:",
+    "islamic_year": "Tahun:",
+    "hijri_abbreviation": "H",
+    "moon_visibility_criteria": [
+        {
+            "name": "Limit Danjon, 1936",
+            "zones": [
+                {
+                    "visibility": "Memenuhi kriteria Limit Danjon (Elongasi ≥ 7°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Belum memenuhi kriteria Limit Danjon",
+                    "color": "#820101"
+                }
+            ]
+        },
+        {
+            "name": "Yallop, 1997",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata (q > 0,216)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah (0,216 ≥ q > -0,014)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik (-0,014 ≥ q > -0,16)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Perlu bantuan alat optik (-0,16 ≥ q > -0,232)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan teleskop (-0,232 ≥ q > -0,293)",
+                    "color": "#B50757"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "SAAO, 2001",
+            "zones": [
+                {
+                    "visibility": "Bulan sabit mudah terlihat (sq > 11)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Perlu bantuan alat optik (11 ≥ sq > 9)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Odeh, 2006",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata (V ≥ 5,65)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik (2 ≤ V < 5,65)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik (-0,96 ≤ V < 2)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Qureshi & Khan, 2010",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat oleh mata (s > 0,15)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah (0,05 < s ≤ 0,15)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik (-0,06 < s ≤ 0,05)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik (-0,16 < s ≤ -0,06)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "LAPAN, 2010",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat mata (Ketinggian > 4° & Elongasi > 6,4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "Shaukat, 2011",
+            "zones": [
+                {
+                    "visibility": "Mudah dilihat dengan mata (q >= 0,27)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Terlihat jika cuaca cerah (0,27 > q ≥ -0,024)",
+                    "color": "#9EFF00"
+                },
+                {
+                    "visibility": "Mungkin perlu bantuan alat optik(-0,024 > q ≥ -0,212)",
+                    "color": "#FF783C"
+                },
+                {
+                    "visibility": "Hanya terlihat dengan alat optik (-0,212 > q ≥ -0,48)",
+                    "color": "#FF0000"
+                },
+                {
+                    "visibility": "Elongasi = 8° & ketinggian Bulan = 5°",
+                    "color": "#FAFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "KHGT/Turki, 2016",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat mata (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Matahari terbenam pada pukul 00:00 UTC",
+                    "color": "#0303FC"
+                },
+                {
+                    "visibility": "Matahari terbenam saat Fajar (Ketinggian Matahari: -18°) di Selandia Baru",
+                    "color": "#FC5203"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "MABIMS, 2021",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat (Ketinggian ≥ 3° & Elongasi ≥ 6,4°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        },
+        {
+            "name": "LFNU, 2022",
+            "zones": [
+                {
+                    "visibility": "Bisa terlihat kasat mata (QRNU: Ketinggian ≥ 3° & Elongasi ≥ 9,9°)",
+                    "color": "#00FF3E"
+                },
+                {
+                    "visibility": "Mungkin terlihat (IRNU: Ketinggian ≥ 3° & Elongasi ≥ 6,4°)",
+                    "color": "#FFFF00"
+                },
+                {
+                    "visibility": "Bulan di atas ufuk, tidak kasat mata (Tidak diarsir)",
+                    "color": ""
+                },
+                {
+                    "visibility": "Bulan sudah tenggelam",
+                    "color": "#808080"
+                },
+                {
+                    "visibility": "Bulan belum ijtima'",
+                    "color": "#000000"
+                }
+            ]
+        }
+    ],
+    "elongation_type": ["Geosentris", "Toposentris"],
+    "altitude_type": ["Geosentris", "Toposentris"],
+    "observation_time": "Waktu Pengamatan:",
+    "observation_times": ["saat Matahari Terbenam", "pada Waktu Terbaik"],
+    "refraction": "Koreksi Refraksi",
+    "sampling": "Sampling:",
+    "coordinate_steps": [1, 2, 3, 4, 5],
+    "observation_date": "Pengamatan:",
+    "eclipses": "Gerhana",
+    "global_solar_eclipse": "Gerhana Matahari Global",
+    "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",
+    "local_solar_eclipse": "Gerhana Matahari Lokal",
+    "local_solar_eclipses_loading": "Memuat Gerhana Matahari Lokal...",
+    "lunar_eclipse": "Gerhana Bulan",
+    "lunar_eclipses_loading": "Memuat Gerhana Bulan...",
+    "global_solar_eclipse_infos": ["Jenis Gerhana Matahari", "Jarak", "Lintang", "Bujur", "Tertutup", "Waktu Puncak","Tidak Diketahui"],
+    "local_solar_eclipse_infos": [
+        "Jenis Gerhana Matahari",
+        "Tertutup",
+        "Ketinggian Awal Sebagian",
+        "Awal Waktu Sebagian",
+        "Ketinggian Awal Total",
+        "Awal Waktu Total",
+        "Ketinggian Puncak",
+        "Waktu Puncak",
+        "Ketinggian Akhir Total",
+        "Akhir Waktu Total",
+        "Ketinggian Akhir Sebagian",
+        "Akhir Waktu Sebagian",
+        "Tidak Ada"
+    ],
+    "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Penumbra Awal", "Waktu Parsial Awal", "Waktu Total Awal", "Waktu Puncak", "Waktu Total Akhir", "Waktu Parsial Akhir", "Waktu Penumbra Akhir", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Tidak Ada"],
+    "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
+    "time_suffixes": ["jam", "menit", "detik"],
+    "version": "Diperbarui pada Juni 2025",
+    "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
+    "resources": "Sumber Aset",
+    "resource_items": [
+        {
+            "name": "Basis Data Kota-kota di Dunia",
+            "url": "https://simplemaps.com/data/world-cities"
+        },
+        {
+            "name": "Gambar Ilustrasi Bulan",
+            "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
+        },
+        {
+            "name": "Dasar Peta Dunia",
+            "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
+        }
+    ],
+    "references": "Referensi",
+    "reference_items": [
+        {
+            "name": "Astronomy Engine",
+            "url": "https://github.com/cosinekitty/astronomy"
+        },
+        {
+            "name": "Imkanu Rukyah",
+            "url": "https://journal.syamilahpublishing.com/index.php/fatawa/article/view/164/71"
+        },
+        {
+            "name": "Kalender Hijriah Global Tunggal",
+            "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
+        },
+        {
+            "name": "Tanggal & Waktu Gerhana",
+            "url": "https://www.timeanddate.com/eclipse/"
+        },
+        {
+            "name": "Hisab Hakiki Wujudul Hilal",
+            "url": "https://muhammadiyah.or.id/2022/02/hisab-hakiki-wujudul-hilal-apa-dan-bagaimana/"
+        },
+        {
+            "name": "Informasi Kalender Islam",
+            "url": "https://www.al-habib.info/kalender-islam/"
+        },
+        {
+            "name": "Informasi Bulan",
+            "url": "https://github.com/faisalr/faisalr.github.io"
+        },
+        {
+            "name": "Menghitung Waktu Sholat",
+            "url": "https://radhifadlillah.com/blog/2020-09-06-calculating-prayer-times/"
+        },
+        {
+            "name": "Ephemeris Hisab Rukyat 2024",
+            "url": "https://simbi.kemenag.go.id/eliterasi/portal-web/buku-digital/ephemeris-hisab-rukyat-2024"
+        },
+        {
+            "name": "Mekanika Benda Langit",
+            "url": "https://simpan.ugm.ac.id/s/GcxKuyZWn8Rshnn#pdfviewer"
+        },
+        {
+            "name": "Perhitungan Waktu Sholat",
+            "url": "http://praytimes.org/calculation"
+        },
+        {
+            "name": "Peta Visibilitas Hilal",
+            "url": "https://www.al-habib.info/kalender-islam/hilalmap-peta-visibilitas-hilal-js.htm"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Odeh",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_odeh_2006.pdf"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Yallop",
+            "url": "https://www.al-habib.info/kalender-islam/crescent_moon_visibility_yallop_1997.pdf"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit LAPAN",
+            "url": "https://tdjamaluddin.wordpress.com/2010/08/02/analisis-visibilitas-hilal-untuk-usulan-kriteria-tunggal-di-indonesia/"
+        },
+        {
+            "name": "Kriteria Visibilitas Bulan Sabit Shaukat",
+            "url": "https://www.moonsighting.com/visibility.html"
+        },
+        {
+            "name": "Perancangan Kriteria Visibilitas Bulan Baru",
+            "url": "https://www.researchgate.net/publication/324561120_Themes_in_Designing_The_New_Moon_Visibility_Criterion"
+        },
+        {
+            "name": "Visibilitas Bulan Sabit",
+            "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
+        }
+    ],
+    "demo_info": "Versi demo, mungkin terdapat error yang tidak diketahui"
+}
