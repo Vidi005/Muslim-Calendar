@@ -1,10 +1,10 @@
 import React from "react"
 
 const CustomPrevArrow = props => {
-  const { className, style, onClick } = props
+  const { className, style, onClick, t } = props
   return (
     <div
-      title="Previous Month"
+      title={t('prev_month')}
       className={className}
       style={{ ...style, display: "relative", height: "100%" }}
       onClick={onClick}
