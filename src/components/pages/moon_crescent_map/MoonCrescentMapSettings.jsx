@@ -163,7 +163,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             selectCoordinateSteps(3)
             selectMoonVisibilityCriteria(3)
             restoreToDefault()
-          }} disabled={areMoonVisibilityCriteriaMapsLoading}>
+          }} disabled={areMoonVisibilityCriteriaMapsLoading && state.selectedCoordinateSteps > 1}>
             <img src={`${import.meta.env.BASE_URL}images/reset-settings-icon.svg`} alt="Restore to Default" />
             <span className="ml-1 text-white text-sm whitespace-nowrap">{t('restore_to_default')}</span>
           </button>
