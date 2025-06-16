@@ -9,7 +9,7 @@ const HeaderContainer = () => (
         <section className="header-title grow flex items-center">
           {innerWidth >= 1280
             ? (
-                <button className="p-1 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" onClick={toggleSidebar}>
+                <button title={t('toggle_sidebar')} className="p-1 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" onClick={toggleSidebar}>
                   <img className="h-8 object-contain drop-shadow-md px-1" src={`${import.meta.env.BASE_URL}images/sidebar-icon.svg`}/>
                 </button>
               )
@@ -18,13 +18,13 @@ const HeaderContainer = () => (
           <h3 className="grow px-1 sm:px-1.5 md:px-2 text-base sm:text-lg md:text-xl font-serif text-white whitespace-nowrap">{t('app_name')}</h3>
         </section>
         <section className="w-fit flex items-center pl-1">
-          <a href="https://github.com/Vidi005/muslim-calendar" title="Repository" target="_blank" rel="noreferrer noopener">
+          <a href="https://github.com/Vidi005/muslim-calendar" title={t('repository')} target="_blank" rel="noreferrer noopener">
             <img className="h-10 mr-1 md:mr-2 p-2 object-contain hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md" src={`${import.meta.env.BASE_URL}images/github-icon.png`} alt="Github" />
           </a>
           <Switch
             checked={state.isDarkMode}
             onChange={setDisplayMode}
-            title="Theme Setting"
+            title={t('theme_setting')}
             className={`${
               state.isDarkMode
                 ? "bg-green-800"
@@ -37,7 +37,7 @@ const HeaderContainer = () => (
             </span>
           </Switch>
           <Menu as={"menu"} className={"inline-block h-10 pl-2"}>
-            <MenuButton className={"inline-flex w-full items-center justify-center h-full p-2 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md"} title="Languages">
+            <MenuButton className={"inline-flex w-full items-center justify-center h-full p-2 hover:bg-black/50 focus-visible:ring-2 focus-visible:ring-white/75 duration-200 rounded-md"} title={t('languages')}>
               <img className="h-full object-contain" src={`${import.meta.env.BASE_URL}images/lang-icon.svg`} alt="Languages" />
               <img className="h-full object-contain" src={`${import.meta.env.BASE_URL}images/expand-icon.svg`} alt="Expand" />
             </MenuButton>

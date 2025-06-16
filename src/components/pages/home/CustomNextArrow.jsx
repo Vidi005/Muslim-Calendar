@@ -1,10 +1,10 @@
 import React from "react"
 
 const CustomNextArrow = props => {
-  const { className, style, onClick } = props
+  const { className, style, onClick, t } = props
   return (
     <div
-      title="Next Month"
+      title={t('next_month')}
       className={className}
       style={{ ...style, display: "relative", height: "100%" }}
       onClick={onClick}
