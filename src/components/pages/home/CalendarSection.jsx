@@ -20,8 +20,8 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
         slidesToScroll: 1,
         initialSlide: state.formattedDateTime.getMonth(),
         adaptiveHeight: true,
-        nextArrow: <CustomNextArrow />,
-        prevArrow: <CustomPrevArrow />
+        nextArrow: <CustomNextArrow t={t}/>,
+        prevArrow: <CustomPrevArrow t={t}/>
       }
       const isWaxing = parseFloat(state.moonInfos[2]) <= 180
       const isCrescent = parseFloat(state.moonInfos[1]) <= 50
@@ -133,7 +133,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                   </Slider>
                   <ul className="flex flex-nowrap items-center justify-center list-none mx-auto py-4 space-x-1 md:space-x-2 lg:space-x-4 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <li key={i} title={`Jump to ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
+                      <li key={i} title={`${t('go_to')} ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
                     ))}
                   </ul>
                   <h5 className="font-normal sm:font-bold mb-2 text-sm text-amber-600 dark:text-amber-200 leading-tight">{t('hijri_date_info')}</h5>
