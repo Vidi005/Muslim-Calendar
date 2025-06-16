@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition, VectorFromHorizon } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -1717,9 +1717,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
 const calculateVisibilityDanjon = (arcOfLight, moonAge, isMeetCriteria, sunset, conjunction) => {
   let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(5)}°\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = '#820101'
-  if (isMeetCriteria && sunset.date > conjunction.date) {
-    color = '#00FF3E'
-  }
+  if (isMeetCriteria && sunset.date > conjunction.date) color = '#00FF3E'
   return { tooltip, color }
 }
 
