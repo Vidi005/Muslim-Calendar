@@ -12,6 +12,7 @@ import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
 import en from "./../locales/en.json"
 import AboutPage from "./pages/about/AboutPage"
 import EclipsesPage from "./pages/eclipses/EclipsesPage"
+import { isDesktopPlatform } from "../utils/platformDetection"
 
 class App extends React.Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class App extends React.Component {
       ALTITUDE_TYPE_STORAGE_KEY: 'ALTITUDE_TYPE_STORAGE_KEY',
       OBSERVATION_TIME_STORAGE_KEY: 'OBSERVATION_TIME_STORAGE_KEY',
       CORRECTED_REFRACTION_STORAGE_KEY: 'CORRECTED_REFRACTION_STORAGE_KEY',
+      SHOW_TOOLTIP_STORAGE_KEY: 'SHOW_TOOLTIP_STORAGE_KEY',
       COORDINATE_STEPS_STORAGE_KEY: 'COORDINATE_STEPS_STORAGE_KEY',
       selectedLanguage: 'en',
       currentDate: {},
@@ -100,6 +102,7 @@ class App extends React.Component {
       isCalendarLoading: true,
       areMoonInfosLoading: true,
       isUseNormalRefraction: true,
+      isTooltipShown: false,
       isMoonCrescentMapLoading: true,
       areEclipseInfosLoading: true,
       isGettingCoordinates: false,
@@ -140,7 +143,7 @@ class App extends React.Component {
         this.formatDateTime().then(() => this.generateCalendar().then(() => this.getMoonCrescentVisibility())).then(() => this.getEclipseInfos())
       }
     }
-    if ((prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria || prevState.selectedElongationType !== this.state.selectedElongationType || prevState.selectedAltitudeType !== this.state.selectedAltitudeType || prevState.selectedObservationTime !== this.state.selectedObservationTime || prevState.isUseNormalRefraction !== this.state.isUseNormalRefraction) && this.state.monthsInSetYear.length > 0) {
+    if ((prevState.selectedMoonVisibilityCriteria !== this.state.selectedMoonVisibilityCriteria || prevState.selectedElongationType !== this.state.selectedElongationType || prevState.selectedAltitudeType !== this.state.selectedAltitudeType || prevState.selectedObservationTime !== this.state.selectedObservationTime || prevState.isUseNormalRefraction !== this.state.isUseNormalRefraction || prevState.isTooltipShown !== this.state.isTooltipShown) && this.state.monthsInSetYear.length > 0) {
       this.getMoonCrescentVisibility()
     }
   }
@@ -193,6 +196,7 @@ class App extends React.Component {
       this.checkSavedAltitudeType()
       this.checkSavedObservationTime()
       this.checkCorrectedRefractionState()
+      this.checkTooltipState()
       this.checkSavedCoordinateSteps()
     }
   }
@@ -553,6 +557,23 @@ class App extends React.Component {
       }
     } catch (error) {
       localStorage.removeItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkTooltipState () {
+    const getTooltipStateFromLocal = localStorage.getItem(this.state.SHOW_TOOLTIP_STORAGE_KEY)
+    try {
+      const parsedTooltipState = JSON.parse(getTooltipStateFromLocal)
+      if (parsedTooltipState !== null) {
+        if (isDesktopPlatform()) this.setState({ isTooltipShown: parsedTooltipState })
+        else {
+          this.setState({ isTooltipShown: false })
+          localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY)
+        }
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -1145,10 +1166,22 @@ class App extends React.Component {
   onChangeRefractionState (value) {
     this.setState({ isUseNormalRefraction: value }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
-        localStorage.setItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY
-          , JSON.stringify(this.state.isUseNormalRefraction))
+        localStorage.setItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY, JSON.stringify(this.state.isUseNormalRefraction))
       }
       this.generateCalendar().then(() => this.getMoonCrescentVisibility())
+    })
+  }
+
+  onChangeTooltipState (value) {
+    this.setState({ isTooltipShown: value }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        if (isDesktopPlatform()) {
+          localStorage.setItem(this.state.SHOW_TOOLTIP_STORAGE_KEY, JSON.stringify(this.state.isTooltipShown))
+        } else {
+          this.setState({ isTooltipShown: false }, () => localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY))
+        }
+      }
+      this.getMoonCrescentVisibility()
     })
   }
 
@@ -1439,6 +1472,7 @@ class App extends React.Component {
       altitudeType: this.state.selectedAltitudeType,
       observationTime: this.state.selectedObservationTime,
       correctedRefraction: this.state.isUseNormalRefraction ? 'normal' : false,
+      shownTooltip: this.state.isTooltipShown,
       steps: this.state.selectedCoordinateSteps
     })
     moonCrescentVisibilityWorker.onmessage = workerEvent => {
@@ -1690,6 +1724,7 @@ class App extends React.Component {
               selectAltitudeType: this.selectAltitudeType.bind(this),
               selectObservationTime: this.selectObservationTime.bind(this),
               onChangeRefractionState: this.onChangeRefractionState.bind(this),
+              onChangeTooltipState: this.onChangeTooltipState.bind(this),
               selectCoordinateSteps: this.selectCoordinateSteps.bind(this)
             }}>
               <MoonCrescentMapPage
@@ -1704,6 +1739,7 @@ class App extends React.Component {
                 selectedAltitudeType={this.state.selectedAltitudeType}
                 selectedObservationTime={this.state.selectedObservationTime}
                 isUseNormalRefraction={this.state.isUseNormalRefraction}
+                isTooltipShown={this.state.isTooltipShown}
                 selectedCoordinateSteps={this.state.selectedCoordinateSteps}
                 generateMoonCrescentVisibility={this.generateMoonCrescentVisibility.bind(this)}
               />

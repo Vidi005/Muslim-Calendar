@@ -2,10 +2,11 @@ import React from "react"
 import en from "../../../locales/en.json"
 import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { Checkbox, Field, Label } from "@headlessui/react"
+import { isMobilePlatform } from "../../../utils/platformDetection"
 
 const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoonVisibilityCriteriaMapsLoading, restoreToDefault }) => (
   <HomePageConsumer>
-    {({ t, state, selectMoonVisibilityCriteria, selectElongationType, selectAltitudeType, selectObservationTime, onChangeRefractionState, selectCoordinateSteps }) => (
+    {({ t, state, selectMoonVisibilityCriteria, selectElongationType, selectAltitudeType, selectObservationTime, onChangeRefractionState, onChangeTooltipState, selectCoordinateSteps }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200">
         <h4 className="text-sm lg:text-lg whitespace-nowrap">{t('moon_crescent_map_config')}</h4>
         <div className="flex flex-wrap items-center justify-center md:justify-between gap-2">
@@ -141,6 +142,14 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
             </Checkbox>
             <Label className={`p-1 ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`} aria-disabled={areMoonVisibilityCriteriaMapsLoading}>{t('refraction')}</Label>
           </Field>
+          <Field className={`flex items-center ${isMobilePlatform() ? "hidden" : ""}`}>
+            <Checkbox checked={state.isTooltipShown} onChange={onChangeTooltipState} disabled={areMoonVisibilityCriteriaMapsLoading || isMobilePlatform()} className={`group block border bg-green-200 dark:bg-gray-200 data-[checked]:bg-green-700 dark:data-[checked]:bg-green-500 w-5 h-5 rounded shadow-inner duration-200 ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>
+              <svg className="stroke-white" viewBox="0 0 14 14" fill="none">
+                <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Checkbox>
+            <Label className={`p-1 ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : "cursor-pointer"}`} aria-disabled={areMoonVisibilityCriteriaMapsLoading}>{t('tooltip')}</Label>
+          </Field>
           <span className="flex items-center">
             <label htmlFor="coordinate-steps">{t('sampling')}</label>
             <select
@@ -157,6 +166,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
           </span>
           <button className={`flex items-center ml-auto md:m-0 p-1 bg-red-700 hover:bg-red-500 hover:dark:bg-red-300 dark:bg-red-500 active:bg-red-700 dark:active:bg-red-900 rounded-md duration-200 shadow ${areMoonVisibilityCriteriaMapsLoading ? "cursor-not-allowed" : ""}`} onClick={() => {
             onChangeRefractionState(true)
+            onChangeTooltipState(false)
             selectElongationType(0)
             selectAltitudeType(1)
             selectObservationTime(0)

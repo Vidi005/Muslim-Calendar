@@ -2173,29 +2173,64 @@ const createZones = (criteria, elongationType, altitudeType, observationTime, co
   } else {
     result = checkLFNU(conjunction, astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   }
-  const width = steps * 100 / 360
-  const height = steps * 100 / 180
-  const xPosition = 100 * (180 + lng) / 360
-  const yPosition = 100 * (90 - lat) / 180
   if (result?.tooltip?.length > 0) {
     return {
-      width,
-      height,
-      yPos: yPosition,
-      xPos: xPosition,
       tooltip: result.tooltip,
       color: result.color
     }
   }
 }
 
-const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
+const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps) => {
   const results = []
-  for (let lng = -180; lng < 180; lng += steps) {
-    for (let lat = 60; lat >= -60; lat -= steps) {
+  for (let lat = 60; lat >= -60; lat -= steps) {
+    let currentRun = null
+    for (let lng = -180; lng < 180; lng += steps) {
       let result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
-      if (result?.tooltip?.length > 0) results.push(result)
+      const color = result.color
+      const width = steps * 100 / 360
+      const xPosition = 100 * (180 + lng) / 360
+      const yPosition = 100 * (90 - lat) / 180
+      if (shownTooltip) {
+        currentRun = {
+          xPos: xPosition,
+          yPos: yPosition,
+          width: width,
+          height: steps * 100 / 180,
+          color: color,
+          tooltip: result.tooltip
+        }
+        if (currentRun) {
+          results.push(currentRun)
+          currentRun = null
+        }
+      } else {
+        if (color) {
+          if (currentRun && currentRun.color === color && true) {
+            currentRun.width += width
+          } else {
+            if (currentRun) results.push(currentRun)
+            currentRun = {
+              xPos: xPosition,
+              yPos: yPosition,
+              width: width,
+              height: steps * 100 / 180,
+              color: color,
+              tooltip: result.tooltip || ''
+            }
+          }
+        } else {
+          if (currentRun) {
+            results.push(currentRun)
+            currentRun = null
+          }
+        }
+      }
       result = null
+    }
+    if (currentRun) {
+      results.push(currentRun)
+      currentRun = null
     }
   }
   return results
@@ -2220,13 +2255,13 @@ const getConjunctionDate = observationDate => {
   return SearchMoonPhase(0, dateBeforeConjunction, 5)
 }
 
-const getMoonCrescentVisibility = (observationDate, timeZone, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps) => {
+const getMoonCrescentVisibility = (observationDate, timeZone, criteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps) => {
   const startDate = new Date(`${getIsoDateStrBasedTimeZone(observationDate, timeZone)}T00:00:00Z`)
   const observationStartDate = new Date(`${addZeroPadForYear(observationDate.getFullYear())}-${addZeroPad(observationDate.getMonth() + 1)}-${addZeroPad(observationDate.getDate())}T00:00:00`)
   const astroDate = MakeTime(startDate)
   const conjunction = getConjunctionDate(observationDate)
   return {
-    zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, steps),
+    zoneCoordinates: gridSearchLongitude(conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps),
     conjunction: conjunction?.date,
     observationDate: observationStartDate
   }
