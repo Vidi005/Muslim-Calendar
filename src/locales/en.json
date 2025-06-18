@@ -666,6 +666,7 @@
     "observation_time": "Observation Time",
     "observation_times": ["at Sunset", "at Best Time"],
     "refraction": "Refracted Correction",
+    "tooltip": "Show Tooltip (Slower)",
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "observation_date": "Observation:",

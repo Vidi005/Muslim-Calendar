@@ -2,7 +2,7 @@ import React from "react"
 import { coordinateScale } from "../../../utils/data"
 import en from "../../../locales/en.json"
 
-const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibilityCriteria, observationDate, selectedObservationTime, visibility }) => (
+const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibilityCriteria, isTooltipShown, observationDate, selectedObservationTime, visibility }) => (
   <div className="moon-crescent-map flex flex-col items-center w-full px-3 md:px-5 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
     {
       (selectedMoonVisibilityCriteria === 2 || selectedMoonVisibilityCriteria === 5 || selectedMoonVisibilityCriteria === 7 || selectedMoonVisibilityCriteria === 8 || selectedMoonVisibilityCriteria === 9)
@@ -30,7 +30,7 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibility
         </>
       ))}
       {visibility.map((marker, index) => (
-        <span title={marker.tooltip} key={index} className="absolute opacity-50 -translate-y-1/2" style={{
+        <span title={isTooltipShown ? marker.tooltip : ""} key={index} className="absolute opacity-50 -translate-y-1/2" style={{
           width: `${marker.width}%`,
           height: `${marker.height}%`,
           backgroundColor: marker.color,
