@@ -1,8 +1,8 @@
 const isMobilePlatform = () => {
   if (typeof navigator === 'undefined') return false
-  if (navigator.userAgentData) {
-    if (navigator.userAgentData.mobile) return true
-    const platform = navigator.userAgentData.platform || ''
+  if (navigator?.userAgentData) {
+    if (navigator?.userAgentData?.mobile) return true
+    const platform = navigator?.userAgentData?.platform || ''
     if (/Android/i.test(platform) || /iOS/i.test(platform)) {
       return true
     }
