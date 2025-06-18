@@ -666,6 +666,7 @@
     "observation_time": "Waktu Pengamatan:",
     "observation_times": ["saat Matahari Terbenam", "pada Waktu Terbaik"],
     "refraction": "Koreksi Refraksi",
+    "tooltip": "Tampilkan Tooltip (Lebih Lambat)",
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "observation_date": "Pengamatan:",

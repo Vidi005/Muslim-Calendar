@@ -12,6 +12,7 @@ class MainContainer extends React.Component {
       ALTITUDE_TYPE_STORAGE_KEY: 'ALTITUDE_TYPE_STORAGE_KEY',
       OBSERVATION_TIME_STORAGE_KEY: 'OBSERVATION_TIME_STORAGE_KEY',
       CORRECTED_REFRACTION_STORAGE_KEY: 'CORRECTED_REFRACTION_STORAGE_KEY',
+      SHOW_TOOLTIP_STORAGE_KEY: 'SHOW_TOOLTIP_STORAGE_KEY',
       COORDINATE_STEPS_STORAGE_KEY: "COORDINATE_STEPS_STORAGE_KEY",
       areMoonVisibilityCriteriaMapsLoading: true,
       moonCrescentVisibilities: [],
@@ -34,7 +35,7 @@ class MainContainer extends React.Component {
       }, () => {
         this.createMoonCrescentVisibilities()
       })
-    } else if (prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedElongationType !== this.props.selectedElongationType || prevProps.selectedAltitudeType !== this.props.selectedAltitudeType || prevProps.selectedObservationTime !== this.props.selectedObservationTime || prevProps.isUseNormalRefraction !== this.props.isUseNormalRefraction || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
+    } else if (prevProps.selectedMoonVisibilityCriteria !== this.props.selectedMoonVisibilityCriteria || prevProps.selectedElongationType !== this.props.selectedElongationType || prevProps.selectedAltitudeType !== this.props.selectedAltitudeType || prevProps.selectedObservationTime !== this.props.selectedObservationTime || prevProps.isUseNormalRefraction !== this.props.isUseNormalRefraction || prevProps.isTooltipShown !== this.props.isTooltipShown || prevProps.selectedCoordinateSteps !== this.props.selectedCoordinateSteps) {
       this.setState({ areMoonVisibilityCriteriaMapsLoading: true }, () => this.createMoonCrescentVisibilities())
     }
   }
@@ -86,6 +87,7 @@ class MainContainer extends React.Component {
       localStorage.removeItem(this.state.ALTITUDE_TYPE_STORAGE_KEY)
       localStorage.removeItem(this.state.OBSERVATION_TIME_STORAGE_KEY)
       localStorage.removeItem(this.state.CORRECTED_REFRACTION_STORAGE_KEY)
+      localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY)
       localStorage.removeItem(this.state.COORDINATE_STEPS_STORAGE_KEY)
     })
   }
@@ -106,6 +108,7 @@ class MainContainer extends React.Component {
                   selectedLanguage={this.props.selectedLanguage}
                   selectedTimeZone={this.props.selectedTimeZone}
                   selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
+                  isTooltipShown={this.props.isTooltipShown}
                   selectedObservationTime={this.props.selectedObservationTime}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}
@@ -120,6 +123,7 @@ class MainContainer extends React.Component {
                   selectedLanguage={this.props.selectedLanguage}
                   selectedTimeZone={this.props.selectedTimeZone}
                   selectedMoonVisibilityCriteria={this.props.selectedMoonVisibilityCriteria}
+                  isTooltipShown={this.props.isTooltipShown}
                   selectedObservationTime={this.props.selectedObservationTime}
                   selectHijriMonth={this.selectHijriMonth.bind(this)}
                   restoreToDefault={this.restoreToDefault.bind(this)}

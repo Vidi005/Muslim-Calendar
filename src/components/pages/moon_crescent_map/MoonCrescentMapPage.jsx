@@ -4,7 +4,7 @@ import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 import FooterContainer from "../Footer"
 
-const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedTimeZone, formattedDateTime, hijriStartDates, selectedMoonVisibilityCriteria, selectedElongationType, selectedAltitudeType, selectedObservationTime, isUseNormalRefraction, selectedCoordinateSteps, generateMoonCrescentVisibility }) => (
+const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedTimeZone, formattedDateTime, hijriStartDates, selectedMoonVisibilityCriteria, selectedElongationType, selectedAltitudeType, selectedObservationTime, isUseNormalRefraction, isTooltipShown, selectedCoordinateSteps, generateMoonCrescentVisibility }) => (
   <div className="moon-crescent-map-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('pages.2')}</title>
@@ -22,6 +22,7 @@ const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedT
       selectedAltitudeType={selectedAltitudeType}
       selectedObservationTime={selectedObservationTime}
       isUseNormalRefraction={isUseNormalRefraction}
+      isTooltipShown={isTooltipShown}
       selectedCoordinateSteps={selectedCoordinateSteps}
       generateMoonCrescentVisibility={generateMoonCrescentVisibility}
     />
