@@ -17,6 +17,4 @@ const isMobilePlatform = () => {
   return false
 }
 
-const isDesktopPlatform = () => !isMobilePlatform()
-
-export { isMobilePlatform, isDesktopPlatform }
+export { isMobilePlatform }
