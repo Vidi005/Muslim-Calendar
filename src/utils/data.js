@@ -2187,7 +2187,7 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
     let currentRun = null
     for (let lng = -180; lng < 180; lng += steps) {
       let result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
-      const color = result.color
+      const color = result?.color || ''
       const width = steps * 100 / 360
       const xPosition = 100 * (180 + lng) / 360
       const yPosition = 100 * (90 - lat) / 180
@@ -2198,9 +2198,9 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
           width: width,
           height: steps * 100 / 180,
           color: color,
-          tooltip: result.tooltip
+          tooltip: result?.tooltip || ''
         }
-        if (currentRun) {
+        if (currentRun && result?.tooltip?.length > 0) {
           results.push(currentRun)
           currentRun = null
         }
@@ -2209,18 +2209,18 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
           if (currentRun && currentRun.color === color && true) {
             currentRun.width += width
           } else {
-            if (currentRun) results.push(currentRun)
+            if (currentRun && result?.tooltip?.length > 0) results.push(currentRun)
             currentRun = {
               xPos: xPosition,
               yPos: yPosition,
               width: width,
               height: steps * 100 / 180,
               color: color,
-              tooltip: result.tooltip || ''
+              tooltip: result?.tooltip || ''
             }
           }
         } else {
-          if (currentRun) {
+          if (currentRun && result?.tooltip?.length > 0) {
             results.push(currentRun)
             currentRun = null
           }

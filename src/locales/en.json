@@ -37,7 +37,7 @@
     "hijri_date_criteria": "Criteria:",
     "date_criteria": [
         {
-            "criteria": "Global Hijri Calendar",
+            "criteria": "Unified Global Hijri Calendar",
             "latitude_range": [-90, 90],
             "longitude_range": [-180, 180]
         },
@@ -725,7 +725,7 @@
             "url": "https://journal.syamilahpublishing.com/index.php/fatawa/article/view/164/71"
         },
         {
-            "name": "Global Hijri Calendar",
+            "name": "Unified Global Hijri Calendar",
             "url": "https://www.suaramuhammadiyah.id/read/tentang-kalender-hijriah-global-tunggal-khgt"
         },
         {
