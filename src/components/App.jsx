@@ -12,7 +12,7 @@ import MoonCrescentMapPage from "./pages/moon_crescent_map/MoonCrescentMapPage"
 import en from "./../locales/en.json"
 import AboutPage from "./pages/about/AboutPage"
 import EclipsesPage from "./pages/eclipses/EclipsesPage"
-import { isDesktopPlatform } from "../utils/platformDetection"
+import { isMobilePlatform } from "../utils/platformDetection"
 
 class App extends React.Component {
   constructor(props) {
@@ -566,7 +566,7 @@ class App extends React.Component {
     try {
       const parsedTooltipState = JSON.parse(getTooltipStateFromLocal)
       if (parsedTooltipState !== null) {
-        if (isDesktopPlatform()) this.setState({ isTooltipShown: parsedTooltipState })
+        if (!isMobilePlatform()) this.setState({ isTooltipShown: parsedTooltipState })
         else {
           this.setState({ isTooltipShown: false })
           localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY)
@@ -1175,7 +1175,7 @@ class App extends React.Component {
   onChangeTooltipState (value) {
     this.setState({ isTooltipShown: value }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
-        if (isDesktopPlatform()) {
+        if (!isMobilePlatform()) {
           localStorage.setItem(this.state.SHOW_TOOLTIP_STORAGE_KEY, JSON.stringify(this.state.isTooltipShown))
         } else {
           this.setState({ isTooltipShown: false }, () => localStorage.removeItem(this.state.SHOW_TOOLTIP_STORAGE_KEY))
