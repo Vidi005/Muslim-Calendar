@@ -1725,15 +1725,15 @@ const calculateVisibilityYallop = (arcOfVision, moonElongationGeocentric, moonAl
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let tooltip = moonElongationGeocentric ? `Elongation: ${moonElongationGeocentric.toFixed(5)}°\nAltitude: ${moonAlt?.toFixed(5)}°\nq: ${isNaN(q) ? '-' : q.toFixed(5)}\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
-  if (q > 0.216 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  if (q > 0.216 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#00FF3E'
-  } else if (q > -0.014 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (q > -0.014 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#9EFF00'
-  } else if (q > -0.160 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (q > -0.160 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FF783C'
-  } else if (q > -0.232 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (q > -0.232 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FF0000'
-  } else if (q > -0.293 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (q > -0.293 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#B50757'
   } else if (newMoonForEachCoords || bestTime.date < conjunction.date) {
     color = '#000000'
@@ -1747,9 +1747,9 @@ const calculateVisibilitySAAO = (topocentricAlt, arcOfLight, moonAge, lagTime, n
   const sq = topocentricAlt + arcOfLight / 3
   let tooltip = arcOfLight ? `Elongation: ${arcOfLight.toFixed(5)}°\nAltitude: ${topocentricAlt?.toFixed(5)}°\nsq: ${isNaN(sq) ? '-' : sq.toFixed(5)}\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
-  if (sq > 11 && sunset.date > conjunction.date && !newMoonForEachCoords) {
+  if (sq > 11 && sunset.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#00FF3E'
-  } else if (sq > 9 && sunset.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (sq > 9 && sunset.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FFE53C'
   } else if (newMoonForEachCoords || sunset.date < conjunction.date) {
     color = '#000000'
@@ -1763,11 +1763,11 @@ const calculateVisibilityOdeh = (moonElongation, moonAlt, moonAge, arcOfVision, 
   const visibilityValue = arcOfVision - (7.1651 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))
   let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(5)}°\nAltitude: ${moonAlt?.toFixed(5)}°\nV: ${isNaN(visibilityValue) ? '-' : visibilityValue.toFixed(5)}\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
-  if (visibilityValue >= 5.65 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  if (visibilityValue >= 5.65 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#00FF3E'
-  } else if (visibilityValue >= 2.0 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (visibilityValue >= 2.0 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#9EFF00'
-  } else if (visibilityValue >= -0.96 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (visibilityValue >= -0.96 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FF783C'
   } else if (newMoonForEachCoords || bestTime.date < conjunction.date) {
     color = '#000000'
@@ -1781,13 +1781,13 @@ const calculateVisibilityQureshi = (moonElongation, moonAlt, moonAge, arcOfVisio
   const s = (arcOfVision - 10.4341759 + 5.42264313 * w - 0.2222075057 * Math.pow(w, 2) + 0.3519637 * Math.pow(w, 3)) / 10
   let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(5)}°\nAltitude: ${moonAlt?.toFixed(5)}°\ns: ${isNaN(s) ? '-' : s.toFixed(5)}\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
-  if (s >= 0.15 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  if (s >= 0.15 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#00FF3E'
-  } else if (s >= 0.05 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (s >= 0.05 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#9EFF00'
-  } else if (s >= -0.06 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (s >= -0.06 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FF783C'
-  } else if (s >= -0.16 && bestTime.date > conjunction.date && !newMoonForEachCoords) {
+  } else if (s >= -0.16 && bestTime.date > conjunction.date && !newMoonForEachCoords && lagTime >= 0) {
     color = '#FF0000'
   } else if (newMoonForEachCoords || bestTime.date < conjunction.date) {
     color = '#000000'
@@ -1814,15 +1814,15 @@ const calculateVisibilityShaukat = (moonElongation, moonAlt, moonAge, arcOfVisio
   const q = (arcOfVision - (11.8371 - 6.3226 * w + 0.7319 * Math.pow(w, 2) - 0.1018 * Math.pow(w, 3))) / 10
   let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(5)}°\nAltitude: ${moonAlt?.toFixed(5)}°\nq: ${isNaN(q) ? '-' : q.toFixed(5)}\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
-  if (q >= 0.27 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
+  if (q >= 0.27 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues && lagTime >= 0) {
     color = '#00FF3E'
-  } else if (q >= -0.024 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
+  } else if (q >= -0.024 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues && lagTime >= 0) {
     color = '#9EFF00'
-  } else if (q >= -0.212 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
+  } else if (q >= -0.212 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues && lagTime >= 0) {
     color = '#FF783C'
-  } else if (q >= -0.48 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues) {
+  } else if (q >= -0.48 && bestTime.date > conjunction.date && !newMoonForEachCoords && !areEqualsToValues && lagTime >= 0) {
     color = '#FF0000'
-  } else if (q >= -0.48 && bestTime.date > conjunction.date && !newMoonForEachCoords && areEqualsToValues) {
+  } else if (q >= -0.48 && bestTime.date > conjunction.date && !newMoonForEachCoords && areEqualsToValues && lagTime >= 0) {
     color = '#FAFF00'
   } else if (newMoonForEachCoords || bestTime.date < conjunction.date) {
     color = '#000000'
