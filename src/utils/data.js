@@ -142,9 +142,10 @@ const anyAmericaCitiesCoordinates = [
   { latitude: 57.0531, longitude: -135.33, elevation: 0 },
   // King Cove
   { latitude: 55.059398, longitude: -162.314625, elevation: 0 },
-  // Vancouver
   // Adak
   { latitude: 51.86624, longitude: -176.638732, elevation: 0 },
+  // Vancouver
+  { latitude: 49.2827, longitude: -123.1207, elevation: 0 },
   // Seattle
   { latitude: 47.6062, longitude: -122.3321, elevation: 0 },
   // Portland
