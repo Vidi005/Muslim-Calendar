@@ -143,7 +143,8 @@ const anyAmericaCitiesCoordinates = [
   // King Cove
   { latitude: 55.059398, longitude: -162.314625, elevation: 0 },
   // Vancouver
-  { latitude: 49.2827, longitude: -123.1207, elevation: 0 },
+  // Adak
+  { latitude: 51.86624, longitude: -176.638732, elevation: 0 },
   // Seattle
   { latitude: 47.6062, longitude: -122.3321, elevation: 0 },
   // Portland
@@ -245,11 +246,8 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
       fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
       isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
-      if (newMoon.date.getUTCHours() < 12) {
-        // Met the Global Hijri Calendar criteria (Conjunction before 12:00 UTC)
-        return newMoonDate.AddDays(1)
-      } else if (isMetCriteria && isConjunctionBeforeFajr) {
-        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria for Conjunction after 12:00 UTC in America continents plains and Conjunction before Fajr in New Zealand on Ijtima' Day)
+      if (isMetCriteria && isConjunctionBeforeFajr) {
+        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria before 00:00 UTC on any location or Meet the Visibility Criteria after 00:00 UTC in any America continents plains and Conjunction before Fajr in New Zealand on Ijtima' Day)
         return newMoonDate.AddDays(1)
       } else {
         // Didn't meet the Global Hijri Calendar criteria
