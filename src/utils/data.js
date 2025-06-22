@@ -1,4 +1,4 @@
-import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, HOUR2RAD, Horizon, HourAngle, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -1669,8 +1669,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const sunEquatorAtMidnight = Equator(Body.Sun, midnight, observer, true, true)
   const sunDeclinationAtMidnight = sunEquatorAtMidnight.dec
   const midnightSunAltitude = -(90 - Math.abs(- observer.latitude - sunDeclinationAtMidnight))
-  const moonPhase = MoonPhase(astroDate).toFixed(2)
-  const moonStatus = moonPhase <= 90 ? 'Waxing Crescent' : moonPhase <= 180 ? 'Waxing Gibbous' : moonPhase <= 270 ? 'Waning Gibbous' : 'Waning Crescent'
+  const phaseAngle = MoonPhase(astroDate).toFixed(2)
+  const moonStatus = phaseAngle <= 90 ? 'Waxing Crescent' : phaseAngle <= 180 ? 'Waxing Gibbous' : phaseAngle <= 270 ? 'Waning Gibbous' : 'Waning Crescent'
   const moonEquator = Equator(Body.Moon, astroDate, observer, true, true)
   const moonDeclination = `${moonEquator.dec.toFixed(2)}°`
   const moonHorizon = Horizon(astroDate, observer, moonEquator.ra, moonEquator.dec, 'normal')
@@ -1680,11 +1680,11 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
   const moonset = SearchRiseSet(Body.Moon, observer, -1, startAstroTime, 1, elevation)
   const moonIllumination = Illumination(Body.Moon, astroDate)
   const illuminationPercent = moonIllumination.phase_fraction * 100
-  const hourAngle = HourAngle(Body.Moon, astroDate, observer)
-  const parallacticAngle = RAD2DEG * Math.atan2(
-    Math.sin(hourAngle * HOUR2RAD),
-    Math.tan(DEG2RAD * latitude) * Math.cos(DEG2RAD * moonEquator.dec) - Math.sin(DEG2RAD * moonEquator.dec) * Math.cos(hourAngle * HOUR2RAD)
+  let moonFacingAngle = RAD2DEG * Math.atan2(
+    Math.sin(DEG2RAD * moonHorizon.altitude) * Math.cos(DEG2RAD * (sunAzimuth - moonHorizon.azimuth)) - Math.cos(DEG2RAD * moonHorizon.altitude) * Math.tan(DEG2RAD * sunAltitude),
+    Math.sin(DEG2RAD * (sunAzimuth - moonHorizon.azimuth))
   )
+  phaseAngle > 180 ? moonFacingAngle = moonFacingAngle + 180 : moonFacingAngle = moonFacingAngle
   return [
     sunrise?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
     sunset?.date?.toLocaleTimeString(lang || 'en', { hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':') || '--:--',
@@ -1697,7 +1697,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${sunEclipticLongitude.toFixed(2)}°`,
     `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${midnight.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
-    `${moonPhase}° (${moonStatus})`,
+    `${phaseAngle}° (${moonStatus})`,
     moonAltitude,
     moonAzimuth,
     moonDeclination,
@@ -1709,7 +1709,7 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     `${culminationSunAltitude.toFixed(2)}°`,
     `${ashrSunAltitude.toFixed(2)}°`,
     `${midnightSunAltitude.toFixed(2)}°`,
-    `${parallacticAngle.toFixed(2)}°`
+    `${moonFacingAngle.toFixed(2)}°`
   ]
 }
 
