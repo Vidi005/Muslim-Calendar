@@ -215,7 +215,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
   let moonHorizon
   let isMetCriteria = false
   if (criteria === 0) {
-    // Global Hijri Calendar/KHGT
+    // Unified Global Hijri Calendar/KHGT
     let westObserver
     let observerFromNewZealand
     let fajrAtWellington
@@ -248,10 +248,10 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
       isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
       if (isMetCriteria && isConjunctionBeforeFajr) {
-        // Met the Global Hijri Calendar criteria (Meet the Visibility Criteria before 00:00 UTC on any location or Meet the Visibility Criteria after 00:00 UTC in any America continents plains and Conjunction before Fajr in New Zealand on Ijtima' Day)
+        // Met the Unified Global Hijri Calendar criteria (Met the Visibility Criteria before 00:00 UTC on any location or Met the Visibility Criteria after 00:00 UTC in any America continents plains and Conjunction before Fajr in New Zealand on Ijtima' Day)
         return newMoonDate.AddDays(1)
       } else {
-        // Didn't meet the Global Hijri Calendar criteria
+        // Didn't meet the Unified Global Hijri Calendar criteria
         return newMoonDate.AddDays(2)
       }
     }
