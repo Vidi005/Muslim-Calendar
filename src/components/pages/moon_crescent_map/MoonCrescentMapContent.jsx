@@ -14,7 +14,7 @@ const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, 
       restoreToDefault={restoreToDefault}
     />
     <h2 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('moon_crescent_map')}</h2>
-    <div className="grid grid-flow-row items-stretch mb-4 grow md:flex-none">
+    <div className="grid grid-flow-row items-stretch mb-4 grow xl:flex-none">
       {state.areMoonVisibilityCriteriaMapsLoading
         ? (
             <div className="flex items-center justify-center space-x-2 p-2 md:p-4">

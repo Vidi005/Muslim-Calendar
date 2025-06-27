@@ -394,7 +394,7 @@
             "name": "Danjon Limit, 1936",
             "zones": [
                 {
-                    "visibility": "Meet Danjon Limit Criterion (Elongation ≥ 7°)",
+                    "visibility": "Met Danjon Limit Criterion (Elongation ≥ 7°)",
                     "color": "#00FF3E"
                 },
                 {
@@ -589,7 +589,7 @@
             "name": "UGHC/Turkey, 2016",
             "zones": [
                 {
-                    "visibility": "Meet Criteria (Altitude ≥ 5° & Elongation ≥ 8°)",
+                    "visibility": "Met Criteria (Altitude ≥ 5° & Elongation ≥ 8°)",
                     "color": "#00FF3E"
                 },
                 {
