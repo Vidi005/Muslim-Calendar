@@ -589,7 +589,7 @@
             "name": "UGHC/Turkey, 2016",
             "zones": [
                 {
-                    "visibility": "Can be seen by eye (Altitude ≥ 5° & Elongation ≥ 8°)",
+                    "visibility": "Meet Criteria (Altitude ≥ 5° & Elongation ≥ 8°)",
                     "color": "#00FF3E"
                 },
                 {

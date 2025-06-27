@@ -589,7 +589,7 @@
             "name": "KHGT/Turki, 2016",
             "zones": [
                 {
-                    "visibility": "Bisa terlihat mata (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
+                    "visibility": "Memenuhi kriteria (Ketinggian ≥ 5° & Elongasi ≥ 8°)",
                     "color": "#00FF3E"
                 },
                 {
