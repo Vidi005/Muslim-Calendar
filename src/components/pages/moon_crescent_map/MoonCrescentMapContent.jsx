@@ -24,12 +24,13 @@ const MoonCrescentMapContent = ({ t, state, selectedLanguage, selectedTimeZone, 
           )
         : (
           <>
-            <h4 className="m-1 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200"><i>{t('conjunction')}</i>: {state.moonCrescentVisibilities.at(0)?.conjunction?.toLocaleString(selectedLanguage || "en", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at').replace(/\./g, ':')}</h4>
+            <h4 className="m-1 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200"><i>{t('conjunction')}</i>: {state.moonCrescentVisibilities.at(0)?.conjunction?.toLocaleString(selectedLanguage || "en", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at').replace(/\./g, ':')} ({state.moonCrescentVisibilities.at(0)?.conjunction?.toLocaleString(selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' })})</h4>
             {state.moonCrescentVisibilities?.map((visibility, index) => (
               <MoonCrescentVisibilityMap
                 key={index}
                 t={t}
                 selectedLanguage={selectedLanguage}
+                selectedTimeZone={selectedTimeZone}
                 selectedMoonVisibilityCriteria={selectedMoonVisibilityCriteria}
                 isTooltipShown={isTooltipShown}
                 observationDate={state.observationDates[index]}

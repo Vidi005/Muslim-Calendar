@@ -1831,7 +1831,7 @@ const calculateVisibilityShaukat = (moonElongation, moonAlt, moonAge, arcOfVisio
   return { tooltip, color }
 }
 
-const calculateVisibilityTurkey = (moonElongation, moonAlt, moonAge, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction) => {
+const calculateVisibilityTurkey = (moonElongation, moonAlt, moonAge, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction, fajrAtWellington) => {
   let tooltip = moonElongation ? `Elongation: ${moonElongation.toFixed(5)}°\nAltitude: ${moonAlt?.toFixed(5)}°\nAge (Geocentric): ${isNaN(moonAge) ? '-' : moonAge} days` : ''
   let color = ''
   if (isMeetCriteria && sunset.date > conjunction.date && !newMoonForEachCoords && !isSunsetAtMidnight && !isFajrAtSunset) {
@@ -1845,7 +1845,7 @@ const calculateVisibilityTurkey = (moonElongation, moonAlt, moonAge, isMeetCrite
   } else if (lagTime < 0 && !isSunsetAtMidnight && !isFajrAtSunset) {
     color = '#808080'
   }
-  return { tooltip, color }
+  return { tooltip, color, fajrAtWellington }
 }
 
 const calculateVisibilityMABIMS = (moonElongation, moonAlt, moonAge, isMeetCriteria, lagTime, newMoonForEachCoords, sunset, conjunction) => {
@@ -2098,7 +2098,7 @@ const checkTurkey = (conjunction, astroDate, latitude, longitude, elongationType
   if ((sunset.date.getUTCHours() === 0 && sunset.date.getUTCMinutes() < steps * 3) || (sunset.date.getUTCHours() === 23 && sunset.date.getUTCMinutes() > 60 - steps * 3)) isSunsetAtMidnight = true
   if (Math.abs(fajrAtWellington.date - sunset.date) / 1000 <= steps * 150) isFajrAtSunset = true
   const newMoonForEachCoords = SearchMoonPhase(0, sunset, 1)
-  return calculateVisibilityTurkey(moonElongation, moonHorizon.altitude, moonAge, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction)
+  return calculateVisibilityTurkey(moonElongation, moonHorizon.altitude, moonAge, isMeetCriteria, isSunsetAtMidnight, isFajrAtSunset, lagTime, newMoonForEachCoords, sunset, conjunction, fajrAtWellington)
 }
 
 const checkMABIMS = (conjunction, astroDate, latitude, longitude, elongationType, altitudeType, correctedRefraction) => {
@@ -2172,10 +2172,11 @@ const createZones = (criteria, elongationType, altitudeType, observationTime, co
   } else {
     result = checkLFNU(conjunction, astroDate, lat, lng, elongationType, altitudeType, correctedRefraction)
   }
-  if (result?.tooltip?.length > 0) {
+  if (result?.tooltip?.length > 0) {    
     return {
       tooltip: result.tooltip,
-      color: result.color
+      color: result.color,
+      fajrAtWellington: result?.fajrAtWellington?.date || ''
     }
   }
 }
@@ -2197,7 +2198,8 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
           width: width,
           height: steps * 100 / 180,
           color: color,
-          tooltip: result?.tooltip || ''
+          tooltip: result?.tooltip || '',
+          fajrAtWellington: result?.fajrAtWellington || ''
         }
         if (currentRun && result?.tooltip?.length > 0) {
           results.push(currentRun)
@@ -2215,7 +2217,8 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
               width: width,
               height: steps * 100 / 180,
               color: color,
-              tooltip: result?.tooltip || ''
+              tooltip: result?.tooltip || '',
+              fajrAtWellington: result?.fajrAtWellington || ''
             }
           }
         } else {
@@ -2231,7 +2234,7 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
       results.push(currentRun)
       currentRun = null
     }
-  }
+  }  
   return results
 }
 

@@ -670,6 +670,7 @@
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "observation_date": "Observation:",
+    "fajr_in_new_zealand": "Fajr in New Zealand",
     "eclipses": "Eclipses",
     "global_solar_eclipse": "Global Solar Eclipse",
     "global_solar_eclipses_loading": "Loading Global Solar Eclipses...",

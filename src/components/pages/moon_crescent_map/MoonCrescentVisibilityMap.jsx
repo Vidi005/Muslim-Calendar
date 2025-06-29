@@ -2,7 +2,7 @@ import React from "react"
 import { coordinateScale } from "../../../utils/data"
 import en from "../../../locales/en.json"
 
-const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibilityCriteria, isTooltipShown, observationDate, selectedObservationTime, visibility }) => (
+const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, selectedMoonVisibilityCriteria, isTooltipShown, observationDate, selectedObservationTime, visibility }) => (
   <div className="moon-crescent-map flex flex-col items-center w-full px-3 md:px-5 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp">
     {
       (selectedMoonVisibilityCriteria === 2 || selectedMoonVisibilityCriteria === 5 || selectedMoonVisibilityCriteria === 7 || selectedMoonVisibilityCriteria === 8 || selectedMoonVisibilityCriteria === 9)
@@ -38,6 +38,9 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedMoonVisibility
           left: `${marker.xPos}%`
         }}></span>
       ))}
+      {visibility[0]?.fajrAtWellington && (
+        <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone }).replace(/\./g, ':')} ({visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' }).replace(/\./g, ':')})</span>
+      )}
     </div>
     <div className={`grid w-full p-1 md:p-2 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.length > 2 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5" : "grid-cols-2"}`}>
       {en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.map((zone, index) => (

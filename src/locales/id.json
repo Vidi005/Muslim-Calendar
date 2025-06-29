@@ -670,6 +670,7 @@
     "sampling": "Sampling:",
     "coordinate_steps": [1, 2, 3, 4, 5],
     "observation_date": "Pengamatan:",
+    "fajr_in_new_zealand": "Fajar di Selandia Baru",
     "eclipses": "Gerhana",
     "global_solar_eclipse": "Gerhana Matahari Global",
     "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",
