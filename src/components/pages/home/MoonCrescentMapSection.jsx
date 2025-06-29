@@ -45,6 +45,9 @@ const MoonCrescentMapSection = () => (
                     left: `${marker.xPos}%`
                   }}></span>
                 ))}
+                {state.moonCrescentVisibility.zoneCoordinates[0]?.fajrAtWellington && (
+                  <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {state.moonCrescentVisibility.zoneCoordinates[0].fajrAtWellington.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: state.selectedTimeZone }).replace(/\./g, ':')} ({state.moonCrescentVisibility.zoneCoordinates[0].fajrAtWellington.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: 'UTC' }).replace(/\./g, ':')})</span>
+                )}
               </div>
               <div className={`grid w-full p-1 md:p-1.5 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[state.selectedMoonVisibilityCriteria].zones.length > 2 ? "grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "grid-cols-2"}`}>
                 {en.moon_visibility_criteria[state.selectedMoonVisibilityCriteria].zones.map((zone, index) => (
