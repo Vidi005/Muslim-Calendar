@@ -136,6 +136,10 @@ const anyMABIMSCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
+  // Wales
+  { latitude: 65.610165, longitude: -168.093815, elevation: 0 },
+  // Hooper Bay
+  { latitude: 61.524793, longitude: -166.153995, elevation: 0 },
   // Platinum
   { latitude: 59.010952, longitude: -161.824012, elevation: 0 },
   // Sitka
@@ -182,8 +186,12 @@ const anyAmericaCitiesCoordinates = [
   { latitude: -36.72375, longitude: -73.144618, elevation: 0 },
   // Puerto Montt
   { latitude: -41.4667, longitude: -72.9333, elevation: 0 },
+  // Aysen, Cile
+  { latitude: -46.803318, longitude: -75.63833, elevation: 0 },
   // Punta Arenas
-  { latitude: -53.1638, longitude: -70.9171, elevation: 0 }
+  { latitude: -53.1638, longitude: -70.9171, elevation: 0 },
+  // Tierra del Fuego
+  { latitude: -54.852689, longitude: -68.404227, elevation: 0 }
 ]
 
 const observerFromEarth = (latitude, longitude, elevation) => new Observer(latitude, longitude, elevation)
@@ -231,6 +239,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
         westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
         sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
+        if (!sunset) {
+          return false
+        }
         sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
         if (altitudeType === 0) {
           // Geocentric Moon Equatorial Coordinates
