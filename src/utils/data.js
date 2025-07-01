@@ -136,6 +136,8 @@ const anyMABIMSCitiesCoordinates = [
 ]
 
 const anyAmericaCitiesCoordinates = [
+  // Point Hope
+  { latitude: 68.340431, longitude: -166.834755, elevation: 0 },
   // Wales
   { latitude: 65.610165, longitude: -168.093815, elevation: 0 },
   // Hooper Bay
