@@ -698,7 +698,7 @@
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
     "time_suffixes": ["hours", "minutes", "seconds"],
-    "version": "Updated on June 2025",
+    "version": "Updated on July 2025",
     "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
     "resources": "Resources",
     "resource_items": [
