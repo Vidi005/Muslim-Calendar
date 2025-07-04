@@ -18,16 +18,16 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, sele
       <span className="absolute w-full h-1/6 top-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
       <span className="absolute w-full h-1/6 bottom-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
       {coordinateScale.latitudes.map((degree, index) => (
-        <>
-          <span key={index} className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
-          <span key={degree} className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
-        </>
+        <React.Fragment key={`lat-${index}`}>
+          <span className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
+          <span className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
+        </React.Fragment>
       ))}
       {coordinateScale.longitudes.map((degree, index) => (
-        <>
-          <span key={index} className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
-          <span key={degree} className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
-        </>
+        <React.Fragment key={`lon-${index}`}>
+          <span className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
+          <span className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
+        </React.Fragment>
       ))}
       {visibility.map((marker, index) => (
         <span title={isTooltipShown ? marker.tooltip : ""} key={index} className="absolute opacity-50 -translate-y-1/2" style={{
