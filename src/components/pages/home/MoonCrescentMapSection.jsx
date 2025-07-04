@@ -25,16 +25,16 @@ const MoonCrescentMapSection = () => (
                 <span className="absolute w-full h-1/6 top-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
                 <span className="absolute w-full h-1/6 bottom-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
                 {coordinateScale.latitudes.map((degree, index) => (
-                  <>
-                    <span key={index} className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
-                    <span key={degree} className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
-                  </>
+                  <React.Fragment key={`lat-${index}`}>
+                    <span className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
+                    <span className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
+                  </React.Fragment>
                 ))}
                 {coordinateScale.longitudes.map((degree, index) => (
-                  <>
-                    <span key={index} className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
-                    <span key={degree} className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
-                  </>
+                  <React.Fragment key={`lon-${index}`}>
+                    <span className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
+                    <span className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
+                  </React.Fragment>
                 ))}
                 {state.moonCrescentVisibility.zoneCoordinates?.map((marker, index) => (
                   <span title={state.isTooltipShown ? marker.tooltip : ""} key={index} className="absolute opacity-50 -translate-y-1/2" style={{
@@ -45,6 +45,22 @@ const MoonCrescentMapSection = () => (
                     left: `${marker.xPos}%`
                   }}></span>
                 ))}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                  {state.moonCrescentVisibility.zoneCoordinates.map((marker, index) => (
+                    index + 1 < state.moonCrescentVisibility.zoneCoordinates.filter(marker => marker.isSunsetAtMidnight).length ? (
+                      <line
+                        key={`midnight-line-${index}`}
+                        x1={`${state.moonCrescentVisibility.zoneCoordinates.filter(marker => marker.isSunsetAtMidnight)[index].xPos}%`}
+                        y1={`${state.moonCrescentVisibility.zoneCoordinates.filter(marker => marker.isSunsetAtMidnight)[index].yPos}%`}
+                        x2={`${state.moonCrescentVisibility.zoneCoordinates.filter(marker => marker.isSunsetAtMidnight)[index + 1].xPos}%`}
+                        y2={`${state.moonCrescentVisibility.zoneCoordinates.filter(marker => marker.isSunsetAtMidnight)[index + 1].yPos}%`}
+                        stroke="#0303FC"
+                        strokeWidth="2"
+                        className="opacity-50"
+                      />
+                    ) : null
+                  ))}
+                </svg>
                 {state.moonCrescentVisibility.zoneCoordinates[0]?.fajrAtWellington && (
                   <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {state.moonCrescentVisibility.zoneCoordinates[0].fajrAtWellington.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: state.selectedTimeZone }).replace(/\./g, ':')} ({state.moonCrescentVisibility.zoneCoordinates[0].fajrAtWellington.toLocaleString(state.selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", timeZoneName: "short", timeZone: 'UTC' }).replace(/\./g, ':')})</span>
                 )}
