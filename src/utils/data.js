@@ -226,6 +226,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
     // Unified Global Hijri Calendar/KHGT
     let westObserver
     let observerFromNewZealand
+    let isMetCriteriaBeforeSunsetAtMidnight = false
     let fajrAtWellington
     let isConjunctionBeforeFajr = false
     while (true) {
@@ -236,34 +237,60 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
       dateInNewMoon = new Date(newMoon.date.getUTCFullYear(), newMoon.date.getUTCMonth(), newMoon.date.getUTCDate())
       newMoonDate = new AstroTime(dateInNewMoon)
-      isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
-        westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
-        sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
-        if (!sunset) {
-          return false
+      isMetCriteriaBeforeSunsetAtMidnight = (() => {
+        for (let lat = -65; lat <= 65; lat += 3) {
+          for (let lng = -150; lng <= -30; lng += 3) {
+            westObserver = observerFromEarth(lat, lng, 0)
+            sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-lng / 360), 1, 0)
+            if (!sunset) continue
+            sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
+            if (altitudeType === 0) {
+              // Geocentric Moon Equatorial Coordinates
+              moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
+            } else {
+              // Topocentric Moon Equatorial Coordinates
+              moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
+            }
+            moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
+            // Elongation Type = 0 for Geocentric, 1 for Topocentric
+            moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+            if (sunset.date.getUTCDate() === newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5) {
+              return true
+            }
+          }
         }
-        sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
-        if (altitudeType === 0) {
-          // Geocentric Moon Equatorial Coordinates
-          moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
-        } else {
-          // Topocentric Moon Equatorial Coordinates
-          moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
-        }
-        moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
-        // Elongation Type = 0 for Geocentric, 1 for Topocentric
-        moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-        return (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() <= newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5)
-      })
-      observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
-      fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
-      isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
-      if (isMetCriteria && isConjunctionBeforeFajr) {
-        // Met the Unified Global Hijri Calendar criteria
+        return false
+      })()
+      if (isMetCriteriaBeforeSunsetAtMidnight) {
+        // Met the Unified Global Hijri Calendar criteria before sunset at midnight
         return newMoonDate.AddDays(1)
       } else {
-        // Didn't meet the Unified Global Hijri Calendar criteria
-        return newMoonDate.AddDays(2)
+        isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
+          westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
+          sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
+          if (!sunset) {
+            return false
+          }
+          sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
+          if (altitudeType === 0) {
+            moonEquator = EquatorFromVector(RotateVector(Rotation_EQJ_EQD(sunset), GeoVector(Body.Moon, sunset, true)))
+          } else {
+            moonEquator = Equator(Body.Moon, sunset, westObserver, true, true)
+          }
+          moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
+          moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
+          return (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() <= newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5)
+        })
+        observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
+        fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
+        isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
+        if (isMetCriteria && isConjunctionBeforeFajr) {
+          // Met criteria in America Continent and conjunction before Fajr in New Zealand
+          return newMoonDate.AddDays(1)
+        } else {
+          // Didn't meet the Unified Global Hijri Calendar criteria
+          return newMoonDate.AddDays(2)
+        }        
       }
     }
   } else if (criteria === 1 || criteria === 2 || criteria === 3 || criteria === 4 || criteria === 5) {
