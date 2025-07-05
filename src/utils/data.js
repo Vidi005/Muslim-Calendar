@@ -238,7 +238,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       dateInNewMoon = new Date(newMoon.date.getUTCFullYear(), newMoon.date.getUTCMonth(), newMoon.date.getUTCDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteriaBeforeSunsetAtMidnight = (() => {
-        for (let lat = -65; lat <= 65; lat += 3) {
+        for (let lat = -70; lat <= 70; lat += 3) {
           for (let lng = -150; lng <= -30; lng += 3) {
             westObserver = observerFromEarth(lat, lng, 0)
             sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-lng / 360), 1, 0)
