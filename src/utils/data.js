@@ -242,7 +242,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           for (let lng = -150; lng <= -30; lng += 3) {
             westObserver = observerFromEarth(lat, lng, 0)
             sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-lng / 360), 1, 0)
-            if (!sunset) continue
+            if (!sunset || sunset.date.getUTCDate() !== newMoon.date.getUTCDate()) continue
             sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
             if (altitudeType === 0) {
               // Geocentric Moon Equatorial Coordinates
@@ -254,7 +254,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
             moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
             // Elongation Type = 0 for Geocentric, 1 for Topocentric
             moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-            if (sunset.date.getUTCDate() === newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5) {
+            if (moonElongation >= 8 && moonHorizon.altitude >= 5) {
               return true
             }
           }
@@ -266,6 +266,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
         return newMoonDate.AddDays(1)
       } else {
         isMetCriteria = anyAmericaCitiesCoordinates.some(city => {
+          if (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() > newMoon.date.getUTCDate()) {
+            return false
+          }
           westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
           sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
           if (!sunset) {
@@ -279,7 +282,7 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           }
           moonHorizon = Horizon(sunset, westObserver, moonEquator.ra, moonEquator.dec, correctedRefraction)
           moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
-          return (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() <= newMoon.date.getUTCDate() && moonElongation >= 8 && moonHorizon.altitude >= 5)
+          return (moonElongation >= 8 && moonHorizon.altitude >= 5)
         })
         observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
         fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
