@@ -154,7 +154,7 @@ const InputForm = () => (
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="flex items-center">
                     <label>{t('hijri_calendar_reference')}&nbsp;</label>
-                    <select className={`bg-green-200 dark:bg-gray-200 w-48 p-1 rounded shadow-inner overflow-ellipsis duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={en.date_criteria[0].criteria} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
+                    <select className={`bg-green-200 dark:bg-gray-200 w-48 p-1 rounded shadow-inner overflow-ellipsis duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={en.date_criteria.length - 1} value={state.selectedCriteria} onChange={event => selectCriteria(event.target.value)} required disabled={state.isCalendarLoading}>
                       {en.date_criteria.map((item, index) => <option key={item.criteria} value={index}>{t(`date_criteria.${index}.criteria`)}</option>)}
                     </select>
                   </span>
