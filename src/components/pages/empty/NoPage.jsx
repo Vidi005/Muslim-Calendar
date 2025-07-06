@@ -12,7 +12,7 @@ const NoPage = ({ t }) => (
         <a className="border border-green-700 bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-500 active:bg-green-700 dark:active:bg-green-800 px-4 py-3 text-white dark:text-green-900 duration-200 rounded-lg shadow-lg dark:shadow-white/50" href="/">{t('back_to_home')}</a>
       </article>
     </main>
-    <footer className="fixed bottom-0 w-full p-2 md:p-3 bg-green-700 text-center text-white text-lg md:text-xl font-bold font-serif">&copy; 2024 - {new Date().getFullYear()} Muslim Calendar</footer>
+    <footer className="fixed bottom-0 w-full p-2 md:p-3 bg-green-700 text-center text-white text-lg md:text-xl font-bold font-serif">Muslim Calendar</footer>
   </React.Fragment>
 )
 
