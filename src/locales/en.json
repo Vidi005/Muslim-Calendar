@@ -790,5 +790,8 @@
             "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
         }
     ],
-    "demo_info": "Demo version, might contains any unexpected errors"
+    "demo_info": "Demo version, might contains any unexpected errors",
+    "not_found": "Not Found",
+    "page_not_found": "Page not found.",
+    "back_to_home": "Back to Home"
 }

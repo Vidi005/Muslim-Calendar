@@ -789,5 +789,8 @@
             "url": "https://github.com/crescent-moon-visibility/crescent-moon-visibility"
         }
     ],
-    "demo_info": "Versi demo, mungkin terdapat error yang tidak diketahui"
+    "demo_info": "Versi demo, mungkin terdapat error yang tidak diketahui",
+    "not_found": "Tidak Ditemukan",
+    "page_not_found": "Halaman tidak ditemukan.",
+    "back_to_home": "Kembali ke Home"
 }
