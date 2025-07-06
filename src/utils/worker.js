@@ -1,6 +1,6 @@
 import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v7.1' // Update the version when deploying new builds to clear old caches
+const CACHE_NAME = 'app-cache-v7.2' // Update the version when deploying new builds to clear old caches
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

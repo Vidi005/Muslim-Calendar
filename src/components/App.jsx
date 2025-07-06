@@ -59,7 +59,7 @@ class App extends React.Component {
       longitude: 0,
       elevation: 0,
       selectedLocation: {},
-      selectedCriteria: 0,
+      selectedCriteria: en.date_criteria.length - 1,
       nearestCity: '',
       selectedTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       selectedIntervalUpdate: 2,
