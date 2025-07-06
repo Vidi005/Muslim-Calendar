@@ -242,7 +242,8 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           for (let lng = -150; lng <= -30; lng += 3) {
             westObserver = observerFromEarth(lat, lng, 0)
             sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-lng / 360), 1, 0)
-            if (!sunset || sunset.date.getUTCDate() !== newMoon.date.getUTCDate()) continue
+            if (!sunset) continue
+            if (sunset.date.getUTCDate() !== newMoon.date.getUTCDate()) continue
             sunEquator = Equator(Body.Sun, sunset, westObserver, true, true)
             if (altitudeType === 0) {
               // Geocentric Moon Equatorial Coordinates
