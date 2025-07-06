@@ -7,7 +7,7 @@ import FooterContainer from "../Footer"
 const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
-      <title>{t('pages.1')}</title>
+      <title>{t('app_name') + ' | ' + t('pages.1')}</title>
     </Helmet>
     <HeaderContainer />
     <MainContainer

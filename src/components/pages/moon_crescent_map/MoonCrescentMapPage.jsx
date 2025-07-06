@@ -7,7 +7,7 @@ import FooterContainer from "../Footer"
 const MoonCrescentMapPage = ({ t, isSidebarExpanded, selectedLanguage, selectedTimeZone, formattedDateTime, hijriStartDates, selectedMoonVisibilityCriteria, selectedElongationType, selectedAltitudeType, selectedObservationTime, isUseNormalRefraction, isTooltipShown, selectedCoordinateSteps, generateMoonCrescentVisibility }) => (
   <div className="moon-crescent-map-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
-      <title>{t('pages.2')}</title>
+      <title>{t('app_name') + ' | ' + t('pages.2')}</title>
     </Helmet>
     <HeaderContainer />
     <MainContainer
