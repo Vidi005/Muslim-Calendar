@@ -7,10 +7,10 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, sele
     {
       (selectedMoonVisibilityCriteria === 2 || selectedMoonVisibilityCriteria === 5 || selectedMoonVisibilityCriteria === 7 || selectedMoonVisibilityCriteria === 8 || selectedMoonVisibilityCriteria === 9)
         ? (
-            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${0}`)}</h4>
+            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { calendar: 'gregory', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${0}`)}</h4>
           )
         : (
-            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${selectedObservationTime}`)}</h4>
+            <h4 className="m-1 md:m-2 text-sm sm:text-base md:text-lg text-center text-green-700 dark:text-gray-200 duration-200">{(t('observation_date'))} {observationDate.toLocaleDateString(selectedLanguage || 'en', { calendar: 'gregory', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')} {t(`observation_times.${selectedObservationTime}`)}</h4>
           )
     }
     <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
@@ -39,7 +39,7 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, sele
         }}></span>
       ))}
       {visibility[0]?.fajrAtWellington && (
-        <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone }).replace(/\./g, ':')} ({visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' }).replace(/\./g, ':')})</span>
+        <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone }).replace(/\./g, ':')} ({visibility[0].fajrAtWellington.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' }).replace(/\./g, ':')})</span>
       )}
     </div>
     <div className={`grid w-full p-1 md:p-2 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.length > 2 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5" : "grid-cols-2"}`}>

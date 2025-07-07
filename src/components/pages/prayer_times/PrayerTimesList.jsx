@@ -11,7 +11,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
     ? en.prayer_names.map((_, i) => t(`prayer_names.${i}`))
     : en.prayer_names.map((_, i) => t(`prayer_names.${i}`)).slice(1)
   const schedule = isRamadanSelected ? t('imsakiyah_schedule') : t('prayer_schedule')
-  const selectedMonth = monthType === 0 ? new Date(formattedDateTime.getFullYear(), selectedGregorianMonth, 1).toLocaleString(selectedLanguage || 'en', { month: 'long', year: 'numeric' }) : `${t(`islamic_months.${hijriStartDates[selectedHijriMonth]?.hijriDate.month - 1}`)}-${parseInt(hijriStartDates[selectedHijriMonth]?.hijriDate.year)}-${t('hijri_abbreviation')}`
+  const selectedMonth = monthType === 0 ? new Date(formattedDateTime.getFullYear(), selectedGregorianMonth, 1).toLocaleString(selectedLanguage || 'en', { calendar: 'gregory', month: 'long', year: 'numeric' }) : `${t(`islamic_months.${hijriStartDates[selectedHijriMonth]?.hijriDate.month - 1}`)}-${parseInt(hijriStartDates[selectedHijriMonth]?.hijriDate.year)}-${t('hijri_abbreviation')}`
   return (
     <section className="w-full p-2 animate__animated animate__fadeInUp">
       <h2 className="text-center text-green-900 dark:text-white duration-200">{isRamadanSelected ? t('imsakiyah_schedule') : t('prayer_schedule')}</h2>
@@ -72,7 +72,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
               disabled={arePrayerTimesListLoading}
               required
             >
-              {monthsInSetYear?.map((_, monthIndex) => <option key={monthIndex} value={monthIndex}>{new Date(formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(selectedLanguage || 'en', { month: 'long' })}</option>)}
+              {monthsInSetYear?.map((_, monthIndex) => <option key={monthIndex} value={monthIndex}>{new Date(formattedDateTime.getFullYear(), monthIndex, 1).toLocaleString(selectedLanguage || 'en', { calendar: 'gregory', month: 'long' })}</option>)}
             </select>
           </span>
           )
@@ -188,7 +188,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                     <span>
                       <a className="text-blue-500 active:text-purple-500" href={location.origin} target="_blank" rel="noreferrer"><u>{location.origin}</u></a>
                     </span>
-                    <span>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</span>
+                    <span>{new Date().toLocaleDateString(selectedLanguage || "en", { calendar: "gregory", year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</span>
                   </p>
                   {monthType !== 0 &&
                     <p className="text-center text-sm leading-tight">{t('footnotes.0')}{t(`date_criteria.${selectedCriteria}.criteria`)} {t('footnotes.1')}</p>
@@ -240,7 +240,7 @@ const PrayerTimesList = ({ t, selectedLanguage, formattedDateTime, selectedLocat
                       <td style={{ border: "none" }}>
                         <a href={location.origin} target="_blank" rel="noreferrer" style={{ fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", color: "#3b82f6", textDecoration: "underline", textAlign: "left" }}><u>{location.origin}</u></a>
                       </td>
-                      <td style={{ border: "none", fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "right" }}>{new Date().toLocaleDateString(selectedLanguage || "en", { year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</td>
+                      <td style={{ border: "none", fontFamily: "'Times New Roman', 'Serif'", fontSize: "10pt", textAlign: "right" }}>{new Date().toLocaleDateString(selectedLanguage || "en", { calendar: "gregory", year: "numeric", month: "long", day: "numeric", weekday: "long" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</td>
                     </tr>
                   </table>
                   {monthType !== 0 &&
