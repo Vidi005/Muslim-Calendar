@@ -28,7 +28,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
     <section className="w-full p-2 md:p-4 2xl:p-8 text-center text-green-900 dark:text-white duration-200 animate__animated animate__fadeInUp">
       <h2>{t('visualization')}</h2>
       {inputDate !== '' && inputTime !=='' && formattedDateTime instanceof Date
-        ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_visualization')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
+        ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_visualization')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { calendar: 'gregory', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
         : null
       }
       <div className="flex flex-wrap justify-center w-full">
@@ -143,7 +143,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
         <div className="w-full md:w-1/2 px-2">
           <h3 className="m-0 md:m-2">{t('sun_info')}</h3>
           {inputDate !== '' && inputTime !=='' && formattedDateTime instanceof Date
-            ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
+            ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_sun_info')} {formattedDateTime.toLocaleString(selectedLanguage || 'en', { calendar: 'gregory', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, hourCycle: 'h23', timeZone: timeZone, timeZoneName: 'short' }).replace(/\./g, ':')}</h5>
             : null
           }
           <table className="table-auto mx-auto text-justify text-base md:text-sm lg:text-base">

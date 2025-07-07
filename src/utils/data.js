@@ -198,6 +198,7 @@ const observerFromEarth = (latitude, longitude, elevation) => new Observer(latit
 
 const getIsoDateStrBasedTimeZone = (localDate, timeZone) => {
   const formattedDate = localDate.toLocaleDateString('en-CA', {
+    calendar: 'gregory',
     timeZone,
     year: 'numeric',
     month: '2-digit',
@@ -574,7 +575,7 @@ const getHijriDate = (gregorianSetDate, months) => {
 
 const adjustedIslamicDate = (months, lang) => {
   const currentDate = new Date()
-  const gregorian = currentDate.toLocaleDateString(lang || 'en', { weekday: "long", year: "numeric", month: "long", day: "numeric" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')
+  const gregorian = currentDate.toLocaleDateString(lang || 'en', { calendar: "gregory", weekday: "long", year: "numeric", month: "long", day: "numeric" }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')
   const time = currentDate.toLocaleTimeString(lang || 'en', { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" }).replace(/\./g, ':')
   const islamicDate = new Date(currentDate)
   const currentFirstMonthGregorianDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay()
@@ -775,11 +776,11 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const fullMoon = SearchMoonPhase(180, lastNewMoon, +30)
   const lastQuarter = SearchMoonPhase(270, lastNewMoon, +30)
   const nextNewMoon = SearchMoonPhase(0, astroDate, +30)
-  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const firstQuarterDateTime = `${firstQuarter.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${firstQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const fullMoonDateTime = `${fullMoon.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${fullMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const lastQuarterDateTime = `${lastQuarter.date.toLocaleDateString(lang || 'en', { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
-  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang, { year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const lastNewMoonDateTime = `${lastNewMoon.date.toLocaleDateString(lang || 'en', { calendar: "gregory", year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const firstQuarterDateTime = `${firstQuarter.date.toLocaleDateString(lang || 'en', { calendar: "gregory", year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${firstQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const fullMoonDateTime = `${fullMoon.date.toLocaleDateString(lang || 'en', { calendar: "gregory", year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${fullMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const lastQuarterDateTime = `${lastQuarter.date.toLocaleDateString(lang || 'en', { calendar: "gregory", year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${lastQuarter.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
+  const nextNewMoonDateTime = `${nextNewMoon.date.toLocaleDateString(lang || 'en', { calendar: "gregory", year: "numeric", month: "2-digit", day: "2-digit", timeZone: timeZone })} ${nextNewMoon.date.toLocaleTimeString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZone: timeZone }).replace(/\./, ':')}`
   const sunAltitude = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').altitude
   const sunAzimuth = Horizon(astroDate, observer, sunEquator.ra, sunEquator.dec, 'normal').azimuth
   const sunrise = SearchRiseSet(Body.Sun, observer, +1, startAstroTime, 1, elevation)
@@ -1737,8 +1738,8 @@ const getSunInfos = (gregorianDate, timeZone, latitude, longitude, elevation, ma
     distanceInKm,
     `${sunEclipticLatitude}°`,
     `${sunEclipticLongitude.toFixed(2)}°`,
-    `${culmination.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
-    `${midnight.date.toLocaleString(lang || 'en', { hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
+    `${culmination.date.toLocaleString(lang || 'en', { calendar: "gregory", hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
+    `${midnight.date.toLocaleString(lang || 'en', { calendar: "gregory", hour: "2-digit", hourCycle: "h23", minute: "2-digit", timeZoneName: "long", timeZone: timeZone }).replace(/\./gm, ':')}`,
     `${phaseAngle}° (${moonStatus})`,
     moonAltitude,
     moonAzimuth,
