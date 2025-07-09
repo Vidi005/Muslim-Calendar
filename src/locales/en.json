@@ -8,6 +8,7 @@
     "repository": "Repository",
     "theme_setting": "Change Theme",
     "languages": "Languages",
+    "langs": ["English", "Indonesian"],
     "current_date": "Current System Date:",
     "gregorian_date": "Gregorian Date",
     "hijri_date": "Hijri Date",

@@ -1,3 +1,4 @@
+import { rawTimeZones } from "@vvo/tzdb"
 import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
 
 const isStorageExist = content => {
@@ -35,6 +36,7 @@ const pages = () => [
 const getTimezoneOffset = timezone => {
   const date = new Date()
   const formatter = new Intl.DateTimeFormat('en-US', {
+    calendar: 'gregory',
     timeZone: timezone,
     timeZoneName: 'shortOffset'
   })
@@ -58,12 +60,20 @@ const parseOffset = offset => {
 }
 
 const getTimeZoneList = () => {
-  const timeZoneList = Intl.supportedValuesOf('timeZone')
-  const timeZonePairs = timeZoneList.map(timeZone => ({
-    timeZone: timeZone,
-    offset: getTimezoneOffset(timeZone)
-  })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))
-  return timeZonePairs
+  let timeZoneList
+  if (typeof Intl.supportedValuesOf === 'function' && typeof Intl.DateTimeFormat().formatToParts === 'function') {
+    timeZoneList = Intl.supportedValuesOf('timeZone')
+    return timeZoneList.map(timeZone => ({
+      timeZone: timeZone,
+      offset: getTimezoneOffset(timeZone)
+    })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))    
+  } else {
+    timeZoneList = rawTimeZones
+    return timeZoneList.map(timeZone => ({
+      timeZone: timeZone.name,
+      offset: timeZone.rawFormat.split(' ')[0] || '+00:00'
+    }))
+  }
 }
 
 const getTimeZoneDiff = () => new Date().getTimezoneOffset() / 60

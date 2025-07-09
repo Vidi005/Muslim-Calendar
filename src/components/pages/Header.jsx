@@ -51,8 +51,8 @@ const HeaderContainer = () => (
               leaveTo="transform opacity-0 scale-95 -translate-y-1/2"
             >
               <MenuItems className="absolute grid grid-flow-row gap-1 right-1 mt-2 w-40 origin-top-right divide-y divide-green-100 rounded-lg bg-green-600 shadow-lg ring-1 ring-green-100 ring-opacity-5 focus:outline-none text-base z-20 overflow-hidden">
-                <MenuItem as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("en")}>English</MenuItem>
-                <MenuItem as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("id")}>Indonesian</MenuItem>
+                <MenuItem as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("en")}>{t('langs.0')}</MenuItem>
+                <MenuItem as={"span"} className={"text-white hover:bg-green-300 hover:text-green-700 cursor-pointer p-2 duration-200 rounded-md animate__animated animate__fadeInRight animate__faster"} onClick={() => changeLanguage("id")}>{t('langs.1')}</MenuItem>
               </MenuItems>
             </Transition>
           </Menu>
