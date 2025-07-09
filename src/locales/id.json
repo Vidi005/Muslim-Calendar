@@ -8,6 +8,7 @@
     "repository": "Repositori",
     "theme_setting": "Ubah Tema",
     "languages": "Bahasa",
+    "langs": ["Inggris", "Indonesia"],
     "current_date": "Hari Ini (Sistem):",
     "gregorian_date": "Tanggal Masehi",
     "hijri_date": "Tanggal Hijriah",
