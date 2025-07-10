@@ -61,8 +61,8 @@ class MainContainer extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevState.monthType !== this.state.monthType || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.inputCustomFajrAngle !== this.props.parentState.inputCustomFajrAngle || prevProps.parentState.inputCustomIshaAngle !== this.props.parentState.inputCustomIshaAngle || prevProps.parentState.selectedZawal !== this.props.parentState.selectedZawal || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds || prevProps.parentState.selectedRoundingMethod !== this.props.parentState.selectedRoundingMethod) {
+  componentDidUpdate(prevProps, _prevState) {
+    if (prevProps.parentState.hijriStartDates !== this.props.parentState.hijriStartDates || prevProps.parentState.selectedCalculationMethod !== this.props.parentState.selectedCalculationMethod || prevProps.parentState.selectedAshrTime !== this.props.parentState.selectedAshrTime || prevProps.parentState.selectedConvention !== this.props.parentState.selectedConvention || prevProps.parentState.inputCustomFajrAngle !== this.props.parentState.inputCustomFajrAngle || prevProps.parentState.inputCustomIshaAngle !== this.props.parentState.inputCustomIshaAngle || prevProps.parentState.selectedZawal !== this.props.parentState.selectedZawal || prevProps.parentState.selectedIhtiyath !== this.props.parentState.selectedIhtiyath || prevProps.parentState.selectedFormula !== this.props.parentState.selectedFormula || prevProps.parentState.selectedDhuhaMethod !== this.props.parentState.selectedDhuhaMethod || prevProps.parentState.inputSunAltitude !== this.props.parentState.inputSunAltitude || prevProps.parentState.inputMinutes !== this.props.parentState.inputMinutes || prevProps.parentState.isPreciseToSeconds !== this.props.parentState.isPreciseToSeconds || prevProps.parentState.selectedRoundingMethod !== this.props.parentState.selectedRoundingMethod) {
       if (this.state.monthType === 0) this.createPrayerTimeInGregorianMonth()
       else this.createPrayerTimeInHijriMonth()
     }
@@ -178,7 +178,11 @@ class MainContainer extends React.Component {
       arePrayerTimesListLoading: true
     }, () => {
       if (monthType === 0) this.createPrayerTimeInGregorianMonth()
-      else this.createPrayerTimeInHijriMonth()
+      else {
+        if (this.props.parentState.hijriStartDates?.length > 0) {
+          this.createPrayerTimeInHijriMonth()
+        }
+      }
     })
   }
 
