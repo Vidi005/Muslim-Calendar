@@ -212,7 +212,7 @@ const getIsoDateStrBasedTimeZone = (localDate, timeZone) => {
     timeZone,
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit',
+    day: '2-digit'
   })
   return `${addZeroPadForYear(formattedDate.split('-')[0])}-${formattedDate.split('-')[1]}-${formattedDate.split('-')[2]}`
 }
@@ -576,7 +576,7 @@ const getHijriDate = (gregorianSetDate, months) => {
   const gregorianDate = new Date(gregorianSetDate)
   const islamicDate = new Date(gregorianDate)
   const currentFirstMonthGregorianDay = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), 1).getDay()
-  const islamicDayNumber = months[gregorianDate.getMonth()]?.at(gregorianDate.getDate() + currentFirstMonthGregorianDay - 1)?.hijri || 0
+  const islamicDayNumber = months[gregorianDate.getMonth()][gregorianDate.getDate() + currentFirstMonthGregorianDay - 1]?.hijri || 0
   islamicDate.setDate(islamicDate.getDate() + 15 - islamicDayNumber)
   const islamicMonth = parseInt(islamicDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" }))
   const islamicYear = parseInt(islamicDate.toLocaleDateString('en', { calendar: "islamic", year: "numeric" }))

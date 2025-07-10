@@ -33,7 +33,7 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
       }
       <div className="flex flex-wrap justify-center w-full">
         <div className="w-full md:w-1/2">
-        <p className="text-sm md:text-base xl:text-lg">{t('zenith')} (+90°)</p>
+          <p className="text-sm md:text-base xl:text-lg">{t('zenith')} (+90°)</p>
           <div className="relative flex-auto flex flex-col items-center justify-center border border-green-900 dark:border-white w-full h-max text-xs lg:text-sm 2xl:text-base duration-300 overflow-hidden">
             <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/rectangle-bg.png`} alt="Visualization Container" />
             <span className="absolute w-[1.25%] border border-yellow-500 bg-yellow-400 rounded-full -translate-x-1/2 translate-y-1/2 duration-300" style={{ bottom: `${ySunPosition}%`, left: `${xSunPosition}%` }}>
@@ -70,73 +70,77 @@ const PrayerTimesVisualization = ({ t, selectedLanguage, inputDate, inputTime, f
             <span className="absolute w-full px-1 md:px-2 bottom-[43.33%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? t('nautical_twilight.1') : t('nautical_twilight.0')} (-12°)</span>
             <span className="astronomical-twilight absolute bottom-[40%] border border-double border-green-600 dark:border-gray-300 w-full"></span>
             <span className="absolute w-full px-1 md:px-2 bottom-[40%] text-right text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? t('astronomical_twilight.1') : t('astronomical_twilight.0')} (-18°)</span>
-            <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${duhrPosition}%` }}></span>
-            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}>
-              <b>
-                {t('prayer_names.4')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(4)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
-              </b>
-            </span>
-            <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('sun_infos.9')} (+{sunInfos[sunInfos.length - 4]})</b></span>
-            {(formattedDateTime <= sunInfos[sunInfos.length - 6] || formattedDateTime >= sunInfos[sunInfos.length - 5]) && dhuhaPosition > 0 && (
-              <React.Fragment>
-                <span className="absolute -mt-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}>
+            {currentPrayerTimes?.length > 0 && (
+              <>
+                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${duhrPosition}%` }}></span>
+                <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "mt-1" : "-mt-5"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}>
                   <b>
-                    {t('prayer_names.3')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(3)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)
+                    {t('prayer_names.4')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[4]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[4]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
                   </b>
                 </span>
-                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${dhuhaPosition}%` }}></span>
-              </React.Fragment>
+                <span className={`${formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${duhrPosition}%` }}><b>{t('sun_infos.9')} (+{sunInfos[sunInfos.length - 4]})</b></span>
+                {(formattedDateTime <= sunInfos[sunInfos.length - 6] || formattedDateTime >= sunInfos[sunInfos.length - 5]) && dhuhaPosition > 0 && (
+                  <React.Fragment>
+                    <span className="absolute -mt-6 w-full duration-200" style={{ top: `${dhuhaPosition}%` }}>
+                      <b>
+                        {t('prayer_names.3')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[3]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[3]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{dhuhaSunAltitude}°)
+                      </b>
+                    </span>
+                    <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${dhuhaPosition}%` }}></span>
+                  </React.Fragment>
+                )}
+                {(formattedDateTime <= sunInfos[sunInfos.length - 6] || formattedDateTime >= sunInfos[sunInfos.length - 5]) && !isNaN(currentPrayerTimes[1]?.getTime()) && (
+                  <React.Fragment>
+                    <span className="absolute mb-0.5 w-full duration-200" style={{ bottom: `${fajrPosition}%` }}>
+                      <b>
+                        {t('prayer_names.1')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[1]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[1]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.fajr}°)
+                      </b>
+                    </span>
+                    <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${fajrPosition}%` }}></span>
+                  </React.Fragment>
+                )}
+                {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] && (
+                  <React.Fragment>
+                    <span className="absolute m-0.5 w-full duration-200" style={{ top: `${ashrPosition}%` }}>
+                      <b>
+                        {t('prayer_names.5')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[5]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[5]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})
+                      </b>
+                    </span>
+                    <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${ashrPosition}%` }}></span>
+                  </React.Fragment>
+                )}
+                {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] && ishaPosition > 0 && !isNaN(currentPrayerTimes[7]?.getTime()) && (
+                  <React.Fragment>
+                    <span className="absolute -mb-4 w-full duration-200" style={{ bottom: `${ishaPosition}%` }}>
+                      <b>
+                        {t('prayer_names.7')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[7]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[7]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.isha}°)
+                      </b>
+                    </span>
+                    <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${ishaPosition}%` }}></span>
+                  </React.Fragment>
+                )}
+                <span className="absolute horizon border-t-2 md:border-2 border-solid border-t-green-900 dark:border-t-white w-full bg-green-900 dark:bg-white"></span>
+                <span className="absolute w-full mb-0.5 bottom-1/2 text-center text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? t('horizons.1') : t('horizons.0')}</span>
+                {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5]
+                  ? <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white">
+                      {!isNaN(currentPrayerTimes[6]?.getTime()) && (
+                        <b>
+                          {t('prayer_names.6')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[6]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[6]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
+                        </b>
+                      )}
+                    </span>
+                  : <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white">
+                      {!isNaN(currentPrayerTimes[2]?.getTime()) && (
+                        <b>
+                          {t('prayer_names.2')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes[2]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || '' : currentPrayerTimes[2]?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
+                        </b>
+                      )}
+                    </span>
+                }
+                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
+                <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.10')} ({sunInfos[sunInfos.length - 2]})</b></span>
+              </>
             )}
-            {(formattedDateTime <= sunInfos[sunInfos.length - 6] || formattedDateTime >= sunInfos[sunInfos.length - 5]) && !isNaN(currentPrayerTimes?.at(1).getTime()) && (
-              <React.Fragment>
-                <span className="absolute mb-0.5 w-full duration-200" style={{ bottom: `${fajrPosition}%` }}>
-                  <b>
-                    {t('prayer_names.1')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(1)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(1)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.fajr}°)
-                  </b>
-                </span>
-                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${fajrPosition}%` }}></span>
-              </React.Fragment>
-            )}
-            {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] && (
-              <React.Fragment>
-                <span className="absolute m-0.5 w-full duration-200" style={{ top: `${ashrPosition}%` }}>
-                  <b>
-                    {t('prayer_names.5')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(5)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(5)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (+{sunInfos[sunInfos.length - 3]})
-                  </b>
-                </span>
-                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${ashrPosition}%` }}></span>
-              </React.Fragment>
-            )}
-            {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] && ishaPosition > 0 && (
-              <React.Fragment>
-                <span className="absolute -mb-4 w-full duration-200" style={{ bottom: `${ishaPosition}%` }}>
-                  <b>
-                    {t('prayer_names.7')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(7)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(7)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''} (-{sunAltitude.isha}°)
-                  </b>
-                </span>
-                <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ bottom: `${ishaPosition}%` }}></span>
-              </React.Fragment>
-            )}
-            <span className="absolute horizon border-t-2 md:border-2 border-solid border-t-green-900 dark:border-t-white w-full bg-green-900 dark:bg-white"></span>
-            <span className="absolute w-full mb-0.5 bottom-1/2 text-center text-green-600 dark:text-gray-300">{formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5] ? t('horizons.1') : t('horizons.0')}</span>
-            {formattedDateTime > sunInfos[sunInfos.length - 6] && formattedDateTime < sunInfos[sunInfos.length - 5]
-              ? <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white">
-                  {!isNaN(currentPrayerTimes?.at(6).getTime()) && (
-                    <b>
-                      {t('prayer_names.6')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(6)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(6)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
-                    </b>
-                  )}
-                </span>
-              : <span className="absolute w-full bottom-[46.67%] text-center text-green-900 dark:text-white">
-                  {!isNaN(currentPrayerTimes?.at(2).getTime()) && (
-                    <b>
-                      {t('prayer_names.2')} {t('at')} {isPreciseToSeconds ? currentPrayerTimes?.at(2)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23", hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') : currentPrayerTimes?.at(2)?.toLocaleTimeString(selectedLanguage || 'en', { hourCycle: "h23",  hour: '2-digit', minute: '2-digit', timeZone: timeZone }).replace(/\./gm, ':') || ''}
-                    </b>
-                  )}
-                </span>
-            }
-            <span className="absolute border md:border-2 border-solid border-green-900 dark:border-white w-full bg-green-900 dark:bg-white duration-200" style={{ top: `${midnightPosition}%` }}></span>
-            <span className={`${parseFloat(sunInfos[sunInfos.length - 2]) < -80 ? "-mt-5" : "mt-1"} absolute w-full text-center duration-200`} style={{ top: `${midnightPosition}%` }}><b>{t('sun_infos.10')} ({sunInfos[sunInfos.length - 2]})</b></span>
           </div>
           <p className="text-sm md:text-base xl:text-lg">{t('nadir')} (-90°)</p>
         </div>
