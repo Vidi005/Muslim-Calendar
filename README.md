@@ -23,6 +23,7 @@ Muslim Calendar is a web app which used to give information related of Islamic C
 - Headless UI
 - Animate.css
 - i18next
+- tzdb
 - React to Print
 - React Helmet
 - React Slick Carousel
