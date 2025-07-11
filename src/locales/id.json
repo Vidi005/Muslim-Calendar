@@ -1,7 +1,7 @@
 {
     "app_name": "Muslim Calendar",
     "app_desc": "Selamat Datang ke Muslim Calendar. Tampilkan Informasi Kalender Islam.",
-    "pages": ["Beranda", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
+    "pages": ["Home", "Waktu Sholat", "Peta Visibilitas Hilal", "Gerhana", "Tentang"],
     "toggle_sidebar": "Lebarkan/Ciutkan Bilah Samping",
     "hide_toolbar": "Sembunyikan Bilah Alat",
     "show_toolbar": "Tampilkan Bilah Alat",
