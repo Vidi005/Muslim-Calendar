@@ -89,6 +89,7 @@
         }
     ],
     "timezone": "Zona Waktu:",
+    "select_timezone": "Silakan Pilih Zona Waktu",
     "interval_update": "Pembaruan:",
     "intervals": ["1 detik", "5 detik", "15 detik", "30 detik", "1 menit"],
     "current_month": "Ke Tanggal Saat Ini",
@@ -698,6 +699,7 @@
     "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Penumbra Awal", "Waktu Parsial Awal", "Waktu Total Awal", "Waktu Puncak", "Waktu Total Akhir", "Waktu Parsial Akhir", "Waktu Penumbra Akhir", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Tidak Ada"],
     "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
     "time_suffixes": ["jam", "menit", "detik"],
+    "unsupported_time_format": "Format waktu tidak didukung",
     "version": "Diperbarui pada Juli 2025",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",

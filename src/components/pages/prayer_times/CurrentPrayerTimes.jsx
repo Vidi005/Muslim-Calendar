@@ -14,13 +14,20 @@ const CurrentPrayerTimes = () => (
           ? en.prayer_names.map((_, i) => t(`prayer_names.${i}`))
           : en.prayer_names.map((_, i) => t(`prayer_names.${i}`)).slice(1)
       }
+      let setPrayerTimes = ''
+      try {
+        setPrayerTimes = state.formattedDateTime.toLocaleDateString(state.selectedLanguage || 'en', { calendar: "gregory", weekday: "long", day: 'numeric', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')
+      } catch (error) {
+        setPrayerTimes = t('unsupported_time_format')
+      }
+      let prayerTimeItem = ''
       return (
         <section className="flex-1 flex flex-col items-center w-full md:w-1/2 p-2 md:px-4 2xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInLeft">
           <h2 className="text-center text-green-900 dark:text-white duration-200 whitespace-nowrap">{t('prayer_times')}</h2>
           {
             state.inputDate !== '' && state.inputTime !== ''
               ? state.formattedDateTime instanceof Date
-                ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {state.formattedDateTime.toLocaleDateString(state.selectedLanguage || 'en', { calendar: "gregory", weekday: "long", day: 'numeric', month: 'long', year: 'numeric', timeZone: state.selectedTimeZone }).replace(/Minggu/g, 'Ahad').replace(/Jumat/g, 'Jum\'at')}</h5>
+                ? <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{t('set_prayer_times')} {setPrayerTimes}</h5>
                 : null
               : <h5 className="text-center text-green-700 dark:text-gray-200 duration-200">{state.nextPrayerInfo}</h5>
           }
@@ -44,15 +51,25 @@ const CurrentPrayerTimes = () => (
                   <td className="border border-green-900 dark:border-white p-1.5 text-green-900 dark:text-white font-bold">{prayerName}</td>
                   {state.prayerTimes.map((prayerTime, j) => {
                     if (state.isPreciseToSeconds) {
+                      try {
+                        prayerTimeItem = prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: state.selectedTimeZone })?.replace(/\./g, ':')
+                      } catch (error) {
+                        prayerTimeItem = '--:--:--'
+                      }
                       return (
                         <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
-                          {isNaN(prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.getTime()) ? '--:--:--' : prayerTime[hijriMonthNumber === 9 ? i : i + 1].toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: state.selectedTimeZone }).replace(/\./g, ':')}
+                          {isNaN(prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.getTime()) ? '--:--:--' : prayerTimeItem}
                         </td>
                       )
                     } else {
+                      try {
+                        prayerTimeItem = prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: state.selectedTimeZone })?.replace(/\./g, ':')
+                      } catch (error) {
+                        prayerTimeItem = '--:--'
+                      }
                       return (
                         <td key={i + j} className={`${j === 1 ? "bg-green-500/20 dark:bg-green-600 font-bold duration-200" : ""} border border-green-700 dark:border-gray-200 text-center`}>
-                          {isNaN(prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.getTime()) ? '--:--' : prayerTime[hijriMonthNumber === 9 ? i : i + 1].toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: state.selectedTimeZone }).replace(/\./g, ':')}
+                          {isNaN(prayerTime[hijriMonthNumber === 9 ? i : i + 1]?.getTime()) ? '--:--' : prayerTimeItem}
                         </td>
                       )
                     }

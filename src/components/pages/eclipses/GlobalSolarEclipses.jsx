@@ -1,5 +1,5 @@
 import React from "react"
-import GlobalSolarEclipseItem from "./GlobalsolarEclipseItem"
+import GlobalSolarEclipseItem from "./GlobalSolarEclipseItem"
 
 const GlobalSolarEclipses = ({ t, selectedLanguage, selectedTimeZone, areGlobalSolarEclipseListLoading, globalSolarEclipseList }) => (
   <section className="w-full md:w-1/2 p-2 md:px-4 xl:px-8 text-green-700 dark:text-gray-200 duration-200 animate__animated animate__fadeInLeft">
