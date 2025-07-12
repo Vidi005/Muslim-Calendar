@@ -160,9 +160,10 @@ const InputForm = () => (
                   </span>
                   <span className="flex items-center">
                     <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
-                    <select className={`bg-green-200 dark:bg-gray-200 w-64 p-1 overflow-ellipsis rounded shadow-inner duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={state.selectedTimeZone} value={
-                      getTimeZoneList().some(item => item.timeZone === state.selectedTimeZone) ? state.selectedTimeZone : ''
-                    } onChange={event => selectTimeZone(event.target.value)} required disabled={state.isCalendarLoading}>
+                    <select
+                      className={`bg-green-200 dark:bg-gray-200 w-64 p-1 overflow-ellipsis rounded shadow-inner duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={state.selectedTimeZone}
+                      value={getTimeZoneList().some(item => item.timeZone === state.selectedTimeZone) ? state.selectedTimeZone : ''}
+                      onChange={event => selectTimeZone(event.target.value)} required disabled={state.isCalendarLoading}>
                       <option value="" hidden>— {t('select_timezone')} —</option>
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
@@ -375,9 +376,10 @@ const InputForm = () => (
                   </span>
                   <span className="flex items-center">
                     <label className="whitespace-nowrap">{t('timezone')}&nbsp;</label>
-                    <select className={`bg-green-200 dark:bg-gray-200 w-48 p-1 overflow-ellipsis rounded shadow-inner duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={state.selectedTimeZone} value={
-                      getTimeZoneList().some(item => item.timeZone === state.selectedTimeZone) ? state.selectedTimeZone : ''
-                    } onChange={event => selectTimeZone(event.target.value)} required disabled={state.isCalendarLoading}>
+                    <select
+                      className={`bg-green-200 dark:bg-gray-200 w-48 p-1 overflow-ellipsis rounded shadow-inner duration-200 ${state.isCalendarLoading ? "cursor-not-allowed" : ""}`} defaultValue={state.selectedTimeZone}
+                      value={getTimeZoneList().some(item => item.timeZone === state.selectedTimeZone) ? state.selectedTimeZone : ''}
+                      onChange={event => selectTimeZone(event.target.value)} required disabled={state.isCalendarLoading}>
                       <option value="" hidden>— {t('select_timezone')} —</option>
                       {getTimeZoneList().map(item => <option key={item.timeZone} value={item.timeZone}>{`(UTC${item.offset}) ${item.timeZone}`}</option>)}
                     </select>
