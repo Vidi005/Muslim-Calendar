@@ -196,6 +196,7 @@ class MainContainer extends React.Component {
 
   createPrayerTimeInGregorianMonth () {
     const daysInMonth = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth + 1, 0).getDate()
+    let prayerTimeItem = ''
     const prayerTimesPromises = []
     for (let day = 1; day <= daysInMonth; day++) {
       const startDate = new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, day, 0, 0, 0)
@@ -203,13 +204,23 @@ class MainContainer extends React.Component {
       const prayerTimeList = this.props.generatePrayerTimes(startDate).then(prayerTime => {
         const formattedPrayerTimes = prayerTime.map(time => {
           if (this.props.parentState.isPreciseToSeconds) {
-            return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            try {
+              prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+            } catch (error) {
+              prayerTimeItem = '--:--:--'
+            }
+            return isNaN(time?.getTime()) ? '--:--:--' : prayerTimeItem
           } else {
             if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
               time.setMinutes(time.getMinutes() + 1)
             }
             time.setSeconds(0)
-            return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+            try {
+              prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+            } catch (error) {
+              prayerTimeItem = '--:--'
+            }
+            return isNaN(time?.getTime()) ? '--:--' : prayerTimeItem
           }
         }).slice(1)
         return [formattedStartDate, ...formattedPrayerTimes]
@@ -222,6 +233,7 @@ class MainContainer extends React.Component {
   createPrayerTimeInHijriMonth () {
     const timeDiff = Math.abs(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth + 1]?.gregorianDate - this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.gregorianDate)
     const daysInMonth = Math.ceil(timeDiff / 86400000)
+    let prayerTimeItem = ''
     const prayerTimesPromises = []
     const hijriMonth = this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month
     const hijriYear = parseInt(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)
@@ -234,24 +246,44 @@ class MainContainer extends React.Component {
         const formattedPrayerTimes = hijriMonth === 9
           ? prayerTime.map(time => {
             if (this.props.parentState.isPreciseToSeconds) {
-              return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              try {
+                prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+              } catch (error) {
+                prayerTimeItem = '--:--:--'
+              }
+              return isNaN(time?.getTime()) ? '--:--:--' : prayerTimeItem
             } else {
               if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
-              return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              try {
+                prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+              } catch (error) {
+                prayerTimeItem = '--:--'
+              }
+              return isNaN(time?.getTime()) ? '--:--' : prayerTimeItem
             }
           })
           : prayerTime.map(time => {
             if (this.props.parentState.isPreciseToSeconds) {
-              return isNaN(time?.getTime()) ? '--:--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              try {
+                prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+              } catch (error) {
+                prayerTimeItem = '--:--:--'
+              }
+              return isNaN(time?.getTime()) ? '--:--:--' : prayerTimeItem
             } else {
               if ((time.getSeconds() >= 30 && this.props.parentState.selectedRoundingMethod === 1) || this.props.parentState.selectedRoundingMethod === 0) {
                 time.setMinutes(time.getMinutes() + 1)
               }
               time.setSeconds(0)
-              return isNaN(time?.getTime()) ? '--:--' : time.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone }).replace(/\./g, ':')
+              try {
+                prayerTimeItem = time?.toLocaleTimeString('en-GB', { hour12: false, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', timeZone: this.props.parentState.selectedTimeZone })?.replace(/\./g, ':')
+              } catch (error) {
+                prayerTimeItem = '--:--'
+              }
+              return isNaN(time?.getTime()) ? '--:--' : prayerTimeItem
             }
           }).slice(1)
         return [hijriDate, formattedGregorianDate, ...formattedPrayerTimes]
