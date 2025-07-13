@@ -61,18 +61,18 @@ const parseOffset = offset => {
 
 const getTimeZoneList = () => {
   let timeZoneList
-  if (typeof Intl.supportedValuesOf === 'function' && typeof Intl.DateTimeFormat().formatToParts === 'function') {
+  try {
     timeZoneList = Intl.supportedValuesOf('timeZone')
     return timeZoneList.map(timeZone => ({
       timeZone: timeZone,
       offset: getTimezoneOffset(timeZone)
-    })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))    
-  } else {
+    })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))
+  } catch (error) {
     timeZoneList = rawTimeZones
     return timeZoneList.map(timeZone => ({
       timeZone: timeZone.name,
       offset: timeZone.rawFormat.split(' ')[0] || '+00:00'
-    }))
+    })).sort((a, b) => parseOffset(a.offset) - parseOffset(b.offset))
   }
 }
 
