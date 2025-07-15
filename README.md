@@ -7,6 +7,7 @@ Muslim Calendar is a web app which used to give information related of Islamic C
 - New Moon Observation Date must be Set Based on Its Location Time Zone and Location is not in Higher Latitude (for preventing any invalid Hijri Date which could be exceeded to 31 days or only 28 days in some months)
 - Hijri Dates in Western Region
 - Input Date before October 15, 1582 or in Julian Calendar Era (only support for Gregorian Calendar)
+- Qibla direction with compass may not be accurate because it depends on earth magnetic field declination especially in polar regions (for supported devices only with magnetic sensor/E-Compass)
 
 ### Features
 - Display Islamic Calendar, Moon Information, Prayer Times, Prayer Schedule List, Qibla Direction, Moon Crescent Visibility map, and Eclipses (Solar and Lunar Eclipses)
