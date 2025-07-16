@@ -641,7 +641,6 @@ class App extends React.Component {
     i18n.changeLanguage(lang)
     this.setState({ selectedLanguage: lang }, () => {
       this.saveLanguageData(lang)
-      this.generateCalendar().then(() => this.getEclipseInfos())
     })
   }
 
@@ -781,6 +780,7 @@ class App extends React.Component {
             this.formatDateTime()
               .then(() => this.generateCalendar())
               .then(() => this.selectTimeZone(this.state.selectedTimeZone))
+              .then(() => this.getEclipseInfos())
               .finally(() => {
                 localStorage.removeItem(this.state.LOCATION_STATE_STORAGE_KEY)
                 localStorage.removeItem(this.state.TIMEZONE_STORAGE_KEY)
@@ -898,6 +898,7 @@ class App extends React.Component {
         this.loadCitiesData().then(worldCities => this.generateNearestCity(worldCities))
         this.getCurrentCriteria()
         this.getCurrentConvention()
+        this.getEclipseInfos()
       })
     }
   }
