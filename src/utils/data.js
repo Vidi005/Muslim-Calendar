@@ -2372,8 +2372,6 @@ const getLunarEclipse = (date, latitude, longitude, elevation) => {
   const partialEndTime = lunarEclipse.peak.AddDays(lunarEclipse.sd_partial / 1440)
   const totalBeginTime = lunarEclipse.peak.AddDays(-lunarEclipse.sd_total / 1440)
   const totalEndTime = lunarEclipse.peak.AddDays(lunarEclipse.sd_total / 1440)
-  const isPenumbralBeginVisible = checkMoonVisibility(penumbralBeginTime, latitude, longitude, elevation)
-  const isPenumbralEndVisible = checkMoonVisibility(penumbralEndTime, latitude, longitude, elevation)
   const isPartialBeginVisible = checkMoonVisibility(partialBeginTime, latitude, longitude, elevation)
   const isPartialEndVisible = checkMoonVisibility(partialEndTime, latitude, longitude, elevation)
   const isTotalBeginVisible = checkMoonVisibility(totalBeginTime, latitude, longitude, elevation)
@@ -2389,13 +2387,11 @@ const getLunarEclipse = (date, latitude, longitude, elevation) => {
     totalEndTime: totalEndTime.date || 0,
     partialEndTime: partialEndTime.date || 0,
     penumbralEndTime: penumbralEndTime.date || 0,
-    isPenumbralBeginVisible,
     isPartialBeginVisible,
     isTotalBeginVisible,
     isPeakTimeVisible,
     isTotalEndVisible,
     isPartialEndVisible,
-    isPenumbralEndVisible,
     partialDuration: lunarEclipse.sd_partial * 2 - lunarEclipse.sd_total * 2 || 0,
     penumbralDuration: lunarEclipse.sd_penum * 2 - lunarEclipse.sd_partial * 2 || 0,
     totalDuration: lunarEclipse.sd_total * 2 || 0,
