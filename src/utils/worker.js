@@ -1,6 +1,6 @@
-import { adjustedIslamicDate, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
+import { adjustedIslamicDate, getAlmanacData, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v7.9' // Update the version when deploying new builds to clear old caches
+const CACHE_NAME = 'app-cache-v8.0' // Update the version when deploying new builds to clear old caches
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -50,6 +50,9 @@ self.onmessage = event => {
   } else if (type === 'createCalendarData') {
     const result = getCalendarData(gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula, lang)
     self.postMessage({ type: 'createCalendarData', result })
+  } else if (type === 'createAlmanacData') {
+    const result = getAlmanacData(gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula)
+    self.postMessage({ type: 'createAlmanacData', result })
   } else if (type === 'createIncludedElement') {
     const result = getElementContent(innerHTML)
     self.postMessage({ type: 'createIncludedElement', result })

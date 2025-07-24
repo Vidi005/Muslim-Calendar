@@ -6,10 +6,11 @@ import MoonCrescentMapSection from "./MoonCrescentMapSection"
 import EclipsesSection from "./EclipsesSection"
 import FooterContainer from "../Footer"
 
-const HomeContent = ({ sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
+const HomeContent = ({ changeCalendarType, sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
   <article className="home-content grow bg-green-100 dark:bg-gray-700 overflow-y-auto duration-200">
     <InputForm />
     <CalendarSection
+      changeCalendarType={changeCalendarType}
       sliderRef={sliderRef}
       calendarContainerRef={calendarContainerRef}
       tooltipRef={tooltipRef}

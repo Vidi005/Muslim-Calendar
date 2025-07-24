@@ -4,7 +4,7 @@ import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 import FooterContainer from "../Footer"
 
-const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
+const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, tooltipRef, changeCalendarType, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
   <div className="home-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('app_name') + ' | ' + t('pages.0')}</title>
@@ -17,6 +17,7 @@ const HomePage = ({ t, isSidebarExpanded, sliderRef, calendarContainerRef, toolt
       sliderRef={sliderRef}
       calendarContainerRef={calendarContainerRef}
       tooltipRef={tooltipRef}
+      changeCalendarType={changeCalendarType}
       showTooltip={showTooltip}
       hideTooltip={hideTooltip}
       goToCurrentMonth={goToCurrentMonth}

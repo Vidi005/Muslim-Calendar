@@ -1,6 +1,6 @@
 import React from "react"
 import i18n from "../utils/localization"
-import { addZeroPad, getIsoDateStrBasedTimeZone, isStorageExist } from "../utils/data"
+import { addZeroPad, getHijriDate, getIsoDateStrBasedTimeZone, isStorageExist } from "../utils/data"
 import { Helmet } from "react-helmet"
 import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/home/HomePage"
@@ -78,8 +78,10 @@ class App extends React.Component {
       inputSunAltitude: 4.5,
       inputMinutes: 18,
       selectedFormula: 1,
+      calendarType: 0,
       monthsInSetYear: [],
       monthsInCurrentYear: [],
+      hijriMonthsInAYear: null,
       tooltipId: '',
       hijriEventDates: [],
       moonInfos: [],
@@ -1195,6 +1197,19 @@ class App extends React.Component {
     })
   }
 
+  changeCalendarType (calendarType) {
+    this.setState({
+      calendarType: parseInt(calendarType),
+      isCalendarLoading: true
+    }, () => {
+      if (calendarType === 0) {
+        this.setState({ hijriMonthsInAYear: null })
+        this.generateCalendar()
+      }
+      else this.generateAlmanac()
+    })
+  }
+
   createCalendarWorker = gregorianDate => {
     return new Promise((resolve, reject) => {
       let calendarDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
@@ -1230,8 +1245,43 @@ class App extends React.Component {
     })
   }
 
+  createAlmanacWorker = gregorianDate => {
+    return new Promise((resolve, reject) => {
+      let almanacDataWorker = new Worker(new URL('./../utils/worker.js', import.meta.url), { type: 'module' })
+      almanacDataWorker.postMessage({
+        type: 'createAlmanacData',
+        gregorianDate: gregorianDate,
+        timeZone: this.state.selectedTimeZone,
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        elevation: this.state.elevation,
+        criteria: this.state.selectedCriteria,
+        elongationType: this.state.selectedElongationType,
+        altitudeType: this.state.selectedAltitudeType,
+        correctedRefraction: this.state.isUseNormalRefraction ? 'normal' : false,
+        formula: this.state.selectedFormula
+      })
+      almanacDataWorker.onmessage = workerEvent => {
+        if (workerEvent.data.type === 'createAlmanacData') {
+          resolve(workerEvent.data.result)
+        }
+        almanacDataWorker.terminate()
+        this.setState({ isCalendarLoading: false }, () => almanacDataWorker = null)
+      }
+      almanacDataWorker.onerror = error => {
+        almanacDataWorker.terminate()
+        this.setState({ isCalendarLoading: false }, () => {
+          console.error(error.message)
+          almanacDataWorker = null
+        })
+        reject(error)
+      }
+    })
+  }
+
   generateCalendar = async() => {
     const currentDate = new Date()
+    if (this.state.calendarType === 1) this.generateAlmanac()
     if (currentDate.getDate() === this.state.formattedDateTime.getDate() && currentDate.getHours() === this.state.formattedDateTime.getHours() && currentDate.getMinutes() === this.state.formattedDateTime.getMinutes()) {
       await this.createCalendarWorker(this.state.formattedDateTime).then(setCalendarData => {
         if (setCalendarData?.months?.length > 0) {
@@ -1264,15 +1314,27 @@ class App extends React.Component {
           this.setState({ monthsInCurrentYear: currentCalendarData.months }, () => {
             this.generateMoonInfos()
             this.create3DaysOfPrayerTimes()
-          })        
+          })
         }
       })
     }
   }
+
+  generateAlmanac = async() => {
+    await this.createAlmanacWorker(this.state.formattedDateTime).then(setAlmanacData => {
+      if (setAlmanacData?.months?.length > 0) {
+        this.setState({ hijriMonthsInAYear: setAlmanacData })          
+      }
+    })
+  }
   
   goToCurrentMonth = () => {
     if (this.sliderRef.current) {
-      this.sliderRef.current.slickGoTo(this.state.formattedDateTime.getMonth())
+      if (this.state.calendarType === 0) {
+        this.sliderRef.current.slickGoTo(this.state.formattedDateTime.getMonth())
+      } else {
+        this.sliderRef.current.slickGoTo(getHijriDate(this.state.formattedDateTime, this.state.monthsInSetYear).islamicMonth - 1)
+      }
     }
   }
 
@@ -1607,6 +1669,7 @@ class App extends React.Component {
                 sliderRef={this.sliderRef}
                 calendarContainerRef={this.calendarContainerRef}
                 tooltipRef={this.tooltipRef}
+                changeCalendarType={this.changeCalendarType.bind(this)}
                 showTooltip={this.showTooltip.bind(this)}
                 hideTooltip={this.hideTooltip.bind(this)}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
@@ -1644,6 +1707,7 @@ class App extends React.Component {
                 sliderRef={this.sliderRef}
                 calendarContainerRef={this.calendarContainerRef}
                 tooltipRef={this.tooltipRef}
+                changeCalendarType={this.changeCalendarType.bind(this)}
                 showTooltip={this.showTooltip.bind(this)}
                 hideTooltip={this.hideTooltip.bind(this)}
                 goToCurrentMonth={this.goToCurrentMonth.bind(this)}
