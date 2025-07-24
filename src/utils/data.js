@@ -572,6 +572,51 @@ const getCalendarData = (gregorianDate, timeZone, latitude, longitude, elevation
   return { months, hijriEventDates, hijriStartDates }
 }
 
+const getAlmanacData = (gregorianDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula) => {
+  const newMoons = []
+  const startHijriDateFromLastYear = new Date(gregorianDate)
+  const approximateIslamicMonth = parseInt(gregorianDate.toLocaleDateString('en', { calendar: "islamic", month: "numeric" }))
+  // Add spare one year before to align offset hijri date at the first/previous new moon calculation
+  startHijriDateFromLastYear.setDate(startHijriDateFromLastYear.getDate() - 354 - approximateIslamicMonth * 30)
+  const midOfHijriYear = new Date(startHijriDateFromLastYear)
+  // Set mid of Hijri year (354 + 177 days from last Hijri year) to get the approximate Hijri year
+  midOfHijriYear.setDate(midOfHijriYear.getDate() + 531)
+  const approximateIslamicYear = midOfHijriYear.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })
+  let startDate = new AstroTime(startHijriDateFromLastYear)
+  let newMoonDate = startHijriDateFromLastYear
+  let islamicDayNumberPlus14 = new Date(newMoonDate)
+  while (parseInt(islamicDayNumberPlus14.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })) <= parseInt(approximateIslamicYear)) {
+    // Search New Moon incremental from first approximate hijri day from the previous of current/configured year until the last approximate hijri day in current/configured year
+    newMoonDate = calculateNewMoon(newMoonDate, startDate, timeZone, latitude, longitude, elevation, criteria, elongationType, altitudeType, correctedRefraction, formula).date
+    if (newMoonDate instanceof Date) {
+      islamicDayNumberPlus14 = new Date(newMoonDate)
+      islamicDayNumberPlus14.setDate(newMoonDate.getDate() + 14)
+      if (parseInt(islamicDayNumberPlus14.toLocaleDateString('en', { calendar: "islamic", year: "numeric" })) >= parseInt(approximateIslamicYear)) {
+        newMoons.push(newMoonDate)
+      }
+      startDate = new AstroTime(newMoonDate)
+      startDate = startDate.AddDays(27)
+    }
+  }
+  const months = newMoons.slice(0, 12).map((month, monthIndex) => {
+    // Create month array for Islamic calendar and Gregorian calendar
+    const nextStartDate = newMoons[monthIndex + 1] || new Date(+month + 30 * 864e5)
+    const daysInMonth = Math.round((nextStartDate - month) / 864e5)
+    const itemsArray = Array.from({ length: month.getDay() }).fill(null)
+    for (let day = 0; day < daysInMonth; day++) {
+      itemsArray.push({
+        hijriDay: day + 1,
+        hijriMonth: monthIndex + 1,
+        hijriYear: parseInt(approximateIslamicYear),
+        gregorianDate: new Date(+month + day * 864e5)
+      })
+    }
+    return itemsArray
+  })
+  const eventsId = Object.values(muslimEvents)
+  return { months, eventsId }
+}
+
 const getHijriDate = (gregorianSetDate, months) => {
   const gregorianDate = new Date(gregorianSetDate)
   const islamicDate = new Date(gregorianDate)
@@ -2411,4 +2456,4 @@ const coordinateScale = {
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getIsoDateStrBasedTimeZone, getCalendarData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getIsoDateStrBasedTimeZone, getCalendarData, getAlmanacData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }

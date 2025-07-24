@@ -7,8 +7,9 @@ import { HomePageConsumer } from "../../contexts/HomPageContext"
 import CustomNextArrow from "./CustomNextArrow"
 import CustomPrevArrow from "./CustomPrevArrow"
 import { getHijriDate } from "../../../utils/data"
+import { Radio, RadioGroup } from "@headlessui/react"
 
-const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
+const CalendarSection = ({ changeCalendarType, sliderRef, calendarContainerRef, tooltipRef, showTooltip, hideTooltip, goToCurrentMonth, jumpToClickedMonth }) => (
   <HomePageConsumer>
     {({ t, state }) => {
       const settings = {
@@ -18,7 +19,7 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        initialSlide: state.formattedDateTime.getMonth(),
+        initialSlide: state.calendarType === 0 ? state.formattedDateTime.getMonth() : getHijriDate(state.formattedDateTime, state.monthsInSetYear).islamicMonth - 1,
         adaptiveHeight: true,
         nextArrow: <CustomNextArrow t={t}/>,
         prevArrow: <CustomPrevArrow t={t}/>
@@ -41,6 +42,50 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
         <section className="calendar-section flex flex-wrap md:flex-nowrap max-w-full">
           <div className="w-full md:w-2/3 lg:w-3/4 px-7 overflow-hidden">
             <h1 className="m-4 text-center text-green-900 dark:text-white duration-200">{t('calendar')}</h1>
+            <RadioGroup disabled={state.isCalendarLoading} value={state.calendarType} onChange={changeCalendarType} className={`flex items-center justify-center space-x-1 md:space-x-2 m-2 md:mx-3 py-1 md:py-2 text-sm md:text-base ${state.isCalendarLoading ? "opacity-75 cursor-not-allowed" : ""}`}>
+              <Radio disabled={state.isCalendarLoading} value={0} className={({ active, checked }) => `${active ? 'ring-2 ring-green-300 rounded-lg' : ''} ${checked ? 'border border-green-700 dark:border-green-500 text-white rounded-lg' : 'border bg-green-200/50 dark:bg-gray-700 rounded-lg'} border-green-700 dark:border-green-500 text-green-900 dark:text-white shadow-md dark:shadow-white/50 cursor-pointer duration-200`}>
+                {({ checked }) => (
+                  checked ? (
+                    <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-600 p-2 cursor-pointer rounded-lg duration-300">
+                      <input
+                        type="radio"
+                        className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
+                        checked />
+                      <label className="cursor-pointer">{t("month_types.0")}</label>
+                    </div>
+                  ) : (
+                    <div className="flex items-center flex-nowrap p-2 cursor-pointer rounded-lg duration-300">
+                      <input
+                        type="radio"
+                        className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
+                        checked={false} />
+                      <label className="cursor-pointer">{t("month_types.0")}</label>
+                    </div>
+                  )
+                )}
+              </Radio>
+              <Radio disabled={state.isCalendarLoading} value={1} className={({ active, checked }) => `${active ? 'ring-2 ring-green-300 rounded-lg' : ''} ${checked ? 'border border-green-700 dark:border-green-500 text-white rounded-lg' : 'border bg-green-200/50 dark:bg-gray-700 rounded-lg'} border-green-700 dark:border-green-500 text-green-900 dark:text-white shadow-md dark:shadow-white/50 cursor-pointer duration-200`}>
+                {({ checked }) => (
+                  checked ? (
+                    <div className="flex items-center flex-nowrap bg-green-700 dark:bg-green-600 p-2 cursor-pointer rounded-lg duration-300">
+                      <input
+                        type="radio"
+                        className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
+                        checked />
+                      <label className="cursor-pointer">{t("month_types.1")}</label>
+                    </div>
+                  ) : (
+                    <div className="flex items-center flex-nowrap p-2 cursor-pointer rounded-lg duration-300">
+                      <input
+                        type="radio"
+                        className="accent-green-700 dark:accent-green-500 h-5 w-5 mr-2 cursor-pointer duration-300"
+                        checked={false} />
+                      <label className="cursor-pointer">{t("month_types.1")}</label>
+                    </div>
+                  )
+                )}
+              </Radio>
+            </RadioGroup>
             <button className="flex items-center mx-auto my-2 px-3 py-1 text-lg text-white bg-green-700 hover:bg-green-500 hover:dark:bg-green-300 dark:bg-green-600 active:bg-green-700 dark:active:bg-green-900 rounded-lg duration-200 shadow-lg dark:shadow-white/50" onClick={goToCurrentMonth}>{state.inputDate !== '' && state.inputTime !=='' && state.formattedDateTime instanceof Date ? t('set_month') : t('current_month')}</button>
             {state.isCalendarLoading
               ? (
@@ -51,95 +96,187 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 )
               : (
                 <React.Fragment>
-                  <Slider {...settings} ref={sliderRef}>
-                    {state.monthsInSetYear.map((days, monthIndex) => {
-                      const hijriDate1 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1), state.monthsInSetYear)
-                      const hijriDate2 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()), state.monthsInSetYear)
-                      return (
-                        <React.Fragment key={monthIndex}>
-                          <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long', year: 'numeric' })}</h2>
-                          <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-600 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
-                            {hijriDate1.islamicMonth === hijriDate2.islamicMonth
-                              ? (
-                                  <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span>
-                                )
-                              : (
-                                  <React.Fragment>
-                                    <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate2.islamicYear)}</span>
-                                  </React.Fragment>
-                                )
-                            }
-                          </h4>
-                          <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
-                            <thead>
-                              <tr>
-                                {en.day_names.map((_day, index) => {
-                                  if (innerWidth >= 1280) {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).replace(/Minggu/g, 'Ahad')}</th>;
-                                  } else {
-                                    return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3).replace(/Min/g, 'Ahd')}</th>
-                                  }
-                                })}
-                              </tr>
-                            </thead>
-                            <tbody ref={calendarContainerRef}>
-                              {Array.from({ length: Math.ceil(days.length / 7) }).map((_, weekIndex) => (
-                                <tr key={weekIndex}>
-                                  {days.slice(weekIndex * 7, (weekIndex + 1) * 7).map((day, dayIndex) => {
-                                    if (isNaN(day?.gregorian)) {
-                                      return (
-                                        <td key={dayIndex} onMouseLeave={hideTooltip} className="border-none border-transparent border-spacing-0 text-center whitespace-nowrap">
-                                          {day ? (
-                                            <React.Fragment>
-                                              <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
-                                              <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
-                                            </React.Fragment>
-                                          ) : null}
-                                        </td>
-                                      )
-                                    } else {
-                                      const isCurrentDate = state.formattedDateTime.getDate() === day.gregorian && state.formattedDateTime.getMonth() === monthIndex
-                                      const muslimEvent = state.hijriEventDates.find(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex)
-                                      const isMuslimEvent = !!muslimEvent
-                                      if (isMuslimEvent) {
-                                        return (
-                                          <td className={`bg-sky-500/25 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex} title={t(`muslim_events.${muslimEvent.eventId}`)}>
-                                            {day ? (
-                                              <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
-                                                <span className={`${muslimEvent.eventId} block text-sky-800 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${muslimEvent.eventId} block text-sky-600 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
-                                              </div>
-                                            ) : null}
-                                            {state.tooltipId === muslimEvent.eventId  && (
-                                              <span ref={tooltipRef} className="absolute bg-sky-400/50 dark:bg-sky-500/50 p-2 text-green-900 dark:text-white backdrop-blur-sm bg-opacity-25 rounded shadow-md dark:shadow-white/50 animate__animated animate__fadeIn animate__faster z-10">{t(`muslim_events.${state.tooltipId}`)}</span>
-                                            )}
-                                          </td>
-                                        )
+                  {state.calendarType === 0
+                    ? (
+                      <Slider {...settings} ref={sliderRef}>
+                        {state.monthsInSetYear.map((days, monthIndex) => {
+                          const hijriDate1 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, 1), state.monthsInSetYear)
+                          const hijriDate2 = getHijriDate(new Date(state.formattedDateTime.getFullYear(), monthIndex, new Date(state.formattedDateTime.getFullYear(), monthIndex + 1, 0).getDate()), state.monthsInSetYear)
+                          return (
+                            <React.Fragment key={monthIndex}>
+                              <h2 className="m-2 text-center text-green-700 dark:text-white duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">{new Date(state.formattedDateTime.getFullYear(), monthIndex).toLocaleString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long', year: 'numeric' })}</h2>
+                              <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-600 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
+                                {hijriDate1.islamicMonth === hijriDate2.islamicMonth
+                                  ? (
+                                      <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span>
+                                    )
+                                  : (
+                                      <React.Fragment>
+                                        <span className={`${hijriDate1.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate1.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate1.islamicYear)}</span> - <span className={`${hijriDate2.islamicMonth === 9 ? "text-yellow-600 dark:text-yellow-300" : ""}`}>{t(`islamic_months.${hijriDate2.islamicMonth - 1}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(hijriDate2.islamicYear)}</span>
+                                      </React.Fragment>
+                                    )
+                                }
+                              </h4>
+                              <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
+                                <thead>
+                                  <tr>
+                                    {en.day_names.map((_day, index) => {
+                                      if (innerWidth >= 1280) {
+                                        return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).replace(/Minggu/g, 'Ahad')}</th>;
                                       } else {
-                                        return (
-                                          <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/25 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/25 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
-                                            {day ? (
-                                              <React.Fragment>
-                                                <span className={`${dayIndex === 0 ? "text-red-800" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
-                                                <span className={`${dayIndex === 0 ? "text-red-600" : "text-green-800"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-600"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
-                                              </React.Fragment>
-                                            ) : null}
-                                          </td>
-                                        )
+                                        return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3).replace(/Min/g, 'Ahd')}</th>
                                       }
-                                    }
-                                  })}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </React.Fragment>
+                                    })}
+                                  </tr>
+                                </thead>
+                                <tbody ref={calendarContainerRef}>
+                                  {Array.from({ length: Math.ceil(days.length / 7) }).map((_, weekIndex) => (
+                                    <tr key={weekIndex}>
+                                      {days.slice(weekIndex * 7, (weekIndex + 1) * 7).map((day, dayIndex) => {
+                                        if (isNaN(day?.gregorian)) {
+                                          return (
+                                            <td key={dayIndex} onMouseLeave={hideTooltip} className="border-none border-transparent border-spacing-0 text-center whitespace-nowrap">
+                                              {day ? (
+                                                <React.Fragment>
+                                                  <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{day.gregorian}</span>
+                                                  <span className="block text-transparent font-bold text-lg md:text-xl lg:text-2xl">{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
+                                                </React.Fragment>
+                                              ) : null}
+                                            </td>
+                                          )
+                                        } else {
+                                          const isCurrentDate = state.formattedDateTime.getDate() === day.gregorian && state.formattedDateTime.getMonth() === monthIndex
+                                          const muslimEvent = state.hijriEventDates.find(event => event.gregorianDate.getDate() === day.gregorian && event.gregorianDate.getMonth() === monthIndex)
+                                          const isMuslimEvent = !!muslimEvent
+                                          if (isMuslimEvent) {
+                                            return (
+                                              <td className={`bg-sky-500/25 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={dayIndex} title={t(`muslim_events.${muslimEvent.eventId}`)}>
+                                                {day ? (
+                                                  <div ref={tooltipRef} className={`${muslimEvent.eventId} p-2 text-center whitespace-nowrap`}>
+                                                    <span className={`${muslimEvent.eventId} block text-sky-800 dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
+                                                    <span className={`${muslimEvent.eventId} block text-sky-600 dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
+                                                  </div>
+                                                ) : null}
+                                                {state.tooltipId === muslimEvent.eventId  && (
+                                                  <span ref={tooltipRef} className="absolute bg-sky-400/50 dark:bg-sky-500/50 p-2 text-green-900 dark:text-white backdrop-blur-sm bg-opacity-25 rounded shadow-md dark:shadow-white/50 animate__animated animate__fadeIn animate__faster z-10">{t(`muslim_events.${state.tooltipId}`)}</span>
+                                                )}
+                                              </td>
+                                            )
+                                          } else {
+                                            return (
+                                              <td key={dayIndex} onMouseLeave={hideTooltip} className={`${dayIndex === 0 ? "bg-red-500/25 dark:bg-red-500" : ""} ${dayIndex === 5 ? "bg-green-500/25 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
+                                                {day ? (
+                                                  <React.Fragment>
+                                                    <span className={`${dayIndex === 0 ? "text-red-800" : "text-green-900"} ${dayIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{day.gregorian}</span>
+                                                    <span className={`${dayIndex === 0 ? "text-red-600" : "text-green-800"} ${dayIndex === 5 ? "text-green-700/50" : "text-green-600"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{Intl.NumberFormat('ar-SA').format(day.hijri)}</span>
+                                                  </React.Fragment>
+                                                ) : null}
+                                              </td>
+                                            )
+                                          }
+                                        }
+                                      })}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </React.Fragment>
+                          )
+                        })}
+                      </Slider>
                       )
-                    })}
-                  </Slider>
+                    : (
+                      <Slider {...settings} ref={sliderRef}>
+                        {state.hijriMonthsInAYear?.months?.map((items, monthIndex) => {
+                          const gregorianDate1 = state.hijriMonthsInAYear?.months[monthIndex][items?.findIndex(item => item?.hijriDay === 1)].gregorianDate
+                          const gregorianDate2 = state.hijriMonthsInAYear?.months[monthIndex][items.length - 1]?.gregorianDate
+                          return (
+                            <React.Fragment key={monthIndex}>
+                              <h2 className={`${monthIndex === 8 ? "text-yellow-600 dark:text-yellow-300" : "text-green-700 dark:text-white"} m-2 text-center duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>{t(`islamic_months.${monthIndex}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(items[15]?.hijriYear)} {t('hijri_abbreviation')}</h2>
+                              <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-600 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
+                                {gregorianDate1?.getMonth() === gregorianDate2?.getMonth()
+                                  ? (
+                                      <span>{gregorianDate1?.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', year: 'numeric', month: 'long' })}</span>
+                                    )
+                                  : (
+                                      <React.Fragment>
+                                        <span>{gregorianDate1?.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', year: 'numeric', month: 'long' })}</span> - <span>{gregorianDate2?.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', year: 'numeric', month: 'long' })}</span>
+                                      </React.Fragment>
+                                    )
+                                }
+                              </h4>
+                              <table className="table-fixed w-full text-green-900 dark:text-gray-200 text-sm md:text-base lg:text-lg duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft">
+                                <thead>
+                                  <tr>
+                                    {en.day_names.map((_day, index) => {
+                                      if (innerWidth >= 1280) {
+                                        return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).replace(/Minggu/g, 'Ahad')}</th>;
+                                      } else {
+                                        return <th className={`${index === 0 ? "text-red-700 dark:bg-red-500 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""} ${index === 5 ? "text-green-500 dark:bg-green-600 dark:text-gray-200 dark:rounded-md md:dark:rounded-lg" : ""}`} key={index}>{t(`day_names.${index}`).slice(0, 3).replace(/Min/g, 'Ahd')}</th>
+                                      }
+                                    })}
+                                  </tr>
+                                </thead>
+                                <tbody ref={calendarContainerRef}>
+                                  {Array.from({ length: Math.ceil(items.length / 7) }).map((_, weekIndex) => (
+                                    <tr key={weekIndex}>
+                                      {items.slice(weekIndex * 7, (weekIndex + 1) * 7).map((item, itemIndex) => {
+                                        if (isNaN(item?.hijriDay)) {
+                                          return (
+                                            <td key={itemIndex} onMouseLeave={hideTooltip} className="border-none border-transparent border-spacing-0 text-center whitespace-nowrap">
+                                              {item ? (
+                                                <React.Fragment>
+                                                  <span className="block text-transparent font-bold text-xl md:text-2xl lg:text-3xl">{Intl.NumberFormat('ar-SA').format(item.hijriDay)}</span>
+                                                  <span className="block text-transparent font-bold text-md md:text-lg lg:text-xl">{item.gregorianDate?.getDate()}</span>
+                                                </React.Fragment>
+                                              ) : null}
+                                            </td>
+                                          )
+                                        } else {
+                                          const isCurrentDate = state.formattedDateTime.getDate() === item.gregorianDate?.getDate() && state.formattedDateTime.getMonth() === item.gregorianDate?.getMonth()
+                                          const muslimEventId = state.hijriMonthsInAYear.eventsId.find(eventId => eventId === `${item.hijriDay}-${item.hijriMonth}-event`)
+                                          const isMuslimEvent = !!muslimEventId
+                                          if (isMuslimEvent) {
+                                            return (
+                                              <td className={`bg-sky-500/25 dark:bg-sky-600 ${isCurrentDate ? "border-4 border-double border-sky-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} rounded`} onMouseEnter={e => showTooltip(e)} key={itemIndex} title={t(`muslim_events.${muslimEventId}`)}>
+                                                {item ? (
+                                                  <div ref={tooltipRef} className={`${muslimEventId} p-2 text-center whitespace-nowrap`}>
+                                                    <span className={`${muslimEventId} block text-sky-800 dark:text-white font-bold text-xl md:text-2xl lg:text-3xl`}>{Intl.NumberFormat('ar-SA').format(item.hijriDay)}</span>
+                                                    <span className={`${muslimEventId} block text-sky-600 dark:text-gray-200 text-sm md:text-md lg:text-lg`}>{item.gregorianDate?.getDate()}</span>
+                                                  </div>
+                                                ) : null}
+                                                {state.tooltipId === muslimEventId  && (
+                                                  <span ref={tooltipRef} className="absolute bg-sky-400/50 dark:bg-sky-500/50 p-2 text-green-900 dark:text-white backdrop-blur-sm bg-opacity-25 rounded shadow-md dark:shadow-white/50 animate__animated animate__fadeIn animate__faster z-10">{t(`muslim_events.${state.tooltipId}`)}</span>
+                                                )}
+                                              </td>
+                                            )
+                                          } else {
+                                            return (
+                                              <td key={itemIndex} onMouseLeave={hideTooltip} className={`${itemIndex === 0 ? "bg-red-500/25 dark:bg-red-500" : ""} ${itemIndex === 5 ? "bg-green-500/25 dark:bg-green-600" : ""} ${isCurrentDate ? "border-4 border-double border-green-900 dark:border-white" : "border border-green-700 dark:border-gray-200"} p-2 text-center whitespace-nowrap`}>
+                                                {item ? (
+                                                  <React.Fragment>
+                                                    <span className={`${itemIndex === 0 ? "text-red-800" : "text-green-900"} ${itemIndex === 5 ? "text-green-400" : "text-green-700"} block dark:text-white font-bold text-lg md:text-xl lg:text-2xl`}>{Intl.NumberFormat('ar-SA').format(item.hijriDay)}</span>
+                                                    <span className={`${itemIndex === 0 ? "text-red-600" : "text-green-800"} ${itemIndex === 5 ? "text-green-700/50" : "text-green-600"} block dark:text-gray-200 text-sm md:text-base lg:text-lg`}>{item.gregorianDate?.getDate()}</span>
+                                                  </React.Fragment>
+                                                ) : null}
+                                              </td>
+                                            )
+                                          }
+                                        }
+                                      })}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </React.Fragment>
+                          )
+                        })}
+                      </Slider>
+                      )
+                  }
                   <ul className="flex flex-nowrap items-center justify-center list-none mx-auto py-4 space-x-1 md:space-x-2 lg:space-x-4 animate__animated animate__fadeInUp md:animate__fadeInLeft">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <li key={i} title={`${t('go_to')} ${new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long' })}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
+                      <li key={i} title={`${t('go_to')} ${state.calendarType === 0 ? new Date(state.formattedDateTime.getFullYear(), i).toLocaleString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long' }) : t(`islamic_months.${i}`)}`} className="grid items-center w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-green-700 to-green-500 dark:from-gray-100 dark:to-gray-300 hover:bg-green-400 dark:hover:bg-gray-400 p-1 text-center text-sm md:text-base lg:text-lg text-white dark:text-black cursor-pointer rounded-full shadow dark:shadow-white duration-200" onClick={() => jumpToClickedMonth(i)}><b>{i + 1}</b></li>
                     ))}
                   </ul>
                   <h5 className="font-normal sm:font-bold mb-2 text-sm text-amber-600 dark:text-amber-200 leading-tight">{t('hijri_date_info')}</h5>
@@ -155,19 +292,40 @@ const CalendarSection = ({ sliderRef, calendarContainerRef, tooltipRef, showTool
                 )
               : (
                 <table className="table-auto text-sky-700 dark:text-sky-200 animate__animated animate__fadeInLeft">
-                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-sm text-justify sm:text-base md:text-lg lg:text-xl"><u>{t('muslim_holidays')} {state.formattedDateTime.getFullYear()}:</u></h3></th>
-                  <tbody className="list-disc text-sm md:text-base lg:text-lg align-top">
-                    {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
-                      <tr key={index}>
-                        <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long', day: 'numeric' })}</td>
-                        <td>&nbsp;:&nbsp;</td>
-                        <td>
-                          <span>{t(`muslim_events.${event.eventId}`)} </span>
-                          <span className="whitespace-nowrap">({event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {parseInt(event.hijriDate.year)} {t('hijri_abbreviation')})</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
+                  <th colSpan={3}><h3 className="whitespace-nowrap font-serif text-sm text-justify sm:text-base md:text-lg lg:text-xl"><u>{t('muslim_holidays')} {state.calendarType === 0 ? state.formattedDateTime.getFullYear() : `${state.hijriMonthsInAYear?.months[6][15]?.hijriYear} ${t('hijri_abbreviation')}`}:</u></h3></th>
+                  {state.calendarType === 0
+                    ? (
+                      <tbody className="list-disc text-sm md:text-base lg:text-lg align-top">
+                        {state.hijriEventDates.sort((a, b) => a.gregorianDate - b.gregorianDate).map((event, index) => (
+                          <tr key={index}>
+                            <td className="whitespace-nowrap">{event.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', month: 'long', day: 'numeric' })}</td>
+                            <td>&nbsp;:&nbsp;</td>
+                            <td>
+                              <span>{t(`muslim_events.${event.eventId}`)} </span>
+                              <span className="whitespace-nowrap">({event.hijriDate.day} {t(`islamic_months.${event.hijriDate.month - 1}`)} {parseInt(event.hijriDate.year)} {t('hijri_abbreviation')})</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      )
+                    : (
+                      <tbody className="list-disc text-sm md:text-base lg:text-lg align-top">
+                        {Object.keys(en.muslim_events).map(eventId => {
+                          const muslimEventDayIndex = state.hijriMonthsInAYear?.months[eventId.split('-')[1] - 1]?.findIndex(item => item?.hijriDay === parseInt(eventId.split('-')[0]))
+                          return (
+                            <tr key={eventId}>
+                              <td className="whitespace-nowrap">{`${eventId.split('-')[0]} ${t(`islamic_months.${eventId.split('-')[1] - 1}`)}`}</td>
+                              <td>&nbsp;:&nbsp;</td>
+                              <td>
+                                <span>{t(`muslim_events.${eventId}`)} </span>
+                                <span className="whitespace-nowrap">({state.hijriMonthsInAYear?.months[eventId.split('-')[1] - 1][muslimEventDayIndex]?.gregorianDate.toLocaleDateString(state.selectedLanguage || 'en', { calendar: 'gregory', year: 'numeric', month: 'long', day: 'numeric' })})</span>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                      )
+                  }
                 </table>
                 )
             }
