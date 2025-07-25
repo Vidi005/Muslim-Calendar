@@ -101,8 +101,10 @@ const anyMABIMSCitiesCoordinates = [
   { latitude: 2.884638, longitude: 101.28393, elevation: 1 },
   // Kukup, Malaysia
   { latitude: 1.324582, longitude: 103.441568, elevation: 1 },
-  // Sabang, Indonesia
-  { latitude: 5.894, longitude: 95.316, elevation: 43.6 },
+  // Sukakarya, Sabang, Indonesia
+  { latitude: 5.906039, longitude: 95.216801, elevation: 43.6 },
+  // Sukajaya, Sabang, Indonesia
+  { latitude: 5.893404, longitude: 95.310511, elevation: 1 },
   // Banda Aceh, Indonesia
   { latitude: 5.54829, longitude: 95.32375, elevation: 1 },
   // Lhoknga, Indonesia
