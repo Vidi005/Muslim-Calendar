@@ -116,7 +116,7 @@
     "conjunction": "Ijtima'",
     "error": "Kesalahan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
-    "islamic_months": ["Muharam", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
+    "islamic_months": ["Muharam", "Shafar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
     "hijri_date_info": "* Perhitungan Tanggal Hijriah ini mungkin terdapat perbedaan/selisih beberapa hari. Sehingga tetap mengikuti keputusan dari Lembaga/Organisasi Islam setempat.",
     "muslim_holidays": "Hari besar Islam di Tahun ",
     "muslim_events": {
