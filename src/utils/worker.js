@@ -1,6 +1,6 @@
 import { adjustedIslamicDate, getAlmanacData, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
 
-const CACHE_NAME = 'app-cache-v8.1' // Update the version when deploying new builds to clear old caches
+const CACHE_NAME = 'app-cache-v8.2' // Update the version when deploying new builds to clear old caches
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -37,7 +37,7 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.onmessage = event => {
-  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, zawal, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, observationDate, moonVisibilityCriteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps, globalSolarEclipseDate, localSolarEclipseDate, lunarEclipseDate } = event.data
+  const { type, months, setMonths, gregorianDate, formattedDateTime, cityData, query, latitude, longitude, elevation, criteria, sunAltitude, formula, lang, innerHTML, timeZone, calculationMethod, ashrTime, imsak, zawal, ihtiyath, corrections, dhuhaMethod, inputSunAlt, inputMins, observationDate, moonVisibilityCriteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps, globalSolarEclipseDate, localSolarEclipseDate, lunarEclipseDate } = event.data
   if (type === 'createAdjustedIslamicDate') {
     const result = adjustedIslamicDate(months, lang)
     self.postMessage({ type: 'createAdjustedIslamicDate', result })
@@ -66,7 +66,7 @@ self.onmessage = event => {
     const result = getQiblaDistance(latitude, longitude)
     self.postMessage({ type: 'createQiblaDistance', result })
   } else if (type === 'createPrayerTimes') {
-    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    const result = getPrayerTimes(gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, ashrTime, sunAltitude, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
     self.postMessage({ type: 'createPrayerTimes', result })
   } else if (type === 'createSunInfos') {
     const result = getSunInfos(gregorianDate, timeZone, latitude, longitude, elevation, ashrTime, lang)

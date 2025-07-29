@@ -114,7 +114,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                       required
                       disabled
                     >
-                      {en.observation_times.map((type, index) => <option key={type} value={index}>{t(`observation_times.${0}`)}</option>)}
+                      {en.observation_times.map((time, index) => <option key={time} value={index}>{t(`observation_times.${index}`)}</option>)}
                     </select>
                   </span>
                 )
@@ -129,7 +129,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
                       required
                       disabled={areMoonVisibilityCriteriaMapsLoading}
                     >
-                      {en.observation_times.map((type, index) => <option key={type} value={index}>{t(`observation_times.${index}`)}</option>)}
+                      {en.observation_times.map((time, index) => <option key={time} value={index}>{t(`observation_times.${index}`)}</option>)}
                     </select>
                   </span>
                 )
@@ -160,7 +160,7 @@ const MoonCrescentMapSettings = ({ selectedHijriMonth, selectHijriMonth, areMoon
               required
               disabled={areMoonVisibilityCriteriaMapsLoading}
             >
-              {en.coordinate_steps.map((type, index) => <option key={type} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
+              {en.coordinate_steps.map((step, index) => <option key={step} value={index + 1}>{t(`coordinate_steps.${index}`)}</option>)}
             </select>
             <label htmlFor="coordinate-steps">{t('degrees')}</label>
           </span>

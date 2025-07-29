@@ -4,7 +4,7 @@ import { HomePageConsumer } from "../../contexts/HomPageContext"
 import { prayerTimesCorrection } from "../../../utils/data"
 import { Checkbox, Field, Label } from "@headlessui/react"
 
-const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectAshrTime, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
+const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectAshrTime, selectImsak, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, resetSettings }) => (
   <HomePageConsumer>
     {({ t, state }) => (
       <section className="grid grid-flow-row gap-2 border-b border-b-green-900 dark:border-b-white bg-green-500/50 dark:bg-white/50 w-full p-1 lg:p-2 text-sm lg:text-base duration-200 animate__animated animate__fadeInUp">
@@ -43,7 +43,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               onChange={event => selectConvention(event.target.value)}
               required
             >
-              {en.conventions.map((type, index) => <option key={type.method} value={index}>{t(`conventions.${index}.method`)}</option>)}
+              {en.conventions.map((convention, index) => <option key={convention.method} value={index}>{t(`conventions.${index}.method`)}</option>)}
             </select>
           </span>
           {state.selectedConvention === en.conventions.length - 1 && (
@@ -83,6 +83,18 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
             </React.Fragment>
           )}
           <span className="flex items-center">
+            <label htmlFor="imsak"><i>Imsak:</i></label>
+            <select
+              className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
+              defaultValue={en.imsak_times[5]}
+              value={state.selectedImsak}
+              onChange={event => selectImsak(event.target.value)}
+              required
+            >
+              {en.imsak_times.map((time, index) => <option key={time} value={time}>{t(`imsak_times.${index}`)}</option>)}
+            </select>
+          </span>
+          <span className="flex items-center">
             <label htmlFor="zawal"><i>{t('zawal')}</i></label>
             <select
               className="ml-1 p-1 bg-green-200 dark:bg-gray-200 rounded shadow-inner duration-200"
@@ -91,7 +103,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               onChange={event => selectZawal(event.target.value)}
               required
             >
-              {en.zawal_times.map((type, index) => <option key={type} value={index}>{t(`zawal_times.${index}`)}</option>)}
+              {en.zawal_times.map((time, index) => <option key={time} value={index}>{t(`zawal_times.${index}`)}</option>)}
             </select>
           </span>
           <span className="flex items-center">
@@ -103,7 +115,7 @@ const PrayerTimesSettings = ({ selectCalculationMethod, selectConvention, onInpu
               onChange={event => selectIhtiyath(event.target.value)}
               required
             >
-              {en.ihtiyath_times.map((type, index) => <option key={type} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
+              {en.ihtiyath_times.map((time, index) => <option key={time} value={index}>{t(`ihtiyath_times.${index}`)}</option>)}
             </select>
           </span>
           <Field className={"flex items-center cursor-pointer"}>
