@@ -4,7 +4,7 @@ import HeaderContainer from "../Header"
 import MainContainer from "./MainContainer"
 import FooterContainer from "../Footer"
 
-const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
+const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTime, getCurrentConvention, selectConvention, onInputCustomFajrAngleChange, onInputCustomIshaAngleChange, selectImsak, selectZawal, selectIhtiyath, onChangePrecision, selectRoundingMethod, selectCorrections, selectDhuhaMethod, onInputSunAltitudeChange, onInputMinutesChange, selectFormula, generatePrayerTimes }) => (
   <div className="prayer-times-page h-screen w-full flex flex-col animate__animated animate__fadeIn">
     <Helmet>
       <title>{t('app_name') + ' | ' + t('pages.1')}</title>
@@ -19,6 +19,7 @@ const PrayerTimesPage = ({ t, parentState, selectCalculationMethod, selectAshrTi
       selectConvention={selectConvention}
       onInputCustomFajrAngleChange={onInputCustomFajrAngleChange}
       onInputCustomIshaAngleChange={onInputCustomIshaAngleChange}
+      selectImsak={selectImsak}
       selectZawal={selectZawal}
       selectIhtiyath={selectIhtiyath}
       onChangePrecision={onChangePrecision}

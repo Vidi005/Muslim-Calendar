@@ -343,6 +343,7 @@
     ],
     "fajr_angle": "Fajr Angle:",
     "isha_angle": "Isha Angle:",
+    "imsak_times": ["-5 minutes", "-6 minutes", "-7 minutes", "-8 minutes", "-9 minutes", "-10 minutes", "-11 minutes", "-12 minutes", "-13 minutes", "-14 minutes", "-15 minutes", "-16 minutes", "-17 minutes", "-18 minutes", "-19 minutes", "-20 minutes", "-21 minutes", "-22 minutes", "-23 minutes", "-24 minutes", "-25 minutes", "-26 minutes", "-27 minutes", "-28 minutes", "-29 minutes", "-30 minutes"],
     "zawal": "Zawal:",
     "zawal_times": ["+0 minute", "+1 minute", "+2 minutes", "+3 minutes", "+4 minutes", "+5 minutes"],
     "ihtiyath": "Ihtiyath:",
