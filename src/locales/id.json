@@ -343,6 +343,7 @@
     ],
     "fajr_angle": "Sudut Subuh:",
     "isha_angle": "Sudut Isya':",
+    "imsak_times": ["-5 menit", "-6 menit", "-7 menit", "-8 menit", "-9 menit", "-10 menit", "-11 menit", "-12 menit", "-13 menit", "-14 menit", "-15 menit", "-16 menit", "-17 menit", "-18 menit", "-19 menit", "-20 menit", "-21 menit", "-22 menit", "-23 menit", "-24 menit", "-25 menit", "-26 menit", "-27 menit", "-28 menit", "-29 menit", "-30 menit"],
     "zawal": "Zawal:",
     "zawal_times": ["+0 menit", "+1 menit", "+2 menit", "+3 menit", "+4 menit", "+5 menit"],
     "ihtiyath": "Ihtiyath:",

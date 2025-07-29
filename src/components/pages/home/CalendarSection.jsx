@@ -192,7 +192,7 @@ const CalendarSection = ({ changeCalendarType, sliderRef, calendarContainerRef, 
                           const gregorianDate2 = state.hijriMonthsInAYear?.months[monthIndex][items.length - 1]?.gregorianDate
                           return (
                             <React.Fragment key={monthIndex}>
-                              <h2 className={`${monthIndex === 8 ? "text-yellow-600 dark:text-yellow-300" : "text-green-700 dark:text-white"} m-2 text-center duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>{t(`islamic_months.${monthIndex}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(items[15]?.hijriYear)} {t('hijri_abbreviation')}</h2>
+                              <h2 className={`${monthIndex === 8 ? "text-yellow-600 dark:text-yellow-300" : "text-green-700 dark:text-white"} m-2 text-center duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>{t(`islamic_months.${monthIndex}`)} {Intl.NumberFormat('ar-SA', { useGrouping: false }).format(items[15]?.hijriYear)}</h2>
                               <h4 className={`text-sm sm:text-base md:text-lg text-center text-green-600 dark:text-gray-200 duration-200 animate__animated animate__fadeInUp md:animate__fadeInLeft`}>
                                 {gregorianDate1?.getMonth() === gregorianDate2?.getMonth()
                                   ? (

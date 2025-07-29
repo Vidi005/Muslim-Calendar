@@ -884,7 +884,7 @@ const addTime = (prayerTime, ihtiyath, correction) => {
   return additionalTime
 }
 
-const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(astroDate.date)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -1227,7 +1227,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
     dhuha = addTime(sunrise.date, inputMins, 0)
   }
   const correctedFajrTime = addTime(fajr.date, ihtiyath, corrections[1])
-  const imsakTime = addTime(correctedFajrTime, -10, 0)
+  const imsakTime = addTime(correctedFajrTime, imsak, 0)
   const correctedSunrise = addTime(sunrise.date, -ihtiyath, 0)
   const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
   const istiwa = SearchHourAngle(Body.Sun, observer, 0, astroDate, 1).time
@@ -1261,7 +1261,7 @@ const getQiblaDirection = (latitude, longitude) => {
 
 const getQiblaDistance = (latitude, longitude) => getCitiesDistance(latitude, longitude, kaabaCoordinates.latitude, kaabaCoordinates.longitude).toFixed(2)
 
-const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   const islamicDate = new Date(gregorianDate)
   let setHijriDay = 0
   const firstDayInGregorianYear = new Date(formattedDateTime.getFullYear(), 0, 1).getDay()
@@ -1716,7 +1716,7 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
     dhuha = parseDate(gregorianDate, dhuhaHours, dhuhaMinutes, dhuhaSeconds)
   } else dhuha = addTime(sunrise, inputMins, 0)
   const correctedFajrTime = addTime(fajr, ihtiyath, corrections[1])
-  const imsakTime = addTime(correctedFajrTime, -10, 0)
+  const imsakTime = addTime(correctedFajrTime, imsak, 0)
   const correctedSunrise = addTime(sunrise, -ihtiyath, 0)
   const correctedDhuhaTime = addTime(dhuha, ihtiyath, 0)
   const correctedDhuhrTime = addTime(dhuhrDate, ihtiyath, corrections[4])
@@ -1726,16 +1726,16 @@ const calculateManually = (gregorianDate, formattedDateTime, setMonths, latitude
   return [ imsakTime, correctedFajrTime, correctedSunrise, correctedDhuhaTime, correctedDhuhrTime, correctedAshrTime, correctedMaghribTime, correctedIshaTime ]
 }
 
-const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
+const getPrayerTimes = (gregorianDate, formattedDateTime, setMonths, latitude, longitude, elevation, calculationMethod, mazhab, sunAlt, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins) => {
   let calculatedPrayerTimes = {}
   if (calculationMethod === 0) {
     const astroDate = new AstroTime(gregorianDate)
     // Calculate Using Astronomy-Engine Library
-    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateByAstronomyEngine(astroDate, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   } else {
     const midDayDateTime = new Date(gregorianDate.getFullYear(), gregorianDate.getMonth(), gregorianDate.getDate(), 12, 0, 0)
     // Calculate Manually by Prayer Times Equation
-    calculatedPrayerTimes = calculateManually(midDayDateTime, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
+    calculatedPrayerTimes = calculateManually(midDayDateTime, formattedDateTime, setMonths, latitude, longitude, elevation, mazhab, sunAlt, imsak, zawal, ihtiyath, formula, corrections, dhuhaMethod, inputSunAlt, inputMins)
   }
   return calculatedPrayerTimes
 }

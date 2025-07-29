@@ -31,6 +31,7 @@ class App extends React.Component {
       CONVENTION_STORAGE_KEY: 'CONVENTION_STORAGE_KEY',
       INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
       INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
+      IMSAK_STORAGE_KEY: 'IMSAK_STORAGE_KEY',
       ZAWAL_STORAGE_KEY: 'ZAWAL_STORAGE_KEY',
       IHTIYATH_STORAGE_KEY: 'IHTIYATH_STORAGE_KEY',
       SECONDS_PRECISION_STORAGE_KEY: 'SECONDS_PRECISION_STORAGE_KEY',
@@ -69,6 +70,7 @@ class App extends React.Component {
       inputCustomFajrAngle: 16,
       inputCustomIshaAngle: 14,
       sunAltitude: en.conventions[0].sun_altitude,
+      selectedImsak: en.imsak_times[5],
       selectedZawal: 1,
       selectedIhtiyath: 2,
       isPreciseToSeconds: false,
@@ -184,6 +186,7 @@ class App extends React.Component {
       this.checkSavedCalculationMethod()
       this.checkSavedAshrTime()
       this.checkSavedConvention()
+      this.checkSavedImsak()
       this.checkSavedZawal()
       this.checkSavedIhtiyath()
       this.checkSavedSecondsPrecision()
@@ -377,6 +380,19 @@ class App extends React.Component {
     } catch (error) {
       localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
       localStorage.removeItem(this.state.CUSTOM_CONVENTION_STORAGE_KEY)
+      alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
+    }
+  }
+
+  checkSavedImsak () {
+    const getSavedImsakFromLocal = localStorage.getItem(this.state.IMSAK_STORAGE_KEY)
+    try {
+      const parsedSavedImsak = JSON.parse(getSavedImsakFromLocal)
+      if (parsedSavedImsak !== null) {
+        this.setState({ selectedImsak: parsedSavedImsak })
+      }
+    } catch (error) {
+      localStorage.removeItem(this.state.IMSAK_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
@@ -1035,6 +1051,15 @@ class App extends React.Component {
     })
   }
 
+  selectImsak (value) {
+    this.setState({ selectedImsak: value }, () => {
+      if (isStorageExist(i18n.t('browser_warning'))) {
+        localStorage.setItem(this.state.IMSAK_STORAGE_KEY, JSON.stringify(this.state.selectedImsak))
+      }
+      this.create3DaysOfPrayerTimes()
+    })
+  }
+
   selectZawal (value) {
     this.setState({ selectedZawal: parseInt(value) }, () => {
       if (isStorageExist(i18n.t('browser_warning'))) {
@@ -1428,6 +1453,7 @@ class App extends React.Component {
         calculationMethod: this.state.selectedCalculationMethod,
         ashrTime: this.state.selectedAshrTime,
         sunAltitude: this.state.sunAltitude,
+        imsak: parseInt(this.state.selectedImsak),
         zawal: this.state.selectedZawal,
         ihtiyath: this.state.selectedIhtiyath,
         formula: this.state.selectedFormula,
@@ -1748,6 +1774,7 @@ class App extends React.Component {
                 selectConvention={this.selectConvention.bind(this)}
                 onInputCustomFajrAngleChange={this.onInputCustomFajrAngleChange.bind(this)}
                 onInputCustomIshaAngleChange={this.onInputCustomIshaAngleChange.bind(this)}
+                selectImsak={this.selectImsak.bind(this)}
                 selectZawal={this.selectZawal.bind(this)}
                 selectIhtiyath={this.selectIhtiyath.bind(this)}
                 onChangePrecision={this.onChangePrecision.bind(this)}
