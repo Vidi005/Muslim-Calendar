@@ -15,6 +15,7 @@ class MainContainer extends React.Component {
       INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY",
       INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY: "INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY",
       IHTIYATH_STORAGE_KEY: "IHTIYATH_STORAGE_KEY",
+      IMSAK_STORAGE_KEY: "IMSAK_STORAGE_KEY",
       ZAWAL_STORAGE_KEY: "ZAWAL_STORAGE_KEY",
       SECONDS_PRECISION_STORAGE_KEY: "SECONDS_PRECISION_STORAGE_KEY",
       ROUND_METHOD_STORAGE_KEY: "ROUND_METHOD_STORAGE_KEY",
@@ -358,7 +359,10 @@ class MainContainer extends React.Component {
         localStorage.removeItem(this.state.INPUT_CUSTOM_FAJR_ANGLE_STORAGE_KEY)
         localStorage.removeItem(this.state.INPUT_CUSTOM_ISHA_ANGLE_STORAGE_KEY)
         localStorage.removeItem(this.state.IHTIYATH_STORAGE_KEY)
+        localStorage.removeItem(this.state.IMSAK_STORAGE_KEY)
+        localStorage.removeItem(this.state.ZAWAL_STORAGE_KEY)
         localStorage.removeItem(this.state.SECONDS_PRECISION_STORAGE_KEY)
+        localStorage.removeItem(this.state.ROUND_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.CORRECTIONS_STORAGE_KEY)
         localStorage.removeItem(this.state.DHUHA_METHOD_STORAGE_KEY)
         localStorage.removeItem(this.state.INPUT_SUN_ALTITUDE_STORAGE_KEY)
