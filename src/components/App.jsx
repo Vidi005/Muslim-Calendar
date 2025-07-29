@@ -379,7 +379,6 @@ class App extends React.Component {
       }
     } catch (error) {
       localStorage.removeItem(this.state.CONVENTION_STORAGE_KEY)
-      localStorage.removeItem(this.state.CUSTOM_CONVENTION_STORAGE_KEY)
       alert(`${i18n.t('error_alert')}: ${error.message}\n${i18n.t('error_solution')}.`)
     }
   }
