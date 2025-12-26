@@ -116,7 +116,7 @@
     "conjunction": "Ijtima'",
     "error": "Kesalahan",
     "day_names": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
-    "islamic_months": ["Muharam", "Shafar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
+    "islamic_months": ["Muharam", "Shafar", "Rabi'ul Awal", "Rabi'ul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulkaidah", "Dzulhijah"],
     "hijri_date_info": "* Perhitungan Tanggal Hijriah ini mungkin terdapat perbedaan/selisih beberapa hari. Sehingga tetap mengikuti keputusan dari Lembaga/Organisasi Islam setempat.",
     "muslim_holidays": "Hari besar Islam di Tahun ",
     "muslim_events": {
@@ -701,7 +701,7 @@
     "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
     "time_suffixes": ["jam", "menit", "detik"],
     "unsupported_time_format": "Format waktu tidak didukung",
-    "version": "Diperbarui pada Agustus 2025",
+    "version": "Diperbarui pada Desember 2025",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",
     "resource_items": [
