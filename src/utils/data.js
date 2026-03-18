@@ -1,5 +1,6 @@
 import { rawTimeZones } from "@vvo/tzdb"
 import { AngleBetween, AngleFromSun, AstroTime, Body, DEG2RAD, Elongation, Equator, EquatorFromVector, GeoVector, Horizon, Illumination, KM_PER_AU, Libration, MakeTime, MoonPhase, Observer, RAD2DEG, RotateVector, Rotation_EQJ_EQD, SearchAltitude, SearchGlobalSolarEclipse, SearchHourAngle, SearchLocalSolarEclipse, SearchLunarEclipse, SearchMoonPhase, SearchRiseSet, SunPosition } from "astronomy-engine"
+import { isMobilePlatform } from "./platformDetection"
 
 const isStorageExist = content => {
   if (!navigator.cookieEnabled) {
@@ -237,8 +238,8 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
   let isMetCriteria = false
   if (criteria === 0) {
     // Unified Global Hijri Calendar/KHGT
-    let westObserver
-    let observerFromNewZealand
+    let westObserver = observerFromEarth(-70, -150, 0)
+    const observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
     let isMetCriteriaBeforeSunsetAtMidnight = false
     let fajrAtWellington
     let isConjunctionBeforeFajr = false
@@ -253,7 +254,8 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       isMetCriteriaBeforeSunsetAtMidnight = (() => {
         for (let lat = -70; lat <= 70; lat += 3) {
           for (let lng = -150; lng <= -30; lng += 3) {
-            westObserver = observerFromEarth(lat, lng, 0)
+            westObserver.latitude = lat
+            westObserver.longitude = lng
             sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-lng / 360), 1, 0)
             if (!sunset) continue
             if (sunset.date.getUTCDate() !== newMoon.date.getUTCDate()) continue
@@ -283,7 +285,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           if (localizedNewMoonDate.AddDays(-city.longitude / 360).date.getUTCDate() > newMoon.date.getUTCDate()) {
             return false
           }
-          westObserver = observerFromEarth(city.latitude, city.longitude, city.elevation)
+          westObserver.latitude = city.latitude
+          westObserver.longitude = city.longitude
+          westObserver.height = city.elevation
           sunset = SearchRiseSet(Body.Sun, westObserver, -1, localizedNewMoonDate.AddDays(-city.longitude / 360), 1, city.elevation)
           if (!sunset) {
             return false
@@ -298,7 +302,6 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
           moonElongation = elongationType === 0 ? Elongation(Body.Moon, sunset).elongation : AngleBetween(sunEquator.vec, moonEquator.vec)
           return (moonElongation >= 8 && moonHorizon.altitude >= 5)
         })
-        observerFromNewZealand = observerFromEarth(-41.2889, 174.7772, 0)
         fajrAtWellington = SearchAltitude(Body.Sun, observerFromNewZealand, +1, newMoon, 2, -18)
         isConjunctionBeforeFajr = (fajrAtWellington.date.getUTCDate() === newMoon.date.getUTCDate() && fajrAtWellington.date > newMoon.date)
         if (isMetCriteria && isConjunctionBeforeFajr) {
@@ -337,7 +340,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       isMetCriteria = slicedMABIMSCitiesCoordinates.some(city => {
-        observer = observerFromEarth(city.latitude, city.longitude, city.elevation)
+        observer.latitude = city.latitude
+        observer.longitude = city.longitude
+        observer.height = city.elevation
         sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, city.elevation)
         sunEquator = Equator(Body.Sun, sunset, observer, true, true)
         if (altitudeType === 0) {
@@ -366,17 +371,21 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
       dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
-      observer = observerFromEarth(latitude, longitude, elevation)
+      observer.latitude = latitude
+      observer.longitude = longitude
+      observer.height = elevation
       sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
       if (Math.abs(latitude) > 48) {
         if (formula === 1) {
-          if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
-          else observer = observerFromEarth(-45, longitude, elevation)
+          if (latitude > 45) observer.latitude = 45
+          else observer.latitude = -45
         } else if (formula === 2) {
-          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+          observer.latitude = kaabaCoordinates.latitude
+          observer.longitude = kaabaCoordinates.longitude
+          observer.height = kaabaCoordinates.elevation
         } else {
-          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
-          else observer = observerFromEarth(-60, longitude, elevation)
+          if (latitude > 60) observer.latitude = 60
+          else observer.latitude = -60
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
       }
@@ -422,7 +431,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
       // Yogyakarta Coordinates
-      observer = observerFromEarth(-7.797224, 110.368797, 105)
+      observer.latitude = -7.797224
+      observer.longitude = 110.368797
+      observer.height = 105
       sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, 105)
       moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, 105)
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
@@ -446,13 +457,15 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, elevation)
       if (Math.abs(latitude) > 48) {
         if (formula === 1) {
-          if (latitude > 45) observer = observerFromEarth(45, longitude, elevation)
-          else observer = observerFromEarth(-45, longitude, elevation)
+          if (latitude > 45) observer.latitude = 45
+          else observer.latitude = -45
         } else if (formula === 2) {
-          observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+          observer.latitude = kaabaCoordinates.latitude
+          observer.longitude = kaabaCoordinates.longitude
+          observer.height = kaabaCoordinates.elevation
         } else {
-          if (latitude > 60) observer = observerFromEarth(60, longitude, elevation)
-          else observer = observerFromEarth(-60, longitude, elevation)
+          if (latitude > 60) observer.latitude = 60
+          else observer.latitude = -60
         }
         sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, elevation)
         moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, elevation)
@@ -488,7 +501,9 @@ const calculateNewMoon = (prevNewMoonDate, startDate, timeZone, latitude, longit
       localizedNewMoonDate = new AstroTime(localizedDateInNewMoon)
       dateInNewMoon = new Date(newMoon.date.getFullYear(), newMoon.date.getMonth(), newMoon.date.getDate())
       newMoonDate = new AstroTime(dateInNewMoon)
-      observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+      observer.latitude = kaabaCoordinates.latitude
+      observer.longitude = kaabaCoordinates.longitude
+      observer.height = kaabaCoordinates.elevation
       sunset = SearchRiseSet(Body.Sun, observer, -1, localizedNewMoonDate, 1, kaabaCoordinates.elevation)
       moonset = SearchRiseSet(Body.Moon, observer, -1, localizedNewMoonDate, 1, kaabaCoordinates.elevation)
       if (newMoon.date < sunset.date && moonset.date > sunset.date) {
@@ -957,7 +972,7 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       let higherLat = latitude
       if (latitude > 45) higherLat = 45
       else higherLat = -45
-      observer = observerFromEarth(higherLat, longitude, elevation)
+      observer.latitude = higherLat
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (isNaN(sunAlt?.maghrib)) {
@@ -993,7 +1008,9 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     } else if (formula === 2) {
       // Follow mecca coordinates
-      observer = observerFromEarth(kaabaCoordinates.latitude, kaabaCoordinates.longitude, kaabaCoordinates.elevation)
+      observer.latitude = kaabaCoordinates.latitude
+      observer.longitude = kaabaCoordinates.longitude
+      observer.height = kaabaCoordinates.elevation
       fajr = SearchAltitude(Body.Sun, observer, +1, astroDate, 1, -sunAlt.fajr)
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (isNaN(sunAlt?.maghrib)) {
@@ -1029,19 +1046,20 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       correctedAshrTime = addTime(ashr.date, ihtiyath, corrections[5])
     } else if (formula === 3) {
       // Middle of the night
+      observer.latitude = setLatitude
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
-        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+        sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         if (!maghrib) {
-          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+          maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         }
       } else {
         maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         if (!maghrib) {
-          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+          maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         }
       }
       const nightDuration = sunrise.date < maghrib.date ? sunrise.AddDays(1).date - maghrib.date : sunrise.date - maghrib.date
@@ -1072,28 +1090,29 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       let ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
-        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
         cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(setLatitude - sunDeclination)) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+        ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       }
       correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     } else if (formula === 4) {
       // One-seventh of the night
+      observer.latitude = setLatitude
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
-        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+        sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         if (!maghrib) {
-          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+          maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         }
       } else {
         maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         if (!maghrib) {
-          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+          maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         }
       }
       const nightDuration = sunrise.date < maghrib.date ? sunrise.AddDays(1).date - maghrib.date : sunrise.date - maghrib.date
@@ -1124,28 +1143,29 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       let ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
-        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
         cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(setLatitude - sunDeclination)) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+        ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       }
       correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     } else {
       // Angle-based method
+      observer.latitude = setLatitude
       sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       if (!sunrise) {
-        sunrise = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), +1, astroDate, 1, elevation)
+        sunrise = SearchRiseSet(Body.Sun, observer, +1, astroDate, 1, elevation)
       }
       if (isNaN(sunAlt?.maghrib)) {
         maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         if (!maghrib) {
-          maghrib = SearchRiseSet(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, elevation)
+          maghrib = SearchRiseSet(Body.Sun, observer, -1, astroDate, 1, elevation)
         }
       } else {
         maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         if (!maghrib) {
-          maghrib = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, -sunAlt.maghrib)
+          maghrib = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, -sunAlt.maghrib)
         }
       }
       const nightDuration = sunrise.date < maghrib.date ? sunrise.AddDays(1).date - maghrib.date : sunrise.date - maghrib.date
@@ -1176,11 +1196,11 @@ const calculateByAstronomyEngine = (astroDate, formattedDateTime, setMonths, lat
       let ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
       ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       if (!ashr) {
-        sunDeclination = Equator(Body.Sun, astroDate, observerFromEarth(setLatitude, longitude, elevation), true, true).dec
+        sunDeclination = Equator(Body.Sun, astroDate, observer, true, true).dec
         cotSunAltitudeAshr = Math.tan(DEG2RAD * Math.abs(setLatitude - sunDeclination)) + shadowFactor
         tanSunAltitudeAshr = 1 / cotSunAltitudeAshr
         ashrSunAltitude = RAD2DEG * Math.atan(tanSunAltitudeAshr)
-        ashr = SearchAltitude(Body.Sun, observerFromEarth(setLatitude, longitude, elevation), -1, astroDate, 1, ashrSunAltitude)
+        ashr = SearchAltitude(Body.Sun, observer, -1, astroDate, 1, ashrSunAltitude)
       }
       correctedAshrTime = addTime(ashr?.date, ihtiyath, corrections[5])
     }
@@ -2283,20 +2303,21 @@ const createZones = (criteria, elongationType, altitudeType, observationTime, co
 
 const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, altitudeType, observationTime, correctedRefraction, shownTooltip, steps) => {
   const results = []
+  const width = steps * 100 / 360
+  const height = steps * 100 / 180
   for (let lat = 60; lat >= -60; lat -= steps) {
     let currentRun = null
+    const yPosition = 100 * (90 - lat) / 180
     for (let lng = -180; lng < 180; lng += steps) {
       let result = createZones(criteria, elongationType, altitudeType, observationTime, correctedRefraction, conjunction, astroDate, lat, lng, steps)
       const color = result?.color || ''
-      const width = steps * 100 / 360
       const xPosition = 100 * (180 + lng) / 360
-      const yPosition = 100 * (90 - lat) / 180
       if (shownTooltip) {
         currentRun = {
           xPos: xPosition,
           yPos: yPosition,
           width: width,
-          height: steps * 100 / 180,
+          height: height,
           color: color,
           tooltip: result?.tooltip || '',
           fajrAtWellington: result?.fajrAtWellington || ''
@@ -2315,7 +2336,7 @@ const gridSearchLongitude = (conjunction, astroDate, criteria, elongationType, a
               xPos: xPosition,
               yPos: yPosition,
               width: width,
-              height: steps * 100 / 180,
+              height: height,
               color: color,
               tooltip: result?.tooltip || '',
               fajrAtWellington: result?.fajrAtWellington || ''
@@ -2383,6 +2404,55 @@ const getGlobalSolarEclipse = date => {
   }
 }
 
+const plotSolarEclipseVisibility = (peakTime, steps) => {
+  const results = []
+  const width = steps * 100 / 360
+  const height = steps * 100 / 180
+  let observer = observerFromEarth(90, -180, 0)
+  for (let lat = 90; lat > -90; lat -= steps) {
+    observer.latitude = lat
+    const yPosition = 100 * (90 - lat) / 180
+    let currentRun = null
+    for (let lon = -180; lon < 180; lon += steps) {
+      observer.longitude = lon
+      const sunEquator = Equator(Body.Sun, peakTime, observer, true, true)
+      if (Horizon(peakTime, observer, sunEquator.ra, sunEquator.dec, "normal").altitude < -5/6) continue
+      const moonEquator = Equator(Body.Moon, peakTime, observer, true, true)
+      const angleDistance = AngleBetween(sunEquator.vec, moonEquator.vec)
+      // Safe margin overlap rejection threshold
+      if (angleDistance > 1.5) continue
+      const solarEclipseData = SearchLocalSolarEclipse(peakTime.AddDays(-1), observer)
+      if (!solarEclipseData || Math.abs(solarEclipseData.peak.time.date - peakTime.date) / 86400000 > 2 || solarEclipseData.obscuration <= 0) continue
+      const color = solarEclipseData.kind === 'total' ? 'red' : solarEclipseData.kind === 'annular' ? 'orange' : 'yellow'
+      if (currentRun && currentRun.color === color) {
+        currentRun.width += width
+      } else {
+        if (currentRun) results.push(currentRun)
+        currentRun = {
+          xPos: 100 * (180 + lon) / 360,
+          yPos: yPosition,
+          width,
+          height,
+          color
+        }
+      }
+    }
+    if (currentRun) {
+      results.push(currentRun)
+      currentRun = null
+    }
+  }
+  return results
+}
+
+const getUpcomingSolarEclipse = date => {
+  const upcomingSolarEclipse = getGlobalSolarEclipse(date)
+  return {
+    result: plotSolarEclipseVisibility(MakeTime(upcomingSolarEclipse.peak), isMobilePlatform() ? 3 : 2),
+    peakTime: upcomingSolarEclipse.peak
+  }
+}
+
 const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
   const astroDate = MakeTime(date)
   const observer = observerFromEarth(latitude, longitude, elevation)
@@ -2407,7 +2477,18 @@ const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
 const checkMoonVisibility = (astroTime, latitude, longitude, elevation) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const moonEquator = Equator(Body.Moon, astroTime, observer, true, true)
-  return Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal").altitude > 0
+  // Average moon upperlimb horizon rise/set
+  return Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal").altitude > -0.3
+}
+
+const isVisibleInRange = (startTime, endTime, lat, lng, samples = 3) => {
+  const total = endTime.date - startTime.date
+  if (total <= 0) return false
+  for (let i = 0; i <= samples; i++) {
+    const time = new Date(startTime.date.getTime() + total * i / samples)
+    if (checkMoonVisibility(MakeTime(time), lat, lng, 0)) return true
+  }
+  return false
 }
 
 const getLunarEclipse = (date, latitude, longitude, elevation) => {
@@ -2446,6 +2527,68 @@ const getLunarEclipse = (date, latitude, longitude, elevation) => {
   }
 }
 
+const plotLunarEclipseVisibility = (penumbralBeginTime, partialBeginTime, totalBeginTime, totalEndTime, partialEndTime, penumbralEndTime, steps) => {
+  const results = []
+  const width = steps * 100 / 360
+  const height = steps * 100 / 180
+  for (let lat = 90; lat > -90; lat -= steps) {
+    const yPosition = 100 * (90 - lat) / 180
+    let currentRun = null
+    for (let lng = -180; lng < 180; lng += steps) {
+      let color = ''
+      if (isVisibleInRange(totalBeginTime, totalEndTime, lat, lng)) {
+        color = 'black'
+      } 
+      else if (isVisibleInRange(partialBeginTime, partialEndTime, lat, lng)) {
+        color = '#374151'
+      } 
+      else if (isVisibleInRange(penumbralBeginTime, penumbralEndTime, lat, lng)) {
+        color = '#9ca3af'
+      }
+      if (color) {
+        if (currentRun && currentRun.color === color) {
+          currentRun.width += width
+        } else {
+          if (currentRun) results.push(currentRun)
+          currentRun = {
+            xPos: 100 * (180 + lng) / 360,
+            yPos: yPosition,
+            width,
+            height,
+            color
+          }
+        }
+      } else {
+        if (currentRun) {
+          results.push(currentRun)
+          currentRun = null
+        }
+      }
+    }
+    if (currentRun) {
+      results.push(currentRun)
+      currentRun = null
+    }
+  }
+  return results
+}
+
+const getUpcomingLunarEclipse = date => {
+  const upcomingLunarEclipse = getLunarEclipse(date, 0, 0, 0)
+  return {
+    result: plotLunarEclipseVisibility(
+      MakeTime(upcomingLunarEclipse.penumbralBeginTime),
+      MakeTime(upcomingLunarEclipse.partialBeginTime),
+      MakeTime(upcomingLunarEclipse.totalBeginTime),
+      MakeTime(upcomingLunarEclipse.totalEndTime),
+      MakeTime(upcomingLunarEclipse.partialEndTime),
+      MakeTime(upcomingLunarEclipse.penumbralEndTime),
+      isMobilePlatform() ? 2 : 1
+    ),
+    beginTime: upcomingLunarEclipse.penumbralBeginTime
+  }
+}
+
 const convertMinutesToTime = (time, hrs, mins, secs) => {
   const hours = Math.floor(time / 60)
   const minutes = Math.floor(time % 60)
@@ -2458,4 +2601,4 @@ const coordinateScale = {
   longitudes: [150, 120, 90, 60, 30, 0, -30, -60, -90, -120, -150]
 }
 
-export { isStorageExist, pages, getTimeZoneList, getIsoDateStrBasedTimeZone, getCalendarData, getAlmanacData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }
+export { isStorageExist, pages, getTimeZoneList, getIsoDateStrBasedTimeZone, getCalendarData, getAlmanacData, getHijriDate, adjustedIslamicDate, getCitiesByName, getNearestCity, getElementContent, getMoonInfos, getQiblaDirection, getQiblaDistance, prayerTimesCorrection, getPrayerTimes, getSunInfos, addZeroPad, getMoonCrescentVisibility, getGlobalSolarEclipse, getUpcomingSolarEclipse, getLocalSolarEclipse, getUpcomingLunarEclipse, getLunarEclipse, convertMinutesToTime, coordinateScale }

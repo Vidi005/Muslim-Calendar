@@ -677,8 +677,15 @@
     "eclipses": "Gerhana",
     "global_solar_eclipse": "Gerhana Matahari Global",
     "global_solar_eclipses_loading": "Memuat Gerhana Matahari Global...",
+    "upcoming_global_solar_eclipse_map": "Peta Gerhana Matahari Mendatang",
+    "upcoming_global_solar_eclipses": "Gerhana Matahari Berikutnya",
+    "upcoming_solar_eclipse_map_loading": "Memuat Peta Gerhana Matahari Mendatang...",
+    "obscuration": "Obskurasi",
     "local_solar_eclipse": "Gerhana Matahari Lokal",
     "local_solar_eclipses_loading": "Memuat Gerhana Matahari Lokal...",
+    "upcoming_lunar_eclipse_map": "Peta Gerhana Bulan Mendatang",
+    "upcoming_lunar_eclipses": "Gerhana Bulan Berikutnya",
+    "upcoming_lunar_eclipse_map_loading": "Memuat Peta Gerhana Bulan Mendatang...",
     "lunar_eclipse": "Gerhana Bulan",
     "lunar_eclipses_loading": "Memuat Gerhana Bulan...",
     "global_solar_eclipse_infos": ["Jenis Gerhana Matahari", "Jarak", "Lintang", "Bujur", "Tertutup", "Waktu Puncak","Tidak Diketahui"],
@@ -699,9 +706,45 @@
     ],
     "lunar_eclipse_infos": ["Jenis Gerhana Bulan", "Tertutup", "Waktu Penumbra Awal", "Waktu Parsial Awal", "Waktu Total Awal", "Waktu Puncak", "Waktu Total Akhir", "Waktu Parsial Akhir", "Waktu Penumbra Akhir", "Durasi Fase Penumbra", "Durasi Fase Parsial", "Durasi Fase Total", "Tidak Ada"],
     "eclipse_visibilities": ["Terlihat", "Tidak Terlihat", "Tergantung Lokasi"],
+    "eclipse_types": [
+        {
+            "name": "Gerhana Matahari",
+            "kinds": [
+                {
+                    "name": "Total",
+                    "color": "red"
+                },
+                {
+                    "name": "Cincin",
+                    "color": "orange"
+                },
+                {
+                    "name": "Sebagian",
+                    "color": "yellow"
+                }
+            ]
+        },
+        {
+            "name": "Gerhana Bulan",
+            "kinds": [
+                {
+                    "name": "Semua Fase Terlihat",
+                    "color": "black"
+                },
+                {
+                    "name": "Parsial & Penumbra",
+                    "color": "#374151"
+                },
+                {
+                    "name": "Hanya Penumbra",
+                    "color": "#9ca3af"
+                }
+            ]
+        }
+    ],
     "time_suffixes": ["jam", "menit", "detik"],
     "unsupported_time_format": "Format waktu tidak didukung",
-    "version": "Diperbarui pada Januari 2026",
+    "version": "Diperbarui pada Maret 2026",
     "about": "Muslim Calendar merupakan sebuah aplikasi berbasis web yang digunakan untuk memberikan informasi terkait Kalender Islam, Waktu Sholat dan Jadwal Imsakiyah, Peta Visibilitas Hilal Bulan Sabit, serta Gerhana Matahari dan Gerhana Bulan di seluruh dunia.",
     "resources": "Sumber Aset",
     "resource_items": [

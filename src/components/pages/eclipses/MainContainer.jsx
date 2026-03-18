@@ -8,25 +8,29 @@ class MainContainer extends React.Component {
     super(props)
     this.state = {
       localSolarEclipseList: [],
+      upcomingSolarEclipseMap: {},
       globalSolarEclipseList: [],
+      upcomingLunarEclipseMap: {},
       lunarEclipseList: [],
       areLocalSolarEclipseListLoading: true,
+      isUpcomingSolarEclipseMapLoading: true,
       areGlobalSolarEclipseListLoading: true,
+      isUpcomingLunarEclipseMapLoading: true,
       areLunarEclipseListLoading: true
     }
   }
 
   componentDidMount() {
     this.createLocalSolarEclipseList()
-    this.createGlobalSolarEclipseList()
-    this.createLunarEclipseList()
+    this.createGlobalSolarEclipseList().then(() => this.createUpcomingSolarEclipseMap())
+    this.createLunarEclipseList().then(() => this.createUpcomingLunarEclipseMap())
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.monthsInSetYear !== this.props.monthsInSetYear || prevProps.latitude !== this.props.latitude || prevProps.longitude !== this.props.longitude || prevProps.inputDate !== this.props.inputDate || prevProps.inputTime !== this.props.inputTime) {
       this.createLocalSolarEclipseList()
-      this.createGlobalSolarEclipseList()
-      this.createLunarEclipseList()
+      this.createGlobalSolarEclipseList().then(() => this.createUpcomingSolarEclipseMap())
+      this.createLunarEclipseList().then(() => this.createUpcomingLunarEclipseMap())
     }
   }
 
@@ -50,6 +54,37 @@ class MainContainer extends React.Component {
       }
     }
     this.setState({ areLocalSolarEclipseListLoading: false, localSolarEclipseList: results })
+  }
+
+  generateUpcomingSolarEclipseMap = globalSolarEclipseDate => new Promise((resolve, reject) => {
+    let upcomingSolarEclipseMapWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
+    upcomingSolarEclipseMapWorker.postMessage({
+      type: 'createUpcomingSolarEclipse',
+      globalSolarEclipseDate: globalSolarEclipseDate
+    })
+    upcomingSolarEclipseMapWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createUpcomingSolarEclipse') {
+        upcomingSolarEclipseMapWorker.terminate()
+        resolve(workerEvent.data.result)
+        upcomingSolarEclipseMapWorker = null
+      }
+    }
+    upcomingSolarEclipseMapWorker.onerror = error => {
+      upcomingSolarEclipseMapWorker.terminate()
+      console.error(error.message)
+      reject(error.message)
+      upcomingSolarEclipseMapWorker = null
+    }
+  })
+
+  createUpcomingSolarEclipseMap = async () => {
+    this.setState({ isUpcomingSolarEclipseMapLoading: true })
+    try {
+      const result = await this.generateUpcomingSolarEclipseMap(this.props.formattedDateTime)
+      this.setState({ isUpcomingSolarEclipseMapLoading: false, upcomingSolarEclipseMap: result })
+    } catch (error) {
+      this.setState({ isUpcomingSolarEclipseMapLoading: false })
+    }
   }
 
   generateGlobalSolarEclipseInfo = globalSolarEclipseDate => new Promise((resolve, reject) => {
@@ -79,7 +114,7 @@ class MainContainer extends React.Component {
   createGlobalSolarEclipseList = async () => {
     const results = []
     let date = this.props.formattedDateTime
-    for (let index = 0; index <= 7; index++) {
+    for (let index = 0; index <= 6; index++) {
       try {
         const result = await this.generateGlobalSolarEclipseInfo(date)
         results.push(result)
@@ -89,7 +124,7 @@ class MainContainer extends React.Component {
           this.setState({ areGlobalSolarEclipseListLoading: false })
           break
         }
-        this.setState({ areGlobalSolarEclipseListLoading: index != 4 })
+        this.setState({ areGlobalSolarEclipseListLoading: index != 6 })
       } catch (error) {
         this.setState({ areGlobalSolarEclipseListLoading: false })
         break
@@ -98,10 +133,41 @@ class MainContainer extends React.Component {
     this.setState({ areGlobalSolarEclipseListLoading: false, globalSolarEclipseList: results })
   }
 
+  generateUpcomingLunarEclipseMap = lunarEclipseDate => new Promise((resolve, reject) => {
+    let upcomingLunarEclipseMapWorker = new Worker(new URL('./../../../utils/worker.js', import.meta.url), { type: 'module' })
+    upcomingLunarEclipseMapWorker.postMessage({
+      type: 'createUpcomingLunarEclipse',
+      lunarEclipseDate: lunarEclipseDate
+    })
+    upcomingLunarEclipseMapWorker.onmessage = workerEvent => {
+      if (workerEvent.data.type === 'createUpcomingLunarEclipse') {
+        upcomingLunarEclipseMapWorker.terminate()
+        resolve(workerEvent.data.result)
+        upcomingLunarEclipseMapWorker = null
+      }
+    }
+    upcomingLunarEclipseMapWorker.onerror = error => {
+      upcomingLunarEclipseMapWorker.terminate()
+      console.error(error.message)
+      reject(error.message)
+      upcomingLunarEclipseMapWorker = null
+    }
+  })
+
+  createUpcomingLunarEclipseMap = async () => {
+    this.setState({ isUpcomingLunarEclipseMapLoading: true })
+    try {
+      const result = await this.generateUpcomingLunarEclipseMap(this.props.formattedDateTime)
+      this.setState({ isUpcomingLunarEclipseMapLoading: false, upcomingLunarEclipseMap: result })
+    } catch (error) {
+      this.setState({ isUpcomingLunarEclipseMapLoading: false })
+    }
+  }
+
   createLunarEclipseList = async () => {
     const results = []
     let date = this.props.formattedDateTime
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index <= 6; index++) {
       try {
         const result = await this.props.generateLunarEclipseInfo(date)
         results.push(result)
@@ -111,7 +177,7 @@ class MainContainer extends React.Component {
           this.setState({ areLunarEclipseListLoading: false })
           break
         }
-        this.setState({ areLunarEclipseListLoading: index != 4 })
+        this.setState({ areLunarEclipseListLoading: index != 6 })
       } catch (error) {
         this.setState({ areLunarEclipseListLoading: false })
         break
@@ -131,11 +197,15 @@ class MainContainer extends React.Component {
               selectedLanguage={this.props.selectedLanguage}
               selectedTimeZone={this.props.selectedTimeZone}
               areLocalSolarEclipseListLoading={this.state.areLocalSolarEclipseListLoading}
+              isUpcomingSolarEclipseMapLoading={this.state.isUpcomingSolarEclipseMapLoading}
               areGlobalSolarEclipseListLoading={this.state.areGlobalSolarEclipseListLoading}
+              isUpcomingLunarEclipseMapLoading={this.state.isUpcomingLunarEclipseMapLoading}
               areLunarEclipseListLoading={this.state.areLunarEclipseListLoading}
               localSolarEclipseList={this.state.localSolarEclipseList}
               globalSolarEclipseList={this.state.globalSolarEclipseList}
+              upcomingSolarEclipseMap={this.state.upcomingSolarEclipseMap}
               lunarEclipseList={this.state.lunarEclipseList}
+              upcomingLunarEclipseMap={this.state.upcomingLunarEclipseMap}
             />
           </div>
         ) : (
@@ -145,11 +215,15 @@ class MainContainer extends React.Component {
               selectedLanguage={this.props.selectedLanguage}
               selectedTimeZone={this.props.selectedTimeZone}
               areLocalSolarEclipseListLoading={this.state.areLocalSolarEclipseListLoading}
+              isUpcomingSolarEclipseMapLoading={this.state.isUpcomingSolarEclipseMapLoading}
               areGlobalSolarEclipseListLoading={this.state.areGlobalSolarEclipseListLoading}
+              isUpcomingLunarEclipseMapLoading={this.state.isUpcomingLunarEclipseMapLoading}
               areLunarEclipseListLoading={this.state.areLunarEclipseListLoading}
               localSolarEclipseList={this.state.localSolarEclipseList}
+              upcomingSolarEclipseMap={this.state.upcomingSolarEclipseMap}
               globalSolarEclipseList={this.state.globalSolarEclipseList}
               lunarEclipseList={this.state.lunarEclipseList}
+              upcomingLunarEclipseMap={this.state.upcomingLunarEclipseMap}
             />
             <BottomBar t={this.props.t} />
           </div>

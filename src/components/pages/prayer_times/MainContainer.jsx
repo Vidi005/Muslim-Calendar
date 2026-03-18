@@ -300,7 +300,7 @@ class MainContainer extends React.Component {
       const schedule = isRamadanSelected ? this.props.t('imsakiyah_schedule') : this.props.t('prayer_schedule')
       const selectedMonth = this.state.monthType === 0 ? new Date(this.props.parentState.formattedDateTime.getFullYear(), this.state.selectedGregorianMonth, 1).toLocaleString(this.props.parentState.selectedLanguage || 'en', { calendar: 'gregory', month: 'long', year: 'numeric' }) : `${this.props.t(`islamic_months.${this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.month - 1}`)}-${parseInt(this.props.parentState.hijriStartDates[this.state.selectedHijriMonth]?.hijriDate.year)}-${this.props.t('hijri_abbreviation')}`
       const getPrayerTimeListContainer = document.querySelector('.prayer-times-list-container-download')
-      const preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>"
+      const preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>"
       const postHtml = "</body></html>"
       const htmlToDoc = `${preHtml}${getPrayerTimeListContainer.innerHTML}${postHtml}`
       const blob = new Blob(['\ufeff', htmlToDoc], { type: 'application/msword' })
