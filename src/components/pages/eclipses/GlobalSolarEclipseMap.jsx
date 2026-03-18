@@ -3,7 +3,7 @@ import GlobalSolarEclipseItem from "./GlobalSolarEclipseItem"
 import { coordinateScale } from "../../../utils/data"
 import en from "../../../locales/en.json"
 
-const GlobalSolarEclipseMap = ({ t, selectedLanguage, selectedTimeZone, globalSolarEclipseData, isUpcomingSolarEclipseMapLoading, upcomingSolarEclipseResult, convertLatLonToPixel, buildPathD, buildPolylinePoints, tooltip, containerRef, width, height }) => (
+const GlobalSolarEclipseMap = ({ t, selectedLanguage, selectedTimeZone, globalSolarEclipseData, isUpcomingSolarEclipseMapLoading, upcomingSolarEclipseResult }) => (
   <div className="upcoming-solar-eclipse-container flex flex-wrap md:flex-nowrap items-center md:items-start w-full md:space-x-4 xl:space-x-8 animate__animated animate__fadeInUp">
     {isUpcomingSolarEclipseMapLoading
       ? (
@@ -14,7 +14,7 @@ const GlobalSolarEclipseMap = ({ t, selectedLanguage, selectedTimeZone, globalSo
       )
       : (
         <div className="flex flex-col basis-full md:basis-2/3 items-center justify-center space-x-2 animate__animated animate__fadeInLeft">
-          <div ref={containerRef} className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
+          <div className="relative w-full border sm:border-2 md:border-4 border-green-900 dark:border-white rounded duration-200 overflow-hidden">
             <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
             {coordinateScale.latitudes.map((degree, index) => (
               <React.Fragment key={`lat-${index}`}>
