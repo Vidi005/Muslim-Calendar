@@ -1,6 +1,6 @@
-import { adjustedIslamicDate, getAlmanacData, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos } from "./data"
+import { adjustedIslamicDate, getAlmanacData, getCalendarData, getCitiesByName, getElementContent, getGlobalSolarEclipse, getLocalSolarEclipse, getLunarEclipse, getMoonCrescentVisibility, getMoonInfos, getNearestCity, getPrayerTimes, getQiblaDirection, getQiblaDistance, getSunInfos, getUpcomingLunarEclipse, getUpcomingSolarEclipse } from "./data"
 
-const CACHE_NAME = 'app-cache-v8.4' // Update the version when deploying new builds to clear old caches
+const CACHE_NAME = 'app-cache-v8.5' // Update the version when deploying new builds to clear old caches
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -77,6 +77,12 @@ self.onmessage = event => {
   } else if (type === 'createGlobalSolarEclipse') {
     const result = getGlobalSolarEclipse(globalSolarEclipseDate)
     self.postMessage({ type: 'createGlobalSolarEclipse', result })
+  } else if (type === 'createUpcomingSolarEclipse') {
+    const result = getUpcomingSolarEclipse(globalSolarEclipseDate)
+    self.postMessage({ type: 'createUpcomingSolarEclipse', result })
+  } else if (type === 'createUpcomingLunarEclipse') {
+    const result = getUpcomingLunarEclipse(lunarEclipseDate)
+    self.postMessage({ type: 'createUpcomingLunarEclipse', result })
   } else if (type === 'createLocalSolarEclipse') {
     const result = getLocalSolarEclipse(localSolarEclipseDate, latitude, longitude, elevation)
     self.postMessage({ type: 'createLocalSolarEclipse', result })

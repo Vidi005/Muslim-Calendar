@@ -5,7 +5,7 @@ import LocalSolarEclipses from "./LocalSolarEclipses"
 import LunarEclipses from "./LunarEclipses"
 import FooterContainer from "../Footer"
 
-const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarEclipseListLoading, areGlobalSolarEclipseListLoading, areLunarEclipseListLoading, localSolarEclipseList, globalSolarEclipseList, lunarEclipseList }) => (
+const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarEclipseListLoading, isUpcomingSolarEclipseMapLoading, areGlobalSolarEclipseListLoading, isUpcomingLunarEclipseMapLoading, areLunarEclipseListLoading, localSolarEclipseList, upcomingSolarEclipseMap, globalSolarEclipseList, lunarEclipseList, upcomingLunarEclipseMap }) => (
   <article className="eclipses-page-container flex flex-col grow duration-200 overflow-y-auto">
     <InputForm />
     <div className="flex flex-wrap md:items-stretch grow md:flex-none">
@@ -20,6 +20,8 @@ const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarE
         t={t}
         selectedLanguage={selectedLanguage}
         selectedTimeZone={selectedTimeZone}
+        isUpcomingSolarEclipseMapLoading={isUpcomingSolarEclipseMapLoading}
+        upcomingSolarEclipseMap={upcomingSolarEclipseMap}
         areGlobalSolarEclipseListLoading={areGlobalSolarEclipseListLoading}
         globalSolarEclipseList={globalSolarEclipseList}
       />
@@ -27,6 +29,8 @@ const EclipsesContent = ({ t, selectedLanguage, selectedTimeZone, areLocalSolarE
         t={t}
         selectedLanguage={selectedLanguage}
         selectedTimeZone={selectedTimeZone}
+        isUpcomingLunarEclipseMapLoading={isUpcomingLunarEclipseMapLoading}
+        upcomingLunarEclipseMap={upcomingLunarEclipseMap}
         areLunarEclipseListLoading={areLunarEclipseListLoading}
         lunarEclipseList={lunarEclipseList}
       />

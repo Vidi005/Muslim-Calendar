@@ -677,8 +677,15 @@
     "eclipses": "Eclipses",
     "global_solar_eclipse": "Global Solar Eclipse",
     "global_solar_eclipses_loading": "Loading Global Solar Eclipses...",
+    "upcoming_global_solar_eclipse_map": "Upcoming Solar Eclipse Map",
+    "upcoming_global_solar_eclipses": "Next Solar Eclipses",
+    "upcoming_solar_eclipse_map_loading": "Loading Upcoming Solar Eclipse Map...",
+    "obscuration": "Obscuration",
     "local_solar_eclipse": "Local Solar Eclipse",
     "local_solar_eclipses_loading": "Loading Local Solar Eclipses...",
+    "upcoming_lunar_eclipse_map": "Upcoming Lunar Eclipse Map",
+    "upcoming_lunar_eclipses": "Next Lunar Eclipses",
+    "upcoming_lunar_eclipse_map_loading": "Loading Upcoming Lunar Eclipse Map...",
     "lunar_eclipse": "Lunar Eclipse",
     "lunar_eclipses_loading": "Loading Lunar Eclipses...",
     "global_solar_eclipse_infos": ["Solar Eclipse Kind", "Distance", "Latitude", "Longitude", "Obscuration", "Peak Time", "Unknown"],
@@ -700,9 +707,46 @@
     "lunar_eclipse_infos": ["Lunar Eclipse Kind", "Obscuration", "Penumbral Begin Time", "Partial Begin Time", "Total Begin Time", "Peak Time", "Total End Time", "Partial End Time", "Penumbral End Time", "Penumbral Phase Duration", "Partial Phase Duration", "Total Phase Duration", "Not Available"],
     "eclipse_locations": ["Eclipse Location", "Unknown"],
     "eclipse_visibilities": ["Visible", "Not Visible", "Depends on Location"],
+    "eclipse_types": [
+        {
+            "name": "Solar Eclipse",
+            "kinds": [
+                {
+                    "name": "Total",
+                    "color": "red"
+                },
+                {
+                    "name": "Annular",
+                    "color": "orange"
+                },
+                {
+                    "name": "Partial",
+                    "color": "yellow"
+                }
+            ]
+        },
+        {
+            "name": "Lunar Eclipse",
+            "kinds": [
+                {
+                    "name": "All Phases Visible",
+                    "color": "black"
+                },
+                {
+                    "name": "Partial & Penumbral",
+                    "color": "#374151"
+                },
+                {
+                    "name": "Penumbral Only",
+                    "color": "#9ca3af"
+                }
+
+            ]
+        }
+    ],
     "time_suffixes": ["hours", "minutes", "seconds"],
     "unsupported_time_format": "Unsupported Time Format",
-    "version": "Updated on January 2026",
+    "version": "Updated on March 2026",
     "about": "Muslim Calendar is a web app which used to give information related of Islamic Calendar, Prayer Times and Imsakiyah Schedule, Moon Crescent Visibility Map, and also Solar and Lunar Eclipses around The World.",
     "resources": "Resources",
     "resource_items": [
