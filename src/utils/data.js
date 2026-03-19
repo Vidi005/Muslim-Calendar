@@ -2477,8 +2477,11 @@ const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
 const checkMoonVisibility = (astroTime, latitude, longitude, elevation) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const moonEquator = Equator(Body.Moon, astroTime, observer, true, true)
-  // Average moon upperlimb horizon rise/set
-  return Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal").altitude > -0.3
+  const moonHoriwzon = Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  // Semi-diameter dynamic from Astronomy Engine
+  const moonSemiDiameter = Libration(astroTime).diam_deg / 2
+  // Chek upper limb
+  return moonHoriwzon.altitude > -moonSemiDiameter
 }
 
 const isVisibleInRange = (startTime, endTime, lat, lng, samples = 3) => {
