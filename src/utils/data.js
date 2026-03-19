@@ -2413,17 +2413,30 @@ const plotSolarEclipseVisibility = (peakTime, steps) => {
     observer.latitude = lat
     const yPosition = 100 * (90 - lat) / 180
     let currentRun = null
+    let gapCount = 0
     for (let lon = -180; lon < 180; lon += steps) {
       observer.longitude = lon
       const sunEquator = Equator(Body.Sun, peakTime, observer, true, true)
-      if (Horizon(peakTime, observer, sunEquator.ra, sunEquator.dec, "normal").altitude < -5/6) continue
       const moonEquator = Equator(Body.Moon, peakTime, observer, true, true)
       const angleDistance = AngleBetween(sunEquator.vec, moonEquator.vec)
-      // Safe margin overlap rejection threshold
-      if (angleDistance > 1.5) continue
-      const solarEclipseData = SearchLocalSolarEclipse(peakTime.AddDays(-1), observer)
-      if (!solarEclipseData || Math.abs(solarEclipseData.peak.time.date - peakTime.date) / 86400000 > 2 || solarEclipseData.obscuration <= 0) continue
-      const color = solarEclipseData.kind === 'total' ? 'red' : solarEclipseData.kind === 'annular' ? 'orange' : 'yellow'
+      let color = null
+      if (Horizon(peakTime, observer, sunEquator.ra, sunEquator.dec, "normal").altitude >= -5 / 6 && angleDistance <= 1.5) {
+        const solarEclipseData = SearchLocalSolarEclipse(peakTime.AddDays(-1), observer)
+        if (solarEclipseData && Math.abs(solarEclipseData.peak.time.date - peakTime.date) / 86400000 <= 2 && solarEclipseData.obscuration > 0) {
+          color = solarEclipseData.kind === 'total' ? 'red' : solarEclipseData.kind === 'annular' ? 'orange' : 'yellow'
+        }
+      }
+      if (!color) {
+        gapCount++
+        if (currentRun && gapCount <= 1) continue
+        if (currentRun) {
+          results.push(currentRun)
+          currentRun = null
+        }
+        gapCount = 0
+        continue
+      }
+      gapCount = 0
       if (currentRun && currentRun.color === color) {
         currentRun.width += width
       } else {
@@ -2437,10 +2450,7 @@ const plotSolarEclipseVisibility = (peakTime, steps) => {
         }
       }
     }
-    if (currentRun) {
-      results.push(currentRun)
-      currentRun = null
-    }
+    if (currentRun) results.push(currentRun)
   }
   return results
 }
@@ -2478,9 +2488,9 @@ const checkMoonVisibility = (astroTime, latitude, longitude, elevation) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const moonEquator = Equator(Body.Moon, astroTime, observer, true, true)
   const moonHoriwzon = Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal")
-  // Semi-diameter dynamic from Astronomy Engine
+  // Dynamic Semi-diameter from Astronomy Engine
   const moonSemiDiameter = Libration(astroTime).diam_deg / 2
-  // Chek upper limb
+  // Check upper limb
   return moonHoriwzon.altitude > -moonSemiDiameter
 }
 
