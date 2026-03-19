@@ -815,6 +815,16 @@ const convertRAToHMS = raDecimalHours => {
   return formatted
 }
 
+const checkMoonVisibility = (astroTime, latitude, longitude, elevation) => {
+  const observer = observerFromEarth(latitude, longitude, elevation)
+  const moonEquator = Equator(Body.Moon, astroTime, observer, true, true)
+  const moonHorizon = Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal")
+  // Dynamic Semi-diameter from Astronomy Engine
+  const moonSemiDiameter = Libration(astroTime).diam_deg / 2
+  // Check upper limb
+  return moonHorizon.altitude > -moonSemiDiameter
+}
+
 const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, lang) => {
   const observer = observerFromEarth(latitude, longitude, elevation)
   const astroDate = new AstroTime(gregorianDate)
@@ -830,7 +840,7 @@ const getMoonInfos = (gregorianDate, timeZone, latitude, longitude, elevation, l
   const moonRightAscension = `${convertRAToHMS(moonEquatorTopocentric.ra)}`
   const moonDeclination = `${moonEquatorTopocentric.dec.toFixed(2)}°`
   const moonHorizonTopocentric = Horizon(astroDate, observer, moonEquatorTopocentric.ra, moonEquatorTopocentric.dec, 'normal')
-  const moonAltitudeTopocentric = `${moonHorizonTopocentric.altitude.toFixed(2)}°${moonHorizonTopocentric.altitude < 0 ? ` ${lang === 'id' ?  '(Tidak Terlihat)' : '(Not Visible)'}` : ''}`
+  const moonAltitudeTopocentric = `${moonHorizonTopocentric.altitude.toFixed(2)}°${!checkMoonVisibility(astroDate, latitude, longitude, elevation) ? ` ${lang === 'id' ?  '(Tidak Terlihat)' : '(Not Visible)'}` : ''}`
   const moonHorizonGeocentric = Horizon(astroDate, observer, moonEquatorGeocentric.ra, moonEquatorGeocentric.dec, 'normal')
   const moonAltitudeGeocentric = `${moonHorizonGeocentric.altitude.toFixed(2)}°`
   const moonAzimuthTopocentric = `${moonHorizonTopocentric.azimuth.toFixed(2)}°`
@@ -2482,16 +2492,6 @@ const getLocalSolarEclipse = (date, latitude, longitude, elevation) => {
     totalEndTime: localSolarEclipse.total_end?.time?.date || 0,
     nextDate: localSolarEclipse.partial_end.time.AddDays(1).date || 0
   }
-}
-
-const checkMoonVisibility = (astroTime, latitude, longitude, elevation) => {
-  const observer = observerFromEarth(latitude, longitude, elevation)
-  const moonEquator = Equator(Body.Moon, astroTime, observer, true, true)
-  const moonHoriwzon = Horizon(astroTime, observer, moonEquator.ra, moonEquator.dec, "normal")
-  // Dynamic Semi-diameter from Astronomy Engine
-  const moonSemiDiameter = Libration(astroTime).diam_deg / 2
-  // Check upper limb
-  return moonHoriwzon.altitude > -moonSemiDiameter
 }
 
 const isVisibleInRange = (startTime, endTime, lat, lng, samples = 3) => {
