@@ -14,6 +14,7 @@ Muslim Calendar is a web app which used to give information related of Islamic C
 - App Configuration (Input Desired Date and Time, Automatic Current Location, Search Cities, Set Latitude, Longitude, and Elevation manually, Select Calendar Criteria Estimation, Timezone Selection, and Refresh Update Time)
 - Prayer Times Configuration (Calculation Method Selection, Asr Time/<i>Mazhab</i>, Convention, <i>Zawal</i> Start Time after <i>Istiwa'</i>, <i>Ihtiyath</i>, Prayer Times Precision, Dhuha Calculation Method, and Prayer Times Correction)
 - Moon Crescent Map (Hijri Month Selection, Moon Crescent Visibilities Criteria, Geocentric and Topocentric Options of Moon Elongation & Moon Altitude, Plot Marker Sampling)
+- Upcoming Solar and Lunar Eclipses Map in Eclipses Page
 - Download and Print Prayer Times Schedule in a month (in Gregorian or Hijri Date).
 
 <strong><i>Disclaimer</i> :</strong> This web app is still far from perfect and still needs a lot of improvements.
