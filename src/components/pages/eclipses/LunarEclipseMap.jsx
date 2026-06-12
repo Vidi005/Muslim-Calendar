@@ -18,14 +18,14 @@ const LunarEclipseMap = ({ t, selectedLanguage, selectedTimeZone, lunarEclipseDa
             <img className="w-full object-center" src={`${import.meta.env.BASE_URL}images/world-map-bg.png`} alt="World Map" />
             {coordinateScale.latitudes.map((degree, index) => (
               <React.Fragment key={`lat-${index}`}>
-                <span className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
-                <span className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
+                <span className="absolute w-full opacity-50 border border-dashed border-green-200" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
+                <span className="absolute w-full px-1 text-xs text-green-200" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
               </React.Fragment>
             ))}
             {coordinateScale.longitudes.map((degree, index) => (
               <React.Fragment key={`lon-${index}`}>
-                <span className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
-                <span className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
+                <span className="absolute h-full opacity-50 border border-dashed border-green-200" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
+                <span className="absolute h-full px-1 text-xs text-green-200" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
               </React.Fragment>
             ))}
             {upcomingLunarEclipseResult?.map((marker, index) => (

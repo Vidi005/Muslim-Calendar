@@ -94,7 +94,7 @@
     "intervals": ["1 detik", "5 detik", "15 detik", "30 detik", "1 menit"],
     "current_month": "Ke Tanggal Saat Ini",
     "set_month": "Ke Tanggal yang Ditentukan",
-    "set_moon_info": "Informasi Bulan pada:",
+    "set_moon_info": "Fase Bulan pada:",
     "set_prayer_times": "Waktu Sholat pada:",
     "error_alert": "Kesalahan",
     "error_solution": "Silakan muat ulang halaman",
@@ -105,7 +105,7 @@
     "prev_month": "Bulan Sebelumnya",
     "go_to": "Ke",
     "loading": "Memuat...",
-    "moon_info": "Informasi Bulan",
+    "moon_info": "Fase Bulan",
     "prayer_times_loading": "Memuat Waktu Sholat...",
     "prayer_times": "Waktu Sholat",
     "prayer_times_headers": ["Waktu", "Kemarin", "Hari Ini", "Besok", "Tanggal Hijriah", "Tanggal Masehi"],
@@ -757,7 +757,7 @@
             "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
         },
         {
-            "name": "Dasar Peta Dunia",
+            "name": "Peta Dunia",
             "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
         }
     ],

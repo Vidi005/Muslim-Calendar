@@ -19,14 +19,14 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, sele
       <span className="absolute w-full h-1/6 bottom-0 inset-x-0 backdrop-blur-sm bg-black/5"></span>
       {coordinateScale.latitudes.map((degree, index) => (
         <React.Fragment key={`lat-${index}`}>
-          <span className="absolute w-full opacity-50 border border-dashed border-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
-          <span className="absolute w-full px-1 text-xs text-green-700" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
+          <span className="absolute w-full opacity-50 border border-dashed border-green-200" style={{ top: `${((90 - degree) / 90) * 50}%` }}></span>
+          <span className="absolute w-full px-1 text-xs text-green-200" style={{ top: `${((90 - degree) / 90) * 50}%` }}>{degree}°</span>
         </React.Fragment>
       ))}
       {coordinateScale.longitudes.map((degree, index) => (
         <React.Fragment key={`lon-${index}`}>
-          <span className="absolute h-full opacity-50 border border-dashed border-green-700" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
-          <span className="absolute h-full px-1 text-xs text-green-700" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
+          <span className="absolute h-full opacity-50 border border-dashed border-green-200" style={{ top: 0, left: `${((180 - degree) / 180) * 50}%` }}></span>
+          <span className="absolute h-full px-1 text-xs text-green-200" style={{ top: 0, right: `${((180 - degree) / 180) * 50}%` }}>{degree}°</span>
         </React.Fragment>
       ))}
       {visibility.map((marker, index) => (
@@ -39,7 +39,7 @@ const MoonCrescentVisibilityMap = ({ t, selectedLanguage, selectedTimeZone, sele
         }}></span>
       ))}
       {visibility[0]?.fajrAtWellington && (
-        <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-900">{t('fajr_in_new_zealand')}: {visibility[0].fajrAtWellington?.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone })?.replace(/\./g, ':')} ({visibility[0].fajrAtWellington?.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' })?.replace(/\./g, ':')})</span>
+        <span className="absolute origin-bottom-right bottom-0 right-0 p-1 md:p-2 text-[8px] sm:text-xs 2xl:text-sm text-orange-100">{t('fajr_in_new_zealand')}: {visibility[0].fajrAtWellington?.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: selectedTimeZone })?.replace(/\./g, ':')} ({visibility[0].fajrAtWellington?.toLocaleString(selectedLanguage || "en", { calendar: "gregory", day: "2-digit", month: "2-digit", year: "numeric", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short", timeZone: 'UTC' })?.replace(/\./g, ':')})</span>
       )}
     </div>
     <div className={`grid w-full p-1 md:p-2 gap-1 md:gap-2 items-stretch ${en.moon_visibility_criteria[selectedMoonVisibilityCriteria]?.zones?.length > 2 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5" : "grid-cols-2"}`}>

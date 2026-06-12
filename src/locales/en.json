@@ -94,7 +94,7 @@
     "intervals": ["1 second", "5 seconds", "15 seconds", "30 seconds", "1 minute"],
     "current_month": "Go to Current Date",
     "set_month": "Go to Set Date",
-    "set_moon_info": "Moon Info at:",
+    "set_moon_info": "Moon Phase at:",
     "set_prayer_times": "Prayer Times at:",
     "error_alert": "Error",
     "error_solution": "Please reload the page",
@@ -105,7 +105,7 @@
     "prev_month": "Previous Month",
     "go_to": "Jump to",
     "loading": "Loading...",
-    "moon_info": "Moon Info",
+    "moon_info": "Moon Phase",
     "prayer_times_loading": "Prayer Times are being loaded...",
     "prayer_times": "Prayer Times",
     "prayer_times_headers": ["Time", "Yesterday", "Today", "Tomorrow", "Hijri Date", "Gregorian Date"],
@@ -759,7 +759,7 @@
             "url": "https://www.freepik.com/free-vector/grey-full-moon-illustration-white-background_16359327.htm#fromView=search&page=1&position=1&uuid=7f486d81-dd0d-4230-b084-1456a43e404c"
         },
         {
-            "name": "Base World Map",
+            "name": "World Map",
             "url": "https://commons.wikimedia.org/wiki/File:Blue_Marble_2002.png"
         }
     ],
